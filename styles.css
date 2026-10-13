@@ -1,0 +1,195 @@
+/* On narrow screens a wide table or display formula scrolls inside its own box instead of widening the page,
+   and long URLs wrap. */
+@media (max-width: 767.98px) {
+  main table,
+  main mjx-container[display="true"] {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+  main a {
+    overflow-wrap: anywhere;
+  }
+}
+
+:root {
+  --research-paper: #faf9f5;
+  --research-ink: #182d3b;
+  --research-muted: #526771;
+  --research-rule: #dce2df;
+  --research-blue: #2364a5;
+}
+body {
+  background: var(--research-paper);
+  color: var(--research-ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 17px;
+  line-height: 1.65;
+}
+a { color: var(--research-blue); text-underline-offset: .2em; }
+a:hover { color: #143e68; }
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible {
+  outline: 3px solid #a46c17;
+  outline-offset: 4px;
+}
+.navbar {
+  background: var(--research-paper) !important;
+  color: var(--research-ink);
+  border-bottom: 1px solid var(--research-rule);
+  padding-top: .85rem;
+  padding-bottom: .85rem;
+}
+.navbar .navbar-brand, .navbar .nav-link, .navbar .navbar-toggler, .navbar #quarto-search { color: var(--research-ink); }
+.navbar .navbar-title { font: 500 1.35rem Georgia, serif; letter-spacing: -.025em; }
+.navbar .nav-link { font-size: .95rem; }
+h1, h2, h3 { font-family: Georgia, "Times New Roman", serif; font-weight: 500; letter-spacing: -.025em; }
+h1.title { font-size: clamp(2.15rem, 4vw, 3.3rem); line-height: 1.12; }
+h2 { border-bottom: 0; margin-top: 2.8rem; padding-bottom: 0; line-height: 1.2; }
+h3 { line-height: 1.3; }
+#title-block-header { margin-top: 2.2rem; margin-bottom: 2.5rem; }
+.quarto-title .subtitle { color: var(--research-muted); font-size: 1.05rem; }
+#TOC { font-size: .82rem; line-height: 1.55; }
+#TOC a, .sidebar nav[role=doc-toc] ul>li>a.active { color: var(--research-muted); }
+main p, main li { overflow-wrap: break-word; }
+main code { font-size: .85em; }
+main pre { font-size: .84rem; }
+main img { max-width: 100%; height: auto; }
+main table { font-size: .9rem; }
+.research-home #title-block-header { display: none; }
+.research-home #quarto-content { display: block; max-width: 1160px; margin: auto; padding: 0 2rem; }
+.research-home main { margin: auto; }
+.research-hero { padding: 3rem 0 2.5rem; max-width: 870px; }
+.research-eyebrow { font: 600 .73rem/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; text-transform: uppercase; letter-spacing: .14em; color: var(--research-muted); margin-bottom: 1.1rem; }
+.research-hero h1 { font-size: clamp(2.15rem, 4vw, 3.3rem); line-height: 1.15; margin: 0; }
+.research-lead { font-size: 1.35rem; line-height: 1.55; max-width: 780px; }
+.research-intro { color: var(--research-muted); max-width: 720px; }
+.research-story { border-top: 1px solid var(--research-rule); padding: 3rem 0; display: grid; grid-template-columns: 1.12fr 1fr; align-items: center; gap: 3rem; }
+.research-story h2 { font-size: clamp(1.9rem, 3vw, 2.45rem); margin: 0 0 1.2rem; }
+.research-story-copy>p:not(.research-eyebrow) { max-width: 560px; }
+.research-main-link { display: inline-block; color: var(--research-ink); font-weight: 600; margin-top: .3rem; }
+.research-main-link span { margin-left: .3rem; }
+.research-secondary-links { display: flex; flex-wrap: wrap; gap: 1.4rem; font-size: .86rem; }
+.research-secondary-links a { color: var(--research-muted); }
+.research-story-visual svg { width: 100%; height: auto; overflow: visible; }
+.preview-main { font: 500 17px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: var(--research-ink); }
+.preview-note { font: 13px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: var(--research-muted); }
+.research-footnote { border-top: 1px solid var(--research-rule); padding: 2rem 0 4rem; color: var(--research-muted); font-size: .9rem; }
+.research-footnote p { max-width: 790px; }
+.research-explainer #quarto-content { display: block; max-width: 1100px; padding: 0 2rem; margin: auto; }
+.research-explainer main { margin: auto; }
+.research-explainer #title-block-header { max-width: 900px; margin-top: 3.5rem; }
+.research-explainer main p { max-width: 790px; }
+.research-explainer main>section { margin-top: 3rem; }
+.research-explainer h2 { max-width: 800px; font-size: clamp(1.65rem, 3vw, 2.2rem); margin-bottom: 1.25rem; }
+.research-explainer h3 { font-family: inherit; font-size: 1.1rem; font-weight: 600; letter-spacing: 0; }
+.research-explainer .subtitle { max-width: 770px; font-size: 1.2rem; line-height: 1.55; }
+.explainer-links { display: flex; flex-wrap: wrap; gap: 1.3rem; font-size: .9rem; margin: 1.2rem 0 2rem; }
+.visual-panel, .explainer-visual { margin: 2rem 0; border-top: 1px solid var(--research-rule); border-bottom: 1px solid var(--research-rule); padding: 1.75rem 0; }
+.visual-controls, .explainer-controls { display: flex; flex-wrap: wrap; align-items: end; gap: 1rem 1.6rem; margin-bottom: 1.5rem; }
+.visual-controls label, .explainer-controls label { display: flex; flex-direction: column; gap: .4rem; font-size: .85rem; font-weight: 600; }
+.research-explainer button, .research-explainer select { font: inherit; font-size: .9rem; border: 1px solid #aebfc1; background: transparent; color: var(--research-ink); min-height: 42px; border-radius: 4px; padding: .45rem .8rem; }
+.research-explainer button { cursor: pointer; }
+.research-explainer button[aria-pressed=true] { background: var(--research-ink); border-color: var(--research-ink); color: #fff; }
+.research-explainer button:hover:not([aria-pressed=true]) { background: #edf0eb; }
+.research-explainer input[type=range] { accent-color: #2a78d6; max-width: 100%; }
+.research-explainer svg { display: block; width: 100%; height: auto; }
+.research-explainer svg text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+.research-explainer figcaption, .visual-caption, .explainer-caption { color: var(--research-muted); font-size: .85rem; line-height: 1.6; margin-top: .75rem; max-width: 840px; }
+.research-explainer details { margin: 1.5rem 0; border-top: 1px solid var(--research-rule); padding-top: 1rem; font-size: .92rem; }
+.research-explainer summary { cursor: pointer; font-weight: 600; }
+.research-explainer details table { font-size: .85rem; }
+.research-explainer .visual-note, .research-explainer .explainer-note { color: var(--research-muted); font-size: .92rem; }
+@media (max-width: 700px) {
+  body { font-size: 16px; }
+  .research-home #quarto-content, .research-explainer #quarto-content { padding: 0 1.15rem; }
+  .research-hero { padding: 3rem 0 2.5rem; }
+  .research-lead { font-size: 1.15rem; }
+  .research-story { grid-template-columns: 1fr; gap: 1rem; padding: 2.5rem 0; }
+  .research-story-visual { max-width: 470px; }
+  .research-explainer #title-block-header { margin-top: 2.5rem; }
+  .visual-controls, .explainer-controls { gap: .8rem; }
+  .research-explainer select { max-width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0s !important; animation-duration: 0s !important; }
+}
+
+/* Figures form part of the argument, with controls beside the thing they change. */
+.visual-figure, .explainer-diagram, .explainer-figure { margin: 2rem 0; }
+.visual-concept, .explainer-diagram, .explainer-interactive { padding: 1.6rem 0; border-top: 1px solid var(--research-rule); border-bottom: 1px solid var(--research-rule); }
+.visual-coefficient-control { max-width: 570px; margin: 0 auto 1.7rem; }
+.visual-coefficient-control label, .explainer-step-control label { display: flex; justify-content: space-between; gap: 1rem; font-size: .9rem; font-weight: 600; }
+.visual-coefficient-control output, .explainer-step-control output { font-variant-numeric: tabular-nums; }
+.visual-coefficient-control input, .explainer-step-control input { display: block; width: 100%; margin: .8rem 0; }
+.visual-range-labels, .explainer-step-labels { display: flex; justify-content: space-between; font-size: .78rem; color: var(--research-muted); }
+.visual-matrix-equation { display: grid; grid-template-columns: 1fr 30px 1fr 30px 1fr; align-items: center; gap: 1.1rem; max-width: 740px; margin: auto; }
+.visual-matrix-term p { text-align: center; font-size: .85rem; font-weight: 600; margin-bottom: .6rem; }
+.visual-matrix-term svg { max-width: 160px; margin: auto; }
+.visual-matrix-operator { text-align: center; font-size: 1.9rem; padding-top: 1.7rem; color: var(--research-muted); }
+.visual-matrix-state { text-align: center; margin: 1.5rem auto 0; font-size: .95rem; }
+.visual-dose { border: 0; margin: 0; padding: 0; }
+.visual-dose legend { float: none; width: auto; font-size: .85rem; font-weight: 600; margin-bottom: .4rem; }
+.visual-chart-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+.visual-result-sentence, .explainer-finding { border-left: 3px solid #2a78d6; padding-left: 1.1rem; margin-top: 1.6rem; }
+.visual-uncertainty-table { overflow-x: auto; }
+.visual-uncertainty-table table, .explainer-data-table table { width: 100%; margin-top: 1rem; border-collapse: collapse; }
+.visual-uncertainty-table th, .visual-uncertainty-table td, .explainer-data-table th, .explainer-data-table td { padding: .6rem .7rem; border-bottom: 1px solid var(--research-rule); text-align: left; }
+.visual-next { border-top: 1px solid var(--research-rule); margin-top: 2rem; padding: 1.5rem 0; }
+.explainer-transfer-path { display: flex; align-items: center; gap: 1.8rem; margin-bottom: 1.8rem; }
+.explainer-transfer-path strong, .explainer-kicker { display: block; }
+.explainer-kicker { font-size: .78rem; color: var(--research-muted); }
+.explainer-transfer-path strong { font-size: 1rem; }
+.explainer-transfer-arrow { color: var(--research-muted); font-size: 2rem; }
+.explainer-method-controls { display: flex; flex-wrap: wrap; gap: .65rem; margin-bottom: 1rem; }
+.explainer-concept-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: center; }
+.explainer-method-copy { max-width: 470px; }
+.explainer-method-copy h3 { margin-top: .5rem; }
+.explainer-method-copy p { font-size: .95rem; }
+.explainer-step-control { max-width: 560px; margin: 1.7rem 0; }
+.explainer-reading { font-size: .95rem; }
+.research-paper-title { font-size: .86rem; color: var(--research-muted); }
+@media (max-width: 800px) {
+  .visual-chart-pair { grid-template-columns: 1fr; gap: 1.4rem; }
+  .explainer-concept-layout { grid-template-columns: 1fr; gap: .4rem; }
+  #repair-method-illustration { max-width: 470px; }
+}
+@media (max-width: 480px) {
+  .visual-matrix-equation { gap: .3rem; grid-template-columns: 1fr 17px 1fr 17px 1fr; }
+  .visual-matrix-term p { min-height: 2.7em; line-height: 1.35; font-size: .73rem; }
+  .visual-matrix-operator { font-size: 1.35rem; }
+  .explainer-transfer-path { gap: .8rem; }
+  .explainer-transfer-path strong { font-size: .85rem; }
+  .explainer-kicker { font-size: .72rem; }
+}
+.navbar .navbar-nav .nav-link.active, .navbar .navbar-nav .nav-link.show { color: var(--research-ink) !important; }
+.navbar #quarto-search .aa-DetachedSearchButton { color: var(--research-ink); }
+.navbar .navbar-toggler-icon { filter: brightness(.25); }
+
+.navbar #quarto-search .aa-SubmitIcon, .navbar #quarto-search .aa-SubmitIcon path { color: var(--research-ink); fill: var(--research-ink); }
+
+/* Context for readers arriving directly at a visual guide. */
+.study-breadcrumb { color: var(--research-muted); font-size: .85rem; margin-bottom: 1.4rem; }
+.research-eyebrow a { color: inherit; }
+.nav-footer a { color: var(--research-muted); }
+
+.study-resources { border-top: 1px solid var(--research-rule); border-bottom: 1px solid var(--research-rule); padding: .65rem 0; margin: 1rem 0 1.5rem; font-size: .9rem; }
+.study-resources p { margin: 0; }
+
+.navbar .nav-link:focus-visible { outline: 3px solid #a46c17; outline-offset: 2px; box-shadow: none; }
+
+.nav-footer { background: var(--research-paper); }
+
+
+/* Keep search descriptions in metadata without repeating the introduction. */
+#title-block-header .description { display: none; }
+
+/* Tables use the same paper background as the surrounding page. */
+main table { --bs-table-bg: transparent; --bs-table-color: var(--research-ink); background-color: transparent; }
+main table > :not(caption) > * > * { background-color: transparent; }
+
+/* Quarto appendices share the surrounding page background. */
+#quarto-appendix.default { background-color: transparent; }
+
+/* Keep the action column legible in the guides' three-column route tables. */
+.guide-task-options table { display: table; width: 100%; table-layout: fixed; }
+.guide-task-options th:first-child, .guide-task-options td:first-child { width: 28%; }
