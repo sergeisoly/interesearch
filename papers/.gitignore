@@ -1,0 +1,5 @@
+/.quarto/
+**/*.quarto_ipynb
+# SVG figures converted to PDF next to a paper when Quarto renders it as PDF
+/repair-transfer/results/
+/selective-editing/results/

@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+type: software
+message: >-
+  If you use the code, cite this software. For a scientific result, cite the
+  relevant paper using the entries in README.md.
+title: "interesearch: language-model weight-editing research software"
+authors:
+  - family-names: Solovev
+    given-names: Sergei
+version: 0.1.0
+repository-code: https://github.com/sergeisoly/interesearch
+url: https://sergeisoly.github.io/interesearch/

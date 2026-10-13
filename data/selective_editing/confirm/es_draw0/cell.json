@@ -1,0 +1,259 @@
+{
+ "format": 1,
+ "study": "selective_editing",
+ "split": "confirm",
+ "target": "es",
+ "protected": "pt",
+ "draw": 0,
+ "target_key": "confirm_es",
+ "protected_key": "confirm_pt",
+ "groups": [
+  "2003-01-16",
+  "1999-01-13",
+  "2008-09-03",
+  "2005-01-11",
+  "2008-05-22",
+  "1999-09-15",
+  "1996-09-05",
+  "2010-11-24",
+  "2008-01-16",
+  "1999-11-17",
+  "2005-11-16",
+  "2002-02-05",
+  "2005-09-26",
+  "2007-10-25",
+  "2004-10-13",
+  "2000-02-02",
+  "1997-02-17",
+  "2011-05-09",
+  "1997-04-09",
+  "1996-05-09",
+  "2003-01-13",
+  "2006-06-15",
+  "2001-05-14",
+  "2006-05-31",
+  "2000-04-10",
+  "2010-02-11",
+  "2006-10-26",
+  "2002-10-22",
+  "1996-11-28",
+  "2005-04-11",
+  "2002-06-11",
+  "1997-06-12",
+  "2003-06-19",
+  "2009-09-16",
+  "1997-04-11",
+  "2008-03-13",
+  "2006-09-07",
+  "2007-09-24",
+  "2003-11-17",
+  "2010-11-10",
+  "1996-07-19",
+  "1997-07-18",
+  "1999-02-10",
+  "2004-09-16",
+  "1997-12-19",
+  "2002-09-25",
+  "2001-03-15",
+  "2006-04-27",
+  "2009-01-13",
+  "2002-03-11",
+  "2000-06-14",
+  "1999-03-10",
+  "1998-07-16",
+  "2007-06-21",
+  "2002-12-05",
+  "1998-01-29",
+  "1997-01-14",
+  "1997-06-25"
+ ],
+ "measured": [
+  "vpd_atom@0.5",
+  "vpd_atom@1.0",
+  "omp_finetune@0.5",
+  "ci_difference@0.5",
+  "ci_difference@1.0",
+  "neurons@0.5",
+  "neurons@1.0",
+  "lora_rank1@0.5",
+  "lora_rank1@1.0",
+  "finetune_24@0.5",
+  "finetune_24@1.0"
+ ],
+ "edits": {
+  "vpd_atom@0.5": {
+   "status": "matched",
+   "scale": 1.0258883476483185,
+   "k": null,
+   "guards": {
+    "confirm_en": 0.0005135823940408641
+   },
+   "target_test_delta": 0.5173648595809937,
+   "english_kl": {
+    "confirm_en": 0.00027516920818015933
+   },
+   "protected_delta": 0.0003140794819798963
+  },
+  "vpd_atom@1.0": {
+   "status": "matched",
+   "scale": 1.3883252147247767,
+   "k": null,
+   "guards": {
+    "confirm_en": 0.0007948669893988248
+   },
+   "target_test_delta": 1.016759070856818,
+   "english_kl": {
+    "confirm_en": 0.000494022529516048
+   },
+   "protected_delta": 0.003015830599028489
+  },
+  "null_atom@0.5": {
+   "status": "no edit by the declared rule: selector status 'no feasible atom'",
+   "technical_failure": false
+  },
+  "null_atom@1.0": {
+   "status": "no edit by the declared rule: selector status 'no feasible atom'",
+   "technical_failure": false
+  },
+  "omp_finetune@0.5": {
+   "status": "matched",
+   "scale": 1.926776695296637,
+   "k": null,
+   "guards": {
+    "confirm_en": 0.0010798224087419182
+   },
+   "target_test_delta": 0.5131571703943713,
+   "english_kl": {
+    "confirm_en": 0.0007416890539702606
+   },
+   "protected_delta": 0.18565281506242423
+  },
+  "omp_finetune@1.0": {
+   "status": "not reached on the evaluated grid",
+   "technical_failure": false
+  },
+  "omp_lora@0.5": {
+   "status": "not reached on the evaluated grid",
+   "technical_failure": false
+  },
+  "omp_lora@1.0": {
+   "status": "not reached on the evaluated grid",
+   "technical_failure": false
+  },
+  "ci_difference@0.5": {
+   "status": "matched",
+   "scale": 0.9267766952966369,
+   "k": null,
+   "guards": {
+    "confirm_en": 0.017901046522732438
+   },
+   "target_test_delta": 0.45480065921257284,
+   "english_kl": {
+    "confirm_en": 0.010716099497773844
+   },
+   "protected_delta": 0.48450216342662944
+  },
+  "ci_difference@1.0": {
+   "status": "matched",
+   "scale": 1.5606601717798214,
+   "k": null,
+   "guards": {
+    "confirm_en": 0.0362312259345219
+   },
+   "target_test_delta": 0.9581658429112928,
+   "english_kl": {
+    "confirm_en": 0.024394231302470995
+   },
+   "protected_delta": 1.0487304062678897
+  },
+  "historical_atom@0.5": {
+   "status": "not applicable (de only)",
+   "technical_failure": false
+  },
+  "historical_atom@1.0": {
+   "status": "not applicable (de only)",
+   "technical_failure": false
+  },
+  "neurons@0.5": {
+   "status": "matched",
+   "scale": 0.9816941738241592,
+   "k": 2,
+   "guards": {
+    "confirm_en": -0.0007880515065686457
+   },
+   "target_test_delta": 0.4846645388109931,
+   "english_kl": {
+    "confirm_en": 0.0032901678967956005
+   },
+   "protected_delta": 0.522610146423866
+  },
+  "neurons@1.0": {
+   "status": "matched",
+   "scale": 0.8901650429449552,
+   "k": 128,
+   "guards": {
+    "confirm_en": 0.017700067881880135
+   },
+   "target_test_delta": 0.9940617248929781,
+   "english_kl": {
+    "confirm_en": 0.0198819973538148
+   },
+   "protected_delta": 0.7573968213180016
+  },
+  "lora_rank1@0.5": {
+   "status": "matched",
+   "scale": 0.42677669529663687,
+   "k": null,
+   "guards": {
+    "confirm_en": -0.00014140277073301118
+   },
+   "target_test_delta": 0.496626981373491,
+   "english_kl": {
+    "confirm_en": 5.914103123108487e-05
+   },
+   "protected_delta": 0.1140566036618989
+  },
+  "lora_rank1@1.0": {
+   "status": "matched",
+   "scale": 0.6035533905932737,
+   "k": null,
+   "guards": {
+    "confirm_en": -0.00021637308186498182
+   },
+   "target_test_delta": 0.9758703790861984,
+   "english_kl": {
+    "confirm_en": 0.0001179399771680092
+   },
+   "protected_delta": 0.23595840766512113
+  },
+  "finetune_24@0.5": {
+   "status": "matched",
+   "scale": 0.6294417382415922,
+   "k": null,
+   "guards": {
+    "confirm_en": 0.0008433440635944235
+   },
+   "target_test_delta": 0.5078871784539059,
+   "english_kl": {
+    "confirm_en": 0.00011451953349901957
+   },
+   "protected_delta": 0.19417572432550892
+  },
+  "finetune_24@1.0": {
+   "status": "matched",
+   "scale": 0.8718592167691145,
+   "k": null,
+   "guards": {
+    "confirm_en": 0.0011741128461114291
+   },
+   "target_test_delta": 0.9910282554297611,
+   "english_kl": {
+    "confirm_en": 0.00021643838333367402
+   },
+   "protected_delta": 0.3856342948716262
+  }
+ },
+ "source": {
+  "readout_sha256": "a58b2147cff8fe1a228bf464fd29401749373129d0d9bb761951e3e567e517e4"
+ }
+}

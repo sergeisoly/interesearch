@@ -1,0 +1,610 @@
+---
+image: ../social-card.png
+description: "A comparison of parameter-decomposition subcomponents, learned updates and neuron edits in a small language model."
+title: "Selective Language Damage with Parameter-Decomposition Subcomponents"
+subtitle: "13 October 2026"
+author:
+  - name: Sergei Solovev
+    affiliation: Independent researcher
+abstract: |
+  I study selective language damage from editing individual adVersarial Parameter Decomposition (VPD)
+  subcomponents in a four-layer, 67M-parameter model, measuring the effects on a target language and its close relative.
+  A fixed rule uses target and English text to select one subcomponent per target. Six edits across three pairs
+  (German and Dutch, Spanish and Portuguese, French and Italian) raise target cross-entropy (CE) by 0.5 or 1 nat/token
+  on validation text. I compare them with rank-one LoRA, full-matrix fine-tuning and neuron edits calibrated the same way.
+
+  On 58 European Parliament session dates evaluated once after the edits were fixed, the subcomponent edits raised
+  the related language’s CE by at most 0.0053 nat/token. All 18 simultaneous 95% intervals for the differences from
+  the comparators lay below zero. The subcomponent edits therefore did less related-language damage at matched
+  validation effects. A post hoc check found achieved target effects to agree within ±0.1 nat/token in 15 of 18
+  comparisons. The learned updates preserved English output better.
+
+  Exploratory comparisons on previously evaluated development dates generally narrowed the gaps to learned updates
+  trained for 2,000 steps, while retaining the subcomponent edits’ advantage at the tested budgets. The subcomponent
+  edits also did less related-language damage than a whitened rank-one selector. The result concerns selective fixed edits in this model;
+  the dictionary’s contribution, the mechanism and generalization of the selection rule remain unresolved.
+citation:
+  type: article
+  id: solovev2026selective
+  issued: 2026-10-13
+  note: "Version 0.1.0"
+  pdf-url: https://sergeisoly.github.io/interesearch/selective-editing/index.pdf
+format:
+  html:
+    embed-resources: true
+    google-scholar: true
+    appendix-cite-as: false
+  pdf:
+    papersize: a4
+    geometry: margin=2.5cm
+    fontsize: 10pt
+    mainfont: STIX Two Text
+    mathfont: STIX Two Math
+    colorlinks: true
+    fig-pos: "H"
+    tbl-cap-location: top
+    include-in-header:
+      - file: ../pdf-title.tex
+      # STIX Two Text has no ≤, ≈ or arrows. Take them from the math font
+      - text: |
+          \usepackage{newunicodechar}
+          \newunicodechar{≤}{\ensuremath{\leq}}
+          \newunicodechar{→}{\ensuremath{\rightarrow}}
+          \newunicodechar{←}{\ensuremath{\leftarrow}}
+          \newunicodechar{≈}{\ensuremath{\approx}}
+          \newunicodechar{‖}{\ensuremath{\Vert}}
+          % the interval columns of the wide tables fit on one line at a smaller size
+          \usepackage{etoolbox}
+          \AtBeginEnvironment{longtable}{\small\setlength{\tabcolsep}{4pt}}
+number-sections: true
+crossref:
+  fig-prefix: Figure
+  tbl-prefix: Table
+  sec-prefix: Section
+---
+
+::: {.content-visible when-format="html"}
+::: {.study-resources}
+[Visual guide](explainer.qmd) · [PDF](index.pdf) · [GitHub](https://github.com/sergeisoly/interesearch/blob/main/papers/guides/selective-editing.md)
+:::
+:::
+
+## Introduction {#sec-question}
+
+A model edit that changes one behaviour usually changes others too. Model-editing work evaluates *locality*:
+inputs outside an edit's scope should keep their predictions [@yao2023editing, sec. 2]. ROME, for example,
+scores an edited fact by whether the model retains facts about nearby subjects [@meng2022locating, sec. 3.3].
+
+I use deliberate language damage as a controlled test of edit selectivity: each edit is calibrated to the same
+target-language damage on validation text, then evaluated for its effects on another language.
+A demanding neighbour for a language edit is a closely related language. Zeroing the parameters or neurons
+most important for one language also degrades its relatives: Spanish removal raises Italian and Portuguese
+perplexity [@zhang2024unveiling, Table 11], and deactivating French neurons also affects Spanish
+[@tang2024language, sec. 3.3.1].
+
+Parameter decompositions may allow narrower edits. adVersarial Parameter Decomposition (VPD)[^vpd-editing]
+approximates each weight matrix of a model by a sum of rank-one *subcomponents*, trained so that few are
+needed on any input [@bushnaq2026interpreting, sec. 2]. It follows earlier attribution-based and stochastic
+decompositions [@braun2025interpretability; @bushnaq2025stochastic]. If a subcomponent is specific to one
+language, an edit along it, $W \leftarrow W + \alpha A$, might change that language and spare its relatives.
+This study uses [Goodfire's four-layer, 67M-parameter decoder-only model](https://www.goodfire.com/research/interpreting-lm-parameters)
+decomposed in the VPD report.
+
+[^vpd-editing]: A separate experiment in the VPD report tests manual changes to a subcomponent's write vector using an unembedding direction. A LoRA update of the same matrix trained on 947 examples does better on both of its KL measures [@bushnaq2026interpreting, sec. 6].
+
+This study is a small follow-up inspired by Lucius Bushnaq's LessWrong post, ["Exploration: fine-tuning with parameter decomposition"](https://www.lesswrong.com/posts/ieoWstubDQWLrMnhH/exploration-fine-tuning-with-parameter-decomposition).
+Bushnaq trains the scalar prefactors of selected subcomponents of the same model to suppress German. One
+subcomponent, chosen by its interpretation label, reaches chance-level German with little English damage and
+spares French and Spanish, while also damaging Italian [@bushnaq2026exploration]. His comparison uses matched
+training budgets and LoRA baselines, with varying achieved effects.
+
+I extend Bushnaq's scalar-edit comparison to three language pairs with a fixed rule for selecting one
+subcomponent per target from target and English text.
+I match target effects on validation text and add full-matrix fine-tuning and neuron baselines.
+
+The pairs are German (de) and Dutch (nl), Spanish (es) and Portuguese (pt), and French (fr) and Italian (it).
+In each pair the related language is *protected*: it is evaluated after selection and training.
+I calibrate each edit to raise target cross-entropy (CE) by τ = 0.5 or 1 nat/token on validation text.
+
+The outcome is the CE rise of the protected language on European Parliament session text [@koehn2005europarl].
+After fixing the six edits and comparators, I evaluate them once on 58 new session dates to test whether
+the difference in related-language damage carries over to new text.
+
+## Setup {#sec-setup}
+
+The [method details](#sec-app-methods) give window and set sizes, grids, tolerances and training recipes.
+
+**Model and subcomponents.** The base model $W_0$ is the four-layer, 67M-parameter decoder-only model
+decomposed in the VPD report. It was trained on a subset of the Pile [@bushnaq2026interpreting, sec.
+3.1; @gao2020pile]. Edits act on its 24 weight matrices: in each layer, the query, key, value and output
+projections of attention and the two MLP matrices. The decomposition supplies 38,912 rank-one subcomponents in
+all, each of the form $A_c = u_c v_c^\top$. Subcomponents are named by layer, matrix and index: `0.attn.o:268`
+is subcomponent 268 of the attention output projection of layer 0.
+
+**The edit.** An edit along subcomponent $c$ of matrix $m$ is $W_m \leftarrow W_m + \alpha A_c$, with the
+subcomponent not normalized. In VPD every subcomponent carries a mask coefficient that equals 1 in the
+unedited model. The edit moves it to $1 + \alpha$. We write $\alpha = s \cdot a$, with a sign $s = \pm 1$ and
+a dose $a > 0$. With $s = -1$, as for every subcomponent selected here, the coefficient is $1 - a$: a dose
+below 1 shrinks the subcomponent's contribution, a dose of 1 removes it, and a dose above 1 reverses its sign.
+The edit norm is $|\alpha|\,\lVert A_c\rVert_F$.
+
+**Text and effects.** Every Europarl set has one window per session date, parallel across languages. The *CE
+rise* of an edit is measured in nat/token. For each window, I subtract the base model $W_0$'s mean next-token CE
+from the edited model's, then average these differences over windows. Each target has three overlapping
+*draws* of its Europarl training windows. The English *retain pool* mixes Europarl English training text,
+WikiText-2 validation text [@merity2017pointer] and English-filtered Pile validation text.
+
+### Selecting the subcomponent {#sec-selection}
+
+The rule scores each subcomponent by its local effect on target CE relative to its local effect on English
+output. Let $g_c$ be the derivative of the mean target CE on the draw with respect to the subcomponent's mask
+coefficient. Let $q_c$ be the curvature of the English output along the same coordinate, estimated on the
+retain pool with labels sampled from $W_0$. This estimates the directional Fisher information of the model's
+predictive distribution. The rule ranks subcomponents by the *gradient-to-retain-curvature score*
+$$\frac{g_c^2}{q_c + \varepsilon \lVert A_c\rVert^2},$$
+where a small floor $\varepsilon$ keeps subcomponents
+with almost no measured curvature from dominating.
+
+The rule then tests a shortlist of the best-ranked subcomponents on the target training draw. For each
+subcomponent, with sign $s = \operatorname{sign}(g_c)$, it raises the dose step by step up to 2. It accepts
+the first subcomponent whose target CE rise reaches 1 nat/token. If none does, it accepts the first that
+reached 0.5, and otherwise it finds no feasible subcomponent.
+
+The rule chose the same subcomponent in all three draws of each target: `0.attn.o:268` for German,
+`0.attn.o:676` for Spanish and `0.attn.o:640` for French. They all lie in the attention output projection of
+the first layer and have sign $-1$.
+
+### Comparators {#sec-comparators}
+
+Like the selection rule, the comparators use only target and English text for selection and training.
+
+- **Rank-one LoRA** [@hu2022lora] learns both vectors of an update to the matrix that holds the selected subcomponent, the attention
+  output projection of layer 0. It uses the same matrix and rank as the subcomponent edit.
+- **Full-matrix fine-tuning** updates all 24 weight matrices.
+- **Neuron edits** use the top $k$ MLP neurons ranked by how much more often they are active on the target
+  draw than on the English retain pool. The edit scales their output weights down, with $k$ and the scale
+  calibrated to τ, in the spirit of language-specific neurons [@tang2024language; @kojima2024multilingual].
+- **The randomized-dictionary control** applies the same selection rule to a randomized dictionary. In each
+  matrix, one random signed permutation transforms the output coordinates of every subcomponent, and another
+  transforms the input coordinates. This preserves their norms and pairwise angles but removes their alignment
+  with $W_0$.
+
+The two learned updates are trained, one per draw, on a target CE objective plus the KL divergence from $W_0$
+on the English retain pool, for a fixed 200 steps. The final update is scaled down to reach τ.
+
+A separate comparison family uses single subcomponents chosen by alternative selection rules:
+
+- the top subcomponent of an orthogonal matching pursuit [@pati1993orthogonal; @mallat1993matching] of the
+  full-matrix fine-tuning update or of a LoRA update trained across all matrices
+- a causal-importance heuristic that takes the top-1 subcomponent, adapted from Bushnaq's top-16
+  procedure [@bushnaq2026exploration]
+- for German only, the previously chosen subcomponent `0.attn.o:268`.
+
+These comparisons have their own multiplicity correction and receive no confirmatory verdicts
+([appendix](#sec-app-references)).
+
+### Calibration and the six edits {#sec-calibration}
+
+Every method is calibrated on target Europarl validation text. A short search over its dose sets the target CE
+rise to τ. An edit is *matched* if its validation effect lies within 0.02 nat/token of τ. Only matched edits
+enter a contrast. The effects achieved on the readout dates can differ and are reported with the results.
+
+{{< include ../../results/selective_editing/interventions_table.md >}}
+
+The three draws yield the same six fixed scaled edits, one per target and τ. Three reduce the selected
+contribution without reversing it, and three reverse its sign. All coefficients remain nonzero (@tbl-interventions).
+
+### What was fixed, and what was known {#sec-access}
+
+Selection and training used only target and English text. Earlier research had used protected-language
+development text and identified the German subcomponent, so the selection history was not blind (@sec-access-details).
+
+I fixed the edits, comparators and analysis before evaluating them once on 58 further session dates.
+Those dates were not used for selection, calibration or re-matching. This tests the six fixed edits on new
+text in the same languages. Evaluating the selection procedure itself remains an open question.
+
+### Readouts, eligibility and intervals {#sec-analysis}
+
+**Guards.** English test sets determine which matched edits are usable: Europarl, WikiText-2 and Pile test
+text on the development readout, and English text from the confirmatory dates on the confirmatory readout. An
+edit is unusable if any guard's CE rises by more than 0.1 nat/token. On the confirmatory dates it must also
+have been usable on development. This is an eligibility rule fixed in advance. Two usable edits can still
+differ greatly in how much they change English (@sec-english).
+
+**Contrasts.** For each protected-language session date, a contrast takes the CE rise of the subcomponent edit
+minus that of the comparator, averaged over the draws in which both are matched and usable. Its estimate is
+the mean over dates. Negative values mean less protected-language damage for the subcomponent edit. The *claim
+family* comprises four comparators × three pairs × two values of τ, or 24 planned contrasts.
+
+**Intervals.** Every confidence interval in this paper is a simultaneous 95% interval from a bootstrap over
+session dates [@efron1979bootstrap], with one resample shared by every contrast of a family and the max-|t|
+critical value of a simultaneous band [@montielolea2019simultaneous, supplement, Algorithm 3]. The intervals
+describe uncertainty across session dates for these fixed edits. The bootstrap varies dates while holding the
+draws, training seeds, subcomponents, language pairs and model fixed.
+
+**Confirmatory verdicts.** Each claim contrast with a development interval receives one verdict on the
+confirmatory readout, according to a rule table fixed before the set was opened. It is "reproduced on confirm"
+if its interval excludes zero with the development sign and no used draw has a target CE rise outside τ ± 0.1.
+A rise outside this band is the *target flag*.
+
+**Post hoc analyses.** Two analyses were chosen after the results were known, outside the protocol.
+The frozen verdicts remain those of the original analysis. The first asks whether the target effects achieved
+on the readout dates were comparable (@sec-agreement). The second counts how often the learned updates move English
+less (@sec-english).
+
+## Results {#sec-results}
+
+### Target change against protected damage {#sec-effects}
+
+All matched edits passed the English guards, and on the confirmatory dates no edit raised the target flag.
+@fig-effects shows each edit on the confirmatory dates as target CE rise against protected-language CE rise.
+At both values of τ and for all three pairs, the subcomponent edits have the lowest protected-language CE rise.
+Across the six subcomponent edits, the protected-language rise is 0.0003 to 0.0053 nat/token. The other
+methods raise it by about 0.03 to 0.88 (@tbl-effects).
+
+![Target CE rise against protected CE rise for every edit on the 58 confirmatory dates (subcomponent edits: one per pair and
+τ, other methods: one per draw). The bands mark τ ± 0.1, the frozen tolerance of the target flag. At both values of τ the
+subcomponent edits raise the protected language's CE far less than the edits calibrated to the same
+τ.](../../results/selective_editing/figures/effects.svg){#fig-effects width="100%" fig-alt="Three scatter panels compare target and protected-language CE rises for German–Dutch, Spanish–Portuguese and French–Italian edits at two calibrated effects. VPD subcomponent edits cause much less protected-language damage than the comparators, including the primary German edit with Dutch protected. Shapes identify methods. Shaded bands show the frozen target tolerance."}
+
+### The protected contrasts {#sec-contrasts}
+
+On the confirmatory dates, all 18 claim contrasts that have an estimate lie below zero, with upper interval
+ends at −0.023 or below, and every verdict is "reproduced on confirm" (@fig-contrasts, top row, @tbl-claims). The largest difference between a confirmatory estimate and its development estimate is 0.033.
+
+The 18 contrasts share six subcomponent edits: each edit is compared with three comparators. The three draws
+vary only the comparators' training data, so the contrasts are dependent.
+
+### Achieved target effects {#sec-agreement}
+
+The edits were calibrated to the same effect on validation text. On the readout dates the achieved effects
+differ somewhat (@fig-effects). To assess whether less protected damage came with a smaller
+target effect, I estimated, post hoc, the difference in target CE rise between the subcomponent edit
+and each comparator, its *target gap*, in one simultaneous family with the protected contrasts ([method
+details](#sec-app-methods)). A target gap counts as agreement if its whole interval lies within ±0.1
+nat/token. This band was chosen after the results. It compares two methods and is separate from the frozen
+target flag, which compares one edit with τ.
+
+![Contrasts of the subcomponent edit with each claim comparator, on the confirmatory (filled, upper marker) and development
+(open, lower marker) dates, with simultaneous 95% intervals. Top: difference in protected CE rise, the frozen claim
+family. The axes differ between columns. Bottom: difference in achieved target CE rise, from the post hoc family of
+@sec-agreement, with the ±0.1 nat/token agreement band. Negative values in the top row mean less protected-language damage
+for the subcomponent edit. Positive values in the bottom row mean a larger target
+effect.](../../results/selective_editing/figures/contrasts.svg){#fig-contrasts width="100%" fig-alt="Six forest panels compare VPD subcomponent edits with three comparators on confirmation and development dates, using simultaneous 95% intervals. The 18 confirmation differences in protected-language damage are below zero. A separate bottom row checks achieved target-effect agreement against ±0.1 nat/token. Filled markers indicate confirmation and open markers development. Top-row axes differ between comparators."}
+
+```{=latex}
+\begin{samepage}
+```
+
+On the confirmatory dates, 15 of the 18 target gaps agree by this criterion (@fig-contrasts, bottom row). The
+three exceptions are all at τ = 1, and in each the point estimate lies inside the band:
+
+- German and Dutch against rank-one LoRA: +0.057 [+0.007, +0.107]
+- French and Italian against full-matrix fine-tuning: +0.077 [+0.020, +0.134]
+- French and Italian against rank-one LoRA: +0.038 [−0.027, +0.104].
+
+```{=latex}
+\end{samepage}
+```
+
+On the development dates, 17 of 18 target gaps agree. The exception is French and Italian against full-matrix
+fine-tuning. All four exceptions have positive point estimates, though the interval for French and Italian
+against rank-one LoRA permits a smaller target effect for the subcomponent edit. In this larger post hoc
+family, all 18 protected-CE intervals and all 18 protected-KL intervals lie below zero on both readouts. Protected KL is
+$D_{\mathrm{KL}}(p_{W_0} \,\|\, p_{\text{edit}})$, averaged over next-token positions on protected-language text.
+
+### English: where the learned updates are better {#sec-english}
+
+The guard rule only asks whether English CE rose past its limit. A finer measure is the KL divergence
+$D_{\mathrm{KL}}(p_{W_0} \,\|\, p_{\text{edit}})$ of the edited model's English next-token distribution from
+that of $W_0$, averaged over positions. By this measure, both learned updates preserve English better than the
+subcomponent edits (@tbl-effects). On the development readout, over three pairs × three draws × two values of τ ×
+four English sets (the validation set and the three guards), the LoRA update has the lower KL in 72 of 72
+comparisons and full-matrix fine-tuning in 65 of 72. On the English confirmatory text both have the lower KL
+in 18 of 18.
+
+The subcomponent edits also change English little in absolute terms: their English KL on the confirmatory
+dates is below 10⁻³ nat/token. Their weight changes have larger norms: 0.29
+to 0.47, against 0.12 to 0.24 for the LoRA updates and 0.07 to 0.11 for full-matrix fine-tuning. The learned
+updates were trained with an explicit English KL term. None of the methods had a term for the protected
+language. The comparison therefore measures how well the methods spare a related language absent from
+their training objective.
+
+{{< include ../../results/selective_editing/effects_table.md >}}
+
+### The randomized-dictionary control gave no estimate {#sec-null}
+
+The control applies the selection rule to the randomized dictionary. It found no feasible subcomponent in any
+of the 9 target–draw combinations: no shortlisted subcomponent reached even 0.5 nat/token on the target
+training draw within the dose limit of 2. The randomized-dictionary control therefore has no edit, and its six
+claim contrasts have no estimate. Because some planned contrasts are empty, the frozen analysis has the
+overall status "conditional" rather than "complete".
+
+The control was meant to measure how selective an edit of the same form is when the subcomponents are
+unrelated to the model’s weights. Its failure to produce an edit leaves the dictionary's contribution unresolved.
+Whether a randomized subcomponent at a larger dose could spare the protected language remains unknown. The
+alternative subcomponent comparisons and whitened rank-one selector leave the contributions of the dictionary
+and selection rule unresolved as well (@sec-references; @sec-extended-comparisons).
+
+### Subcomponents chosen by other rules {#sec-references}
+
+The [alternative selection comparisons](#sec-app-references) use single subcomponents of the same dictionary.
+Every estimable contrast is at or below zero. The causal-importance heuristic picked `0.attn.o:41` in 8 of 9
+target–draw combinations and, on the confirmatory dates, raised the protected CE by 0.48 to 1.37 nat/token
+more than the selected subcomponent, at achieved target rises close to the selected subcomponent's
+(@tbl-references). The previously chosen German subcomponent is the
+selected one, so it gives an identical edit. Selectivity therefore varies among subcomponents
+of the same dictionary. By contrast, the randomized-dictionary control held the selection rule fixed and
+changed the dictionary (@sec-null).
+
+## Longer training and alternative rank-one directions {#sec-extended-comparisons}
+
+After the confirmatory readout, I ran exploratory comparisons on the previously evaluated development dates.
+The six subcomponent edits were compared with a whitened rank-one selector outside the VPD dictionary and learned
+updates trained for 2,000 steps, all calibrated to the same τ. All 18 protected-CE intervals of the all-run family and all 12 of
+the family excluding unstable learned runs lie below zero. The achieved target rises differ by at most
+0.07 nat/token. The [appendix](#sec-app-extended) gives the methods, full results and study record.
+
+The expanded training recipe lowered the protected-language rise of full-matrix fine-tuning in all six target
+and τ combinations and that of LoRA in five of six. Steps, margin, grid and seeds changed together, with
+retention still limited to English. Convergence remains unestablished at either budget.
+
+The whitened rank-one selector uses the selected VPD subcomponent's norm and the main selector's ε, leaving
+the dictionary's contribution entangled with the selector's. The SVD comparator gave no estimate.
+
+## Limits of these conclusions {#sec-limits}
+
+The result covers six edits in one four-layer model, three language pairs and two values of τ. The measured
+outcomes are protected-language CE on parliamentary text and English CE guards and KL. The confirmatory
+readout tests fixed edits on new text in the same languages; uncertainty varies session dates only
+(@sec-analysis). Testing the selection rule in other models, explaining the edits' selectivity and evaluating
+tasks beyond next-token prediction remain open.
+
+## Conclusion {#sec-conclusion}
+
+In this model, one subcomponent per target language, chosen from target and English text and calibrated to
+raise target CE by 0.5 or 1 nat/token on validation text, raised the CE of the related language by at most
+0.0053 nat/token on 58 new session dates. Rank-one LoRA and full-matrix fine-tuning updates calibrated to the
+same validation rise raised it by about 0.03 to 0.41, and neuron edits by 0.42 to 0.88. All 18 simultaneous
+intervals of the differences lie below zero. A post hoc check found agreement in achieved target effects
+within ±0.1 nat/token in 15 of the 18 comparisons. In the other three the subcomponent edit's target effect
+was larger on average, though one interval also allows a smaller effect. The advantage does not extend to
+English, where the learned updates move the output distribution less.
+
+Exploratory comparisons on the development dates found the same direction against a whitened rank-one selector and against learned
+updates trained for 2,000 steps. The randomized-dictionary control found no edit to compare, and the selection
+history was not blind (@sec-access). Together, the comparisons show that selective single-subcomponent edits
+exist for these three pairs in this model, with effects reproduced on a fixed confirmatory readout.
+
+**AI assistance.** I used OpenAI Codex and Anthropic Claude for research planning, code development, data analysis, and manuscript preparation.
+Scientific Agent Skills [@kassis2026scientific] supplied the scientific-writing, scientific-critical-thinking,
+peer-review and citation-management workflows used to review organization, claims and references.
+
+```{=latex}
+% Keep the final reference with the bibliography at the body font size.
+\apptocmd{\CSLReferences}{\setlength{\itemsep}{0.25\baselineskip}}{}{}
+```
+
+## References {.unnumbered}
+
+::: {#refs}
+:::
+
+```{=latex}
+\clearpage
+\compactappendix
+```
+
+## Method details {#sec-app-methods .appendix}
+
+**Subcomponents and text.** The decomposition has 512 subcomponents each for query and key, 1,024 each for
+value and output, 3,072 for the MLP input and 3,584 for the MLP output matrix of each layer. The Europarl text
+comes from release v7 of the corpus [@koehn2005europarl], downloaded from
+<https://www.statmt.org/europarl/v7/europarl.tgz>. Each Europarl split has one 257-token window per session date (256
+predictions). Each target has three draws of 64 of its 128 Europarl training windows. Calibration uses 32 target-language
+Europarl validation windows per target. The English validation set has 64 windows: 32 Europarl and 32 English-filtered
+Pile windows. The English retain pool
+has 256 windows: 128 of Europarl English training text, 64 of WikiText-2 validation text and 64 of
+English-filtered Pile validation text.
+
+**Selection.** For softmax cross-entropy, the Fisher information matrix equals the generalized Gauss–Newton
+matrix [@martens2020new, sec. 9.2]. It differs from the empirical Fisher, which uses the data's labels
+[@kunstner2019limitations, sec. 1]. The curvature $q_c$ is the mean squared directional score over the retain pool, with eight sets
+of labels sampled from $W_0$ per window. The floor $\varepsilon$ is the 1st percentile of $q_c / \lVert
+A_c\rVert^2$ over subcomponents. The top 64 subcomponents are re-ranked with the larger of $q_c$ and a second
+estimate on 256 other English windows. The search raises the dose on the grid $0.0625 \cdot \sqrt{2}^{\,k}$
+for $k = 0, \ldots, 10$, that is up to 2. Before any selection, $q$ was checked against finite-difference
+curvature on English windows. The check, including contraction, batch splitting and scaling, passed on the
+NVIDIA L40S used for the original runs. On the tested A10 and L4, the batch-splitting test failed identically
+in the original and released implementations. The checked selection reruns are limited to the L40S, for the
+German target's first draw with the VPD dictionary and one randomized dictionary. Fisher-label sampling
+depends on the GPU model, so selections can differ on other GPUs.
+
+**Calibration.** The dose grid is scanned and the first crossing of τ is bracketed. Linear bisection, at most
+five steps, stops at the first point within the matching tolerance. The neuron edit scales the output weights
+of the top $k$ neurons by $1 - f$. Its calibration takes the smallest $k$ among powers of two from 1 to 256
+whose full removal reaches τ, then calibrates $f$. The chosen $k$ ranges from 2 to 256. The
+randomized-dictionary permutations use a separate seed per draw.
+
+**Learned updates.** The objective is a hinge on target CE, $\max(0, 1 - \Delta\mathrm{CE})$ per window, plus
+the KL divergence from $W_0$ on the English retain pool with weight 1. Training uses Adam [@kingma2015adam]
+with 10 warm-up steps and gradient clipping at 1.0, 8 target and 8 English windows per step, for 200 steps.
+The edit is the final update $D$ scaled down, $\beta D$ with $\beta \le 1$, and $\beta$ is calibrated like a
+dose. The learning rate was chosen once per target, on draw 0, by the lowest English validation KL at τ = 1.
+The LoRA grid was {1e-4, 3e-4, 1e-3, 3e-3} and the full-matrix fine-tuning grid {1e-6, 3e-6, 1e-5}. The choice
+was 3e-3 for LoRA and 1e-6 for full-matrix fine-tuning on all three targets, the top and the bottom of their
+grids.
+
+### Extended comparisons {#sec-app-extended}
+
+The comparisons were specified before these runs. I measured the six subcomponent edits again, next to four
+comparators calibrated to the same τ:
+
+```{=latex}
+\begin{samepage}
+```
+
+- **SVD components.** The selection rule of @sec-selection is applied unchanged to the rank-one terms of a
+  singular value decomposition of the 24 weight matrices. These terms reconstruct the weights, whereas VPD
+  leaves a residual that is unchanged by its subcomponent edits.
+- **A whitened rank-one selector.** In each matrix, this procedure finds a direction outside the VPD dictionary
+  with the largest squared target gradient relative to the damped K-FAC curvature of the English retain text
+  [@martens2015optimizing], using the norm of that target–draw combination's VPD subcomponent and the
+  selector's ε. It then scores the direction with the same rule and tests doses from 1/64 to 8.
+- **Longer-trained rank-one LoRA and full-matrix fine-tuning.** The learned updates are trained for 2,000
+  steps instead of 200, with a hinge margin of 1.5 instead of 1, wider learning-rate grids and three seeds per
+  draw.
+
+```{=latex}
+\end{samepage}
+```
+
+Each side of a contrast is the mean over its matched and usable runs. The analysis compares these means
+without pairing runs by draw. The contrasts form one simultaneous family. The learned-update contrasts are
+repeated as a second family without the runs flagged as unstable, 7 of the 27 LoRA runs. For each interval, the analysis
+reports its direction and whether it lies wholly within ±0.02 nat/token. These runs used a different GPU model,
+which changes the sampled Fisher labels. Selection found the same subcomponents in all nine target–draw
+combinations, and the subcomponent-edit readout matched the main readout within 1.5·10⁻⁶ nat/token.
+
+{{< include ../../results/selective_editing/extended_comparisons_table.md >}}
+
+All 18 estimable intervals of the all-run family and all 12 of the stable-run family lie below zero, and none
+lies within ±0.02 (@tbl-extended-comparisons). The closest to the band is French and Italian at τ = 0.5
+against rank-one LoRA, −0.017 [−0.021, −0.013]. The achieved target rises of the two sides differ by at most
+0.07 nat/token. The subcomponent edit's target rise is larger in 14 of 18 comparisons.
+
+The longer budget lowered the protected-language rise of full-matrix fine-tuning in all six target and τ
+combinations, to 0.04–0.34 nat/token from 0.06–0.40 at 200 steps, and that of LoRA in five of six, to 0.02–0.18
+from 0.03–0.19. The SVD comparator gave no estimate: every SVD edit that reached τ raised an English guard by
+more than 0.1 nat/token, and three of nine did not reach τ = 1.
+
+**Chronology of the exploratory comparisons.** The comparisons, labels and limits were declared on 12 October
+2026, before the runs. The 5% tolerance for reproducing the main selection's curvature floor across GPU models
+was added after one selection had finished but before its result was read. The analysis rules were fixed
+before any readout, after the selection outcomes, learning-rate choices and target and English validation
+effects of the rate grid had been seen. The records were then frozen, and the readout was run. The analyzer's
+two properties were implemented after readout but before any readout measurements were opened or analysed.
+This sequence comes from the author's records and is not independently timestamped.
+
+**Diagnostics for the exploratory comparisons.** A learned run is flagged as unstable if its English validation
+KL at step 2,000 is more than twice its minimum from step 100 onward. The second comparison family excludes
+these runs. A change of less than 10% in English validation KL between steps 1,500 and 2,000 is called a
+plateau. Only 6 of the 54 training runs used in the comparisons met it. Including the 18 additional
+learning-rate candidates gives 7 of 72, all full-matrix fine-tuning runs. This diagnostic does not establish
+convergence of the training objective and does not determine which edit is selected. At 200 steps the learned
+comparators' learning rates lay at the edges of the tested grids. At 2,000 steps they still caused more related-language damage.
+
+### Readouts and intervals {#sec-app-readouts}
+
+**Readouts.** The development guards are Europarl English test text (64 windows), WikiText-2 test text (32
+windows) and Pile test documents (512 windows). The confirmatory guard is English text from the 58 confirmatory dates. The
+confirmatory set has 48 main and 10 reserve dates, analysed as one set.
+
+**Intervals.** Dates are resampled with replacement, one resample shared by every contrast of a family. Each
+contrast's standard error is the standard deviation of its resampled means, and the interval is the estimate ±
+$c$ standard errors. The critical value $c$ is the 95% quantile, over resamples, of the largest absolute
+standardized deviation in the family. With 2,000 resamples (seed 0), $c$ = 2.780 for the claim family on the
+58 confirmatory dates and 2.814 on the 64 development dates. For the alternative subcomponent-selection
+family, $c$ is 2.817 on the confirmatory dates and 2.772 on development.
+
+**Verdicts.** The first applicable rule in the verdict table determines the result. No interval or a technical
+failure gives "not established". A target flag in any used draw gives "effect not maintained". An interval
+that excludes zero with the development sign gives "reproduced on confirm", and with the opposite sign "not
+reproduced". Anything else is "not established".
+
+**Target gaps.** The post hoc target gaps, the protected-CE contrasts and the corresponding protected-KL
+contrasts form one family of 54 coordinates per readout, with the per-date values averaged over draws. The
+family has a joint bootstrap over dates (20,000 resamples, seed 20261011) and a max-|t| critical value of
+3.149 on the confirmatory readout and 3.158 on the development dates.
+
+### Protocol records and prior access {#sec-access-details}
+
+- **Freeze and readout.** The selection rule, comparators, calibration, guard rule and analysis were fixed in
+  code and a protocol, with a freeze record dated 11 October 2026. The development readout and its analysis
+  ran right after the freeze. A second set of 58 session dates was read once, later the same day, with the
+  frozen edits unchanged. An amendment written before any window was parsed fixed the readout procedure.
+- **Prior knowledge.** The research before the freeze was not blind. The German subcomponent
+  `0.attn.o:268` had been chosen in an earlier experiment with Dutch in view, and it was the top German
+  candidate in an earlier pilot run of this selector. Dutch, Portuguese and Italian text from the development
+  splits, and the NTREX Dutch and Italian sets [@federmann2022ntrex], had been read or used in earlier
+  development. The protected-language damage on the 64 development dates is therefore part of the development readout.
+- **Pretraining.** The Pile contains a European Parliament component [@gao2020pile, sec. 2.17]. I did not
+  establish whether the subset on which the model was trained includes it, so the dates are new to this
+  workflow but may have appeared in pretraining.
+- **Dates and hashes.** The dates come from the documents' own records and the project's run log, and neither is
+  independently timestamped. The original protocol, freeze record and frozen code list are not published.
+  Their recorded hashes identify the files' contents; the date of those contents remains
+  unverified, so the records lack a timestamped preregistration.
+
+## The claim contrasts {#sec-app-claims .appendix}
+
+@tbl-claims lists the 18 claim contrasts of @fig-contrasts with their intervals. The six randomized-dictionary
+contrasts have no estimate (@sec-null).
+
+{{< include ../../results/selective_editing/claim_table.md >}}
+
+## Alternative subcomponent-selection comparisons {#sec-app-references .appendix}
+
+Each alternative selection rule chooses one subcomponent, which is calibrated in the same way as the main
+edit:
+
+- `omp_finetune` takes the first subcomponent of an orthogonal matching pursuit of the chosen full-matrix
+  fine-tuning update, the subcomponent with the largest absolute correlation with it, with the sign of that
+  correlation.
+- `omp_lora` does the same for a rank-one LoRA on all 24 matrices, learning rate 1e-4, with a checkpoint rule
+  that uses English text only for retention. This differs from the main rank-one LoRA comparator, which
+  updates one matrix.
+- `ci_difference` is a causal-importance heuristic that takes the top-1 subcomponent: the subcomponent with
+  the largest mean causal importance on the target draw minus that on the English retain pool, on the removal
+  side. Causal importance is the per-position importance learned for each subcomponent in VPD
+  [@bushnaq2026interpreting, sec. 2.3]. Bushnaq ranks subcomponents the same way but trains the top 16, and
+  his single-subcomponent edit used a subcomponent chosen by its label instead of the ranking
+  [@bushnaq2026exploration]. The selection heuristic adapts that top-16 procedure to selecting one subcomponent.
+- `historical_atom` uses the previously chosen subcomponent `0.attn.o:268` on the removal side, for German
+  only. This reuses a previously chosen intervention with its selection fixed by the earlier experiment.
+
+As in the main results, @tbl-references gives each alternative edit's achieved target rise next to its
+contrasts, averaged over the same draws.
+
+{{< include ../../results/selective_editing/references_table.md >}}
+
+- **Identical edits.** For German, the previously chosen subcomponent is the selected subcomponent with the
+  same sign and dose, so its contrast is exactly zero. `omp_lora` also picks `0.attn.o:268` in draws 0 and 1,
+  where its edit equals the selected one. In draw 2 it picks `0.attn.v:271`, the subcomponent that
+  `omp_finetune` picks in all German draws. Only draw 2 contributes a nonzero contrast. The reported estimate
+  averages all three draws. For French, `omp_finetune` in draw 0 picks `0.attn.o:640`, the selected
+  subcomponent.
+- **Spanish.** `omp_finetune` picks `3.mlp.up:1435` in all draws, which needs a dose of 1.927 for τ = 0.5 and
+  does not reach τ = 1 within the limit. `omp_lora` reaches τ = 0.5 only in draw 2, where it picks the same
+  subcomponent, so its estimate equals `omp_finetune`'s while its status is conditional. Neither has an edit
+  at τ = 1.
+- **French.** The pursuit of the full-matrix fine-tuning update picks a different subcomponent in each draw.
+  `omp_lora` has an edit only in draw 0: in draws 1 and 2 no checkpoint of the LoRA across all matrices met
+  its checkpoint rule. In draw 1, `omp_finetune` and `ci_difference` do not reach τ = 1.
+
+## Reproducibility and availability {#sec-reproduction .appendix}
+
+Code, saved measurements and reproduction instructions are on
+[GitHub](https://github.com/sergeisoly/interesearch/blob/main/papers/guides/selective-editing.md).
+Saved per-date measurements support analysis replay. The confirmatory token windows and texts are not released,
+so that model evaluation cannot be rerun from this checkout. The guide describes the available model procedures.
+
+::: {.content-visible when-format="html"}
+
+<details>
+<summary>Cite this article</summary>
+
+```bibtex
+@misc{solovev2026selective,
+  author = {Solovev, Sergei},
+  title  = {Selective Language Damage with Parameter-Decomposition Subcomponents},
+  year   = {2026},
+  month  = oct,
+  note   = {Version 0.1.0},
+  url    = {https://sergeisoly.github.io/interesearch/selective-editing/}
+}
+```
+
+</details>
+
+:::

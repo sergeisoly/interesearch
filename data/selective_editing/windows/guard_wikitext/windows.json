@@ -1,0 +1,56 @@
+{
+ "role": "guard_wikitext",
+ "languages": [
+  "en"
+ ],
+ "rows": [
+  "wikitext-2-raw-v1/test:article_index=18",
+  "wikitext-2-raw-v1/test:article_index=59",
+  "wikitext-2-raw-v1/test:article_index=13",
+  "wikitext-2-raw-v1/test:article_index=48",
+  "wikitext-2-raw-v1/test:article_index=41",
+  "wikitext-2-raw-v1/test:article_index=57",
+  "wikitext-2-raw-v1/test:article_index=24",
+  "wikitext-2-raw-v1/test:article_index=8",
+  "wikitext-2-raw-v1/test:article_index=27",
+  "wikitext-2-raw-v1/test:article_index=50",
+  "wikitext-2-raw-v1/test:article_index=5",
+  "wikitext-2-raw-v1/test:article_index=43",
+  "wikitext-2-raw-v1/test:article_index=33",
+  "wikitext-2-raw-v1/test:article_index=36",
+  "wikitext-2-raw-v1/test:article_index=26",
+  "wikitext-2-raw-v1/test:article_index=56",
+  "wikitext-2-raw-v1/test:article_index=52",
+  "wikitext-2-raw-v1/test:article_index=14",
+  "wikitext-2-raw-v1/test:article_index=3",
+  "wikitext-2-raw-v1/test:article_index=9",
+  "wikitext-2-raw-v1/test:article_index=42",
+  "wikitext-2-raw-v1/test:article_index=22",
+  "wikitext-2-raw-v1/test:article_index=40",
+  "wikitext-2-raw-v1/test:article_index=21",
+  "wikitext-2-raw-v1/test:article_index=20",
+  "wikitext-2-raw-v1/test:article_index=47",
+  "wikitext-2-raw-v1/test:article_index=31",
+  "wikitext-2-raw-v1/test:article_index=29",
+  "wikitext-2-raw-v1/test:article_index=45",
+  "wikitext-2-raw-v1/test:article_index=38",
+  "wikitext-2-raw-v1/test:article_index=7",
+  "wikitext-2-raw-v1/test:article_index=60"
+ ],
+ "provenance": {
+  "builder": {
+   "description": "corpus build of the Europarl, WikiText-2, Pile and NTREX-128 windows",
+   "sha256": "b8e309365a2f51302e9298cfd2ca1b8c5be598b639c628210fe936ee4ec3be24"
+  },
+  "salt": "vpd-diff-v1",
+  "tokenizer_sha256": "d4c0d99d84af59e9126913fafe5210822963e9a3065ee43e6833b358b0c2f825",
+  "row_format": "'<source>:<key>=<value>[,<key>=<value>]'; Europarl date = session date; WikiText article_index = index of the article within its split (articles start at ' = Title = ' header lines), window = window index within the article; Pile shard_row = row of the tokenized shard; Pile shard_doc_index = document index within the text shard; NTREX block = 0-based index of the 16-line block (lines 16 * block + 1 to 16 * block + 16)",
+  "rule": "WikiText-2-raw test articles (' = Title = ' header lines) in ascending int(sha256(salt + '|wikitext|test|' + title).hexdigest(), 16); the first 32 with >= 256 tokens; window = [EOS] + the article's first 256 tokens",
+  "sources": {
+   "wikitext-2-raw-v1/test": {
+    "url": "https://huggingface.co/datasets/Salesforce/wikitext/resolve/b08601e04326c79dfdd32d625aee71d232d685c3/wikitext-2-raw-v1/test-00000-of-00001.parquet",
+    "sha256": "5f1bea067869d04849c0f975a2b29c4ff47d867f484f5010ea5e861eab246d91"
+   }
+  }
+ }
+}

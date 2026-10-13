@@ -1,0 +1,150 @@
+---
+image: ../social-card.png
+description: "Comparing the effects of language-model weight edits on a target language and its close relative."
+title: "Selective language editing"
+format:
+  html:
+    embed-resources: true
+toc: false
+page-layout: full
+body-classes: research-explainer
+---
+
+::: {.study-resources}
+[Paper](index.qmd) · [PDF](index.pdf) · [GitHub](https://github.com/sergeisoly/interesearch/blob/main/papers/guides/selective-editing.md)
+:::
+
+::: {.visual-intro}
+Changing one behaviour in a language model can also affect behaviours we want to preserve. I test edit selectivity by deliberately weakening next-token prediction in one language and measuring the unwanted damage to another.
+
+Lucius Bushnaq's [Exploration: Fine-Tuning with Parameter Decomposition](https://www.lesswrong.com/posts/ieoWstubDQWLrMnhH/exploration-fine-tuning-with-parameter-decomposition)
+showed that changing one subcomponent's coefficient in [Goodfire's four-layer, 67-million-parameter language model](https://www.goodfire.com/research/interpreting-lm-parameters)
+could suppress German while largely sparing French and Spanish. I extend the comparison to a close relative of
+each target language: German/Dutch, Spanish/Portuguese and French/Italian. Using the same model and decomposition,
+I compare subcomponent edits with learned weight updates and neuron edits calibrated to the same target damage
+on validation text.
+:::
+
+## Edit one rank-one subcomponent
+
+[Goodfire's adVersarial Parameter Decomposition (VPD)](https://www.goodfire.com/research/interpreting-lm-parameters)
+writes a weight matrix as a sum of **rank-one subcomponents** plus a residual. Each subcomponent is formed from
+an input vector and an output vector. The edit changes one selected subcomponent's scalar coefficient, keeping
+both vectors fixed. All other coefficients and the residual stay fixed. A coefficient of zero removes the
+selected contribution. A negative coefficient reverses it.
+
+```{=html}
+<figure class="visual-figure visual-concept" aria-label="Schematic weight edit" aria-describedby="visual-matrix-caption">
+  <div class="visual-coefficient-control" id="visual-coefficient-control" hidden>
+    <label for="visual-coefficient">Selected subcomponent's coefficient <output id="visual-coefficient-value" for="visual-coefficient">0</output></label>
+    <input id="visual-coefficient" type="range" min="-1" max="1" step="0.05" value="0" aria-describedby="visual-matrix-state">
+    <div class="visual-range-labels"><span>−1 · reversed</span><span>0 · removed</span><span>1 · original</span></div>
+  </div>
+  <div class="visual-matrix-equation" role="group" aria-label="Other components plus a scaled selected subcomponent equals the edited matrix">
+    <div class="visual-matrix-term"><p>Other components</p>
+      <svg viewBox="0 0 134 134" aria-hidden="true"><g id="visual-matrix-cells-0"><rect x="2" y="2" width="130" height="130" rx="4" fill="#e6eeeb" stroke="#78968a"/><text x="67" y="79" text-anchor="middle" font-size="28" fill="#39574a">W − A</text></g></svg>
+    </div>
+    <span class="visual-matrix-operator" aria-hidden="true">+</span>
+    <div class="visual-matrix-term"><p>Selected subcomponent</p>
+      <svg viewBox="0 0 134 134" aria-hidden="true"><g id="visual-matrix-cells-1"><rect x="2" y="2" width="130" height="130" rx="4" fill="#f4f4ef" stroke="#a8afa9"/><text x="67" y="79" text-anchor="middle" font-size="28" fill="#52605a">0 × A</text></g></svg>
+    </div>
+    <span class="visual-matrix-operator" aria-hidden="true">=</span>
+    <div class="visual-matrix-term"><p>Edited matrix</p>
+      <svg viewBox="0 0 134 134" aria-hidden="true"><g id="visual-matrix-cells-2"><rect x="2" y="2" width="130" height="130" rx="4" fill="#e6eeeb" stroke="#78968a"/><text x="67" y="79" text-anchor="middle" font-size="28" fill="#39574a">W − A</text></g></svg>
+    </div>
+  </div>
+  <p id="visual-matrix-state" class="visual-matrix-state" aria-live="polite">The selected subcomponent is removed.</p>
+  <figcaption id="visual-matrix-caption">Schematic illustration with a toy matrix. The measured results below use the calibrated study edits.</figcaption>
+</figure>
+```
+
+Rank-one LoRA learns both vectors of an update to the same matrix. Full-matrix fine-tuning can change all
+24 weight matrices, and neuron edits scale selected neurons' output weights.
+
+I measure next-token prediction on parliamentary text. The selection and training procedures use target and
+English text. The selection rule ranks subcomponents by their estimated effect on the target language relative to their effect
+on English. Each method's edit is calibrated
+to raise the target language's prediction error, measured as cross-entropy (CE), by the same amount on validation
+text: **0.5 or 1 nat per token**. A nat is a unit of information based on natural logarithms. 1 nat is about 1.44 bits.
+A larger rise means worse next-token prediction. Matching this rise gives the methods the same intended effect before
+I compare their side effects on separate evaluation text.
+
+## Target and related-language damage
+
+The learned baselines were each trained on three overlapping samples of training text, called **draws**.
+The plotted ranges span the edits from these draws. I evaluate the six fixed subcomponent edits and the
+comparators on **58 European Parliament session dates**. The target and related-language panels use the same scale.
+
+```{=html}
+<figure class="visual-figure visual-results" aria-labelledby="visual-results-caption">
+  <div id="visual-results-interactive" hidden>
+    <div class="visual-controls">
+      <label for="visual-pair">Language pair
+        <select id="visual-pair"><option value="de">German → Dutch</option><option value="es">Spanish → Portuguese</option><option value="fr">French → Italian</option></select>
+      </label>
+      <fieldset class="visual-dose"><legend>Calibrated target rise</legend>
+        <button type="button" data-visual-tau="0.5" aria-pressed="false">0.5 nat/token</button>
+        <button type="button" data-visual-tau="1" aria-pressed="true">1 nat/token</button>
+      </fieldset>
+    </div>
+    <div class="visual-chart-pair">
+      <div id="visual-target-chart"></div>
+      <div id="visual-protected-chart"></div>
+    </div>
+    <p id="visual-result-sentence" class="visual-result-sentence" aria-live="polite" aria-atomic="true"></p>
+  </div>
+  <div id="visual-results-fallback">
+    <p><strong>German → Dutch, calibrated target rise of 1 nat/token.</strong> Measured CE rises on the 58 dates. Comparator ranges span the three training draws.</p>
+    <table><caption>Target and related-language damage, in nat/token</caption><thead><tr><th scope="col">Edit</th><th scope="col">German</th><th scope="col">Dutch</th></tr></thead><tbody>
+      <tr><th scope="row">One VPD subcomponent</th><td>0.98</td><td>0.0053</td></tr>
+      <tr><th scope="row">Rank-one LoRA</th><td>0.92–0.93</td><td>0.078–0.11</td></tr>
+      <tr><th scope="row">Full-matrix fine-tuning</th><td>0.95–0.97</td><td>0.23–0.24</td></tr>
+      <tr><th scope="row">Neuron edit</th><td>1.00</td><td>0.76</td></tr>
+    </tbody></table>
+    <p>See the <a href="index.html#sec-effects">paper's figure</a> for all three language pairs and both calibrated effects.</p>
+  </div>
+  <figcaption id="visual-results-caption">CE rise relative to the unedited model. Dots are individual edits. Lines show the range across training draws. Repeated values overlap. The selected subcomponent is the same in all three draws. Learned updates here use 200 training steps.</figcaption>
+</figure>
+```
+
+Across all three pairs and both calibrated effects,
+related-language CE rose by about **0.0003–0.0053 nat/token**. The subcomponent edits caused less related-language
+damage than each comparator: all 18 simultaneous intervals for those differences lie below zero. These comparisons
+share the same six fixed edits.
+
+Earlier development had used related-language text and identified the German subcomponent. The new dates test
+the fixed edits; the selection history was not blind.
+
+The methods differ in what they preserve. The subcomponent edits cause less damage to the related language,
+while the learned updates keep English predictions closer to the original model, measured by KL divergence.
+
+```{=html}
+<details class="visual-details">
+  <summary>Uncertainty and the achieved target effects</summary>
+  <p>Intervals describe variation across the 58 session dates for each fixed edit. The edits, training seeds, subcomponents, languages and model stay fixed during resampling. Negative related-language differences favour the subcomponent edit.</p>
+  <div id="visual-uncertainty"><p>The <a href="index.html#sec-contrasts">paper's comparison figure</a> gives all simultaneous 95% intervals and the achieved target-effect checks.</p></div>
+  <p>Calibration matched validation effects. A separate, post hoc check asked whether achieved target effects agreed within ±0.1 nat/token on the evaluation dates: 15 of 18 comparisons did. The other three had a larger mean target effect for the subcomponent edit. One target-gap interval also allows a smaller effect for the subcomponent edit. The target-gap intervals use a separate simultaneous family.</p>
+</details>
+```
+
+
+## Longer training and alternative directions
+
+To check how the comparison depends on the training recipe, I trained the learned updates for 2,000 steps
+under an expanded recipe. These updates generally reduced related-language damage, but still caused more than
+the subcomponent edits. A separate selector searched for rank-one directions outside VPD's fixed set of
+subcomponents. Its edits also caused more related-language damage; it reused the selected subcomponent's norm.
+
+A randomized-dictionary control produced no comparable edit, so the dictionary's contribution remains unresolved.
+
+These exploratory comparisons reuse development text examined earlier. Convergence of the learned updates was
+not established. The paper gives the [comparison details](index.qmd#sec-extended-comparisons) and
+[study limits](index.qmd#sec-limits).
+
+
+```{=html}
+<script type="application/json" id="visual-selective-data">
+{{< include ../../results/selective_editing/explainer_data.json >}}
+</script>
+<script src="explainer.js"></script>
+```

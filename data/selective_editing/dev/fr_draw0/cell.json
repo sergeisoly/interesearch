@@ -1,0 +1,351 @@
+{
+ "format": 1,
+ "study": "selective_editing",
+ "split": "dev",
+ "target": "fr",
+ "protected": "it",
+ "draw": 0,
+ "target_key": "europarl_test_fr",
+ "protected_key": "europarl_test_it",
+ "groups": [
+  "2009-03-24",
+  "2000-09-20",
+  "1997-05-29",
+  "1998-06-16",
+  "2002-10-23",
+  "1997-01-15",
+  "2000-04-14",
+  "2008-01-23",
+  "2008-04-09",
+  "2009-05-06",
+  "2010-02-08",
+  "1999-05-04",
+  "1999-12-01",
+  "2001-09-04",
+  "2000-05-19",
+  "1996-12-11",
+  "2005-06-07",
+  "2006-10-24",
+  "2008-06-19",
+  "2008-01-15",
+  "2007-06-27",
+  "1999-02-08",
+  "2003-12-04",
+  "2011-03-23",
+  "2004-01-13",
+  "2001-12-10",
+  "1998-02-19",
+  "2008-02-20",
+  "1996-09-04",
+  "2009-05-04",
+  "2007-06-06",
+  "2004-04-19",
+  "2011-06-06",
+  "2002-03-13",
+  "2009-04-22",
+  "1999-12-14",
+  "1996-04-19",
+  "2011-05-11",
+  "2005-06-23",
+  "2002-05-14",
+  "2003-06-18",
+  "2006-07-06",
+  "2004-05-04",
+  "1999-10-26",
+  "2008-07-08",
+  "2006-10-11",
+  "2000-12-12",
+  "1999-01-28",
+  "2010-05-05",
+  "1996-05-08",
+  "2002-06-10",
+  "1996-11-12",
+  "2001-06-12",
+  "2003-06-30",
+  "2007-10-23",
+  "2007-05-09",
+  "2005-03-08",
+  "2000-05-16",
+  "2007-02-14",
+  "2009-03-26",
+  "1996-11-11",
+  "2008-10-23",
+  "2006-04-05",
+  "2008-06-05"
+ ],
+ "measured": [
+  "vpd_atom@0.5",
+  "vpd_atom@1.0",
+  "omp_finetune@0.5",
+  "omp_finetune@1.0",
+  "omp_lora@0.5",
+  "omp_lora@1.0",
+  "ci_difference@0.5",
+  "ci_difference@1.0",
+  "neurons@0.5",
+  "neurons@1.0",
+  "lora_rank1@0.5",
+  "lora_rank1@1.0",
+  "finetune_24@0.5",
+  "finetune_24@1.0"
+ ],
+ "edits": {
+  "vpd_atom@0.5": {
+   "status": "matched",
+   "scale": 0.76202425971407,
+   "k": null,
+   "guards": {
+    "europarl_test_en": -1.3824552297592163e-05,
+    "wikitext2_test": -0.00029608607292175293,
+    "pile_docs_test": 0.00010442566417623311
+   },
+   "target_test_delta": 0.526484526693821,
+   "english_kl": {
+    "val_en": 0.0002277610116152573,
+    "europarl_test_en": 0.00027633135596261127,
+    "wikitext2_test": 0.00019641758240140916,
+    "pile_docs_test": 0.00016613102453533202
+   }
+  },
+  "vpd_atom@1.0": {
+   "status": "matched",
+   "scale": 1.0388325214724778,
+   "k": null,
+   "guards": {
+    "europarl_test_en": 6.72563910484314e-05,
+    "wikitext2_test": -0.0003068670630455017,
+    "pile_docs_test": 0.00022499110491480678
+   },
+   "target_test_delta": 1.0626220516860485,
+   "english_kl": {
+    "val_en": 0.00041393432559289067,
+    "europarl_test_en": 0.0004994338419237465,
+    "wikitext2_test": 0.0003611888546402042,
+    "pile_docs_test": 0.0003068858557355725
+   }
+  },
+  "null_atom@0.5": {
+   "status": "no edit by the declared rule: selector status 'no feasible atom'",
+   "technical_failure": false
+  },
+  "null_atom@1.0": {
+   "status": "no edit by the declared rule: selector status 'no feasible atom'",
+   "technical_failure": false
+  },
+  "omp_finetune@0.5": {
+   "status": "matched",
+   "scale": 0.76202425971407,
+   "k": null,
+   "guards": {
+    "europarl_test_en": -1.3824552297592163e-05,
+    "wikitext2_test": -0.00029608607292175293,
+    "pile_docs_test": 0.00010442566417623311
+   },
+   "target_test_delta": 0.526484526693821,
+   "english_kl": {
+    "val_en": 0.0002277610116152573,
+    "europarl_test_en": 0.00027633135596261127,
+    "wikitext2_test": 0.00019641758240140916,
+    "pile_docs_test": 0.00016613102453533202
+   }
+  },
+  "omp_finetune@1.0": {
+   "status": "matched",
+   "scale": 1.0388325214724778,
+   "k": null,
+   "guards": {
+    "europarl_test_en": 6.72563910484314e-05,
+    "wikitext2_test": -0.0003068670630455017,
+    "pile_docs_test": 0.00022499110491480678
+   },
+   "target_test_delta": 1.0626220516860485,
+   "english_kl": {
+    "val_en": 0.00041393432559289067,
+    "europarl_test_en": 0.0004994338419237465,
+    "wikitext2_test": 0.0003611888546402042,
+    "pile_docs_test": 0.0003068858557355725
+   }
+  },
+  "omp_lora@0.5": {
+   "status": "matched",
+   "scale": 1.3624368670764584,
+   "k": null,
+   "guards": {
+    "europarl_test_en": 0.00922534242272377,
+    "wikitext2_test": 0.00224129855632782,
+    "pile_docs_test": 0.0012686672998825088
+   },
+   "target_test_delta": 0.4918968454003334,
+   "english_kl": {
+    "val_en": 0.004012986131783691,
+    "europarl_test_en": 0.00648142476711655,
+    "wikitext2_test": 0.001466341132982052,
+    "pile_docs_test": 0.0013151905135373454
+   }
+  },
+  "omp_lora@1.0": {
+   "status": "matched",
+   "scale": 1.8901650429449552,
+   "k": null,
+   "guards": {
+    "europarl_test_en": 0.01674601063132286,
+    "wikitext2_test": 0.003776349127292633,
+    "pile_docs_test": 0.0025288290198659524
+   },
+   "target_test_delta": 1.0375385284423828,
+   "english_kl": {
+    "val_en": 0.007914506366887508,
+    "europarl_test_en": 0.01296240669398685,
+    "wikitext2_test": 0.0028170493660581997,
+    "pile_docs_test": 0.0025993847015115534
+   }
+  },
+  "ci_difference@0.5": {
+   "status": "matched",
+   "scale": 1.1035533905932737,
+   "k": null,
+   "guards": {
+    "europarl_test_en": 0.02340579777956009,
+    "wikitext2_test": 0.0019903257489204407,
+    "pile_docs_test": 0.001739900399115868
+   },
+   "target_test_delta": 0.5173956044018269,
+   "english_kl": {
+    "val_en": 0.00799408055809181,
+    "europarl_test_en": 0.014633628181400127,
+    "wikitext2_test": 0.0030978327558841556,
+    "pile_docs_test": 0.0021308504101114067
+   }
+  },
+  "ci_difference@1.0": {
+   "status": "matched",
+   "scale": 1.7071067811865475,
+   "k": null,
+   "guards": {
+    "europarl_test_en": 0.04325493797659874,
+    "wikitext2_test": 0.005624264478683472,
+    "pile_docs_test": 0.004385816151625477
+   },
+   "target_test_delta": 0.9972492530941963,
+   "english_kl": {
+    "val_en": 0.016334595766238635,
+    "europarl_test_en": 0.029218426388979424,
+    "wikitext2_test": 0.007328529420192353,
+    "pile_docs_test": 0.0049435686202059514
+   }
+  },
+  "historical_atom@0.5": {
+   "status": "not applicable (de only)",
+   "technical_failure": false
+  },
+  "historical_atom@1.0": {
+   "status": "not applicable (de only)",
+   "technical_failure": false
+  },
+  "neurons@0.5": {
+   "status": "matched",
+   "scale": 0.9633883476483185,
+   "k": 16,
+   "guards": {
+    "europarl_test_en": 0.001885153353214264,
+    "wikitext2_test": 0.0044592320919036865,
+    "pile_docs_test": 0.002737429429544136
+   },
+   "target_test_delta": 0.5002946592867374,
+   "english_kl": {
+    "val_en": 0.0045410813836497255,
+    "europarl_test_en": 0.005090567694423953,
+    "wikitext2_test": 0.0032153398788068444,
+    "pile_docs_test": 0.0032049696225158186
+   }
+  },
+  "neurons@1.0": {
+   "status": "matched",
+   "scale": 0.8169417382415922,
+   "k": 256,
+   "guards": {
+    "europarl_test_en": 0.03887706249952316,
+    "wikitext2_test": 0.05777859687805176,
+    "pile_docs_test": 0.036262660432839766
+   },
+   "target_test_delta": 1.0053543969988823,
+   "english_kl": {
+    "val_en": 0.03954204294132069,
+    "europarl_test_en": 0.0387092980381567,
+    "wikitext2_test": 0.039862682577222586,
+    "pile_docs_test": 0.035387346246352536
+   }
+  },
+  "lora_rank1@0.5": {
+   "status": "matched",
+   "scale": 0.3718592167691146,
+   "k": null,
+   "guards": {
+    "europarl_test_en": -0.00027203187346458435,
+    "wikitext2_test": -0.00020678341388702393,
+    "pile_docs_test": 1.3729528291150928e-05
+   },
+   "target_test_delta": 0.4996539391577244,
+   "english_kl": {
+    "val_en": 7.933591422215613e-05,
+    "europarl_test_en": 8.021545710334976e-05,
+    "wikitext2_test": 6.801063040029476e-05,
+    "pile_docs_test": 7.433275373003312e-05
+   }
+  },
+  "lora_rank1@1.0": {
+   "status": "matched",
+   "scale": 0.5388325214724776,
+   "k": null,
+   "guards": {
+    "europarl_test_en": -0.0004083104431629181,
+    "wikitext2_test": -0.0002438575029373169,
+    "pile_docs_test": 7.101638766471297e-05
+   },
+   "target_test_delta": 1.0244114995002747,
+   "english_kl": {
+    "val_en": 0.0001612189194304392,
+    "europarl_test_en": 0.00016602880873506365,
+    "wikitext2_test": 0.00013847488935425645,
+    "pile_docs_test": 0.00015459831058706186
+   }
+  },
+  "finetune_24@0.5": {
+   "status": "matched",
+   "scale": 0.6035533905932737,
+   "k": null,
+   "guards": {
+    "europarl_test_en": 0.001040235161781311,
+    "wikitext2_test": -0.00014035403728485107,
+    "pile_docs_test": 0.0002450329629937187
+   },
+   "target_test_delta": 0.474218025803566,
+   "english_kl": {
+    "val_en": 0.00014870624795548792,
+    "europarl_test_en": 0.00014740481589115006,
+    "wikitext2_test": 0.00013017883020438603,
+    "pile_docs_test": 0.00011654620008272332
+   }
+  },
+  "finetune_24@1.0": {
+   "status": "matched",
+   "scale": 0.8535533905932737,
+   "k": null,
+   "guards": {
+    "europarl_test_en": 0.0014774687588214874,
+    "wikitext2_test": -0.0001294463872909546,
+    "pile_docs_test": 0.00041173935460392386
+   },
+   "target_test_delta": 0.9625045172870159,
+   "english_kl": {
+    "val_en": 0.00029404883218830946,
+    "europarl_test_en": 0.0002908230654838917,
+    "wikitext2_test": 0.00025643390108598396,
+    "pile_docs_test": 0.00023094865398576303
+   }
+  }
+ },
+ "source": {
+  "readout_sha256": "857eba0308acb3760595bd11f5e06d9e5991ef8d71c304f5c4a997dcd1684df6"
+ }
+}

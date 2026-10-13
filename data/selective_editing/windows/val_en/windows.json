@@ -1,0 +1,109 @@
+{
+ "role": "val_en",
+ "languages": [
+  "en"
+ ],
+ "rows": [
+  "europarl-v7:date=2005-06-08",
+  "europarl-v7:date=2000-10-04",
+  "europarl-v7:date=2000-03-29",
+  "europarl-v7:date=1999-09-14",
+  "europarl-v7:date=1997-01-17",
+  "europarl-v7:date=1996-06-06",
+  "europarl-v7:date=2002-09-03",
+  "europarl-v7:date=1998-01-13",
+  "europarl-v7:date=2007-01-18",
+  "europarl-v7:date=1998-07-15",
+  "europarl-v7:date=2007-01-17",
+  "europarl-v7:date=2001-09-19",
+  "europarl-v7:date=2007-01-15",
+  "europarl-v7:date=1998-03-13",
+  "europarl-v7:date=1997-04-23",
+  "europarl-v7:date=2007-09-26",
+  "europarl-v7:date=2008-04-24",
+  "europarl-v7:date=1999-09-13",
+  "europarl-v7:date=2005-11-14",
+  "europarl-v7:date=2002-11-19",
+  "europarl-v7:date=1999-03-23",
+  "europarl-v7:date=2003-09-25",
+  "europarl-v7:date=2002-04-10",
+  "europarl-v7:date=2004-03-09",
+  "europarl-v7:date=2009-09-14",
+  "europarl-v7:date=1997-09-17",
+  "europarl-v7:date=2000-04-12",
+  "europarl-v7:date=2001-05-16",
+  "europarl-v7:date=2002-02-07",
+  "europarl-v7:date=1997-03-12",
+  "europarl-v7:date=2005-04-28",
+  "europarl-v7:date=2003-11-19",
+  "pile-uncopyrighted-tok-shuffled/val-00000-of-00012:shard_row=7097",
+  "pile-uncopyrighted-tok-shuffled/val-00000-of-00012:shard_row=4516",
+  "pile-uncopyrighted-tok-shuffled/val-00000-of-00012:shard_row=7130",
+  "pile-uncopyrighted-tok-shuffled/val-00000-of-00012:shard_row=5139",
+  "pile-uncopyrighted-tok-shuffled/val-00000-of-00012:shard_row=6798",
+  "pile-uncopyrighted-tok-shuffled/val-00000-of-00012:shard_row=8079",
+  "pile-uncopyrighted-tok-shuffled/val-00000-of-00012:shard_row=8106",
+  "pile-uncopyrighted-tok-shuffled/val-00000-of-00012:shard_row=7978",
+  "pile-uncopyrighted-tok-shuffled/val-00000-of-00012:shard_row=5406",
+  "pile-uncopyrighted-tok-shuffled/val-00000-of-00012:shard_row=7902",
+  "pile-uncopyrighted-tok-shuffled/val-00000-of-00012:shard_row=7987",
+  "pile-uncopyrighted-tok-shuffled/val-00000-of-00012:shard_row=5275",
+  "pile-uncopyrighted-tok-shuffled/val-00000-of-00012:shard_row=4808",
+  "pile-uncopyrighted-tok-shuffled/val-00000-of-00012:shard_row=8191",
+  "pile-uncopyrighted-tok-shuffled/val-00000-of-00012:shard_row=7020",
+  "pile-uncopyrighted-tok-shuffled/val-00000-of-00012:shard_row=5661",
+  "pile-uncopyrighted-tok-shuffled/val-00000-of-00012:shard_row=6039",
+  "pile-uncopyrighted-tok-shuffled/val-00000-of-00012:shard_row=5074",
+  "pile-uncopyrighted-tok-shuffled/val-00000-of-00012:shard_row=6128",
+  "pile-uncopyrighted-tok-shuffled/val-00000-of-00012:shard_row=6160",
+  "pile-uncopyrighted-tok-shuffled/val-00000-of-00012:shard_row=7880",
+  "pile-uncopyrighted-tok-shuffled/val-00000-of-00012:shard_row=5248",
+  "pile-uncopyrighted-tok-shuffled/val-00000-of-00012:shard_row=6360",
+  "pile-uncopyrighted-tok-shuffled/val-00000-of-00012:shard_row=4224",
+  "pile-uncopyrighted-tok-shuffled/val-00000-of-00012:shard_row=4567",
+  "pile-uncopyrighted-tok-shuffled/val-00000-of-00012:shard_row=8103",
+  "pile-uncopyrighted-tok-shuffled/val-00000-of-00012:shard_row=8170",
+  "pile-uncopyrighted-tok-shuffled/val-00000-of-00012:shard_row=7205",
+  "pile-uncopyrighted-tok-shuffled/val-00000-of-00012:shard_row=7923",
+  "pile-uncopyrighted-tok-shuffled/val-00000-of-00012:shard_row=4897",
+  "pile-uncopyrighted-tok-shuffled/val-00000-of-00012:shard_row=5907",
+  "pile-uncopyrighted-tok-shuffled/val-00000-of-00012:shard_row=6278"
+ ],
+ "provenance": {
+  "builder": {
+   "description": "build of the English pools (retain, validation, q-check)",
+   "sha256": "e04aeaf70b5b1b498f4a8c51d44a73557041d13e1991b4e845b5a7dd93d9fa94"
+  },
+  "salt": "e-prime-v1",
+  "tokenizer_sha256": "d4c0d99d84af59e9126913fafe5210822963e9a3065ee43e6833b358b0c2f825",
+  "row_format": "'<source>:<key>=<value>[,<key>=<value>]'; Europarl date = session date; WikiText article_index = index of the article within its split (articles start at ' = Title = ' header lines), window = window index within the article; Pile shard_row = row of the tokenized shard; Pile shard_doc_index = document index within the text shard; NTREX block = 0-based index of the 16-line block (lines 16 * block + 1 to 16 * block + 16)",
+  "parts": [
+   {
+    "rows": [
+     0,
+     32
+    ],
+    "source": "europarl-v7",
+    "rule": "every Europarl English val window of the corpus build, in its row order"
+   },
+   {
+    "rows": [
+     32,
+     64
+    ],
+    "source": "pile-uncopyrighted-tok-shuffled/val-00000-of-00012",
+    "rule": "rows of the tokenized validation shard (its first 8,192 rows: 0-4095 retain_train, 4096-8191 retain_val; German-flagged rows dropped) in ascending int(sha256(salt + '|pile|' + split + '|' + shard_row).hexdigest(), 16); row filter: no EOS, >= 150 words, English function words >= 20% of words; window = first 257 tokens; window filter: >= 60 words, English function words >= 15%, German < 2%, other listed function words < 3%, >= 97% of letters ASCII; split retain_val; the first 32 passing rows"
+   }
+  ],
+  "sources": {
+   "europarl-v7": {
+    "url": "https://www.statmt.org/europarl/v7/europarl.tgz",
+    "sha256": "d109549ff35623ded3d375dc04040e3f0b399665680ed726281f877ff5995330"
+   },
+   "pile-uncopyrighted-tok-shuffled/val-00000-of-00012": {
+    "url": "https://huggingface.co/datasets/danbraunai/pile-uncopyrighted-tok-shuffled/resolve/6f141f6e4edc32fea842f2ece0d3477b15c3dc90/data/val-00000-of-00012.parquet",
+    "sha256": "0234ba6365476b543845406fb411f6530d922862ce0597fad47e4337786ebecc"
+   }
+  }
+ }
+}

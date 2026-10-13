@@ -1,0 +1,123 @@
+{
+ "format": 1,
+ "study": "selective_editing",
+ "expected_cells": [
+  "de:0",
+  "de:1",
+  "de:2",
+  "es:0",
+  "es:1",
+  "es:2",
+  "fr:0",
+  "fr:1",
+  "fr:2"
+ ],
+ "freeze": {
+  "technical_gaps": [],
+  "allow_incomplete": false
+ },
+ "targets": {
+  "de": "nl",
+  "es": "pt",
+  "fr": "it"
+ },
+ "taus": [
+  0.5,
+  1.0
+ ],
+ "methods": {
+  "vpd_atom": "g^2/q selector, VPD dictionary (main)",
+  "null_atom": "g^2/q selector, randomized dictionary (same rule)",
+  "omp_finetune": "OMP top-1 of the full-matrix fine-tune of all 24 modules (same target and draw)",
+  "omp_lora": "OMP top-1 of the historical LoRA condition (rank-1 LoRA on all 24 modules, lr 1e-4, historical checkpoint rule, English retention)",
+  "ci_difference": "CI top-1 (adaptation of Bushnaq's top-16 rule)",
+  "historical_atom": "historical atom 0.attn.o:268, ablation side (historical, de only, dev-selected)",
+  "neurons": "top-k activation neurons (target vs English rate), ablation",
+  "lora_rank1": "rank-1 LoRA in the selected atom's module",
+  "finetune_24": "full-matrix fine-tune of all 24 modules"
+ },
+ "main_method": "vpd_atom",
+ "claim_comparators": [
+  "null_atom",
+  "lora_rank1",
+  "finetune_24",
+  "neurons"
+ ],
+ "reference_comparators": [
+  "omp_finetune",
+  "omp_lora",
+  "ci_difference",
+  "historical_atom"
+ ],
+ "historical_atom_targets": [
+  "de"
+ ],
+ "guard_max": 0.1,
+ "target_deviation_flag": 0.1,
+ "calibration": {
+  "tol": 0.02,
+  "max_bisect": 5,
+  "atom_grid": [
+   0.0625,
+   0.08838834764831845,
+   0.125,
+   0.1767766952966369,
+   0.25,
+   0.3535533905932738,
+   0.5,
+   0.7071067811865476,
+   1.0,
+   1.4142135623730951,
+   2.0
+  ],
+  "scale_grid": [
+   0.0625,
+   0.08838834764831845,
+   0.125,
+   0.1767766952966369,
+   0.25,
+   0.3535533905932738,
+   0.5,
+   0.7071067811865476,
+   1.0
+  ],
+  "neuron_ladder": [
+   1,
+   2,
+   4,
+   8,
+   16,
+   32,
+   64,
+   128,
+   256
+  ],
+  "neuron_grid": [
+   0.0625,
+   0.08838834764831845,
+   0.125,
+   0.1767766952966369,
+   0.25,
+   0.3535533905932738,
+   0.5,
+   0.7071067811865476,
+   1.0
+  ],
+  "grid_of_method": {
+   "vpd_atom": "atom_grid",
+   "null_atom": "atom_grid",
+   "omp_finetune": "atom_grid",
+   "omp_lora": "atom_grid",
+   "ci_difference": "atom_grid",
+   "historical_atom": "atom_grid",
+   "neurons": "neuron_grid",
+   "lora_rank1": "scale_grid",
+   "finetune_24": "scale_grid"
+  }
+ },
+ "source": {
+  "freeze_sha256": "562f7a025d4b82018fcaa4cece511832514318208036b73c826f8b483524365e",
+  "dev_analysis_sha256": "1c0c1fb6280156f63ce19a239afb053ef0e877b6886febd1cc76e1ff85c4c2f5",
+  "confirm_analysis_sha256": "d9d8dd17fad7f7a662d8c5820e804ff648822ecee74fd6055bd88aca90957c29"
+ }
+}

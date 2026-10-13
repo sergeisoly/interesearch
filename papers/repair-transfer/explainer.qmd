@@ -1,0 +1,158 @@
+---
+image: ../social-card.png
+description: "Reusing learned repairs across fine-tunes trained on data from the same distribution."
+title: "Repair transfer"
+format:
+  html:
+    embed-resources: true
+toc: false
+number-sections: false
+page-layout: article
+body-classes: research-explainer
+---
+
+::: {.study-resources}
+[Paper](index.qmd) · [PDF](index.pdf) · [GitHub](https://github.com/sergeisoly/interesearch/blob/main/papers/guides/repair-transfer.md)
+:::
+
+::: {.visual-explainer .explainer-repair}
+
+
+Fine-tuning a model can change behaviour we want to preserve. In this study, training [Goodfire's four-layer, 67-million-parameter language model](https://www.goodfire.com/research/interpreting-lm-parameters) to predict German less accurately also damages its Dutch.
+The deliberate German change provides an intended effect to preserve while testing whether a repair restores Dutch prediction quality.
+
+A compact repair can undo much of this damage. I test whether reusing it helps repair two new fine-tunes
+trained independently from the same base model, with the same recipe on different samples from the same data distribution.
+
+## The same starting repair, two ways to reuse it
+
+The earlier fine-tune is the **donor** and its correction is the **donor repair**. The two new fine-tunes
+use different Europarl session dates. Each repair adds a rank-one update to each of 24 weight matrices, with the model's
+other weights fixed. Each update is formed from an input vector and an output vector. The repairs operate directly on
+the weight matrices, independently of Goodfire's parameter decomposition.
+
+I reuse the donor repair in two ways: keep its input and output vectors fixed and learn 24 scalar coefficients,
+or start from the donor repair and train both vectors. Fresh fitting learns both vectors from a new initialization. All three
+have the same rank, objective and norm limit, so the comparison asks what the earlier repair contributes.
+
+```{=html}
+<figure class="explainer-diagram" aria-label="Schematic repair directions for one weight matrix" aria-describedby="repair-transfer-diagram-caption">
+  <div class="explainer-transfer-path">
+    <div><span class="explainer-kicker">Earlier fine-tune</span><strong>Learn a donor repair</strong></div>
+    <span class="explainer-transfer-arrow" aria-hidden="true">→</span>
+    <div><span class="explainer-kicker">New fine-tune</span><strong>Repair the new damage</strong></div>
+  </div>
+  <div class="explainer-method-controls" role="group" aria-label="Choose how to fit the new repair">
+    <button type="button" data-repair-method="strengths" aria-pressed="true" aria-controls="repair-method-illustration repair-method-copy">Scalar coefficients only</button>
+    <button type="button" data-repair-method="donor_init" aria-pressed="false" aria-controls="repair-method-illustration repair-method-copy">Donor initialization</button>
+    <button type="button" data-repair-method="fresh" aria-pressed="false" aria-controls="repair-method-illustration repair-method-copy">Fresh initialization</button>
+  </div>
+  <div class="explainer-concept-layout">
+    <svg id="repair-method-illustration" viewBox="0 0 430 210" role="img" aria-labelledby="repair-method-title repair-method-description">
+      <title id="repair-method-title">Fit scalar coefficients over fixed donor directions</title>
+      <desc id="repair-method-description">The new arrow stays on the donor repair's line, but its scale can change.</desc>
+      <path d="M38 177 H404 M58 197 V12" fill="none" stroke="#dedfdc" stroke-width="1"/>
+      <path id="repair-learned-arrow" d="M58 177 L326 27 M315 28 L326 27 L321 37" fill="none" stroke="#52514e" stroke-width="4"/>
+      <path id="repair-donor-arrow" d="M58 177 L236.6667 77 M225.6667 78 L236.6667 77 L231.6667 87" fill="none" stroke="#8b9599" stroke-width="3" stroke-dasharray="6 5"/>
+      <circle id="repair-donor-endpoint" cx="236.6667" cy="77" r="6" fill="#faf9f5" stroke="#526771" stroke-width="2"/>
+      <circle id="repair-zero-start" cx="58" cy="177" r="6" fill="#c85224" visibility="hidden"/>
+      <text id="repair-arrow-label" x="332" y="25" fill="#52514e" font-size="15">New update</text>
+      <text id="repair-donor-label" x="137" y="81" fill="#526771" font-size="14">Donor repair</text>
+    </svg>
+    <div id="repair-method-copy" class="explainer-method-copy" aria-live="polite" aria-atomic="true">
+      <h3>Same directions, new coefficients</h3>
+      <p>Keep the donor repair's input and output directions fixed. Learn one scalar coefficient per matrix, 24 numbers in all.</p>
+    </div>
+  </div>
+  <figcaption id="repair-transfer-diagram-caption">Dashes and the outlined endpoint mark the donor repair. The solid arrow marks the newly fitted update.</figcaption>
+</figure>
+```
+
+## Keeping the directions leaves damage behind
+
+Recovery is the fraction of the fine-tune's extra Dutch prediction loss removed by a repair.
+At the full budget, fitting scalar coefficients only recovers about **87%** of the Dutch damage on the first target and **78%** on the second.
+Donor initialization, which lets the directions change, raises recovery to about **98–99%**. Fresh initialization also works well.
+All full-budget repairs shown preserved the German effect and met the constraints on the other languages.
+
+Fitting budgets exclude a separate selection and diagnostic pool of **57,344 prediction positions**, shared by all families.
+
+```{=html}
+<figure class="explainer-figure" aria-labelledby="repair-full-caption">
+  <div id="repair-full-chart" class="explainer-chart"></div>
+  <figcaption id="repair-full-caption">Full budget: 2,048 fit tokens and checkpoint selection from runs of up to 600 steps.
+  Fit tokens count prediction positions, excluding the initial context token of each window.
+  Recovery is the fraction of the fine-tune's extra Dutch prediction loss removed: 0% means no repair. 100%
+  means back to the base model's Dutch prediction loss. Whiskers show 95% bootstrap intervals over 92 readout dates for each fixed target.</figcaption>
+</figure>
+<p id="repair-primary-result" class="explainer-finding">Donor initialization exceeds the scalar-coefficient fit by 11.3 percentage
+points on the first target and 20.4 points on the second.</p>
+```
+
+<details class="visual-details">
+<summary>How the scalar coefficients were fitted</summary>
+
+The scalar-coefficient search includes full-batch optimization to convergence from two starting points, though
+the selected repair may still be an ordinary training checkpoint. The shortfall survives that expanded search, but the
+experiment cannot rule out every possible choice of coefficients.
+
+</details>
+
+## The donor helps most when fitting is constrained
+
+Fresh fitting also recovers most of the damage, so I compare how much the donor start helps at different fitting budgets.
+At the full budget, donor initialization leads the first fresh seed by **1.1–1.4 percentage points**. Both
+confidence intervals lie inside the study’s ±2 percentage-point equivalence band, and the lead is comparable to
+differences between two fresh seeds. At 256 fit tokens and 50 steps, the lead is about **4 percentage points**;
+only one fresh seed was tested at that budget.
+
+```{=html}
+<section class="explainer-interactive" aria-label="Explore recovery at different fitting budgets">
+  <div class="explainer-controls">
+    <label for="repair-target">New fine-tune
+      <select id="repair-target">
+        <option value="primary_target">Primary target</option>
+        <option value="replication_target">Replication target</option>
+      </select>
+    </label>
+    <label for="repair-budget">Unique fit tokens
+      <select id="repair-budget">
+        <option value="256">256 tokens</option>
+        <option value="512">512 tokens</option>
+        <option value="2K">2,048 tokens</option>
+      </select>
+    </label>
+  </div>
+  <figure class="explainer-figure" aria-labelledby="repair-curve-caption">
+    <div id="repair-curve-chart" class="explainer-chart"></div>
+    <figcaption id="repair-curve-caption">Recovery of Dutch damage (%), with 95% bootstrap intervals over 92 readout dates for the selected target. Each point uses the best
+    eligible checkpoint chosen on separate selection data, at the stated step cap. The vertical axis starts at
+    70%. Step spacing is logarithmic. The scalar-coefficient fit uses the regular fitting search here.
+    The full-budget comparison above also includes additional full-batch optimization.</figcaption>
+  </figure>
+  <div class="explainer-step-control">
+    <label for="repair-step">Step cap per run: <output id="repair-step-value" for="repair-step">50 steps</output></label>
+    <input id="repair-step" type="range" min="0" max="3" step="1" value="0" aria-valuetext="50 steps per run">
+    <div class="explainer-step-labels" aria-hidden="true"><span>50</span><span>100</span><span>200</span><span>600</span></div>
+  </div>
+  <p class="explainer-reading">At 2,048 tokens and 600 steps, equivalence is assessed using a ±2 percentage-point band.</p>
+  <p id="repair-curve-result" class="explainer-finding" aria-live="polite" aria-atomic="true"></p>
+  <p id="repair-curve-interpretation" class="explainer-reading"></p>
+  <details class="explainer-data-table">
+    <summary>Read the plotted values</summary>
+    <div id="repair-curve-table"></div>
+  </details>
+</section>
+<noscript><p>The interactive view needs JavaScript. At 256 tokens and 50 steps, recovery with donor initialization is 97.0%
+versus 92.6% for fresh on the primary target, and 96.7% versus 92.6% on the replication target.
+The <a href="index.html#sec-warm">paper's static figures</a> show every measured budget.</p></noscript>
+```
+
+```{=html}
+<script id="repair-explainer-data" type="application/json">
+{{< include ../../results/repair_transfer/explainer_data.json >}}
+</script>
+<script src="explainer.js"></script>
+```
+
+:::

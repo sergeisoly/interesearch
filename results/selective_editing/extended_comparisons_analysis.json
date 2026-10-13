@@ -1,0 +1,1884 @@
+{
+ "rule": "Contrasts of the main edit against each comparator on protected Europarl test, each side averaged over its\nmatched and usable runs (float64, per document), in one simultaneous family. A second family excludes\nunstable learned-update runs. Also reports descriptive rows per method, the main study's 200-step updates and the\nconvergence of every training run.",
+ "label_rule": "Two independent attributes of the interval of main - comparator: `direction` is below 0, above 0 or includes\n0. `within_band` is true when the whole interval lies in [-band, band], whether or not it includes 0.",
+ "expected_cells": [
+  "de:0",
+  "de:1",
+  "de:2",
+  "es:0",
+  "es:1",
+  "es:2",
+  "fr:0",
+  "fr:1",
+  "fr:2"
+ ],
+ "band": 0.02,
+ "all_runs": {
+  "de->nl|tau=0.5|vpd_atom-whitened_rank1": {
+   "estimate": -0.07588326558470726,
+   "se": 0.002870634453740053,
+   "lo": -0.08381201815795604,
+   "hi": -0.06795451301145848
+  },
+  "de->nl|tau=0.5|vpd_atom-lora_rank1_long": {
+   "estimate": -0.044133832678198814,
+   "se": 0.0022577654735181658,
+   "lo": -0.050369828273049436,
+   "hi": -0.03789783708334819
+  },
+  "de->nl|tau=0.5|vpd_atom-finetune_24_long": {
+   "estimate": -0.09834006283846167,
+   "se": 0.004596584675436882,
+   "lo": -0.1110359261261202,
+   "hi": -0.08564419955080313
+  },
+  "de->nl|tau=1.0|vpd_atom-whitened_rank1": {
+   "estimate": -0.1701115711281697,
+   "se": 0.004667977296864795,
+   "lo": -0.1830046223336838,
+   "hi": -0.15721851992265556
+  },
+  "de->nl|tau=1.0|vpd_atom-lora_rank1_long": {
+   "estimate": -0.07258765751288997,
+   "se": 0.003134443127596485,
+   "lo": -0.0812450551767595,
+   "hi": -0.06393025984902043
+  },
+  "de->nl|tau=1.0|vpd_atom-finetune_24_long": {
+   "estimate": -0.1814839504659176,
+   "se": 0.006743261069994717,
+   "lo": -0.20010897898222704,
+   "hi": -0.16285892194960813
+  },
+  "es->pt|tau=0.5|vpd_atom-whitened_rank1": {
+   "estimate": -0.2011542258163293,
+   "se": 0.005491552547935499,
+   "lo": -0.2163220091399239,
+   "hi": -0.18598644249273472
+  },
+  "es->pt|tau=0.5|vpd_atom-lora_rank1_long": {
+   "estimate": -0.10463497870498234,
+   "se": 0.004417490464533614,
+   "lo": -0.11683618002559622,
+   "hi": -0.09243377738436846
+  },
+  "es->pt|tau=0.5|vpd_atom-finetune_24_long": {
+   "estimate": -0.17036811055408585,
+   "se": 0.005577359017184803,
+   "lo": -0.18577289314555148,
+   "hi": -0.15496332796262022
+  },
+  "es->pt|tau=1.0|vpd_atom-whitened_rank1": {
+   "estimate": -0.44231029475728667,
+   "se": 0.010253644929382768,
+   "lo": -0.4706310771240912,
+   "hi": -0.41398951239048215
+  },
+  "es->pt|tau=1.0|vpd_atom-lora_rank1_long": {
+   "estimate": -0.1826721616089344,
+   "se": 0.0068641684176018744,
+   "lo": -0.20163113875538585,
+   "hi": -0.16371318446248295
+  },
+  "es->pt|tau=1.0|vpd_atom-finetune_24_long": {
+   "estimate": -0.3368727361990346,
+   "se": 0.00963271370769199,
+   "lo": -0.3634784935073971,
+   "hi": -0.31026697889067206
+  },
+  "fr->it|tau=0.5|vpd_atom-whitened_rank1": {
+   "estimate": -0.026932885870337486,
+   "se": 0.0013173217254021459,
+   "lo": -0.03057135610693299,
+   "hi": -0.02329441563374198
+  },
+  "fr->it|tau=0.5|vpd_atom-lora_rank1_long": {
+   "estimate": -0.017006904093755618,
+   "se": 0.0014627423217778972,
+   "lo": -0.021047029067761312,
+   "hi": -0.012966779119749921
+  },
+  "fr->it|tau=0.5|vpd_atom-finetune_24_long": {
+   "estimate": -0.039163749044140175,
+   "se": 0.0013964202630790989,
+   "lo": -0.04302069110090396,
+   "hi": -0.03530680698737639
+  },
+  "fr->it|tau=1.0|vpd_atom-whitened_rank1": {
+   "estimate": -0.05033625600238641,
+   "se": 0.001985554251206039,
+   "lo": -0.05582039849153683,
+   "hi": -0.044852113513235994
+  },
+  "fr->it|tau=1.0|vpd_atom-lora_rank1_long": {
+   "estimate": -0.026738218549225066,
+   "se": 0.0019321797224140437,
+   "lo": -0.032074939470312674,
+   "hi": -0.021401497628137454
+  },
+  "fr->it|tau=1.0|vpd_atom-finetune_24_long": {
+   "estimate": -0.07015681184000438,
+   "se": 0.0019467117804459603,
+   "lo": -0.0755336706101884,
+   "hi": -0.06477995306982037
+  },
+  "_critical_value": 2.7620209751606195,
+  "_n_groups": 64
+ },
+ "labels": {
+  "de->nl|tau=0.5|vpd_atom-whitened_rank1": {
+   "direction": "below 0",
+   "within_band": false
+  },
+  "de->nl|tau=0.5|vpd_atom-lora_rank1_long": {
+   "direction": "below 0",
+   "within_band": false
+  },
+  "de->nl|tau=0.5|vpd_atom-finetune_24_long": {
+   "direction": "below 0",
+   "within_band": false
+  },
+  "de->nl|tau=1.0|vpd_atom-whitened_rank1": {
+   "direction": "below 0",
+   "within_band": false
+  },
+  "de->nl|tau=1.0|vpd_atom-lora_rank1_long": {
+   "direction": "below 0",
+   "within_band": false
+  },
+  "de->nl|tau=1.0|vpd_atom-finetune_24_long": {
+   "direction": "below 0",
+   "within_band": false
+  },
+  "es->pt|tau=0.5|vpd_atom-whitened_rank1": {
+   "direction": "below 0",
+   "within_band": false
+  },
+  "es->pt|tau=0.5|vpd_atom-lora_rank1_long": {
+   "direction": "below 0",
+   "within_band": false
+  },
+  "es->pt|tau=0.5|vpd_atom-finetune_24_long": {
+   "direction": "below 0",
+   "within_band": false
+  },
+  "es->pt|tau=1.0|vpd_atom-whitened_rank1": {
+   "direction": "below 0",
+   "within_band": false
+  },
+  "es->pt|tau=1.0|vpd_atom-lora_rank1_long": {
+   "direction": "below 0",
+   "within_band": false
+  },
+  "es->pt|tau=1.0|vpd_atom-finetune_24_long": {
+   "direction": "below 0",
+   "within_band": false
+  },
+  "fr->it|tau=0.5|vpd_atom-whitened_rank1": {
+   "direction": "below 0",
+   "within_band": false
+  },
+  "fr->it|tau=0.5|vpd_atom-lora_rank1_long": {
+   "direction": "below 0",
+   "within_band": false
+  },
+  "fr->it|tau=0.5|vpd_atom-finetune_24_long": {
+   "direction": "below 0",
+   "within_band": false
+  },
+  "fr->it|tau=1.0|vpd_atom-whitened_rank1": {
+   "direction": "below 0",
+   "within_band": false
+  },
+  "fr->it|tau=1.0|vpd_atom-lora_rank1_long": {
+   "direction": "below 0",
+   "within_band": false
+  },
+  "fr->it|tau=1.0|vpd_atom-finetune_24_long": {
+   "direction": "below 0",
+   "within_band": false
+  }
+ },
+ "stable_runs": {
+  "de->nl|tau=0.5|vpd_atom-lora_rank1_long": {
+   "estimate": -0.043625971768051386,
+   "se": 0.0022658164317548254,
+   "lo": -0.04966160958772908,
+   "hi": -0.03759033394837369
+  },
+  "de->nl|tau=0.5|vpd_atom-finetune_24_long": {
+   "estimate": -0.09834006283846167,
+   "se": 0.004596584675436882,
+   "lo": -0.1105843558533778,
+   "hi": -0.08609576982354554
+  },
+  "de->nl|tau=1.0|vpd_atom-lora_rank1_long": {
+   "estimate": -0.07191862701438367,
+   "se": 0.0031503990941694772,
+   "lo": -0.0803105989558711,
+   "hi": -0.06352665507289625
+  },
+  "de->nl|tau=1.0|vpd_atom-finetune_24_long": {
+   "estimate": -0.1814839504659176,
+   "se": 0.006743261069994717,
+   "lo": -0.19944651838255117,
+   "hi": -0.163521382549284
+  },
+  "es->pt|tau=0.5|vpd_atom-lora_rank1_long": {
+   "estimate": -0.10971313901245594,
+   "se": 0.00460282041719079,
+   "lo": -0.12197404267518809,
+   "hi": -0.09745223534972379
+  },
+  "es->pt|tau=0.5|vpd_atom-finetune_24_long": {
+   "estimate": -0.17036811055408585,
+   "se": 0.005577359017184803,
+   "lo": -0.18522497121864104,
+   "hi": -0.15551124988953066
+  },
+  "es->pt|tau=1.0|vpd_atom-lora_rank1_long": {
+   "estimate": -0.19493247879048187,
+   "se": 0.007231825706511671,
+   "lo": -0.21419647570029962,
+   "hi": -0.1756684818806641
+  },
+  "es->pt|tau=1.0|vpd_atom-finetune_24_long": {
+   "estimate": -0.3368727361990346,
+   "se": 0.00963271370769199,
+   "lo": -0.362532171952727,
+   "hi": -0.3112133004453421
+  },
+  "fr->it|tau=0.5|vpd_atom-lora_rank1_long": {
+   "estimate": -0.017216676846146584,
+   "se": 0.0013392472022432256,
+   "lo": -0.020784137541758403,
+   "hi": -0.013649216150534764
+  },
+  "fr->it|tau=0.5|vpd_atom-finetune_24_long": {
+   "estimate": -0.039163749044140175,
+   "se": 0.0013964202630790989,
+   "lo": -0.042883506229181405,
+   "hi": -0.035443991859098946
+  },
+  "fr->it|tau=1.0|vpd_atom-lora_rank1_long": {
+   "estimate": -0.027087734080851078,
+   "se": 0.0017726072635951625,
+   "lo": -0.031809570894129176,
+   "hi": -0.022365897267572977
+  },
+  "fr->it|tau=1.0|vpd_atom-finetune_24_long": {
+   "estimate": -0.07015681184000438,
+   "se": 0.0019467117804459603,
+   "lo": -0.07534242488499934,
+   "hi": -0.06497119879500943
+  },
+  "_critical_value": 2.663780584821353,
+  "_n_groups": 64
+ },
+ "labels_stable_runs": {
+  "de->nl|tau=0.5|vpd_atom-lora_rank1_long": {
+   "direction": "below 0",
+   "within_band": false
+  },
+  "de->nl|tau=0.5|vpd_atom-finetune_24_long": {
+   "direction": "below 0",
+   "within_band": false
+  },
+  "de->nl|tau=1.0|vpd_atom-lora_rank1_long": {
+   "direction": "below 0",
+   "within_band": false
+  },
+  "de->nl|tau=1.0|vpd_atom-finetune_24_long": {
+   "direction": "below 0",
+   "within_band": false
+  },
+  "es->pt|tau=0.5|vpd_atom-lora_rank1_long": {
+   "direction": "below 0",
+   "within_band": false
+  },
+  "es->pt|tau=0.5|vpd_atom-finetune_24_long": {
+   "direction": "below 0",
+   "within_band": false
+  },
+  "es->pt|tau=1.0|vpd_atom-lora_rank1_long": {
+   "direction": "below 0",
+   "within_band": false
+  },
+  "es->pt|tau=1.0|vpd_atom-finetune_24_long": {
+   "direction": "below 0",
+   "within_band": false
+  },
+  "fr->it|tau=0.5|vpd_atom-lora_rank1_long": {
+   "direction": "below 0",
+   "within_band": false
+  },
+  "fr->it|tau=0.5|vpd_atom-finetune_24_long": {
+   "direction": "below 0",
+   "within_band": false
+  },
+  "fr->it|tau=1.0|vpd_atom-lora_rank1_long": {
+   "direction": "below 0",
+   "within_band": false
+  },
+  "fr->it|tau=1.0|vpd_atom-finetune_24_long": {
+   "direction": "below 0",
+   "within_band": false
+  }
+ },
+ "stable_changes_a_label": {},
+ "composition": {
+  "de->nl|tau=0.5|vpd_atom-svd_atom": {
+   "main_runs": 3,
+   "comparator_runs": 0,
+   "comparator_runs_stable": 0
+  },
+  "de->nl|tau=0.5|vpd_atom-whitened_rank1": {
+   "main_runs": 3,
+   "comparator_runs": 3,
+   "comparator_runs_stable": 3
+  },
+  "de->nl|tau=0.5|vpd_atom-lora_rank1_long": {
+   "main_runs": 3,
+   "comparator_runs": 9,
+   "comparator_runs_stable": 8
+  },
+  "de->nl|tau=0.5|vpd_atom-finetune_24_long": {
+   "main_runs": 3,
+   "comparator_runs": 9,
+   "comparator_runs_stable": 9
+  },
+  "de->nl|tau=1.0|vpd_atom-svd_atom": {
+   "main_runs": 3,
+   "comparator_runs": 0,
+   "comparator_runs_stable": 0
+  },
+  "de->nl|tau=1.0|vpd_atom-whitened_rank1": {
+   "main_runs": 3,
+   "comparator_runs": 3,
+   "comparator_runs_stable": 3
+  },
+  "de->nl|tau=1.0|vpd_atom-lora_rank1_long": {
+   "main_runs": 3,
+   "comparator_runs": 9,
+   "comparator_runs_stable": 8
+  },
+  "de->nl|tau=1.0|vpd_atom-finetune_24_long": {
+   "main_runs": 3,
+   "comparator_runs": 9,
+   "comparator_runs_stable": 9
+  },
+  "es->pt|tau=0.5|vpd_atom-svd_atom": {
+   "main_runs": 3,
+   "comparator_runs": 0,
+   "comparator_runs_stable": 0
+  },
+  "es->pt|tau=0.5|vpd_atom-whitened_rank1": {
+   "main_runs": 3,
+   "comparator_runs": 3,
+   "comparator_runs_stable": 3
+  },
+  "es->pt|tau=0.5|vpd_atom-lora_rank1_long": {
+   "main_runs": 3,
+   "comparator_runs": 9,
+   "comparator_runs_stable": 6
+  },
+  "es->pt|tau=0.5|vpd_atom-finetune_24_long": {
+   "main_runs": 3,
+   "comparator_runs": 9,
+   "comparator_runs_stable": 9
+  },
+  "es->pt|tau=1.0|vpd_atom-svd_atom": {
+   "main_runs": 3,
+   "comparator_runs": 0,
+   "comparator_runs_stable": 0
+  },
+  "es->pt|tau=1.0|vpd_atom-whitened_rank1": {
+   "main_runs": 3,
+   "comparator_runs": 3,
+   "comparator_runs_stable": 3
+  },
+  "es->pt|tau=1.0|vpd_atom-lora_rank1_long": {
+   "main_runs": 3,
+   "comparator_runs": 9,
+   "comparator_runs_stable": 6
+  },
+  "es->pt|tau=1.0|vpd_atom-finetune_24_long": {
+   "main_runs": 3,
+   "comparator_runs": 9,
+   "comparator_runs_stable": 9
+  },
+  "fr->it|tau=0.5|vpd_atom-svd_atom": {
+   "main_runs": 3,
+   "comparator_runs": 0,
+   "comparator_runs_stable": 0
+  },
+  "fr->it|tau=0.5|vpd_atom-whitened_rank1": {
+   "main_runs": 3,
+   "comparator_runs": 3,
+   "comparator_runs_stable": 3
+  },
+  "fr->it|tau=0.5|vpd_atom-lora_rank1_long": {
+   "main_runs": 3,
+   "comparator_runs": 9,
+   "comparator_runs_stable": 6
+  },
+  "fr->it|tau=0.5|vpd_atom-finetune_24_long": {
+   "main_runs": 3,
+   "comparator_runs": 9,
+   "comparator_runs_stable": 9
+  },
+  "fr->it|tau=1.0|vpd_atom-svd_atom": {
+   "main_runs": 3,
+   "comparator_runs": 0,
+   "comparator_runs_stable": 0
+  },
+  "fr->it|tau=1.0|vpd_atom-whitened_rank1": {
+   "main_runs": 3,
+   "comparator_runs": 3,
+   "comparator_runs_stable": 3
+  },
+  "fr->it|tau=1.0|vpd_atom-lora_rank1_long": {
+   "main_runs": 3,
+   "comparator_runs": 9,
+   "comparator_runs_stable": 6
+  },
+  "fr->it|tau=1.0|vpd_atom-finetune_24_long": {
+   "main_runs": 3,
+   "comparator_runs": 9,
+   "comparator_runs_stable": 9
+  }
+ },
+ "contrasts_absent": [
+  "de->nl|tau=0.5|vpd_atom-svd_atom",
+  "de->nl|tau=1.0|vpd_atom-svd_atom",
+  "es->pt|tau=0.5|vpd_atom-svd_atom",
+  "es->pt|tau=1.0|vpd_atom-svd_atom",
+  "fr->it|tau=0.5|vpd_atom-svd_atom",
+  "fr->it|tau=1.0|vpd_atom-svd_atom"
+ ],
+ "methods": {
+  "de|tau=0.5|vpd_atom": {
+   "runs": 3,
+   "used": 3,
+   "unstable": [],
+   "excluded": [],
+   "protected_mean": 0.0035546403378248215,
+   "target_test_mean": 0.4939778260886669,
+   "target_test_mean_stable": 0.4939778260886669,
+   "guard_max": 0.0016449354588985443,
+   "per_run_protected": [
+    0.0035546403378248215,
+    0.0035546403378248215,
+    0.0035546403378248215
+   ]
+  },
+  "de|tau=0.5|svd_atom": {
+   "runs": 3,
+   "used": 0,
+   "unstable": [],
+   "excluded": [
+    "draw 0 svd_atom: matched (guard)",
+    "draw 1 svd_atom: matched (guard)",
+    "draw 2 svd_atom: matched (guard)"
+   ],
+   "protected_mean": null,
+   "target_test_mean": null,
+   "target_test_mean_stable": null,
+   "guard_max": null,
+   "per_run_protected": []
+  },
+  "de|tau=0.5|whitened_rank1": {
+   "runs": 3,
+   "used": 3,
+   "unstable": [],
+   "excluded": [],
+   "protected_mean": 0.07943790592253208,
+   "target_test_mean": 0.49716957410176593,
+   "target_test_mean_stable": 0.49716957410176593,
+   "guard_max": 0.00012894347310066223,
+   "per_run_protected": [
+    0.07731109112501144,
+    0.07998987659811974,
+    0.08101275004446507
+   ]
+  },
+  "de|tau=0.5|lora_rank1_long": {
+   "runs": 9,
+   "used": 9,
+   "unstable": [
+    "draw 2 lora_rank1_long_s1"
+   ],
+   "excluded": [],
+   "protected_mean": 0.047688473016023636,
+   "target_test_mean": 0.48984748166468406,
+   "target_test_mean_stable": 0.4911179896444082,
+   "guard_max": 0.0008854642510414124,
+   "per_run_protected": [
+    0.05900227278470993,
+    0.051611896604299545,
+    0.05353449285030365,
+    0.04780906066298485,
+    0.04113737493753433,
+    0.03992212750017643,
+    0.04253994859755039,
+    0.051751360297203064,
+    0.04188772290945053
+   ]
+  },
+  "de|tau=0.5|finetune_24_long": {
+   "runs": 9,
+   "used": 9,
+   "unstable": [],
+   "excluded": [],
+   "protected_mean": 0.10189470317628649,
+   "target_test_mean": 0.5060961801144812,
+   "target_test_mean_stable": 0.5060961801144812,
+   "guard_max": 0.0006009712815284729,
+   "per_run_protected": [
+    0.09623564779758453,
+    0.10025540553033352,
+    0.09602605737745762,
+    0.10357886366546154,
+    0.10713787376880646,
+    0.10756871290504932,
+    0.10106314159929752,
+    0.10381948761641979,
+    0.10136713832616806
+   ]
+  },
+  "de|tau=1.0|vpd_atom": {
+   "runs": 3,
+   "used": 3,
+   "unstable": [],
+   "excluded": [],
+   "protected_mean": 0.006159109994769096,
+   "target_test_mean": 1.0006072521209717,
+   "target_test_mean_stable": 1.0006072521209717,
+   "guard_max": 0.0025074444711208344,
+   "per_run_protected": [
+    0.006159109994769096,
+    0.006159109994769096,
+    0.006159109994769096
+   ]
+  },
+  "de|tau=1.0|svd_atom": {
+   "runs": 3,
+   "used": 0,
+   "unstable": [],
+   "excluded": [
+    "draw 0 svd_atom: matched (guard)",
+    "draw 1 svd_atom: matched (guard)",
+    "draw 2 svd_atom: matched (guard)"
+   ],
+   "protected_mean": null,
+   "target_test_mean": null,
+   "target_test_mean_stable": null,
+   "guard_max": null,
+   "per_run_protected": []
+  },
+  "de|tau=1.0|whitened_rank1": {
+   "runs": 3,
+   "used": 3,
+   "unstable": [],
+   "excluded": [],
+   "protected_mean": 0.17627068112293878,
+   "target_test_mean": 0.9805312740306059,
+   "target_test_mean_stable": 0.9805312740306059,
+   "guard_max": 0.0002430751919746399,
+   "per_run_protected": [
+    0.17294673062860966,
+    0.179538419470191,
+    0.17632689327001572
+   ]
+  },
+  "de|tau=1.0|lora_rank1_long": {
+   "runs": 9,
+   "used": 9,
+   "unstable": [
+    "draw 2 lora_rank1_long_s1"
+   ],
+   "excluded": [],
+   "protected_mean": 0.07874676750765906,
+   "target_test_mean": 0.9554066827727689,
+   "target_test_mean_stable": 0.9550523720681667,
+   "guard_max": 0.001162305474281311,
+   "per_run_protected": [
+    0.09928357042372227,
+    0.08524969406425953,
+    0.0906138401478529,
+    0.07850074209272861,
+    0.06885119155049324,
+    0.06463548727333546,
+    0.06976615823805332,
+    0.08409901149570942,
+    0.06772121228277683
+   ]
+  },
+  "de|tau=1.0|finetune_24_long": {
+   "runs": 9,
+   "used": 9,
+   "unstable": [],
+   "excluded": [],
+   "protected_mean": 0.18764306046068668,
+   "target_test_mean": 0.9919283290704092,
+   "target_test_mean_stable": 0.9919283290704092,
+   "guard_max": 0.0008641853928565979,
+   "per_run_protected": [
+    0.17455686442553997,
+    0.17791057378053665,
+    0.17445091530680656,
+    0.19469423778355122,
+    0.20111466757953167,
+    0.19756493158638477,
+    0.18656624667346478,
+    0.19121933914721012,
+    0.1907097678631544
+   ]
+  },
+  "es|tau=0.5|vpd_atom": {
+   "runs": 3,
+   "used": 3,
+   "unstable": [],
+   "excluded": [],
+   "protected_mean": -0.0014242716133594513,
+   "target_test_mean": 0.5262363404035568,
+   "target_test_mean_stable": 0.5262363404035568,
+   "guard_max": 0.0006049610674381256,
+   "per_run_protected": [
+    -0.0014242716133594513,
+    -0.0014242716133594513,
+    -0.0014242716133594513
+   ]
+  },
+  "es|tau=0.5|svd_atom": {
+   "runs": 3,
+   "used": 0,
+   "unstable": [],
+   "excluded": [
+    "draw 0 svd_atom: matched (guard)",
+    "draw 1 svd_atom: matched (guard)",
+    "draw 2 svd_atom: matched (guard)"
+   ],
+   "protected_mean": null,
+   "target_test_mean": null,
+   "target_test_mean_stable": null,
+   "guard_max": null,
+   "per_run_protected": []
+  },
+  "es|tau=0.5|whitened_rank1": {
+   "runs": 3,
+   "used": 3,
+   "unstable": [],
+   "excluded": [],
+   "protected_mean": 0.19972995420296988,
+   "target_test_mean": 0.4913155461351077,
+   "target_test_mean_stable": 0.4913155461351077,
+   "guard_max": 3.346055746078491e-05,
+   "per_run_protected": [
+    0.1820427030324936,
+    0.20886927470564842,
+    0.2082778848707676
+   ]
+  },
+  "es|tau=0.5|lora_rank1_long": {
+   "runs": 9,
+   "used": 9,
+   "unstable": [
+    "draw 1 lora_rank1_long_s1",
+    "draw 2 lora_rank1_long_s0",
+    "draw 2 lora_rank1_long_s1"
+   ],
+   "excluded": [],
+   "protected_mean": 0.10321070709162289,
+   "target_test_mean": 0.5017915591597557,
+   "target_test_mean_stable": 0.4986326328168313,
+   "guard_max": 0.00020983070135116577,
+   "per_run_protected": [
+    0.1048552580177784,
+    0.10000506415963173,
+    0.11017929762601852,
+    0.11634146422147751,
+    0.09985721856355667,
+    0.12091969698667526,
+    0.08664761111140251,
+    0.09265832975506783,
+    0.09743242338299751
+   ]
+  },
+  "es|tau=0.5|finetune_24_long": {
+   "runs": 9,
+   "used": 9,
+   "unstable": [],
+   "excluded": [],
+   "protected_mean": 0.1689438389407264,
+   "target_test_mean": 0.5187385860416625,
+   "target_test_mean_stable": 0.5187385860416625,
+   "guard_max": 0.00021923333406448364,
+   "per_run_protected": [
+    0.16898131743073463,
+    0.16753201931715012,
+    0.16926797479391098,
+    0.1753968819975853,
+    0.173751600086689,
+    0.1718236207962036,
+    0.1694822832942009,
+    0.16368909180164337,
+    0.16056976094841957
+   ]
+  },
+  "es|tau=1.0|vpd_atom": {
+   "runs": 3,
+   "used": 3,
+   "unstable": [],
+   "excluded": [],
+   "protected_mean": 0.0011602342128753662,
+   "target_test_mean": 1.0508748069405556,
+   "target_test_mean_stable": 1.0508748069405556,
+   "guard_max": 0.0009461604058742523,
+   "per_run_protected": [
+    0.0011602342128753662,
+    0.0011602342128753662,
+    0.0011602342128753662
+   ]
+  },
+  "es|tau=1.0|svd_atom": {
+   "runs": 3,
+   "used": 0,
+   "unstable": [],
+   "excluded": [
+    "draw 0 svd_atom: not reached on the evaluated grid",
+    "draw 1 svd_atom: matched (guard)",
+    "draw 2 svd_atom: not reached on the evaluated grid"
+   ],
+   "protected_mean": null,
+   "target_test_mean": null,
+   "target_test_mean_stable": null,
+   "guard_max": null,
+   "per_run_protected": []
+  },
+  "es|tau=1.0|whitened_rank1": {
+   "runs": 3,
+   "used": 3,
+   "unstable": [],
+   "excluded": [],
+   "protected_mean": 0.4434705289701621,
+   "target_test_mean": 0.9930668274561564,
+   "target_test_mean_stable": 0.9930668274561564,
+   "guard_max": 5.459785461425781e-05,
+   "per_run_protected": [
+    0.4144449457526207,
+    0.4544755667448044,
+    0.46149107441306114
+   ]
+  },
+  "es|tau=1.0|lora_rank1_long": {
+   "runs": 9,
+   "used": 9,
+   "unstable": [
+    "draw 1 lora_rank1_long_s1",
+    "draw 2 lora_rank1_long_s0",
+    "draw 2 lora_rank1_long_s1"
+   ],
+   "excluded": [],
+   "protected_mean": 0.18383239582180977,
+   "target_test_mean": 1.0231871667007606,
+   "target_test_mean_stable": 1.024314862365524,
+   "guard_max": 0.0002862587571144104,
+   "per_run_protected": [
+    0.18155036494135857,
+    0.1838083304464817,
+    0.19241486489772797,
+    0.2166253887116909,
+    0.17024052515625954,
+    0.22835859283804893,
+    0.1498478651046753,
+    0.15784689411520958,
+    0.17379873618483543
+   ]
+  },
+  "es|tau=1.0|finetune_24_long": {
+   "runs": 9,
+   "used": 9,
+   "unstable": [],
+   "excluded": [],
+   "protected_mean": 0.33803297041190994,
+   "target_test_mean": 1.0415764914618597,
+   "target_test_mean_stable": 1.0415764914618597,
+   "guard_max": 0.0003036782145500183,
+   "per_run_protected": [
+    0.34762391075491905,
+    0.3560772128403187,
+    0.349355835467577,
+    0.3283277116715908,
+    0.3352923132479191,
+    0.3331025391817093,
+    0.3308805264532566,
+    0.3292875662446022,
+    0.33234911784529686
+   ]
+  },
+  "fr|tau=0.5|vpd_atom": {
+   "runs": 3,
+   "used": 3,
+   "unstable": [],
+   "excluded": [],
+   "protected_mean": 0.000550147145986557,
+   "target_test_mean": 0.526484526693821,
+   "target_test_mean_stable": 0.526484526693821,
+   "guard_max": 0.00010442566417623311,
+   "per_run_protected": [
+    0.000550147145986557,
+    0.000550147145986557,
+    0.000550147145986557
+   ]
+  },
+  "fr|tau=0.5|svd_atom": {
+   "runs": 3,
+   "used": 0,
+   "unstable": [],
+   "excluded": [
+    "draw 0 svd_atom: matched (guard)",
+    "draw 1 svd_atom: matched (guard)",
+    "draw 2 svd_atom: matched (guard)"
+   ],
+   "protected_mean": null,
+   "target_test_mean": null,
+   "target_test_mean_stable": null,
+   "guard_max": null,
+   "per_run_protected": []
+  },
+  "fr|tau=0.5|whitened_rank1": {
+   "runs": 3,
+   "used": 3,
+   "unstable": [],
+   "excluded": [],
+   "protected_mean": 0.027483033016324043,
+   "target_test_mean": 0.4885609783232212,
+   "target_test_mean_stable": 0.4885609783232212,
+   "guard_max": 0.0001596882939338684,
+   "per_run_protected": [
+    0.02080589532852173,
+    0.034562453627586365,
+    0.027080750092864037
+   ]
+  },
+  "fr|tau=0.5|lora_rank1_long": {
+   "runs": 9,
+   "used": 9,
+   "unstable": [
+    "draw 0 lora_rank1_long_s1",
+    "draw 2 lora_rank1_long_s0",
+    "draw 2 lora_rank1_long_s2"
+   ],
+   "excluded": [],
+   "protected_mean": 0.017557051239742175,
+   "target_test_mean": 0.5402542882495456,
+   "target_test_mean_stable": 0.5421501435339451,
+   "guard_max": 0.00035834312438964844,
+   "per_run_protected": [
+    0.018440352752804756,
+    0.015705620869994164,
+    0.01907464861869812,
+    0.020783264189958572,
+    0.015108399093151093,
+    0.013342687860131264,
+    0.019427966326475143,
+    0.01985159143805504,
+    0.016278930008411407
+   ]
+  },
+  "fr|tau=0.5|finetune_24_long": {
+   "runs": 9,
+   "used": 9,
+   "unstable": [],
+   "excluded": [],
+   "protected_mean": 0.03971389619012674,
+   "target_test_mean": 0.4908898253407743,
+   "target_test_mean_stable": 0.4908898253407743,
+   "guard_max": 0.00026176124811172485,
+   "per_run_protected": [
+    0.04159890301525593,
+    0.04356464557349682,
+    0.04086870700120926,
+    0.04591628909111023,
+    0.04605056345462799,
+    0.04122864082455635,
+    0.0330696702003479,
+    0.03181389346718788,
+    0.033313753083348274
+   ]
+  },
+  "fr|tau=1.0|vpd_atom": {
+   "runs": 3,
+   "used": 3,
+   "unstable": [],
+   "excluded": [],
+   "protected_mean": 0.0012410208582878113,
+   "target_test_mean": 1.0626220516860485,
+   "target_test_mean_stable": 1.0626220516860485,
+   "guard_max": 0.00022499110491480678,
+   "per_run_protected": [
+    0.0012410208582878113,
+    0.0012410208582878113,
+    0.0012410208582878113
+   ]
+  },
+  "fr|tau=1.0|svd_atom": {
+   "runs": 3,
+   "used": 0,
+   "unstable": [],
+   "excluded": [
+    "draw 0 svd_atom: matched (guard)",
+    "draw 1 svd_atom: not reached on the evaluated grid",
+    "draw 2 svd_atom: matched (guard)"
+   ],
+   "protected_mean": null,
+   "target_test_mean": null,
+   "target_test_mean_stable": null,
+   "guard_max": null,
+   "per_run_protected": []
+  },
+  "fr|tau=1.0|whitened_rank1": {
+   "runs": 3,
+   "used": 3,
+   "unstable": [],
+   "excluded": [],
+   "protected_mean": 0.051577276860674225,
+   "target_test_mean": 0.9949997601409754,
+   "target_test_mean_stable": 0.9949997601409754,
+   "guard_max": 0.00024466216564178467,
+   "per_run_protected": [
+    0.0368356890976429,
+    0.06681377813220024,
+    0.05108236335217953
+   ]
+  },
+  "fr|tau=1.0|lora_rank1_long": {
+   "runs": 9,
+   "used": 9,
+   "unstable": [
+    "draw 0 lora_rank1_long_s1",
+    "draw 2 lora_rank1_long_s0",
+    "draw 2 lora_rank1_long_s2"
+   ],
+   "excluded": [],
+   "protected_mean": 0.027979239407512877,
+   "target_test_mean": 1.0804541553888056,
+   "target_test_mean_stable": 1.0728267791370552,
+   "guard_max": 0.00045446306467056274,
+   "per_run_protected": [
+    0.029694708064198494,
+    0.024624716490507126,
+    0.030204029753804207,
+    0.032159846276044846,
+    0.02344638481736183,
+    0.02284405194222927,
+    0.031075583770871162,
+    0.03162350878119469,
+    0.026140324771404266
+   ]
+  },
+  "fr|tau=1.0|finetune_24_long": {
+   "runs": 9,
+   "used": 9,
+   "unstable": [],
+   "excluded": [],
+   "protected_mean": 0.0713978326982922,
+   "target_test_mean": 0.9997665588226583,
+   "target_test_mean_stable": 0.9997665588226583,
+   "guard_max": 0.0003743991255760193,
+   "per_run_protected": [
+    0.0747017078101635,
+    0.07682821154594421,
+    0.07603909820318222,
+    0.08057927526533604,
+    0.08472227305173874,
+    0.07273761555552483,
+    0.057139985263347626,
+    0.05879155173897743,
+    0.06104077585041523
+   ]
+  }
+ },
+ "main_study_200_step": {
+  "de|tau=0.5|lora_rank1": 0.05099335188666979,
+  "de|tau=0.5|finetune_24": 0.1272561512887478,
+  "de|tau=1.0|lora_rank1": 0.09537460158268611,
+  "de|tau=1.0|finetune_24": 0.24947700339059034,
+  "es|tau=0.5|lora_rank1": 0.09955759470661481,
+  "es|tau=0.5|finetune_24": 0.20007841909925142,
+  "es|tau=1.0|lora_rank1": 0.189717727402846,
+  "es|tau=1.0|finetune_24": 0.40326149637500447,
+  "fr|tau=0.5|lora_rank1": 0.02951047507425149,
+  "fr|tau=0.5|finetune_24": 0.06381726451218128,
+  "fr|tau=1.0|lora_rank1": 0.0576969850808382,
+  "fr|tau=1.0|finetune_24": 0.11777944738666217
+ },
+ "convergence": {
+  "de_draw0_lora_rank1_long_lr0.001_s0": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 16.649463653564453,
+   "kl": [
+    0.00038465149486910377,
+    0.00034163626912686595
+   ],
+   "rel_change": -0.11182908767032304,
+   "state": "falling",
+   "plateau": false
+  },
+  "de_draw0_lora_rank1_long_lr0.001_s1": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 12.823843002319336,
+   "kl": [
+    0.0003309266198812111,
+    0.0002892342427571748
+   ],
+   "rel_change": -0.12598677356025972,
+   "state": "falling",
+   "plateau": false
+  },
+  "de_draw0_lora_rank1_long_lr0.001_s2": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 15.777196884155273,
+   "kl": [
+    0.00045940231950680754,
+    0.0003795919894855615
+   ],
+   "rel_change": -0.17372644114406435,
+   "state": "falling",
+   "plateau": false
+  },
+  "de_draw0_lora_rank1_long_lr0.003_s0": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 13.678234100341797,
+   "kl": [
+    0.0008978627924989269,
+    0.0002835870814692498
+   ],
+   "rel_change": -0.6841532093339431,
+   "state": "falling",
+   "plateau": false
+  },
+  "de_draw0_lora_rank1_long_lr0.01_s0": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 8.441473960876465,
+   "kl": [
+    0.046114561264403164,
+    0.0002592966027350485
+   ],
+   "rel_change": -0.9943771209000918,
+   "state": "falling",
+   "plateau": false
+  },
+  "de_draw0_lora_rank1_long_lr0.03_s0": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": true,
+   "max_grad_norm_after_warmup": 15.140695571899414,
+   "kl": [
+    0.038346070126863196,
+    0.008017716419999488
+   ],
+   "rel_change": -0.7909116529158302,
+   "state": "falling",
+   "plateau": false
+  },
+  "de_draw0_finetune_24_long_lr1e-06_s0": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 46.562965393066406,
+   "kl": [
+    0.0002707784103108679,
+    0.00022876769691038135
+   ],
+   "rel_change": -0.15514794311797625,
+   "state": "falling",
+   "plateau": false
+  },
+  "de_draw0_finetune_24_long_lr1e-06_s1": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 49.19987487792969,
+   "kl": [
+    0.00031733339267248084,
+    0.0002677755791751224
+   ],
+   "rel_change": -0.15616955114618825,
+   "state": "falling",
+   "plateau": false
+  },
+  "de_draw0_finetune_24_long_lr1e-06_s2": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 45.781944274902344,
+   "kl": [
+    0.00027937990694226755,
+    0.00026686287651500606
+   ],
+   "rel_change": -0.04480290141211934,
+   "state": "plateau",
+   "plateau": true
+  },
+  "de_draw0_finetune_24_long_lr1e-07_s0": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 52.30910873413086,
+   "kl": [
+    0.0005331690289267499,
+    0.0004115057602120942
+   ],
+   "rel_change": -0.22818892717673325,
+   "state": "falling",
+   "plateau": false
+  },
+  "de_draw0_finetune_24_long_lr3e-06_s0": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 42.67688751220703,
+   "kl": [
+    0.0006054962113921647,
+    0.0008287550344903138
+   ],
+   "rel_change": 0.36872042945542066,
+   "state": "rising",
+   "plateau": false
+  },
+  "de_draw0_finetune_24_long_lr3e-07_s0": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 50.93644714355469,
+   "kl": [
+    0.00029081966306421236,
+    0.0002427064790708755
+   ],
+   "rel_change": -0.16543992757021236,
+   "state": "falling",
+   "plateau": false
+  },
+  "de_draw1_lora_rank1_long_lr0.001_s0": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 13.147951126098633,
+   "kl": [
+    0.0003675557638871396,
+    0.0003055824254261097
+   ],
+   "rel_change": -0.1686093500632988,
+   "state": "falling",
+   "plateau": false
+  },
+  "de_draw1_lora_rank1_long_lr0.001_s1": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 13.654276847839355,
+   "kl": [
+    0.00045492052254303417,
+    0.0003617682887124829
+   ],
+   "rel_change": -0.2047659518850116,
+   "state": "falling",
+   "plateau": false
+  },
+  "de_draw1_lora_rank1_long_lr0.001_s2": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 14.629344940185547,
+   "kl": [
+    0.0003879822567114388,
+    0.0003093239407121473
+   ],
+   "rel_change": -0.20273688973821685,
+   "state": "falling",
+   "plateau": false
+  },
+  "de_draw1_finetune_24_long_lr1e-06_s0": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 51.45730209350586,
+   "kl": [
+    0.0003255190620166104,
+    0.0003008293585367028
+   ],
+   "rel_change": -0.07584718181157626,
+   "state": "plateau",
+   "plateau": true
+  },
+  "de_draw1_finetune_24_long_lr1e-06_s1": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 49.87813949584961,
+   "kl": [
+    0.0004118665624446294,
+    0.00034266093848600576
+   ],
+   "rel_change": -0.16802923633289,
+   "state": "falling",
+   "plateau": false
+  },
+  "de_draw1_finetune_24_long_lr1e-06_s2": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 51.17655944824219,
+   "kl": [
+    0.0003226417017572203,
+    0.00030444342246482847
+   ],
+   "rel_change": -0.056403989915989106,
+   "state": "plateau",
+   "plateau": true
+  },
+  "de_draw2_lora_rank1_long_lr0.001_s0": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 13.835809707641602,
+   "kl": [
+    0.00043905288544010546,
+    0.0003569551437294649
+   ],
+   "rel_change": -0.1869882750647362,
+   "state": "falling",
+   "plateau": false
+  },
+  "de_draw2_lora_rank1_long_lr0.001_s1": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": true,
+   "max_grad_norm_after_warmup": 12.695998191833496,
+   "kl": [
+    0.0003673304385074516,
+    0.001855739236361842
+   ],
+   "rel_change": 4.0519615088315,
+   "state": "rising",
+   "plateau": false
+  },
+  "de_draw2_lora_rank1_long_lr0.001_s2": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 14.009979248046875,
+   "kl": [
+    0.0004118594069950632,
+    0.0003400061979732527
+   ],
+   "rel_change": -0.17446052658127523,
+   "state": "falling",
+   "plateau": false
+  },
+  "de_draw2_finetune_24_long_lr1e-06_s0": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 49.72202682495117,
+   "kl": [
+    0.0003108507376623493,
+    0.0003345074009644122
+   ],
+   "rel_change": 0.07610296658764623,
+   "state": "plateau",
+   "plateau": true
+  },
+  "de_draw2_finetune_24_long_lr1e-06_s1": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 48.8724479675293,
+   "kl": [
+    0.00032298059863933304,
+    0.00033739000980403944
+   ],
+   "rel_change": 0.044613859858489965,
+   "state": "plateau",
+   "plateau": true
+  },
+  "de_draw2_finetune_24_long_lr1e-06_s2": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 50.1386604309082,
+   "kl": [
+    0.0003439822434643247,
+    0.00030204738874317627
+   ],
+   "rel_change": -0.1219099401725299,
+   "state": "falling",
+   "plateau": false
+  },
+  "es_draw0_lora_rank1_long_lr0.001_s0": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 17.473140716552734,
+   "kl": [
+    0.00018365574607059898,
+    0.0001465760117298487
+   ],
+   "rel_change": -0.20189803550440777,
+   "state": "falling",
+   "plateau": false
+  },
+  "es_draw0_lora_rank1_long_lr0.003_s0": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 17.062231063842773,
+   "kl": [
+    0.0004865434455041395,
+    0.00015800414553268638
+   ],
+   "rel_change": -0.6752517231653015,
+   "state": "falling",
+   "plateau": false
+  },
+  "es_draw0_lora_rank1_long_lr0.003_s1": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 14.353641510009766,
+   "kl": [
+    0.0004449973584996769,
+    0.0001581123613618729
+   ],
+   "rel_change": -0.6446892136731915,
+   "state": "falling",
+   "plateau": false
+  },
+  "es_draw0_lora_rank1_long_lr0.003_s2": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 13.403873443603516,
+   "kl": [
+    0.007933439446787816,
+    0.00023962285274592432
+   ],
+   "rel_change": -0.9697958427296063,
+   "state": "falling",
+   "plateau": false
+  },
+  "es_draw0_lora_rank1_long_lr0.01_s0": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 10.430523872375488,
+   "kl": [
+    0.0012252288233867148,
+    0.00020419469649368693
+   ],
+   "rel_change": -0.8333415827345112,
+   "state": "falling",
+   "plateau": false
+  },
+  "es_draw0_lora_rank1_long_lr0.03_s0": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": true,
+   "max_grad_norm_after_warmup": 11.908699035644531,
+   "kl": [
+    0.05289597291266546,
+    0.019893278869858477
+   ],
+   "rel_change": -0.623916949165421,
+   "state": "falling",
+   "plateau": false
+  },
+  "es_draw0_finetune_24_long_lr1e-06_s0": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 47.38447189331055,
+   "kl": [
+    0.0001294674546556962,
+    0.0001128652283455267
+   ],
+   "rel_change": -0.12823474713642288,
+   "state": "falling",
+   "plateau": false
+  },
+  "es_draw0_finetune_24_long_lr1e-07_s0": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 62.73124313354492,
+   "kl": [
+    0.00019804528994882276,
+    0.0001421357098365661
+   ],
+   "rel_change": -0.28230704263001843,
+   "state": "falling",
+   "plateau": false
+  },
+  "es_draw0_finetune_24_long_lr3e-06_s0": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 40.50760269165039,
+   "kl": [
+    0.000859790271078964,
+    0.0006398901264219603
+   ],
+   "rel_change": -0.255760215082508,
+   "state": "falling",
+   "plateau": false
+  },
+  "es_draw0_finetune_24_long_lr3e-07_s0": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 57.67677688598633,
+   "kl": [
+    0.00010088931946938828,
+    8.203445747767546e-05
+   ],
+   "rel_change": -0.18688660098885634,
+   "state": "falling",
+   "plateau": false
+  },
+  "es_draw0_finetune_24_long_lr3e-07_s1": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 60.5277099609375,
+   "kl": [
+    0.00010447553268022602,
+    8.122847066260874e-05
+   ],
+   "rel_change": -0.22251202191780955,
+   "state": "falling",
+   "plateau": false
+  },
+  "es_draw0_finetune_24_long_lr3e-07_s2": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 60.81679916381836,
+   "kl": [
+    0.00011019672069778608,
+    8.04862565928488e-05
+   ],
+   "rel_change": -0.269612960501956,
+   "state": "falling",
+   "plateau": false
+  },
+  "es_draw1_lora_rank1_long_lr0.003_s0": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 13.63066577911377,
+   "kl": [
+    0.00029500855714559293,
+    0.00013710544124023727
+   ],
+   "rel_change": -0.5352492735572655,
+   "state": "falling",
+   "plateau": false
+  },
+  "es_draw1_lora_rank1_long_lr0.003_s1": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": true,
+   "max_grad_norm_after_warmup": 21.253950119018555,
+   "kl": [
+    0.0003023524543550593,
+    0.0003776670225761336
+   ],
+   "rel_change": 0.2490952765100782,
+   "state": "rising",
+   "plateau": false
+  },
+  "es_draw1_lora_rank1_long_lr0.003_s2": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 12.202341079711914,
+   "kl": [
+    0.0006785090945413685,
+    0.00015830693553198216
+   ],
+   "rel_change": -0.766684136136763,
+   "state": "falling",
+   "plateau": false
+  },
+  "es_draw1_finetune_24_long_lr3e-07_s0": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 63.147918701171875,
+   "kl": [
+    8.971770566290616e-05,
+    7.311461666859032e-05
+   ],
+   "rel_change": -0.1850592240588292,
+   "state": "falling",
+   "plateau": false
+  },
+  "es_draw1_finetune_24_long_lr3e-07_s1": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 63.55668258666992,
+   "kl": [
+    9.988563743945633e-05,
+    7.430151285348074e-05
+   ],
+   "rel_change": -0.2561341674520813,
+   "state": "falling",
+   "plateau": false
+  },
+  "es_draw1_finetune_24_long_lr3e-07_s2": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 67.8184814453125,
+   "kl": [
+    8.552942992423596e-05,
+    7.514017119092387e-05
+   ],
+   "rel_change": -0.12146998690994605,
+   "state": "falling",
+   "plateau": false
+  },
+  "es_draw2_lora_rank1_long_lr0.003_s0": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": true,
+   "max_grad_norm_after_warmup": 12.801329612731934,
+   "kl": [
+    0.00012049527259705428,
+    0.00040369554585595324
+   ],
+   "rel_change": 2.350301942599384,
+   "state": "rising",
+   "plateau": false
+  },
+  "es_draw2_lora_rank1_long_lr0.003_s1": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": true,
+   "max_grad_norm_after_warmup": 11.041410446166992,
+   "kl": [
+    0.00011505179423920708,
+    0.0002998920552954587
+   ],
+   "rel_change": 1.6065830374791512,
+   "state": "rising",
+   "plateau": false
+  },
+  "es_draw2_lora_rank1_long_lr0.003_s2": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 19.47530174255371,
+   "kl": [
+    0.0005935856861469802,
+    0.00012015531439146798
+   ],
+   "rel_change": -0.7975771363837842,
+   "state": "falling",
+   "plateau": false
+  },
+  "es_draw2_finetune_24_long_lr3e-07_s0": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 62.846763610839844,
+   "kl": [
+    8.111082019013338e-05,
+    6.79179185567591e-05
+   ],
+   "rel_change": -0.16265279530460364,
+   "state": "falling",
+   "plateau": false
+  },
+  "es_draw2_finetune_24_long_lr3e-07_s1": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 64.48628997802734,
+   "kl": [
+    8.058077486339243e-05,
+    6.944662200680796e-05
+   ],
+   "rel_change": -0.13817381224566364,
+   "state": "falling",
+   "plateau": false
+  },
+  "es_draw2_finetune_24_long_lr3e-07_s2": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 64.6385726928711,
+   "kl": [
+    9.213275095021345e-05,
+    6.765046350665216e-05
+   ],
+   "rel_change": -0.26572838855957953,
+   "state": "falling",
+   "plateau": false
+  },
+  "fr_draw0_lora_rank1_long_lr0.001_s0": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 11.637632369995117,
+   "kl": [
+    0.00026582739769764885,
+    0.00020784997354894585
+   ],
+   "rel_change": -0.2181017632149652,
+   "state": "falling",
+   "plateau": false
+  },
+  "fr_draw0_lora_rank1_long_lr0.003_s0": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 10.302802085876465,
+   "kl": [
+    0.0005276817798858247,
+    0.00016406162541215963
+   ],
+   "rel_change": -0.6890898422764229,
+   "state": "falling",
+   "plateau": false
+  },
+  "fr_draw0_lora_rank1_long_lr0.003_s1": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": true,
+   "max_grad_norm_after_warmup": 12.027345657348633,
+   "kl": [
+    0.0003262197226376884,
+    0.006508044740257901
+   ],
+   "rel_change": 18.949881287484185,
+   "state": "rising",
+   "plateau": false
+  },
+  "fr_draw0_lora_rank1_long_lr0.003_s2": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 9.727091789245605,
+   "kl": [
+    0.001289305233513005,
+    0.0002151924502413749
+   ],
+   "rel_change": -0.8330942552253245,
+   "state": "falling",
+   "plateau": false
+  },
+  "fr_draw0_lora_rank1_long_lr0.01_s0": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": true,
+   "max_grad_norm_after_warmup": 5.93928861618042,
+   "kl": [
+    0.0033154632710648,
+    0.0013064238296465192
+   ],
+   "rel_change": -0.6059603974358173,
+   "state": "falling",
+   "plateau": false
+  },
+  "fr_draw0_lora_rank1_long_lr0.03_s0": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": true,
+   "max_grad_norm_after_warmup": 11.18624496459961,
+   "kl": [
+    0.014063200513191987,
+    0.059806298435432836
+   ],
+   "rel_change": 3.25268048900615,
+   "state": "rising",
+   "plateau": false
+  },
+  "fr_draw0_finetune_24_long_lr1e-06_s0": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 40.91897964477539,
+   "kl": [
+    0.0001707946429974072,
+    0.00014777382716602006
+   ],
+   "rel_change": -0.13478652156400847,
+   "state": "falling",
+   "plateau": false
+  },
+  "fr_draw0_finetune_24_long_lr1e-06_s1": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 40.70463562011719,
+   "kl": [
+    0.0001942700801578212,
+    0.00016481569468851376
+   ],
+   "rel_change": -0.15161565509922725,
+   "state": "falling",
+   "plateau": false
+  },
+  "fr_draw0_finetune_24_long_lr1e-06_s2": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 40.778526306152344,
+   "kl": [
+    0.00019567630931760505,
+    0.00016267294381577813
+   ],
+   "rel_change": -0.1686630620585688,
+   "state": "falling",
+   "plateau": false
+  },
+  "fr_draw0_finetune_24_long_lr1e-07_s0": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 50.13668441772461,
+   "kl": [
+    0.00040487954413492844,
+    0.0003016005954350476
+   ],
+   "rel_change": -0.25508561792260503,
+   "state": "falling",
+   "plateau": false
+  },
+  "fr_draw0_finetune_24_long_lr3e-06_s0": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 36.54410171508789,
+   "kl": [
+    0.0006275901876051648,
+    0.0006413188320948393
+   ],
+   "rel_change": 0.021875173896618614,
+   "state": "plateau",
+   "plateau": true
+  },
+  "fr_draw0_finetune_24_long_lr3e-07_s0": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 45.27598571777344,
+   "kl": [
+    0.00018871353324811935,
+    0.00015528810962450734
+   ],
+   "rel_change": -0.1771225573931917,
+   "state": "falling",
+   "plateau": false
+  },
+  "fr_draw1_lora_rank1_long_lr0.003_s0": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 12.882772445678711,
+   "kl": [
+    0.005472756917697552,
+    0.00015582433019289965
+   ],
+   "rel_change": -0.9715272699781344,
+   "state": "falling",
+   "plateau": false
+  },
+  "fr_draw1_lora_rank1_long_lr0.003_s1": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 13.326385498046875,
+   "kl": [
+    0.0003533087804044044,
+    0.00012049038679151636
+   ],
+   "rel_change": -0.6589657730736252,
+   "state": "falling",
+   "plateau": false
+  },
+  "fr_draw1_lora_rank1_long_lr0.003_s2": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 8.68844223022461,
+   "kl": [
+    0.0001756056367412384,
+    0.00010165891887936596
+   ],
+   "rel_change": -0.42109535453486474,
+   "state": "falling",
+   "plateau": false
+  },
+  "fr_draw1_finetune_24_long_lr1e-06_s0": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 57.18523406982422,
+   "kl": [
+    0.000151959082245412,
+    0.00012043429501318315
+   ],
+   "rel_change": -0.20745576221180853,
+   "state": "falling",
+   "plateau": false
+  },
+  "fr_draw1_finetune_24_long_lr1e-06_s1": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 61.66423797607422,
+   "kl": [
+    0.00013893062390479827,
+    0.00014141490845531735
+   ],
+   "rel_change": 0.017881475521346724,
+   "state": "plateau",
+   "plateau": true
+  },
+  "fr_draw1_finetune_24_long_lr1e-06_s2": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 55.95899200439453,
+   "kl": [
+    0.00012959745498619668,
+    0.00010532138020380444
+   ],
+   "rel_change": -0.18731907030873304,
+   "state": "falling",
+   "plateau": false
+  },
+  "fr_draw2_lora_rank1_long_lr0.003_s0": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": true,
+   "max_grad_norm_after_warmup": 12.181198120117188,
+   "kl": [
+    0.00018930131307115516,
+    0.0004026657959457225
+   ],
+   "rel_change": 1.1271157046563498,
+   "state": "rising",
+   "plateau": false
+  },
+  "fr_draw2_lora_rank1_long_lr0.003_s1": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 13.989516258239746,
+   "kl": [
+    0.0006882451857563865,
+    0.0001557818291644253
+   ],
+   "rel_change": -0.7736535868489659,
+   "state": "falling",
+   "plateau": false
+  },
+  "fr_draw2_lora_rank1_long_lr0.003_s2": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": true,
+   "max_grad_norm_after_warmup": 10.470070838928223,
+   "kl": [
+    0.00026159480592014006,
+    0.00039937189421834773
+   ],
+   "rel_change": 0.5266812841087847,
+   "state": "rising",
+   "plateau": false
+  },
+  "fr_draw2_finetune_24_long_lr1e-06_s0": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 46.7313232421875,
+   "kl": [
+    0.00013008312100737385,
+    0.00014654058270480164
+   ],
+   "rel_change": 0.12651496650741403,
+   "state": "rising",
+   "plateau": false
+  },
+  "fr_draw2_finetune_24_long_lr1e-06_s1": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 48.42831039428711,
+   "kl": [
+    0.000147143208550915,
+    0.00016393380087720288
+   ],
+   "rel_change": 0.11411054911500003,
+   "state": "rising",
+   "plateau": false
+  },
+  "fr_draw2_finetune_24_long_lr1e-06_s2": {
+   "rule": "plateau: English val KL changes by less than 10% from step 1500 to 2000; unstable: last KL > 2 x its minimum from step 100 on",
+   "unstable": false,
+   "max_grad_norm_after_warmup": 45.81317901611328,
+   "kl": [
+    0.00013230139234110538,
+    0.00014823261307128632
+   ],
+   "rel_change": 0.12041612297704586,
+   "state": "rising",
+   "plateau": false
+  }
+ },
+ "plateau_count": "7/72"
+}

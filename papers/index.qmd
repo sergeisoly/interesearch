@@ -1,0 +1,56 @@
+---
+image: social-card.png
+description: "Language-model interpretability through selective weight edits and repair transfer."
+title: "Some Studies of Language Model Weight Edits"
+page-layout: full
+body-classes: research-home
+toc: false
+---
+
+```{=html}
+<header class="research-hero">
+<h1>Some Studies of Language Model Weight Edits</h1>
+<p class="research-intro">Changing a model's weights can affect more than the intended behaviour. These studies examine selective language edits and the reuse of repairs for collateral damage, using <a href="https://www.goodfire.com/research/interpreting-lm-parameters">Goodfire's 67M-parameter model</a>.</p>
+</header>
+
+<section class="research-story">
+<div class="research-story-copy">
+<h2>Selective language editing</h2>
+<p>This study tests how selectively weight edits can weaken one language while sparing a close relative, following up on <a href="https://www.lesswrong.com/posts/ieoWstubDQWLrMnhH/exploration-fine-tuning-with-parameter-decomposition">Lucius Bushnaq’s exploration of fine-tuning with parameter decomposition</a>. Across three related-language pairs, selected subcomponent edits caused less damage to the related language than learned updates and neuron edits calibrated to the same target effect on validation text. The learned updates preserved English predictions better.</p>
+<p><a class="research-main-link" href="selective-editing/explainer.qmd">Visual guide</a></p>
+<p class="research-secondary-links"><a href="selective-editing/index.qmd">Paper</a><a href="selective-editing/index.pdf">PDF</a><a href="https://github.com/sergeisoly/interesearch/blob/main/papers/guides/selective-editing.md">Study guide on GitHub</a></p>
+</div>
+<div class="research-story-visual" aria-label="The experiment changes German and checks the effect on Dutch. Diagram of the question, not measured data.">
+<svg viewBox="0 0 470 260" role="img" aria-labelledby="selective-preview-title">
+<title id="selective-preview-title">One edit, two languages to check</title>
+<defs><marker id="preview-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10" fill="#87999f"/></marker></defs>
+<g fill="none" stroke="#87999f" stroke-width="1.5" marker-end="url(#preview-arrow)"><path d="M 156 130 H 206 V 75 H 266"/><path d="M 206 130 V 185 H 266"/></g>
+<rect x="28" y="87" width="128" height="86" rx="8" fill="#eaf0f8" stroke="#bfd0e3"/>
+<g fill="#2a78d6"><rect x="55" y="108" width="12" height="12"/><rect x="74" y="108" width="12" height="12" opacity=".3"/><rect x="93" y="108" width="12" height="12" opacity=".3"/><rect x="112" y="108" width="12" height="12" opacity=".3"/></g>
+<text x="92" y="151" text-anchor="middle" class="preview-main">One weight edit</text>
+<text x="284" y="71" class="preview-main">German</text><text x="284" y="96" class="preview-note">the intended change</text>
+<text x="284" y="181" class="preview-main">Dutch</text><text x="284" y="206" class="preview-note">the collateral effect</text>
+<circle cx="273" cy="66" r="3" fill="#b56542"/><circle cx="273" cy="176" r="3" fill="#2c776f"/>
+</svg>
+</div>
+</section>
+
+<section class="research-story">
+<div class="research-story-copy">
+<h2>Repair transfer</h2>
+<p>This study tests ways to reuse an earlier repair on two fine-tunes trained independently from the same base model on samples from the same data distribution. Using the repair as an initialization removed more Dutch damage than fresh fitting when data and steps were limited, while fresh fitting nearly caught up at the full budget. Rescaling the repair's fixed directions left more Dutch damage.</p>
+<p><a class="research-main-link" href="repair-transfer/explainer.qmd">Visual guide</a></p>
+<p class="research-secondary-links"><a href="repair-transfer/index.qmd">Paper</a><a href="repair-transfer/index.pdf">PDF</a><a href="https://github.com/sergeisoly/interesearch/blob/main/papers/guides/repair-transfer.md">Study guide on GitHub</a></p>
+</div>
+<div class="research-story-visual" aria-label="A learned repair can provide fixed directions for fitting scalar coefficients or initialize new directions. Schematic of the two approaches.">
+<svg viewBox="0 0 470 260" role="img" aria-labelledby="repair-preview-title">
+<title id="repair-preview-title">Two ways to reuse a learned repair</title>
+<g stroke="#d4deda" stroke-width="1"><path d="M 38 202 H 431"/><path d="M 68 220 V 42"/></g>
+<g fill="none" stroke-width="4" stroke-linecap="round"><path d="M 68 202 L 162 116" stroke="#8b9599"/><path d="M 68 202 L 215 68" stroke="#52514e" stroke-dasharray="5 7"/><path d="M 68 202 Q 216 184 296 92" stroke="#2a78d6"/></g>
+<circle cx="162" cy="116" r="6" fill="#8b9599"/><circle cx="215" cy="68" r="6" fill="#52514e"/><circle cx="296" cy="92" r="6" fill="#2a78d6"/>
+<text x="47" y="242" class="preview-note">a learned repair</text><text x="224" y="49" class="preview-main">Fit coefficients</text><text x="310" y="90" class="preview-main">Donor</text><text x="310" y="113" class="preview-main">initialization</text>
+
+</svg>
+</div>
+</section>
+```

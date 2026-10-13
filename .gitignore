@@ -1,0 +1,16 @@
+.venv/
+__pycache__/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.DS_Store
+# Quarto build output
+papers/_site/
+papers/.quarto/
+papers/**/*_files/
+# Model assets
+assets/
+# Goodfire reference environment
+vendor/
+# Model-run outputs
+runs/

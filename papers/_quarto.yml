@@ -1,0 +1,39 @@
+project:
+  type: website
+  output-dir: _site
+  render:
+    - "**/*.qmd"
+
+website:
+  title: "interesearch"
+  favicon: favicon.svg
+  image: social-card.png
+  open-graph: true
+  twitter-card: true
+  navbar:
+    title: Sergei Solovev
+    logo-href: https://sergeisoly.github.io/
+    collapse-below: sm
+    left:
+      - href: https://sergeisoly.github.io/research.html
+        text: Research
+      - href: https://sergeisoly.github.io/writing.html
+        text: Writing
+      - href: https://sergeisoly.github.io/about.html
+        text: About
+  page-footer:
+    right:
+      - text: RSS
+        href: https://sergeisoly.github.io/writing.xml
+
+bibliography: references.bib
+
+# Rendering never runs code: papers show results computed beforehand by the analysis commands.
+execute:
+  eval: false
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    css: styles.css

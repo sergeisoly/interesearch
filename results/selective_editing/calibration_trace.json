@@ -1,0 +1,2243 @@
+{
+ "rule": "Effect-matched calibration: the scan-and-bisect rule, and its replay on the recorded calibration points.\n\nEvery edit is a one-parameter family (an atom's signed multiple, a learned update's scale, the ablated fraction of\nthe top-k neurons). Its dose is set so that the mean target validation CE rises by tau: the whole grid is\nevaluated, the first crossing of tau is bisected at most 5 times, and the dose is matched when the closest point\ninside that bracket is within 0.02 nats of tau. Neurons first take the smallest k of the ladder whose full\nablation reaches tau, then scan the ablated fraction at that k. A non-finite effect anywhere on the evaluated points\nmakes the calibration a technical failure, never \"not reached\".\n\nThe trace replays every recorded decision from the recorded (dose, effect) points: the rule must ask for exactly\nthe recorded doses (an unrecorded dose is a KeyError), scan exactly when the record has a scan (a neuron decision\ntaken on the ladder alone has none) and give the recorded status, dose, achieved effect, k and technical failure.\nIt checks the decision rule only, not the effects themselves: the model evaluations are not replayed here.\n",
+ "n_decisions": 128,
+ "n_agree": 128,
+ "statuses": {
+  "matched": 118,
+  "not reached on the evaluated grid": 10
+ },
+ "decisions": [
+  {
+   "cell": "de:0",
+   "method": "vpd_atom",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.6812184335382292,
+    "achieved": 0.49590012431144714
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.6812184335382292,
+    "achieved": 0.49590012431144714
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "de:0",
+   "method": "vpd_atom",
+   "tau": "1.0",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.9450825214724776,
+    "achieved": 1.0193970873951912
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.9450825214724776,
+    "achieved": 1.0193970873951912
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "de:0",
+   "method": "omp_finetune",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.7254126073623883,
+    "achieved": 0.5021709278225899
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.7254126073623883,
+    "achieved": 0.5021709278225899
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "de:0",
+   "method": "omp_finetune",
+   "tau": "1.0",
+   "recorded": {
+    "status": "matched",
+    "scale": 1.0,
+    "achieved": 1.014410026371479
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 1.0,
+    "achieved": 1.014410026371479
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "de:0",
+   "method": "omp_lora",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.6812184335382292,
+    "achieved": 0.49590012431144714
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.6812184335382292,
+    "achieved": 0.49590012431144714
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "de:0",
+   "method": "omp_lora",
+   "tau": "1.0",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.9450825214724776,
+    "achieved": 1.0193970873951912
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.9450825214724776,
+    "achieved": 1.0193970873951912
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "de:0",
+   "method": "ci_difference",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.7803300858899107,
+    "achieved": 0.5165570825338364
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.7803300858899107,
+    "achieved": 0.5165570825338364
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "de:0",
+   "method": "ci_difference",
+   "tau": "1.0",
+   "recorded": {
+    "status": "matched",
+    "scale": 1.2071067811865475,
+    "achieved": 0.9944108501076698
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 1.2071067811865475,
+    "achieved": 0.9944108501076698
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "de:0",
+   "method": "historical_atom",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.6812184335382292,
+    "achieved": 0.49590012431144714
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.6812184335382292,
+    "achieved": 0.49590012431144714
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "de:0",
+   "method": "historical_atom",
+   "tau": "1.0",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.9450825214724776,
+    "achieved": 1.0193970873951912
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.9450825214724776,
+    "achieved": 1.0193970873951912
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "de:0",
+   "method": "neurons",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.8718592167691145,
+    "achieved": 0.5003140717744827,
+    "k": 8
+   },
+   "replayed": {
+    "k": 8,
+    "status": "matched",
+    "scale": 0.8718592167691145,
+    "achieved": 0.5003140717744827
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "de:0",
+   "method": "neurons",
+   "tau": "1.0",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.954235434560398,
+    "achieved": 1.0045008435845375,
+    "k": 64
+   },
+   "replayed": {
+    "k": 64,
+    "status": "matched",
+    "scale": 0.954235434560398,
+    "achieved": 1.0045008435845375
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "de:0",
+   "method": "lora_rank1",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.3718592167691146,
+    "achieved": 0.48377958685159683
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.3718592167691146,
+    "achieved": 0.48377958685159683
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "de:0",
+   "method": "lora_rank1",
+   "tau": "1.0",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.5258883476483185,
+    "achieved": 0.9996739104390144
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.5258883476483185,
+    "achieved": 0.9996739104390144
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "de:0",
+   "method": "finetune_24",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.6035533905932737,
+    "achieved": 0.4878389313817024
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.6035533905932737,
+    "achieved": 0.4878389313817024
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "de:0",
+   "method": "finetune_24",
+   "tau": "1.0",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.8718592167691145,
+    "achieved": 1.0046660602092743
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.8718592167691145,
+    "achieved": 1.0046660602092743
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "de:1",
+   "method": "vpd_atom",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.6812184335382292,
+    "achieved": 0.49590012431144714
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.6812184335382292,
+    "achieved": 0.49590012431144714
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "de:1",
+   "method": "vpd_atom",
+   "tau": "1.0",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.9450825214724776,
+    "achieved": 1.0193970873951912
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.9450825214724776,
+    "achieved": 1.0193970873951912
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "de:1",
+   "method": "omp_finetune",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.7254126073623883,
+    "achieved": 0.5021709278225899
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.7254126073623883,
+    "achieved": 0.5021709278225899
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "de:1",
+   "method": "omp_finetune",
+   "tau": "1.0",
+   "recorded": {
+    "status": "matched",
+    "scale": 1.0,
+    "achieved": 1.014410026371479
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 1.0,
+    "achieved": 1.014410026371479
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "de:1",
+   "method": "omp_lora",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.6812184335382292,
+    "achieved": 0.49590012431144714
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.6812184335382292,
+    "achieved": 0.49590012431144714
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "de:1",
+   "method": "omp_lora",
+   "tau": "1.0",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.9450825214724776,
+    "achieved": 1.0193970873951912
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.9450825214724776,
+    "achieved": 1.0193970873951912
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "de:1",
+   "method": "ci_difference",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.7803300858899107,
+    "achieved": 0.5165570825338364
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.7803300858899107,
+    "achieved": 0.5165570825338364
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "de:1",
+   "method": "ci_difference",
+   "tau": "1.0",
+   "recorded": {
+    "status": "matched",
+    "scale": 1.2071067811865475,
+    "achieved": 0.9944108501076698
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 1.2071067811865475,
+    "achieved": 0.9944108501076698
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "de:1",
+   "method": "historical_atom",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.6812184335382292,
+    "achieved": 0.49590012431144714
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.6812184335382292,
+    "achieved": 0.49590012431144714
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "de:1",
+   "method": "historical_atom",
+   "tau": "1.0",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.9450825214724776,
+    "achieved": 1.0193970873951912
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.9450825214724776,
+    "achieved": 1.0193970873951912
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "de:1",
+   "method": "neurons",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.8718592167691145,
+    "achieved": 0.5003140717744827,
+    "k": 8
+   },
+   "replayed": {
+    "k": 8,
+    "status": "matched",
+    "scale": 0.8718592167691145,
+    "achieved": 0.5003140717744827
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "de:1",
+   "method": "neurons",
+   "tau": "1.0",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.954235434560398,
+    "achieved": 1.0045008435845375,
+    "k": 64
+   },
+   "replayed": {
+    "k": 64,
+    "status": "matched",
+    "scale": 0.954235434560398,
+    "achieved": 1.0045008435845375
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "de:1",
+   "method": "lora_rank1",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.39016504294495535,
+    "achieved": 0.5128631442785263
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.39016504294495535,
+    "achieved": 0.5128631442785263
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "de:1",
+   "method": "lora_rank1",
+   "tau": "1.0",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.5388325214724776,
+    "achieved": 1.005804069340229
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.5388325214724776,
+    "achieved": 1.005804069340229
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "de:1",
+   "method": "finetune_24",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.6035533905932737,
+    "achieved": 0.49174491316080093
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.6035533905932737,
+    "achieved": 0.49174491316080093
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "de:1",
+   "method": "finetune_24",
+   "tau": "1.0",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.8718592167691145,
+    "achieved": 1.002244584262371
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.8718592167691145,
+    "achieved": 1.002244584262371
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "de:2",
+   "method": "vpd_atom",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.6812184335382292,
+    "achieved": 0.49590012431144714
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.6812184335382292,
+    "achieved": 0.49590012431144714
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "de:2",
+   "method": "vpd_atom",
+   "tau": "1.0",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.9450825214724776,
+    "achieved": 1.0193970873951912
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.9450825214724776,
+    "achieved": 1.0193970873951912
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "de:2",
+   "method": "omp_finetune",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.7254126073623883,
+    "achieved": 0.5021709278225899
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.7254126073623883,
+    "achieved": 0.5021709278225899
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "de:2",
+   "method": "omp_finetune",
+   "tau": "1.0",
+   "recorded": {
+    "status": "matched",
+    "scale": 1.0,
+    "achieved": 1.014410026371479
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 1.0,
+    "achieved": 1.014410026371479
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "de:2",
+   "method": "omp_lora",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.7254126073623883,
+    "achieved": 0.5021709278225899
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.7254126073623883,
+    "achieved": 0.5021709278225899
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "de:2",
+   "method": "omp_lora",
+   "tau": "1.0",
+   "recorded": {
+    "status": "matched",
+    "scale": 1.0,
+    "achieved": 1.014410026371479
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 1.0,
+    "achieved": 1.014410026371479
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "de:2",
+   "method": "ci_difference",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.7803300858899107,
+    "achieved": 0.5165570825338364
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.7803300858899107,
+    "achieved": 0.5165570825338364
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "de:2",
+   "method": "ci_difference",
+   "tau": "1.0",
+   "recorded": {
+    "status": "matched",
+    "scale": 1.2071067811865475,
+    "achieved": 0.9944108501076698
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 1.2071067811865475,
+    "achieved": 0.9944108501076698
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "de:2",
+   "method": "historical_atom",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.6812184335382292,
+    "achieved": 0.49590012431144714
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.6812184335382292,
+    "achieved": 0.49590012431144714
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "de:2",
+   "method": "historical_atom",
+   "tau": "1.0",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.9450825214724776,
+    "achieved": 1.0193970873951912
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.9450825214724776,
+    "achieved": 1.0193970873951912
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "de:2",
+   "method": "neurons",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.8718592167691145,
+    "achieved": 0.5003140717744827,
+    "k": 8
+   },
+   "replayed": {
+    "k": 8,
+    "status": "matched",
+    "scale": 0.8718592167691145,
+    "achieved": 0.5003140717744827
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "de:2",
+   "method": "neurons",
+   "tau": "1.0",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.954235434560398,
+    "achieved": 1.0045008435845375,
+    "k": 64
+   },
+   "replayed": {
+    "k": 64,
+    "status": "matched",
+    "scale": 0.954235434560398,
+    "achieved": 1.0045008435845375
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "de:2",
+   "method": "lora_rank1",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.3535533905932738,
+    "achieved": 0.4804408401250839
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.3535533905932738,
+    "achieved": 0.4804408401250839
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "de:2",
+   "method": "lora_rank1",
+   "tau": "1.0",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.4908470869120796,
+    "achieved": 0.9847544729709625
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.4908470869120796,
+    "achieved": 0.9847544729709625
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "de:2",
+   "method": "finetune_24",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.6035533905932737,
+    "achieved": 0.5091928243637085
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.6035533905932737,
+    "achieved": 0.5091928243637085
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "de:2",
+   "method": "finetune_24",
+   "tau": "1.0",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.8535533905932737,
+    "achieved": 0.9898425340652466
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.8535533905932737,
+    "achieved": 0.9898425340652466
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "es:0",
+   "method": "vpd_atom",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 1.0258883476483185,
+    "achieved": 0.5029110386967659
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 1.0258883476483185,
+    "achieved": 0.5029110386967659
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "es:0",
+   "method": "vpd_atom",
+   "tau": "1.0",
+   "recorded": {
+    "status": "matched",
+    "scale": 1.3883252147247767,
+    "achieved": 1.009085588157177
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 1.3883252147247767,
+    "achieved": 1.009085588157177
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "es:0",
+   "method": "omp_finetune",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 1.926776695296637,
+    "achieved": 0.5015882924199104
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 1.926776695296637,
+    "achieved": 0.5015882924199104
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "es:0",
+   "method": "omp_finetune",
+   "tau": "1.0",
+   "recorded": {
+    "status": "not reached on the evaluated grid",
+    "scale": null,
+    "achieved": null,
+    "best_reached": 0.5360311418771744
+   },
+   "replayed": {
+    "status": "not reached on the evaluated grid",
+    "scale": null,
+    "achieved": null,
+    "best_reached": 0.5360311418771744
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "es:0",
+   "method": "omp_lora",
+   "tau": "0.5",
+   "recorded": {
+    "status": "not reached on the evaluated grid",
+    "scale": null,
+    "achieved": null,
+    "best_reached": 0.48267812281847
+   },
+   "replayed": {
+    "status": "not reached on the evaluated grid",
+    "scale": null,
+    "achieved": null,
+    "best_reached": 0.48267812281847
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "es:0",
+   "method": "omp_lora",
+   "tau": "1.0",
+   "recorded": {
+    "status": "not reached on the evaluated grid",
+    "scale": null,
+    "achieved": null,
+    "best_reached": 0.48267812281847
+   },
+   "replayed": {
+    "status": "not reached on the evaluated grid",
+    "scale": null,
+    "achieved": null,
+    "best_reached": 0.48267812281847
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "es:0",
+   "method": "ci_difference",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.9267766952966369,
+    "achieved": 0.4855072647333145
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.9267766952966369,
+    "achieved": 0.4855072647333145
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "es:0",
+   "method": "ci_difference",
+   "tau": "1.0",
+   "recorded": {
+    "status": "matched",
+    "scale": 1.5606601717798214,
+    "achieved": 0.988124705851078
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 1.5606601717798214,
+    "achieved": 0.988124705851078
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "es:0",
+   "method": "neurons",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.9816941738241592,
+    "achieved": 0.49401089549064636,
+    "k": 2
+   },
+   "replayed": {
+    "k": 2,
+    "status": "matched",
+    "scale": 0.9816941738241592,
+    "achieved": 0.49401089549064636
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "es:0",
+   "method": "neurons",
+   "tau": "1.0",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.8901650429449552,
+    "achieved": 0.9919907674193382,
+    "k": 128
+   },
+   "replayed": {
+    "k": 128,
+    "status": "matched",
+    "scale": 0.8901650429449552,
+    "achieved": 0.9919907674193382
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "es:0",
+   "method": "lora_rank1",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.42677669529663687,
+    "achieved": 0.5145956948399544
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.42677669529663687,
+    "achieved": 0.5145956948399544
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "es:0",
+   "method": "lora_rank1",
+   "tau": "1.0",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.6035533905932737,
+    "achieved": 1.007466085255146
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.6035533905932737,
+    "achieved": 1.007466085255146
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "es:0",
+   "method": "finetune_24",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.6294417382415922,
+    "achieved": 0.5185700431466103
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.6294417382415922,
+    "achieved": 0.5185700431466103
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "es:0",
+   "method": "finetune_24",
+   "tau": "1.0",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.8718592167691145,
+    "achieved": 1.007377415895462
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.8718592167691145,
+    "achieved": 1.007377415895462
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "es:1",
+   "method": "vpd_atom",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 1.0258883476483185,
+    "achieved": 0.5029110386967659
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 1.0258883476483185,
+    "achieved": 0.5029110386967659
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "es:1",
+   "method": "vpd_atom",
+   "tau": "1.0",
+   "recorded": {
+    "status": "matched",
+    "scale": 1.3883252147247767,
+    "achieved": 1.009085588157177
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 1.3883252147247767,
+    "achieved": 1.009085588157177
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "es:1",
+   "method": "omp_finetune",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 1.926776695296637,
+    "achieved": 0.5015882924199104
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 1.926776695296637,
+    "achieved": 0.5015882924199104
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "es:1",
+   "method": "omp_finetune",
+   "tau": "1.0",
+   "recorded": {
+    "status": "not reached on the evaluated grid",
+    "scale": null,
+    "achieved": null,
+    "best_reached": 0.5360311418771744
+   },
+   "replayed": {
+    "status": "not reached on the evaluated grid",
+    "scale": null,
+    "achieved": null,
+    "best_reached": 0.5360311418771744
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "es:1",
+   "method": "omp_lora",
+   "tau": "0.5",
+   "recorded": {
+    "status": "not reached on the evaluated grid",
+    "scale": null,
+    "achieved": null,
+    "best_reached": 0.48267812281847
+   },
+   "replayed": {
+    "status": "not reached on the evaluated grid",
+    "scale": null,
+    "achieved": null,
+    "best_reached": 0.48267812281847
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "es:1",
+   "method": "omp_lora",
+   "tau": "1.0",
+   "recorded": {
+    "status": "not reached on the evaluated grid",
+    "scale": null,
+    "achieved": null,
+    "best_reached": 0.48267812281847
+   },
+   "replayed": {
+    "status": "not reached on the evaluated grid",
+    "scale": null,
+    "achieved": null,
+    "best_reached": 0.48267812281847
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "es:1",
+   "method": "ci_difference",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.9267766952966369,
+    "achieved": 0.4855072647333145
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.9267766952966369,
+    "achieved": 0.4855072647333145
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "es:1",
+   "method": "ci_difference",
+   "tau": "1.0",
+   "recorded": {
+    "status": "matched",
+    "scale": 1.5606601717798214,
+    "achieved": 0.988124705851078
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 1.5606601717798214,
+    "achieved": 0.988124705851078
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "es:1",
+   "method": "neurons",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.9816941738241592,
+    "achieved": 0.49401089549064636,
+    "k": 2
+   },
+   "replayed": {
+    "k": 2,
+    "status": "matched",
+    "scale": 0.9816941738241592,
+    "achieved": 0.49401089549064636
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "es:1",
+   "method": "neurons",
+   "tau": "1.0",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.8901650429449552,
+    "achieved": 0.9951615408062935,
+    "k": 128
+   },
+   "replayed": {
+    "k": 128,
+    "status": "matched",
+    "scale": 0.8901650429449552,
+    "achieved": 0.9951615408062935
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "es:1",
+   "method": "lora_rank1",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.1859296083845573,
+    "achieved": 0.5028531700372696
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.1859296083845573,
+    "achieved": 0.5028531700372696
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "es:1",
+   "method": "lora_rank1",
+   "tau": "1.0",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.2339824020961393,
+    "achieved": 0.9929517805576324
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.2339824020961393,
+    "achieved": 0.9929517805576324
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "es:1",
+   "method": "finetune_24",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.6294417382415922,
+    "achieved": 0.503932923078537
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.6294417382415922,
+    "achieved": 0.503932923078537
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "es:1",
+   "method": "finetune_24",
+   "tau": "1.0",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.8901650429449552,
+    "achieved": 1.006604552268982
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.8901650429449552,
+    "achieved": 1.006604552268982
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "es:2",
+   "method": "vpd_atom",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 1.0258883476483185,
+    "achieved": 0.5029110386967659
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 1.0258883476483185,
+    "achieved": 0.5029110386967659
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "es:2",
+   "method": "vpd_atom",
+   "tau": "1.0",
+   "recorded": {
+    "status": "matched",
+    "scale": 1.3883252147247767,
+    "achieved": 1.009085588157177
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 1.3883252147247767,
+    "achieved": 1.009085588157177
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "es:2",
+   "method": "omp_finetune",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 1.926776695296637,
+    "achieved": 0.5015882924199104
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 1.926776695296637,
+    "achieved": 0.5015882924199104
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "es:2",
+   "method": "omp_finetune",
+   "tau": "1.0",
+   "recorded": {
+    "status": "not reached on the evaluated grid",
+    "scale": null,
+    "achieved": null,
+    "best_reached": 0.5360311418771744
+   },
+   "replayed": {
+    "status": "not reached on the evaluated grid",
+    "scale": null,
+    "achieved": null,
+    "best_reached": 0.5360311418771744
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "es:2",
+   "method": "omp_lora",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 1.926776695296637,
+    "achieved": 0.5015882924199104
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 1.926776695296637,
+    "achieved": 0.5015882924199104
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "es:2",
+   "method": "omp_lora",
+   "tau": "1.0",
+   "recorded": {
+    "status": "not reached on the evaluated grid",
+    "scale": null,
+    "achieved": null,
+    "best_reached": 0.5360311418771744
+   },
+   "replayed": {
+    "status": "not reached on the evaluated grid",
+    "scale": null,
+    "achieved": null,
+    "best_reached": 0.5360311418771744
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "es:2",
+   "method": "ci_difference",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.9267766952966369,
+    "achieved": 0.4855072647333145
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.9267766952966369,
+    "achieved": 0.4855072647333145
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "es:2",
+   "method": "ci_difference",
+   "tau": "1.0",
+   "recorded": {
+    "status": "matched",
+    "scale": 1.5606601717798214,
+    "achieved": 0.988124705851078
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 1.5606601717798214,
+    "achieved": 0.988124705851078
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "es:2",
+   "method": "neurons",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.9816941738241592,
+    "achieved": 0.49401089549064636,
+    "k": 2
+   },
+   "replayed": {
+    "k": 2,
+    "status": "matched",
+    "scale": 0.9816941738241592,
+    "achieved": 0.49401089549064636
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "es:2",
+   "method": "neurons",
+   "tau": "1.0",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.8901650429449552,
+    "achieved": 0.9948198348283768,
+    "k": 128
+   },
+   "replayed": {
+    "k": 128,
+    "status": "matched",
+    "scale": 0.8901650429449552,
+    "achieved": 0.9948198348283768
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "es:2",
+   "method": "lora_rank1",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.4084708691207961,
+    "achieved": 0.501399852335453
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.4084708691207961,
+    "achieved": 0.501399852335453
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "es:2",
+   "method": "lora_rank1",
+   "tau": "1.0",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.5517766952966369,
+    "achieved": 0.9864654690027237
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.5517766952966369,
+    "achieved": 0.9864654690027237
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "es:2",
+   "method": "finetune_24",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.5906092167691145,
+    "achieved": 0.49657199531793594
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.5906092167691145,
+    "achieved": 0.49657199531793594
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "es:2",
+   "method": "finetune_24",
+   "tau": "1.0",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.8169417382415922,
+    "achieved": 1.008285976946354
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.8169417382415922,
+    "achieved": 1.008285976946354
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "fr:0",
+   "method": "vpd_atom",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.76202425971407,
+    "achieved": 0.4922006204724312
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.76202425971407,
+    "achieved": 0.4922006204724312
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "fr:0",
+   "method": "vpd_atom",
+   "tau": "1.0",
+   "recorded": {
+    "status": "matched",
+    "scale": 1.0388325214724778,
+    "achieved": 0.9947722479701042
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 1.0388325214724778,
+    "achieved": 0.9947722479701042
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "fr:0",
+   "method": "omp_finetune",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.76202425971407,
+    "achieved": 0.4922006204724312
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.76202425971407,
+    "achieved": 0.4922006204724312
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "fr:0",
+   "method": "omp_finetune",
+   "tau": "1.0",
+   "recorded": {
+    "status": "matched",
+    "scale": 1.0388325214724778,
+    "achieved": 0.9947722479701042
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 1.0388325214724778,
+    "achieved": 0.9947722479701042
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "fr:0",
+   "method": "omp_lora",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 1.3624368670764584,
+    "achieved": 0.48544027656316757
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 1.3624368670764584,
+    "achieved": 0.48544027656316757
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "fr:0",
+   "method": "omp_lora",
+   "tau": "1.0",
+   "recorded": {
+    "status": "matched",
+    "scale": 1.8901650429449552,
+    "achieved": 1.0057268291711807
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 1.8901650429449552,
+    "achieved": 1.0057268291711807
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "fr:0",
+   "method": "ci_difference",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 1.1035533905932737,
+    "achieved": 0.5163339525461197
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 1.1035533905932737,
+    "achieved": 0.5163339525461197
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "fr:0",
+   "method": "ci_difference",
+   "tau": "1.0",
+   "recorded": {
+    "status": "matched",
+    "scale": 1.7071067811865475,
+    "achieved": 0.9826356694102287
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 1.7071067811865475,
+    "achieved": 0.9826356694102287
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "fr:0",
+   "method": "neurons",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.9633883476483185,
+    "achieved": 0.4844547510147095,
+    "k": 16
+   },
+   "replayed": {
+    "k": 16,
+    "status": "matched",
+    "scale": 0.9633883476483185,
+    "achieved": 0.4844547510147095
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "fr:0",
+   "method": "neurons",
+   "tau": "1.0",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.8169417382415922,
+    "achieved": 0.9891940727829933,
+    "k": 256
+   },
+   "replayed": {
+    "k": 256,
+    "status": "matched",
+    "scale": 0.8169417382415922,
+    "achieved": 0.9891940727829933
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "fr:0",
+   "method": "lora_rank1",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.3718592167691146,
+    "achieved": 0.495395764708519
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.3718592167691146,
+    "achieved": 0.495395764708519
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "fr:0",
+   "method": "lora_rank1",
+   "tau": "1.0",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.5388325214724776,
+    "achieved": 1.0084251761436462
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.5388325214724776,
+    "achieved": 1.0084251761436462
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "fr:0",
+   "method": "finetune_24",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.6035533905932737,
+    "achieved": 0.4920057877898216
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.6035533905932737,
+    "achieved": 0.4920057877898216
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "fr:0",
+   "method": "finetune_24",
+   "tau": "1.0",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.8535533905932737,
+    "achieved": 0.9826584979891777
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.8535533905932737,
+    "achieved": 0.9826584979891777
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "fr:1",
+   "method": "vpd_atom",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.76202425971407,
+    "achieved": 0.4922006204724312
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.76202425971407,
+    "achieved": 0.4922006204724312
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "fr:1",
+   "method": "vpd_atom",
+   "tau": "1.0",
+   "recorded": {
+    "status": "matched",
+    "scale": 1.0388325214724778,
+    "achieved": 0.9947722479701042
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 1.0388325214724778,
+    "achieved": 0.9947722479701042
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "fr:1",
+   "method": "omp_finetune",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 1.597271824131503,
+    "achieved": 0.5013552829623222
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 1.597271824131503,
+    "achieved": 0.5013552829623222
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "fr:1",
+   "method": "omp_finetune",
+   "tau": "1.0",
+   "recorded": {
+    "status": "not reached on the evaluated grid",
+    "scale": null,
+    "achieved": null,
+    "best_reached": 0.8523523509502411
+   },
+   "replayed": {
+    "status": "not reached on the evaluated grid",
+    "scale": null,
+    "achieved": null,
+    "best_reached": 0.8523523509502411
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "fr:1",
+   "method": "ci_difference",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 1.7803300858899105,
+    "achieved": 0.49041152000427246
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 1.7803300858899105,
+    "achieved": 0.49041152000427246
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "fr:1",
+   "method": "ci_difference",
+   "tau": "1.0",
+   "recorded": {
+    "status": "not reached on the evaluated grid",
+    "scale": null,
+    "achieved": null,
+    "best_reached": 0.6405382826924324
+   },
+   "replayed": {
+    "status": "not reached on the evaluated grid",
+    "scale": null,
+    "achieved": null,
+    "best_reached": 0.6405382826924324
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "fr:1",
+   "method": "neurons",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 1.0,
+    "achieved": 0.5189648643136024,
+    "k": 16
+   },
+   "replayed": {
+    "k": 16,
+    "status": "matched",
+    "scale": 1.0,
+    "achieved": 0.5189648643136024
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "fr:1",
+   "method": "neurons",
+   "tau": "1.0",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.8169417382415922,
+    "achieved": 0.9871633648872375,
+    "k": 256
+   },
+   "replayed": {
+    "k": 256,
+    "status": "matched",
+    "scale": 0.8169417382415922,
+    "achieved": 0.9871633648872375
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "fr:1",
+   "method": "lora_rank1",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.381012129857035,
+    "achieved": 0.49680691957473755
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.381012129857035,
+    "achieved": 0.49680691957473755
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "fr:1",
+   "method": "lora_rank1",
+   "tau": "1.0",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.5388325214724776,
+    "achieved": 0.989055410027504
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.5388325214724776,
+    "achieved": 0.989055410027504
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "fr:1",
+   "method": "finetune_24",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.616497564417433,
+    "achieved": 0.49812159687280655
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.616497564417433,
+    "achieved": 0.49812159687280655
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "fr:1",
+   "method": "finetune_24",
+   "tau": "1.0",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.835247564417433,
+    "achieved": 0.9832080081105232
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.835247564417433,
+    "achieved": 0.9832080081105232
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "fr:2",
+   "method": "vpd_atom",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.76202425971407,
+    "achieved": 0.4922006204724312
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.76202425971407,
+    "achieved": 0.4922006204724312
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "fr:2",
+   "method": "vpd_atom",
+   "tau": "1.0",
+   "recorded": {
+    "status": "matched",
+    "scale": 1.0388325214724778,
+    "achieved": 0.9947722479701042
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 1.0388325214724778,
+    "achieved": 0.9947722479701042
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "fr:2",
+   "method": "omp_finetune",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.7803300858899107,
+    "achieved": 0.4855434074997902
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.7803300858899107,
+    "achieved": 0.4855434074997902
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "fr:2",
+   "method": "omp_finetune",
+   "tau": "1.0",
+   "recorded": {
+    "status": "matched",
+    "scale": 1.051776695296637,
+    "achieved": 0.990529790520668
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 1.051776695296637,
+    "achieved": 0.990529790520668
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "fr:2",
+   "method": "ci_difference",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 1.1035533905932737,
+    "achieved": 0.5163339525461197
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 1.1035533905932737,
+    "achieved": 0.5163339525461197
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "fr:2",
+   "method": "ci_difference",
+   "tau": "1.0",
+   "recorded": {
+    "status": "matched",
+    "scale": 1.7071067811865475,
+    "achieved": 0.9826356694102287
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 1.7071067811865475,
+    "achieved": 0.9826356694102287
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "fr:2",
+   "method": "neurons",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.9816941738241592,
+    "achieved": 0.49859942495822906,
+    "k": 16
+   },
+   "replayed": {
+    "k": 16,
+    "status": "matched",
+    "scale": 0.9816941738241592,
+    "achieved": 0.49859942495822906
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "fr:2",
+   "method": "neurons",
+   "tau": "1.0",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.8169417382415922,
+    "achieved": 0.9962839335203171,
+    "k": 256
+   },
+   "replayed": {
+    "k": 256,
+    "status": "matched",
+    "scale": 0.8169417382415922,
+    "achieved": 0.9962839335203171
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "fr:2",
+   "method": "lora_rank1",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.381012129857035,
+    "achieved": 0.5029585361480713
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.381012129857035,
+    "achieved": 0.5029585361480713
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "fr:2",
+   "method": "lora_rank1",
+   "tau": "1.0",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.5388325214724776,
+    "achieved": 1.0184424296021461
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.5388325214724776,
+    "achieved": 1.0184424296021461
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "fr:2",
+   "method": "finetune_24",
+   "tau": "0.5",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.6035533905932737,
+    "achieved": 0.48986465483903885
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.6035533905932737,
+    "achieved": 0.48986465483903885
+   },
+   "same_points": true,
+   "agrees": true
+  },
+  {
+   "cell": "fr:2",
+   "method": "finetune_24",
+   "tau": "1.0",
+   "recorded": {
+    "status": "matched",
+    "scale": 0.835247564417433,
+    "achieved": 0.9820558205246925
+   },
+   "replayed": {
+    "status": "matched",
+    "scale": 0.835247564417433,
+    "achieved": 0.9820558205246925
+   },
+   "same_points": true,
+   "agrees": true
+  }
+ ]
+}

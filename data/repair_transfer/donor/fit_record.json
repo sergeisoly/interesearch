@@ -1,0 +1,53 @@
+{
+ "format": 1,
+ "study": "repair_transfer",
+ "record": "donor_repair_fit",
+ "fit": {
+  "unique_predicted_tokens": {
+   "de": 12288,
+   "nl": 12288,
+   "ret": 49152
+  },
+  "windows": {
+   "de": 48,
+   "nl": 48,
+   "ret": {
+    "en": 48,
+    "fr": 48,
+    "es": 48,
+    "it": 48
+   }
+  },
+  "total_unique_predicted_tokens": 73728
+ },
+ "runs": {
+  "0.0003": {
+   "batch": {
+    "de": 8,
+    "nl": 8,
+    "ret": 2
+   },
+   "batches_presented": 200
+  },
+  "0.001": {
+   "batch": {
+    "de": 8,
+    "nl": 8,
+    "ret": 2
+   },
+   "batches_presented": 200
+  },
+  "0.003": {
+   "batch": {
+    "de": 8,
+    "nl": 8,
+    "ret": 2
+   },
+   "batches_presented": 200
+  }
+ },
+ "total_s": 335.96031403541565,
+ "source": {
+  "run_record_sha256": "2595d9a9755d90f00b418942b9429af1052dd6fe6933d15d9d88bd48c7806213"
+ }
+}

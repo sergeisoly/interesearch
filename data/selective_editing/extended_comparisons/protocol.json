@@ -1,0 +1,154 @@
+{
+ "format": 1,
+ "study": "selective_editing_addendum",
+ "split": "dev",
+ "expected_cells": [
+  "de:0",
+  "de:1",
+  "de:2",
+  "es:0",
+  "es:1",
+  "es:2",
+  "fr:0",
+  "fr:1",
+  "fr:2"
+ ],
+ "targets": {
+  "de": "nl",
+  "es": "pt",
+  "fr": "it"
+ },
+ "taus": [
+  0.5,
+  1.0
+ ],
+ "methods": {
+  "vpd_atom": "the main study's VPD atom edit at its calibrated scale, measured again with the addendum",
+  "svd_atom": "g^2/q selector, SVD atoms of the 24 weight matrices (same rule as the main selector)",
+  "whitened_rank1": "dictionary-free rank-one selector: per matrix the top singular pair of the K-FAC whitened target gradient, scaled to the norm of the cell's VPD atom; same score and walk",
+  "lora_rank1_long": "rank-1 LoRA in the selected atom's module, 2000 steps, margin 1.5, three seeds",
+  "finetune_24_long": "full-matrix fine-tune of all 24 modules, 2000 steps, margin 1.5, three seeds"
+ },
+ "main_method": "vpd_atom",
+ "comparators": [
+  "svd_atom",
+  "whitened_rank1",
+  "lora_rank1_long",
+  "finetune_24_long"
+ ],
+ "learned_methods": [
+  "lora_rank1_long",
+  "finetune_24_long"
+ ],
+ "seeds": [
+  0,
+  1,
+  2
+ ],
+ "guard_max": 0.1,
+ "band": 0.02,
+ "bootstrap": {
+  "resamples": 2000,
+  "seed": 0,
+  "level": 0.95,
+  "statistic": "max |t| over contrasts"
+ },
+ "calibration": {
+  "tol": 0.02,
+  "max_bisect": 5,
+  "atom_grid": [
+   0.0625,
+   0.08838834764831845,
+   0.125,
+   0.1767766952966369,
+   0.25,
+   0.3535533905932738,
+   0.5,
+   0.7071067811865476,
+   1.0,
+   1.4142135623730951,
+   2.0
+  ],
+  "whitened_grid": [
+   0.015625,
+   0.02209708691207961,
+   0.03125,
+   0.04419417382415922,
+   0.0625,
+   0.08838834764831845,
+   0.125,
+   0.1767766952966369,
+   0.25,
+   0.3535533905932738,
+   0.5,
+   0.7071067811865476,
+   1.0,
+   1.4142135623730951,
+   2.0,
+   2.8284271247461903,
+   4.0,
+   5.656854249492381,
+   8.0
+  ],
+  "scale_grid": [
+   0.0625,
+   0.08838834764831845,
+   0.125,
+   0.1767766952966369,
+   0.25,
+   0.3535533905932738,
+   0.5,
+   0.7071067811865476,
+   1.0
+  ]
+ },
+ "selection": {
+  "eps_main_dictionary": 3.782279378840755e-05,
+  "eps_mc_tolerance": 0.05,
+  "fisher_k": 8
+ },
+ "training": {
+  "steps": 2000,
+  "margin": 1.5,
+  "validation_every": 100,
+  "learning_rate_grid": {
+   "lora_rank1_long": [
+    0.001,
+    0.003,
+    0.01,
+    0.03
+   ],
+   "finetune_24_long": [
+    1e-07,
+    3e-07,
+    1e-06,
+    3e-06
+   ]
+  },
+  "seed_rule": "100 + draw + 1000 x seed index",
+  "learning_rate_rule": "draw 0, seed 0: matched at the upper effect point on target val (scale <= 1); lowest English val KL, then the smaller rate; a failed or non-finite rate is a listed technical row"
+ },
+ "convergence": {
+  "plateau": "English val KL changes by less than 10% from step 1500 to 2000",
+  "unstable": "last English val KL > 2 x its minimum from step 100 on"
+ },
+ "source": {
+  "freeze_sha256": "f7c39e9c2994809a97979c40ba7a94acc85adc9ea205c8c8e76e9e5a343781ef",
+  "analysis_sha256": "730a80c23ec9ba19806caaa6dccb2d9bec11ec0402e4657d906ddb7a29b83b8c",
+  "analyzer_sha256": {
+   "frozen": "f16b5eb62ec2c6ba7a8a133c79c32317e2ed7557c9e46a53ba203b81f585ee03",
+   "ran": "c5df8b1205d2e96924b3c9f4fd252d34af5074eea7b6f271372a7859b6d9c5d9"
+  },
+  "readout_sha256": {
+   "readout/de_d0.json": "63bcc3877ac4354850a92c79ed9fe32b74d9bccb4d039233e69f7bb5ca1eaaf3",
+   "readout/de_d1.json": "28a672ab9fbe41f4fc8f15c7fb14f9e652d9cdd0db8b1c6c2518d6a28a4f7f0d",
+   "readout/de_d2.json": "83d66cf0347a3e2240139ac4b1f8750920223889fcfb451e646a5f2e0946e688",
+   "readout/es_d0.json": "48e72ee9d21f459c2d50899b800a13381030d11c819dffedb6596b882eaf8771",
+   "readout/es_d1.json": "e1766687217e561bf8dbd23104bdf774d8ac0662aed71c7cd41ceec88f94f1ef",
+   "readout/es_d2.json": "377510208c388e85ba4529bba2e28fb4cbbfb565bcb80906c66edd1f76fd486a",
+   "readout/fr_d0.json": "6da4e1e47a65b1de820832cc66d98d392b6fe7e79a7a40c7d7d5efbde6f10648",
+   "readout/fr_d1.json": "2a115f863bc338a62f469740eca13c0d8aa891ddb33d57a629c72cd69355a5d1",
+   "readout/fr_d2.json": "1651aacbf583e68e317b66056bb7b0cef06b25bd3068db189ccd15285a7bd830"
+  }
+ }
+}

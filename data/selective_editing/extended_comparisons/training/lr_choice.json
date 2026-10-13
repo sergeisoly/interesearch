@@ -1,0 +1,248 @@
+{
+ "de_lora_rank1_long": {
+  "target": "de",
+  "method": "lora_rank1_long",
+  "tau": 1.0,
+  "rows": [
+   {
+    "lr": 0.001,
+    "status": "matched",
+    "scale": 0.5647208691207961,
+    "achieved": 0.9942906424403191,
+    "en_kl": 0.00011362237904677386,
+    "en_delta_ce": 7.0892274379730225e-06
+   },
+   {
+    "lr": 0.003,
+    "status": "matched",
+    "scale": 0.616497564417433,
+    "achieved": 0.9926715940237045,
+    "en_kl": 0.00011533488174109152,
+    "en_delta_ce": 6.701424717903137e-05
+   },
+   {
+    "lr": 0.01,
+    "status": "matched",
+    "scale": 0.6812184335382292,
+    "achieved": 1.019163817167282,
+    "en_kl": 0.00012166067381258472,
+    "en_delta_ce": 0.0001218840479850769
+   },
+   {
+    "lr": 0.03,
+    "status": "matched",
+    "scale": 0.2888325214724776,
+    "achieved": 0.9801573976874352,
+    "en_kl": 0.0006603173856092326,
+    "en_delta_ce": 0.0009737052023410797
+   }
+  ],
+  "chosen_lr": 0.001,
+  "rule": "matched at the upper effect point on target val; lowest English val KL; then smaller lr (draw 0, seed 0)"
+ },
+ "de_finetune_24_long": {
+  "target": "de",
+  "method": "finetune_24_long",
+  "tau": 1.0,
+  "rows": [
+   {
+    "lr": 1e-07,
+    "status": "matched",
+    "scale": 0.7803300858899107,
+    "achieved": 0.9930897355079651,
+    "en_kl": 0.0002472748438435701,
+    "en_delta_ce": 0.0002514272928237915
+   },
+   {
+    "lr": 3e-07,
+    "status": "matched",
+    "scale": 0.7711771728019903,
+    "achieved": 0.9903968647122383,
+    "en_kl": 0.00014140150710773014,
+    "en_delta_ce": 0.00014985352754592896
+   },
+   {
+    "lr": 1e-06,
+    "status": "matched",
+    "scale": 0.7437184335382292,
+    "achieved": 0.9949245676398277,
+    "en_kl": 0.00012548027007142082,
+    "en_delta_ce": 7.912516593933105e-05
+   },
+   {
+    "lr": 3e-06,
+    "status": "matched",
+    "scale": 0.6488579989778311,
+    "achieved": 1.0009661614894867,
+    "en_kl": 0.0003631131816064226,
+    "en_delta_ce": 0.000392179936170578
+   }
+  ],
+  "chosen_lr": 1e-06,
+  "rule": "matched at the upper effect point on target val; lowest English val KL; then smaller lr (draw 0, seed 0)"
+ },
+ "es_lora_rank1_long": {
+  "target": "es",
+  "method": "lora_rank1_long",
+  "tau": 1.0,
+  "rows": [
+   {
+    "lr": 0.001,
+    "status": "matched",
+    "scale": 0.6423859120657515,
+    "achieved": 0.9805704057216644,
+    "en_kl": 6.156150763558799e-05,
+    "en_delta_ce": 0.00011448562145233154
+   },
+   {
+    "lr": 0.003,
+    "status": "matched",
+    "scale": 0.5970813036811942,
+    "achieved": 0.9988536238670349,
+    "en_kl": 5.706185208964598e-05,
+    "en_delta_ce": 0.0002690069377422333
+   },
+   {
+    "lr": 0.01,
+    "status": "matched",
+    "scale": 0.6941626073623883,
+    "achieved": 1.0163355693221092,
+    "en_kl": 9.81611696033724e-05,
+    "en_delta_ce": 0.0003015473484992981
+   },
+   {
+    "lr": 0.03,
+    "status": "matched",
+    "scale": 0.2225412607362388,
+    "achieved": 0.9975477382540703,
+    "en_kl": 0.0009398755787515256,
+    "en_delta_ce": 0.0004905164241790771
+   }
+  ],
+  "chosen_lr": 0.003,
+  "rule": "matched at the upper effect point on target val; lowest English val KL; then smaller lr (draw 0, seed 0)"
+ },
+ "es_finetune_24_long": {
+  "target": "es",
+  "method": "finetune_24_long",
+  "tau": 1.0,
+  "rows": [
+   {
+    "lr": 1e-07,
+    "status": "matched",
+    "scale": 0.7803300858899107,
+    "achieved": 0.9979020282626152,
+    "en_kl": 8.67555922354768e-05,
+    "en_delta_ce": 0.0003750510513782501
+   },
+   {
+    "lr": 3e-07,
+    "status": "matched",
+    "scale": 0.7711771728019903,
+    "achieved": 1.004529595375061,
+    "en_kl": 4.895452309483517e-05,
+    "en_delta_ce": 0.00025035813450813293
+   },
+   {
+    "lr": 1e-06,
+    "status": "matched",
+    "scale": 0.76202425971407,
+    "achieved": 1.0032018274068832,
+    "en_kl": 6.603493486068146e-05,
+    "en_delta_ce": 0.0003129914402961731
+   },
+   {
+    "lr": 3e-06,
+    "status": "matched",
+    "scale": 0.6812184335382292,
+    "achieved": 1.0043059438467026,
+    "en_kl": 0.00030731113201909466,
+    "en_delta_ce": 0.00011367350816726685
+   }
+  ],
+  "chosen_lr": 3e-07,
+  "rule": "matched at the upper effect point on target val; lowest English val KL; then smaller lr (draw 0, seed 0)"
+ },
+ "fr_lora_rank1_long": {
+  "target": "fr",
+  "method": "lora_rank1_long",
+  "tau": 1.0,
+  "rows": [
+   {
+    "lr": 0.001,
+    "status": "matched",
+    "scale": 0.616497564417433,
+    "achieved": 0.9917162731289864,
+    "en_kl": 8.141423077745458e-05,
+    "en_delta_ce": 1.1388212442398071e-05
+   },
+   {
+    "lr": 0.003,
+    "status": "matched",
+    "scale": 0.66827425971407,
+    "achieved": 0.9806749448180199,
+    "en_kl": 7.479213454075762e-05,
+    "en_delta_ce": -2.1580606698989868e-05
+   },
+   {
+    "lr": 0.01,
+    "status": "matched",
+    "scale": 0.27588834764831843,
+    "achieved": 0.9817409738898277,
+    "en_kl": 0.00011045937688436425,
+    "en_delta_ce": 0.00016117095947265625
+   },
+   {
+    "lr": 0.03,
+    "status": "matched",
+    "scale": 0.20881189110435824,
+    "achieved": 1.007216103374958,
+    "en_kl": 0.002324050248716958,
+    "en_delta_ce": 0.002558816224336624
+   }
+  ],
+  "chosen_lr": 0.003,
+  "rule": "matched at the upper effect point on target val; lowest English val KL; then smaller lr (draw 0, seed 0)"
+ },
+ "fr_finetune_24_long": {
+  "target": "fr",
+  "method": "finetune_24_long",
+  "tau": 1.0,
+  "rows": [
+   {
+    "lr": 1e-07,
+    "status": "matched",
+    "scale": 0.7711771728019903,
+    "achieved": 0.9967012256383896,
+    "en_kl": 0.00017669563811750777,
+    "en_delta_ce": 0.0005910582840442657
+   },
+   {
+    "lr": 3e-07,
+    "status": "matched",
+    "scale": 0.76202425971407,
+    "achieved": 1.0026716366410255,
+    "en_kl": 8.886020393106264e-05,
+    "en_delta_ce": 0.0003995634615421295
+   },
+   {
+    "lr": 1e-06,
+    "status": "matched",
+    "scale": 0.7162596942744679,
+    "achieved": 1.0064570158720016,
+    "en_kl": 7.51010721558032e-05,
+    "en_delta_ce": 0.0002426058053970337
+   },
+   {
+    "lr": 3e-06,
+    "status": "matched",
+    "scale": 0.6294417382415922,
+    "achieved": 1.009922355413437,
+    "en_kl": 0.00026706748110427725,
+    "en_delta_ce": 0.0004824399948120117
+   }
+  ],
+  "chosen_lr": 1e-06,
+  "rule": "matched at the upper effect point on target val; lowest English val KL; then smaller lr (draw 0, seed 0)"
+ }
+}

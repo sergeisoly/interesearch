@@ -1,0 +1,810 @@
+{
+ "role": "donor_fit",
+ "languages": [
+  "de",
+  "en",
+  "fr",
+  "es",
+  "it",
+  "nl",
+  "pt"
+ ],
+ "dates": [
+  "2005-07-05",
+  "2006-10-25",
+  "2007-01-16",
+  "2003-09-23",
+  "2001-05-30",
+  "2000-04-11",
+  "2005-12-15",
+  "2000-07-03",
+  "2007-03-12",
+  "2010-05-18",
+  "2003-05-12",
+  "2002-07-02",
+  "1999-10-27",
+  "2003-12-16",
+  "2002-09-26",
+  "2010-07-08",
+  "2005-01-27",
+  "2006-04-26",
+  "2010-10-18",
+  "2008-01-31",
+  "1996-06-20",
+  "2007-12-13",
+  "2004-01-29",
+  "2000-11-15",
+  "2008-06-04",
+  "1998-06-17",
+  "2001-10-01",
+  "2000-07-07",
+  "2000-12-15",
+  "2002-11-18",
+  "1998-10-06",
+  "2011-06-23",
+  "2007-11-13",
+  "2007-02-15",
+  "1996-12-09",
+  "2001-02-14",
+  "2003-12-15",
+  "1997-10-21",
+  "2008-05-08",
+  "2008-07-07",
+  "2009-10-19",
+  "2010-12-15",
+  "2001-10-02",
+  "2009-04-21",
+  "2007-09-03",
+  "1998-05-11",
+  "2010-11-25",
+  "1996-04-17"
+ ],
+ "provenance": {
+  "builder": {
+   "description": "donor-stage Europarl build: the eligible train-bucket dates the corpus build did not select, in salted date order, assigned to the roles in sequence (the remaining dates form an unpublished reserve)",
+   "sha256": "451f4b154017e73e9f078461628c4e46d3c87d283c7639416fd03454ee2fc400"
+  },
+  "source": {
+   "name": "Europarl v7 (Koehn 2005)",
+   "url": "https://www.statmt.org/europarl/v7/europarl.tgz",
+   "sha256": "d109549ff35623ded3d375dc04040e3f0b399665680ed726281f877ff5995330"
+  },
+  "tokenizer_sha256": "d4c0d99d84af59e9126913fafe5210822963e9a3065ee43e6833b358b0c2f825",
+  "bucket": {
+   "salt": "vpd-diff-v1",
+   "rule": "int(sha256(salt + '|' + date).hexdigest(), 16) % 100",
+   "split": "train",
+   "range": [
+    0,
+    69
+   ]
+  },
+  "date_order": {
+   "salt": "vpd-rtransfer-v1",
+   "rule": "ascending int(sha256(salt + '|order-date|' + date).hexdigest(), 16)"
+  },
+  "window": "first 257 tokens (target tokenizer, no special tokens) of the session file text, cleaned as in the Pile's EuroParl component, from the speaker line of the chosen turn; row i is the same turn in every language",
+  "turns": [
+   {
+    "member": "txt/<lang>/ep-05-07-05.txt",
+    "chapter_id": "1",
+    "speaker_id": "8",
+    "turn_rank": 0,
+    "char_offset": {
+     "de": 19439,
+     "en": 17339,
+     "fr": 18804,
+     "es": 18610,
+     "it": 17805,
+     "nl": 18938,
+     "pt": 18510
+    }
+   },
+   {
+    "member": "txt/<lang>/ep-06-10-25-014.txt",
+    "chapter_id": "014",
+    "speaker_id": "352",
+    "turn_rank": 0,
+    "char_offset": {
+     "de": 36647,
+     "en": 34306,
+     "fr": 38401,
+     "es": 35498,
+     "it": 37370,
+     "nl": 35952,
+     "pt": 36843
+    }
+   },
+   {
+    "member": "txt/<lang>/ep-07-01-16-003.txt",
+    "chapter_id": "003",
+    "speaker_id": "031",
+    "turn_rank": 0,
+    "char_offset": {
+     "de": 17590,
+     "en": 16361,
+     "fr": 17365,
+     "es": 16877,
+     "it": 17350,
+     "nl": 16956,
+     "pt": 17088
+    }
+   },
+   {
+    "member": "txt/<lang>/ep-03-09-23.txt",
+    "chapter_id": "2",
+    "speaker_id": "17",
+    "turn_rank": 0,
+    "char_offset": {
+     "de": 31953,
+     "en": 29378,
+     "fr": 32374,
+     "es": 31595,
+     "it": 30919,
+     "nl": 31070,
+     "pt": 31176
+    }
+   },
+   {
+    "member": "txt/<lang>/ep-01-05-30.txt",
+    "chapter_id": "5",
+    "speaker_id": "61",
+    "turn_rank": 0,
+    "char_offset": {
+     "de": 118849,
+     "en": 109164,
+     "fr": 117819,
+     "es": 112810,
+     "it": 109029,
+     "nl": 117128,
+     "pt": 114232
+    }
+   },
+   {
+    "member": "txt/<lang>/ep-00-04-11.txt",
+    "chapter_id": "8",
+    "speaker_id": "168",
+    "turn_rank": 0,
+    "char_offset": {
+     "de": 418014,
+     "en": 377153,
+     "fr": 413779,
+     "es": 408546,
+     "it": 408618,
+     "nl": 400461,
+     "pt": 402641
+    }
+   },
+   {
+    "member": "txt/<lang>/ep-05-12-15.txt",
+    "chapter_id": "1",
+    "speaker_id": "126",
+    "turn_rank": 0,
+    "char_offset": {
+     "de": 79296,
+     "en": 70646,
+     "fr": 76160,
+     "es": 75019,
+     "it": 78669,
+     "nl": 79757,
+     "pt": 73594
+    }
+   },
+   {
+    "member": "txt/<lang>/ep-00-07-03.txt",
+    "chapter_id": "6",
+    "speaker_id": "75",
+    "turn_rank": 0,
+    "char_offset": {
+     "de": 163758,
+     "en": 150515,
+     "fr": 160622,
+     "es": 155668,
+     "it": 154595,
+     "nl": 156220,
+     "pt": 153772
+    }
+   },
+   {
+    "member": "txt/<lang>/ep-07-03-12-018.txt",
+    "chapter_id": "018",
+    "speaker_id": "101",
+    "turn_rank": 0,
+    "char_offset": {
+     "de": 23505,
+     "en": 21011,
+     "fr": 25458,
+     "es": 22700,
+     "it": 23328,
+     "nl": 22864,
+     "pt": 23068
+    }
+   },
+   {
+    "member": "txt/<lang>/ep-10-05-18-005.txt",
+    "chapter_id": "005",
+    "speaker_id": "023",
+    "turn_rank": 0,
+    "char_offset": {
+     "de": 29283,
+     "en": 26426,
+     "fr": 29180,
+     "es": 28731,
+     "it": 28963,
+     "nl": 29184,
+     "pt": 27449
+    }
+   },
+   {
+    "member": "txt/<lang>/ep-03-05-12.txt",
+    "chapter_id": "1",
+    "speaker_id": "32",
+    "turn_rank": 0,
+    "char_offset": {
+     "de": 17859,
+     "en": 15829,
+     "fr": 17097,
+     "es": 16892,
+     "it": 16885,
+     "nl": 16858,
+     "pt": 17381
+    }
+   },
+   {
+    "member": "txt/<lang>/ep-02-07-02.txt",
+    "chapter_id": "2",
+    "speaker_id": "233",
+    "turn_rank": 0,
+    "char_offset": {
+     "de": 448962,
+     "en": 399097,
+     "fr": 446188,
+     "es": 428849,
+     "it": 430779,
+     "nl": 446029,
+     "pt": 430378
+    }
+   },
+   {
+    "member": "txt/<lang>/ep-99-10-27.txt",
+    "chapter_id": "3",
+    "speaker_id": "93",
+    "turn_rank": 0,
+    "char_offset": {
+     "de": 219103,
+     "en": 201793,
+     "fr": 217109,
+     "es": 208456,
+     "it": 211126,
+     "nl": 215079,
+     "pt": 209630
+    }
+   },
+   {
+    "member": "txt/<lang>/ep-03-12-16.txt",
+    "chapter_id": "1",
+    "speaker_id": "92",
+    "turn_rank": 0,
+    "char_offset": {
+     "de": 201382,
+     "en": 181076,
+     "fr": 197563,
+     "es": 192852,
+     "it": 194070,
+     "nl": 203464,
+     "pt": 190899
+    }
+   },
+   {
+    "member": "txt/<lang>/ep-02-09-26.txt",
+    "chapter_id": "4",
+    "speaker_id": "104",
+    "turn_rank": 0,
+    "char_offset": {
+     "de": 158540,
+     "en": 142035,
+     "fr": 157204,
+     "es": 153668,
+     "it": 154511,
+     "nl": 158161,
+     "pt": 155621
+    }
+   },
+   {
+    "member": "txt/<lang>/ep-10-07-08-008.txt",
+    "chapter_id": "008",
+    "speaker_id": "350",
+    "turn_rank": 0,
+    "char_offset": {
+     "de": 183525,
+     "en": 161591,
+     "fr": 180867,
+     "es": 179147,
+     "it": 177428,
+     "nl": 183394,
+     "pt": 169537
+    }
+   },
+   {
+    "member": "txt/<lang>/ep-05-01-27.txt",
+    "chapter_id": "1",
+    "speaker_id": "16",
+    "turn_rank": 0,
+    "char_offset": {
+     "de": 8850,
+     "en": 7789,
+     "fr": 8651,
+     "es": 8144,
+     "it": 8163,
+     "nl": 8772,
+     "pt": 8238
+    }
+   },
+   {
+    "member": "txt/<lang>/ep-06-04-26.txt",
+    "chapter_id": "1",
+    "speaker_id": "155",
+    "turn_rank": 0,
+    "char_offset": {
+     "de": 338783,
+     "en": 308588,
+     "fr": 339117,
+     "es": 322459,
+     "it": 327428,
+     "nl": 338776,
+     "pt": 328009
+    }
+   },
+   {
+    "member": "txt/<lang>/ep-10-10-18-015.txt",
+    "chapter_id": "015",
+    "speaker_id": "131",
+    "turn_rank": 0,
+    "char_offset": {
+     "de": 1277,
+     "en": 1019,
+     "fr": 1036,
+     "es": 1211,
+     "it": 1087,
+     "nl": 827,
+     "pt": 1146
+    }
+   },
+   {
+    "member": "txt/<lang>/ep-08-01-31-010.txt",
+    "chapter_id": "010",
+    "speaker_id": "174",
+    "turn_rank": 0,
+    "char_offset": {
+     "de": 48939,
+     "en": 42609,
+     "fr": 47858,
+     "es": 47295,
+     "it": 48440,
+     "nl": 47492,
+     "pt": 46103
+    }
+   },
+   {
+    "member": "txt/<lang>/ep-96-06-20.txt",
+    "chapter_id": "6",
+    "speaker_id": "78",
+    "turn_rank": 0,
+    "char_offset": {
+     "de": 153124,
+     "en": 134448,
+     "fr": 151505,
+     "es": 145621,
+     "it": 143994,
+     "nl": 144572,
+     "pt": 142774
+    }
+   },
+   {
+    "member": "txt/<lang>/ep-07-12-13-006.txt",
+    "chapter_id": "006",
+    "speaker_id": "061",
+    "turn_rank": 0,
+    "char_offset": {
+     "de": 6364,
+     "en": 5562,
+     "fr": 5585,
+     "es": 5897,
+     "it": 5708,
+     "nl": 5877,
+     "pt": 5843
+    }
+   },
+   {
+    "member": "txt/<lang>/ep-04-01-29.txt",
+    "chapter_id": "1",
+    "speaker_id": "46",
+    "turn_rank": 0,
+    "char_offset": {
+     "de": 91026,
+     "en": 81108,
+     "fr": 90637,
+     "es": 89018,
+     "it": 89276,
+     "nl": 87393,
+     "pt": 87094
+    }
+   },
+   {
+    "member": "txt/<lang>/ep-00-11-15.txt",
+    "chapter_id": "9",
+    "speaker_id": "169",
+    "turn_rank": 0,
+    "char_offset": {
+     "de": 408706,
+     "en": 361554,
+     "fr": 397091,
+     "es": 395438,
+     "it": 390500,
+     "nl": 392136,
+     "pt": 389313
+    }
+   },
+   {
+    "member": "txt/<lang>/ep-08-06-04-027.txt",
+    "chapter_id": "027",
+    "speaker_id": "282",
+    "turn_rank": 0,
+    "char_offset": {
+     "de": 22038,
+     "en": 19660,
+     "fr": 22033,
+     "es": 22393,
+     "it": 22166,
+     "nl": 21496,
+     "pt": 21590
+    }
+   },
+   {
+    "member": "txt/<lang>/ep-98-06-17.txt",
+    "chapter_id": "13",
+    "speaker_id": "269",
+    "turn_rank": 0,
+    "char_offset": {
+     "de": 368821,
+     "en": 331743,
+     "fr": 366067,
+     "es": 363647,
+     "it": 344967,
+     "nl": 354225,
+     "pt": 355565
+    }
+   },
+   {
+    "member": "txt/<lang>/ep-01-10-01.txt",
+    "chapter_id": "2",
+    "speaker_id": "7",
+    "turn_rank": 0,
+    "char_offset": {
+     "de": 9946,
+     "en": 9293,
+     "fr": 9950,
+     "es": 9794,
+     "it": 9646,
+     "nl": 10001,
+     "pt": 9742
+    }
+   },
+   {
+    "member": "txt/<lang>/ep-00-07-07.txt",
+    "chapter_id": "1",
+    "speaker_id": "18",
+    "turn_rank": 0,
+    "char_offset": {
+     "de": 7992,
+     "en": 7346,
+     "fr": 8086,
+     "es": 7650,
+     "it": 8237,
+     "nl": 8135,
+     "pt": 8334
+    }
+   },
+   {
+    "member": "txt/<lang>/ep-00-12-15.txt",
+    "chapter_id": "2",
+    "speaker_id": "18",
+    "turn_rank": 0,
+    "char_offset": {
+     "de": 24734,
+     "en": 21586,
+     "fr": 24307,
+     "es": 23816,
+     "it": 22642,
+     "nl": 22315,
+     "pt": 23284
+    }
+   },
+   {
+    "member": "txt/<lang>/ep-02-11-18.txt",
+    "chapter_id": "1",
+    "speaker_id": "75",
+    "turn_rank": 0,
+    "char_offset": {
+     "de": 88648,
+     "en": 81186,
+     "fr": 89725,
+     "es": 88352,
+     "it": 86160,
+     "nl": 87801,
+     "pt": 89708
+    }
+   },
+   {
+    "member": "txt/<lang>/ep-98-10-06.txt",
+    "chapter_id": "6",
+    "speaker_id": "132",
+    "turn_rank": 0,
+    "char_offset": {
+     "de": 263498,
+     "en": 238083,
+     "fr": 261075,
+     "es": 260502,
+     "it": 256626,
+     "nl": 256816,
+     "pt": 255817
+    }
+   },
+   {
+    "member": "txt/<lang>/ep-11-06-23-014.txt",
+    "chapter_id": "014",
+    "speaker_id": "435",
+    "turn_rank": 0,
+    "char_offset": {
+     "de": 434807,
+     "en": 380240,
+     "fr": 420510,
+     "es": 418141,
+     "it": 416048,
+     "nl": 429005,
+     "pt": 400912
+    }
+   },
+   {
+    "member": "txt/<lang>/ep-07-11-13-004.txt",
+    "chapter_id": "004",
+    "speaker_id": "051",
+    "turn_rank": 0,
+    "char_offset": {
+     "de": 106348,
+     "en": 95331,
+     "fr": 107101,
+     "es": 105013,
+     "it": 104130,
+     "nl": 110108,
+     "pt": 103521
+    }
+   },
+   {
+    "member": "txt/<lang>/ep-07-02-15-010-03.txt",
+    "chapter_id": "010-03",
+    "speaker_id": "199",
+    "turn_rank": 0,
+    "char_offset": {
+     "de": 122,
+     "en": 100,
+     "fr": 122,
+     "es": 138,
+     "it": 121,
+     "nl": 85,
+     "pt": 110
+    }
+   },
+   {
+    "member": "txt/<lang>/ep-96-12-09.txt",
+    "chapter_id": "8",
+    "speaker_id": "68",
+    "turn_rank": 0,
+    "char_offset": {
+     "de": 112418,
+     "en": 101983,
+     "fr": 107658,
+     "es": 107907,
+     "it": 107912,
+     "nl": 110060,
+     "pt": 107911
+    }
+   },
+   {
+    "member": "txt/<lang>/ep-01-02-14.txt",
+    "chapter_id": "8",
+    "speaker_id": "285",
+    "turn_rank": 0,
+    "char_offset": {
+     "de": 469339,
+     "en": 415590,
+     "fr": 466242,
+     "es": 445738,
+     "it": 450844,
+     "nl": 454654,
+     "pt": 450180
+    }
+   },
+   {
+    "member": "txt/<lang>/ep-03-12-15.txt",
+    "chapter_id": "1",
+    "speaker_id": "63",
+    "turn_rank": 0,
+    "char_offset": {
+     "de": 100250,
+     "en": 86753,
+     "fr": 94716,
+     "es": 94028,
+     "it": 92723,
+     "nl": 97205,
+     "pt": 97315
+    }
+   },
+   {
+    "member": "txt/<lang>/ep-97-10-21.txt",
+    "chapter_id": "1",
+    "speaker_id": "4",
+    "turn_rank": 0,
+    "char_offset": {
+     "de": 1620,
+     "en": 1312,
+     "fr": 1531,
+     "es": 1403,
+     "it": 1564,
+     "nl": 1473,
+     "pt": 1484
+    }
+   },
+   {
+    "member": "txt/<lang>/ep-08-05-08-009.txt",
+    "chapter_id": "009",
+    "speaker_id": "217",
+    "turn_rank": 0,
+    "char_offset": {
+     "de": 56129,
+     "en": 49336,
+     "fr": 54951,
+     "es": 55271,
+     "it": 53816,
+     "nl": 55568,
+     "pt": 52217
+    }
+   },
+   {
+    "member": "txt/<lang>/ep-08-07-07-018.txt",
+    "chapter_id": "018",
+    "speaker_id": "124",
+    "turn_rank": 0,
+    "char_offset": {
+     "de": 5179,
+     "en": 4488,
+     "fr": 4729,
+     "es": 4809,
+     "it": 4661,
+     "nl": 5251,
+     "pt": 4694
+    }
+   },
+   {
+    "member": "txt/<lang>/ep-09-10-19-016.txt",
+    "chapter_id": "016",
+    "speaker_id": "064",
+    "turn_rank": 0,
+    "char_offset": {
+     "de": 38516,
+     "en": 34907,
+     "fr": 39890,
+     "es": 37366,
+     "it": 38427,
+     "nl": 38709,
+     "pt": 37409
+    }
+   },
+   {
+    "member": "txt/<lang>/ep-10-12-15-010.txt",
+    "chapter_id": "010",
+    "speaker_id": "894",
+    "turn_rank": 0,
+    "char_offset": {
+     "de": 265808,
+     "en": 231985,
+     "fr": 256486,
+     "es": 257358,
+     "it": 245226,
+     "nl": 256351,
+     "pt": 241745
+    }
+   },
+   {
+    "member": "txt/<lang>/ep-01-10-02.txt",
+    "chapter_id": "5",
+    "speaker_id": "103",
+    "turn_rank": 0,
+    "char_offset": {
+     "de": 260228,
+     "en": 236694,
+     "fr": 259827,
+     "es": 250555,
+     "it": 249830,
+     "nl": 248954,
+     "pt": 251416
+    }
+   },
+   {
+    "member": "txt/<lang>/ep-09-04-21-017.txt",
+    "chapter_id": "017",
+    "speaker_id": "091",
+    "turn_rank": 0,
+    "char_offset": {
+     "de": 55709,
+     "en": 48704,
+     "fr": 57542,
+     "es": 54211,
+     "it": 53724,
+     "nl": 53869,
+     "pt": 54100
+    }
+   },
+   {
+    "member": "txt/<lang>/ep-07-09-03-002.txt",
+    "chapter_id": "002",
+    "speaker_id": "005",
+    "turn_rank": 0,
+    "char_offset": {
+     "de": 26,
+     "en": 27,
+     "fr": 29,
+     "es": 31,
+     "it": 31,
+     "nl": 35,
+     "pt": 26
+    }
+   },
+   {
+    "member": "txt/<lang>/ep-98-05-11.txt",
+    "chapter_id": "4",
+    "speaker_id": "60",
+    "turn_rank": 0,
+    "char_offset": {
+     "de": 115427,
+     "en": 99156,
+     "fr": 110788,
+     "es": 107458,
+     "it": 106076,
+     "nl": 109434,
+     "pt": 107981
+    }
+   },
+   {
+    "member": "txt/<lang>/ep-10-11-25-009.txt",
+    "chapter_id": "009",
+    "speaker_id": "198",
+    "turn_rank": 0,
+    "char_offset": {
+     "de": 146096,
+     "en": 126283,
+     "fr": 143060,
+     "es": 140070,
+     "it": 137916,
+     "nl": 142406,
+     "pt": 132863
+    }
+   },
+   {
+    "member": "txt/<lang>/ep-96-04-17.txt",
+    "chapter_id": "8",
+    "speaker_id": "142",
+    "turn_rank": 0,
+    "char_offset": {
+     "de": 324886,
+     "en": 287444,
+     "fr": 310137,
+     "es": 300917,
+     "it": 313072,
+     "nl": 311885,
+     "pt": 300782
+    }
+   }
+  ]
+ }
+}

@@ -1,0 +1,35 @@
+% A compact title block for the two standalone research notes.
+% Keep the document's body font, margins, and abstract formatting unchanged.
+\makeatletter
+\renewcommand{\maketitle}{%
+  \thispagestyle{plain}%
+  \begingroup
+    \centering
+    {\normalfont\fontsize{17}{20}\selectfont\bfseries\@title\par}%
+    \vspace{0.8em}%
+    {\normalfont\fontsize{10}{12}\selectfont\@author\par}%
+    \vspace{0.2em}%
+    {\normalfont\fontsize{9}{11}\selectfont Independent researcher\par}%
+    \vspace{0.55em}%
+    {\normalfont\fontsize{9}{11}\selectfont\@subtitle\par}%
+  \endgroup
+  \vspace{0.85em}%
+}
+\makeatother
+
+% Use moderate spacing between bibliography entries at the body font size.
+\usepackage{etoolbox}
+\AtBeginDocument{%
+  \apptocmd{\CSLReferences}{\setlength{\itemsep}{0.5\baselineskip}}{}{}%
+  \Urlmuskip=0mu plus 1mu minus 1mu\relax
+}
+
+% Appendix headings need less vertical separation than the main sections.
+\newcommand{\compactappendix}{%
+  \appendix
+  \setlength{\parskip}{4pt plus 1pt minus 1pt}%
+  \ifdefined\RedeclareSectionCommand
+    \RedeclareSectionCommand[beforeskip=2ex plus 1ex minus .2ex,
+      afterskip=1ex plus .2ex]{section}%
+  \fi
+}

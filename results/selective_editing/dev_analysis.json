@@ -1,0 +1,943 @@
+{
+ "rule": "Contrast = protected CE rise of the main method minus that of the comparator, per document of the protected\nEuroparl test set, averaged over the draws in which both edits are matched and usable. One simultaneous family\n(claim): 3 targets x 2 effect points x 4 comparators. The reference rows form a second, separately reported\nfamily with its own simultaneous correction. The historical atom is a reference row for de only.\n\nComposition is explicit: the expected cells (target x draw) are the protocol's. Each cell is \"read\" or \"missing\nreadout\". Each contrast lists its used draws, every excluded draw with its reason, and a status: \"complete\"\n(every expected draw used), \"conditional\" (every expected draw read, some excluded by the declared rules: not\nmatched, unusable, or the method's rule gave no edit), \"incomplete\" (a readout is missing, an edit is absent\nfrom it, a method has no edit for a technical reason, or a matched edit's per-document readout is missing or\nholds a non-finite number) or \"empty\" (no draw usable, declared reasons only, the contrast is then absent from\nits family). The top-level status is \"complete\" if every contrast is complete, \"conditional\" if none is\nincomplete and no cell is missing, else \"incomplete\". The exported data carry no job log, so a cell whose read\nfailed in the original run is \"missing readout\" here too.",
+ "split": "dev",
+ "method_labels": {
+  "vpd_atom": "g^2/q selector, VPD dictionary (main)",
+  "null_atom": "g^2/q selector, randomized dictionary (same rule)",
+  "omp_finetune": "OMP top-1 of the full-matrix fine-tune of all 24 modules (same target and draw)",
+  "omp_lora": "OMP top-1 of the historical LoRA condition (rank-1 LoRA on all 24 modules, lr 1e-4, historical checkpoint rule, English retention)",
+  "ci_difference": "CI top-1 (adaptation of Bushnaq's top-16 rule)",
+  "historical_atom": "historical atom 0.attn.o:268, ablation side (historical, de only, dev-selected)",
+  "neurons": "top-k activation neurons (target vs English rate), ablation",
+  "lora_rank1": "rank-1 LoRA in the selected atom's module",
+  "finetune_24": "full-matrix fine-tune of all 24 modules"
+ },
+ "status": "conditional",
+ "expected_cells": [
+  "de:0",
+  "de:1",
+  "de:2",
+  "es:0",
+  "es:1",
+  "es:2",
+  "fr:0",
+  "fr:1",
+  "fr:2"
+ ],
+ "cells": {
+  "de:0": "read",
+  "de:1": "read",
+  "de:2": "read",
+  "es:0": "read",
+  "es:1": "read",
+  "es:2": "read",
+  "fr:0": "read",
+  "fr:1": "read",
+  "fr:2": "read"
+ },
+ "missing_cells": [],
+ "composition": {
+  "claim": {
+   "de->nl|tau=0.5|vpd_atom-null_atom": {
+    "expected_draws": [
+     0,
+     1,
+     2
+    ],
+    "used_draws": [],
+    "excluded": {
+     "0": "vpd_atom: ok; null_atom: not matched (no edit by the declared rule: selector status 'no feasible atom')",
+     "1": "vpd_atom: ok; null_atom: not matched (no edit by the declared rule: selector status 'no feasible atom')",
+     "2": "vpd_atom: ok; null_atom: not matched (no edit by the declared rule: selector status 'no feasible atom')"
+    },
+    "status": "empty"
+   },
+   "de->nl|tau=0.5|vpd_atom-lora_rank1": {
+    "expected_draws": [
+     0,
+     1,
+     2
+    ],
+    "used_draws": [
+     0,
+     1,
+     2
+    ],
+    "excluded": {},
+    "status": "complete"
+   },
+   "de->nl|tau=0.5|vpd_atom-finetune_24": {
+    "expected_draws": [
+     0,
+     1,
+     2
+    ],
+    "used_draws": [
+     0,
+     1,
+     2
+    ],
+    "excluded": {},
+    "status": "complete"
+   },
+   "de->nl|tau=0.5|vpd_atom-neurons": {
+    "expected_draws": [
+     0,
+     1,
+     2
+    ],
+    "used_draws": [
+     0,
+     1,
+     2
+    ],
+    "excluded": {},
+    "status": "complete"
+   },
+   "de->nl|tau=1.0|vpd_atom-null_atom": {
+    "expected_draws": [
+     0,
+     1,
+     2
+    ],
+    "used_draws": [],
+    "excluded": {
+     "0": "vpd_atom: ok; null_atom: not matched (no edit by the declared rule: selector status 'no feasible atom')",
+     "1": "vpd_atom: ok; null_atom: not matched (no edit by the declared rule: selector status 'no feasible atom')",
+     "2": "vpd_atom: ok; null_atom: not matched (no edit by the declared rule: selector status 'no feasible atom')"
+    },
+    "status": "empty"
+   },
+   "de->nl|tau=1.0|vpd_atom-lora_rank1": {
+    "expected_draws": [
+     0,
+     1,
+     2
+    ],
+    "used_draws": [
+     0,
+     1,
+     2
+    ],
+    "excluded": {},
+    "status": "complete"
+   },
+   "de->nl|tau=1.0|vpd_atom-finetune_24": {
+    "expected_draws": [
+     0,
+     1,
+     2
+    ],
+    "used_draws": [
+     0,
+     1,
+     2
+    ],
+    "excluded": {},
+    "status": "complete"
+   },
+   "de->nl|tau=1.0|vpd_atom-neurons": {
+    "expected_draws": [
+     0,
+     1,
+     2
+    ],
+    "used_draws": [
+     0,
+     1,
+     2
+    ],
+    "excluded": {},
+    "status": "complete"
+   },
+   "es->pt|tau=0.5|vpd_atom-null_atom": {
+    "expected_draws": [
+     0,
+     1,
+     2
+    ],
+    "used_draws": [],
+    "excluded": {
+     "0": "vpd_atom: ok; null_atom: not matched (no edit by the declared rule: selector status 'no feasible atom')",
+     "1": "vpd_atom: ok; null_atom: not matched (no edit by the declared rule: selector status 'no feasible atom')",
+     "2": "vpd_atom: ok; null_atom: not matched (no edit by the declared rule: selector status 'no feasible atom')"
+    },
+    "status": "empty"
+   },
+   "es->pt|tau=0.5|vpd_atom-lora_rank1": {
+    "expected_draws": [
+     0,
+     1,
+     2
+    ],
+    "used_draws": [
+     0,
+     1,
+     2
+    ],
+    "excluded": {},
+    "status": "complete"
+   },
+   "es->pt|tau=0.5|vpd_atom-finetune_24": {
+    "expected_draws": [
+     0,
+     1,
+     2
+    ],
+    "used_draws": [
+     0,
+     1,
+     2
+    ],
+    "excluded": {},
+    "status": "complete"
+   },
+   "es->pt|tau=0.5|vpd_atom-neurons": {
+    "expected_draws": [
+     0,
+     1,
+     2
+    ],
+    "used_draws": [
+     0,
+     1,
+     2
+    ],
+    "excluded": {},
+    "status": "complete"
+   },
+   "es->pt|tau=1.0|vpd_atom-null_atom": {
+    "expected_draws": [
+     0,
+     1,
+     2
+    ],
+    "used_draws": [],
+    "excluded": {
+     "0": "vpd_atom: ok; null_atom: not matched (no edit by the declared rule: selector status 'no feasible atom')",
+     "1": "vpd_atom: ok; null_atom: not matched (no edit by the declared rule: selector status 'no feasible atom')",
+     "2": "vpd_atom: ok; null_atom: not matched (no edit by the declared rule: selector status 'no feasible atom')"
+    },
+    "status": "empty"
+   },
+   "es->pt|tau=1.0|vpd_atom-lora_rank1": {
+    "expected_draws": [
+     0,
+     1,
+     2
+    ],
+    "used_draws": [
+     0,
+     1,
+     2
+    ],
+    "excluded": {},
+    "status": "complete"
+   },
+   "es->pt|tau=1.0|vpd_atom-finetune_24": {
+    "expected_draws": [
+     0,
+     1,
+     2
+    ],
+    "used_draws": [
+     0,
+     1,
+     2
+    ],
+    "excluded": {},
+    "status": "complete"
+   },
+   "es->pt|tau=1.0|vpd_atom-neurons": {
+    "expected_draws": [
+     0,
+     1,
+     2
+    ],
+    "used_draws": [
+     0,
+     1,
+     2
+    ],
+    "excluded": {},
+    "status": "complete"
+   },
+   "fr->it|tau=0.5|vpd_atom-null_atom": {
+    "expected_draws": [
+     0,
+     1,
+     2
+    ],
+    "used_draws": [],
+    "excluded": {
+     "0": "vpd_atom: ok; null_atom: not matched (no edit by the declared rule: selector status 'no feasible atom')",
+     "1": "vpd_atom: ok; null_atom: not matched (no edit by the declared rule: selector status 'no feasible atom')",
+     "2": "vpd_atom: ok; null_atom: not matched (no edit by the declared rule: selector status 'no feasible atom')"
+    },
+    "status": "empty"
+   },
+   "fr->it|tau=0.5|vpd_atom-lora_rank1": {
+    "expected_draws": [
+     0,
+     1,
+     2
+    ],
+    "used_draws": [
+     0,
+     1,
+     2
+    ],
+    "excluded": {},
+    "status": "complete"
+   },
+   "fr->it|tau=0.5|vpd_atom-finetune_24": {
+    "expected_draws": [
+     0,
+     1,
+     2
+    ],
+    "used_draws": [
+     0,
+     1,
+     2
+    ],
+    "excluded": {},
+    "status": "complete"
+   },
+   "fr->it|tau=0.5|vpd_atom-neurons": {
+    "expected_draws": [
+     0,
+     1,
+     2
+    ],
+    "used_draws": [
+     0,
+     1,
+     2
+    ],
+    "excluded": {},
+    "status": "complete"
+   },
+   "fr->it|tau=1.0|vpd_atom-null_atom": {
+    "expected_draws": [
+     0,
+     1,
+     2
+    ],
+    "used_draws": [],
+    "excluded": {
+     "0": "vpd_atom: ok; null_atom: not matched (no edit by the declared rule: selector status 'no feasible atom')",
+     "1": "vpd_atom: ok; null_atom: not matched (no edit by the declared rule: selector status 'no feasible atom')",
+     "2": "vpd_atom: ok; null_atom: not matched (no edit by the declared rule: selector status 'no feasible atom')"
+    },
+    "status": "empty"
+   },
+   "fr->it|tau=1.0|vpd_atom-lora_rank1": {
+    "expected_draws": [
+     0,
+     1,
+     2
+    ],
+    "used_draws": [
+     0,
+     1,
+     2
+    ],
+    "excluded": {},
+    "status": "complete"
+   },
+   "fr->it|tau=1.0|vpd_atom-finetune_24": {
+    "expected_draws": [
+     0,
+     1,
+     2
+    ],
+    "used_draws": [
+     0,
+     1,
+     2
+    ],
+    "excluded": {},
+    "status": "complete"
+   },
+   "fr->it|tau=1.0|vpd_atom-neurons": {
+    "expected_draws": [
+     0,
+     1,
+     2
+    ],
+    "used_draws": [
+     0,
+     1,
+     2
+    ],
+    "excluded": {},
+    "status": "complete"
+   }
+  },
+  "references": {
+   "de->nl|tau=0.5|vpd_atom-omp_finetune": {
+    "expected_draws": [
+     0,
+     1,
+     2
+    ],
+    "used_draws": [
+     0,
+     1,
+     2
+    ],
+    "excluded": {},
+    "status": "complete"
+   },
+   "de->nl|tau=0.5|vpd_atom-omp_lora": {
+    "expected_draws": [
+     0,
+     1,
+     2
+    ],
+    "used_draws": [
+     0,
+     1,
+     2
+    ],
+    "excluded": {},
+    "status": "complete"
+   },
+   "de->nl|tau=0.5|vpd_atom-ci_difference": {
+    "expected_draws": [
+     0,
+     1,
+     2
+    ],
+    "used_draws": [
+     0,
+     1,
+     2
+    ],
+    "excluded": {},
+    "status": "complete"
+   },
+   "de->nl|tau=0.5|vpd_atom-historical_atom": {
+    "expected_draws": [
+     0,
+     1,
+     2
+    ],
+    "used_draws": [
+     0,
+     1,
+     2
+    ],
+    "excluded": {},
+    "status": "complete"
+   },
+   "de->nl|tau=1.0|vpd_atom-omp_finetune": {
+    "expected_draws": [
+     0,
+     1,
+     2
+    ],
+    "used_draws": [
+     0,
+     1,
+     2
+    ],
+    "excluded": {},
+    "status": "complete"
+   },
+   "de->nl|tau=1.0|vpd_atom-omp_lora": {
+    "expected_draws": [
+     0,
+     1,
+     2
+    ],
+    "used_draws": [
+     0,
+     1,
+     2
+    ],
+    "excluded": {},
+    "status": "complete"
+   },
+   "de->nl|tau=1.0|vpd_atom-ci_difference": {
+    "expected_draws": [
+     0,
+     1,
+     2
+    ],
+    "used_draws": [
+     0,
+     1,
+     2
+    ],
+    "excluded": {},
+    "status": "complete"
+   },
+   "de->nl|tau=1.0|vpd_atom-historical_atom": {
+    "expected_draws": [
+     0,
+     1,
+     2
+    ],
+    "used_draws": [
+     0,
+     1,
+     2
+    ],
+    "excluded": {},
+    "status": "complete"
+   },
+   "es->pt|tau=0.5|vpd_atom-omp_finetune": {
+    "expected_draws": [
+     0,
+     1,
+     2
+    ],
+    "used_draws": [
+     0,
+     1,
+     2
+    ],
+    "excluded": {},
+    "status": "complete"
+   },
+   "es->pt|tau=0.5|vpd_atom-omp_lora": {
+    "expected_draws": [
+     0,
+     1,
+     2
+    ],
+    "used_draws": [
+     2
+    ],
+    "excluded": {
+     "0": "vpd_atom: ok; omp_lora: not matched (not reached on the evaluated grid)",
+     "1": "vpd_atom: ok; omp_lora: not matched (not reached on the evaluated grid)"
+    },
+    "status": "conditional"
+   },
+   "es->pt|tau=0.5|vpd_atom-ci_difference": {
+    "expected_draws": [
+     0,
+     1,
+     2
+    ],
+    "used_draws": [
+     0,
+     1,
+     2
+    ],
+    "excluded": {},
+    "status": "complete"
+   },
+   "es->pt|tau=1.0|vpd_atom-omp_finetune": {
+    "expected_draws": [
+     0,
+     1,
+     2
+    ],
+    "used_draws": [],
+    "excluded": {
+     "0": "vpd_atom: ok; omp_finetune: not matched (not reached on the evaluated grid)",
+     "1": "vpd_atom: ok; omp_finetune: not matched (not reached on the evaluated grid)",
+     "2": "vpd_atom: ok; omp_finetune: not matched (not reached on the evaluated grid)"
+    },
+    "status": "empty"
+   },
+   "es->pt|tau=1.0|vpd_atom-omp_lora": {
+    "expected_draws": [
+     0,
+     1,
+     2
+    ],
+    "used_draws": [],
+    "excluded": {
+     "0": "vpd_atom: ok; omp_lora: not matched (not reached on the evaluated grid)",
+     "1": "vpd_atom: ok; omp_lora: not matched (not reached on the evaluated grid)",
+     "2": "vpd_atom: ok; omp_lora: not matched (not reached on the evaluated grid)"
+    },
+    "status": "empty"
+   },
+   "es->pt|tau=1.0|vpd_atom-ci_difference": {
+    "expected_draws": [
+     0,
+     1,
+     2
+    ],
+    "used_draws": [
+     0,
+     1,
+     2
+    ],
+    "excluded": {},
+    "status": "complete"
+   },
+   "fr->it|tau=0.5|vpd_atom-omp_finetune": {
+    "expected_draws": [
+     0,
+     1,
+     2
+    ],
+    "used_draws": [
+     0,
+     1,
+     2
+    ],
+    "excluded": {},
+    "status": "complete"
+   },
+   "fr->it|tau=0.5|vpd_atom-omp_lora": {
+    "expected_draws": [
+     0,
+     1,
+     2
+    ],
+    "used_draws": [
+     0
+    ],
+    "excluded": {
+     "1": "vpd_atom: ok; omp_lora: not matched (no edit by the declared rule: upstream status 'no update: no checkpoint met the historical checkpoint rule')",
+     "2": "vpd_atom: ok; omp_lora: not matched (no edit by the declared rule: upstream status 'no update: no checkpoint met the historical checkpoint rule')"
+    },
+    "status": "conditional"
+   },
+   "fr->it|tau=0.5|vpd_atom-ci_difference": {
+    "expected_draws": [
+     0,
+     1,
+     2
+    ],
+    "used_draws": [
+     0,
+     1,
+     2
+    ],
+    "excluded": {},
+    "status": "complete"
+   },
+   "fr->it|tau=1.0|vpd_atom-omp_finetune": {
+    "expected_draws": [
+     0,
+     1,
+     2
+    ],
+    "used_draws": [
+     0,
+     2
+    ],
+    "excluded": {
+     "1": "vpd_atom: ok; omp_finetune: not matched (not reached on the evaluated grid)"
+    },
+    "status": "conditional"
+   },
+   "fr->it|tau=1.0|vpd_atom-omp_lora": {
+    "expected_draws": [
+     0,
+     1,
+     2
+    ],
+    "used_draws": [
+     0
+    ],
+    "excluded": {
+     "1": "vpd_atom: ok; omp_lora: not matched (no edit by the declared rule: upstream status 'no update: no checkpoint met the historical checkpoint rule')",
+     "2": "vpd_atom: ok; omp_lora: not matched (no edit by the declared rule: upstream status 'no update: no checkpoint met the historical checkpoint rule')"
+    },
+    "status": "conditional"
+   },
+   "fr->it|tau=1.0|vpd_atom-ci_difference": {
+    "expected_draws": [
+     0,
+     1,
+     2
+    ],
+    "used_draws": [
+     0,
+     2
+    ],
+    "excluded": {
+     "1": "vpd_atom: ok; ci_difference: not matched (not reached on the evaluated grid)"
+    },
+    "status": "conditional"
+   }
+  }
+ },
+ "incomplete_contrasts": [],
+ "freeze": {
+  "technical_gaps": [],
+  "allow_incomplete": false
+ },
+ "claim": {
+  "de->nl|tau=0.5|vpd_atom-lora_rank1": {
+   "estimate": -0.04743871147366008,
+   "se": 0.0023553049665109836,
+   "lo": -0.05406578414514598,
+   "hi": -0.04081163880217418,
+   "status": "complete"
+  },
+  "de->nl|tau=0.5|vpd_atom-finetune_24": {
+   "estimate": -0.12370151077629998,
+   "se": 0.005138564877971079,
+   "lo": -0.13815978406050428,
+   "hi": -0.1092432374920957,
+   "status": "complete"
+  },
+  "de->nl|tau=0.5|vpd_atom-neurons": {
+   "estimate": -0.43190207332372665,
+   "se": 0.008406949499429031,
+   "lo": -0.45555653254255085,
+   "hi": -0.40824761410490246,
+   "status": "complete"
+  },
+  "de->nl|tau=1.0|vpd_atom-lora_rank1": {
+   "estimate": -0.0892154915491119,
+   "se": 0.003573988777100077,
+   "lo": -0.09927154954995882,
+   "hi": -0.07915943354826499,
+   "status": "complete"
+  },
+  "de->nl|tau=1.0|vpd_atom-finetune_24": {
+   "estimate": -0.24331789347343147,
+   "se": 0.007781625501305087,
+   "lo": -0.26521289154488237,
+   "hi": -0.22142289540198057,
+   "status": "complete"
+  },
+  "de->nl|tau=1.0|vpd_atom-neurons": {
+   "estimate": -0.7419756725430489,
+   "se": 0.010726134413201152,
+   "lo": -0.7721555741910754,
+   "hi": -0.7117957708950223,
+   "status": "complete"
+  },
+  "es->pt|tau=0.5|vpd_atom-lora_rank1": {
+   "estimate": -0.10098186635877937,
+   "se": 0.00436066498963416,
+   "lo": -0.11325137888187246,
+   "hi": -0.08871235383568628,
+   "status": "complete"
+  },
+  "es->pt|tau=0.5|vpd_atom-finetune_24": {
+   "estimate": -0.20150269044097513,
+   "se": 0.005452926869050367,
+   "lo": -0.21684547753110134,
+   "hi": -0.18615990335084892,
+   "status": "complete"
+  },
+  "es->pt|tau=0.5|vpd_atom-neurons": {
+   "estimate": -0.5443806573748589,
+   "se": 0.00896604976094849,
+   "lo": -0.5696082453886454,
+   "hi": -0.5191530693610723,
+   "status": "complete"
+  },
+  "es->pt|tau=1.0|vpd_atom-lora_rank1": {
+   "estimate": -0.188557491870597,
+   "se": 0.006811794639625557,
+   "lo": -0.20772369698708681,
+   "hi": -0.1693912867541072,
+   "status": "complete"
+  },
+  "es->pt|tau=1.0|vpd_atom-finetune_24": {
+   "estimate": -0.40210126154124737,
+   "se": 0.009286659168540367,
+   "lo": -0.42823094158705677,
+   "hi": -0.37597158149543797,
+   "status": "complete"
+  },
+  "es->pt|tau=1.0|vpd_atom-neurons": {
+   "estimate": -0.7918876307085156,
+   "se": 0.010279787883368512,
+   "lo": -0.8208116563948622,
+   "hi": -0.7629636050221691,
+   "status": "complete"
+  },
+  "fr->it|tau=0.5|vpd_atom-lora_rank1": {
+   "estimate": -0.028960327967070043,
+   "se": 0.002179136699047125,
+   "lo": -0.035091719642891844,
+   "hi": -0.022828936291248242,
+   "status": "complete"
+  },
+  "fr->it|tau=0.5|vpd_atom-finetune_24": {
+   "estimate": -0.06326711742440239,
+   "se": 0.0017179423087162965,
+   "lo": -0.0681008560218071,
+   "hi": -0.05843337882699767,
+   "status": "complete"
+  },
+  "fr->it|tau=0.5|vpd_atom-neurons": {
+   "estimate": -0.43160136649385095,
+   "se": 0.008770853851080868,
+   "lo": -0.45627973582969034,
+   "hi": -0.40692299715801156,
+   "status": "complete"
+  },
+  "fr->it|tau=1.0|vpd_atom-lora_rank1": {
+   "estimate": -0.056455964213455445,
+   "se": 0.0032870393910976415,
+   "lo": -0.06570463868600564,
+   "hi": -0.047207289740905246,
+   "status": "complete"
+  },
+  "fr->it|tau=1.0|vpd_atom-finetune_24": {
+   "estimate": -0.11653842683881521,
+   "se": 0.002472572784262455,
+   "lo": -0.1234954535337993,
+   "hi": -0.10958140014383112,
+   "status": "complete"
+  },
+  "fr->it|tau=1.0|vpd_atom-neurons": {
+   "estimate": -0.9008910758420825,
+   "se": 0.014915084332519337,
+   "lo": -0.9428573388858731,
+   "hi": -0.8589248127982919,
+   "status": "complete"
+  },
+  "_critical_value": 2.8136792329287497,
+  "_n_groups": 64
+ },
+ "claim_contrasts_absent": [
+  "de->nl|tau=0.5|vpd_atom-null_atom",
+  "de->nl|tau=1.0|vpd_atom-null_atom",
+  "es->pt|tau=0.5|vpd_atom-null_atom",
+  "es->pt|tau=1.0|vpd_atom-null_atom",
+  "fr->it|tau=0.5|vpd_atom-null_atom",
+  "fr->it|tau=1.0|vpd_atom-null_atom"
+ ],
+ "references": {
+  "de->nl|tau=0.5|vpd_atom-omp_finetune": {
+   "estimate": -0.07142005115747452,
+   "se": 0.0030997933474764153,
+   "lo": -0.08001206163793531,
+   "hi": -0.06282804067701372,
+   "status": "complete"
+  },
+  "de->nl|tau=0.5|vpd_atom-omp_lora": {
+   "estimate": -0.023806683675502427,
+   "se": 0.001033264439491085,
+   "lo": -0.02667068714219236,
+   "hi": -0.020942680208812493,
+   "status": "complete"
+  },
+  "de->nl|tau=0.5|vpd_atom-ci_difference": {
+   "estimate": -0.7891260758042336,
+   "se": 0.01206107662312245,
+   "lo": -0.822556980750163,
+   "hi": -0.7556951708583041,
+   "status": "complete"
+  },
+  "de->nl|tau=0.5|vpd_atom-historical_atom": {
+   "estimate": 0.0,
+   "se": 0.0,
+   "lo": 0.0,
+   "hi": 0.0,
+   "status": "complete"
+  },
+  "de->nl|tau=1.0|vpd_atom-omp_finetune": {
+   "estimate": -0.13263215869665146,
+   "se": 0.004443524268362863,
+   "lo": -0.14494872396544187,
+   "hi": -0.12031559342786105,
+   "status": "complete"
+  },
+  "de->nl|tau=1.0|vpd_atom-omp_lora": {
+   "estimate": -0.044210719352122396,
+   "se": 0.0014811747233351904,
+   "lo": -0.04831624101751025,
+   "hi": -0.04010519768673454,
+   "status": "complete"
+  },
+  "de->nl|tau=1.0|vpd_atom-ci_difference": {
+   "estimate": -1.4143940228968859,
+   "se": 0.01785743048622186,
+   "lo": -1.4638912676137406,
+   "hi": -1.3648967781800312,
+   "status": "complete"
+  },
+  "de->nl|tau=1.0|vpd_atom-historical_atom": {
+   "estimate": 0.0,
+   "se": 0.0,
+   "lo": 0.0,
+   "hi": 0.0,
+   "status": "complete"
+  },
+  "es->pt|tau=0.5|vpd_atom-omp_finetune": {
+   "estimate": -0.18190239369869232,
+   "se": 0.005300732384500634,
+   "lo": -0.1965949693308148,
+   "hi": -0.16720981806656984,
+   "status": "complete"
+  },
+  "es->pt|tau=0.5|vpd_atom-omp_lora": {
+   "estimate": -0.18190239369869232,
+   "se": 0.005300732384500634,
+   "lo": -0.1965949693308148,
+   "hi": -0.16720981806656984,
+   "status": "conditional"
+  },
+  "es->pt|tau=0.5|vpd_atom-ci_difference": {
+   "estimate": -0.49429284408688545,
+   "se": 0.009219667163573891,
+   "lo": -0.5198479272863115,
+   "hi": -0.46873776088745944,
+   "status": "complete"
+  },
+  "es->pt|tau=1.0|vpd_atom-ci_difference": {
+   "estimate": -1.0825434625148773,
+   "se": 0.015542746686608312,
+   "lo": -1.1256248642267705,
+   "hi": -1.039462060802984,
+   "status": "complete"
+  },
+  "fr->it|tau=0.5|vpd_atom-omp_finetune": {
+   "estimate": -0.43614199943840504,
+   "se": 0.00746938214569868,
+   "lo": -0.4568456407732886,
+   "hi": -0.4154383581035215,
+   "status": "complete"
+  },
+  "fr->it|tau=0.5|vpd_atom-omp_lora": {
+   "estimate": -0.6291304640471935,
+   "se": 0.011893323157131059,
+   "lo": -0.6620963897585863,
+   "hi": -0.5961645383358007,
+   "status": "conditional"
+  },
+  "fr->it|tau=0.5|vpd_atom-ci_difference": {
+   "estimate": -0.48870301293209195,
+   "se": 0.00876732411288782,
+   "lo": -0.5130042911849971,
+   "hi": -0.4644017346791868,
+   "status": "complete"
+  },
+  "fr->it|tau=1.0|vpd_atom-omp_finetune": {
+   "estimate": -0.4792003743350506,
+   "se": 0.0068836394971683226,
+   "lo": -0.49828045357695694,
+   "hi": -0.4601202950931442,
+   "status": "conditional"
+  },
+  "fr->it|tau=1.0|vpd_atom-omp_lora": {
+   "estimate": -1.2708038166165352,
+   "se": 0.020899763437735544,
+   "lo": -1.3287338030275218,
+   "hi": -1.2128738302055486,
+   "status": "conditional"
+  },
+  "fr->it|tau=1.0|vpd_atom-ci_difference": {
+   "estimate": -1.3670109622180462,
+   "se": 0.019976469316854536,
+   "lo": -1.4223817610078269,
+   "hi": -1.3116401634282655,
+   "status": "conditional"
+  },
+  "_critical_value": 2.7718010581110724,
+  "_n_groups": 64
+ },
+ "references_contrasts_absent": [
+  "es->pt|tau=1.0|vpd_atom-omp_finetune",
+  "es->pt|tau=1.0|vpd_atom-omp_lora"
+ ]
+}

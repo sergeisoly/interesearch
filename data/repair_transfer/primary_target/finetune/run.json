@@ -1,0 +1,159 @@
+{
+ "config": {
+  "condition": "matrix",
+  "lr": 3e-06,
+  "seed": 14,
+  "steps": 200,
+  "warmup": 10,
+  "checkpoints": [
+   50,
+   100,
+   150,
+   200
+  ],
+  "track": [],
+  "lam": 1.0,
+  "margin": 1.0,
+  "n_target": 8,
+  "n_retain_per_lang": 2,
+  "micro_batch": 4,
+  "retain_langs": [
+   "en",
+   "fr",
+   "es",
+   "it"
+  ],
+  "n_retain": 8,
+  "objective": "hinge",
+  "teacher_m": null,
+  "teacher_atom": "3.attn.v:513",
+  "rank": 1,
+  "alpha": null,
+  "grad_clip": 1.0,
+  "betas": [
+   0.9,
+   0.999
+  ],
+  "eps": 1e-08,
+  "weight_decay": 0.0,
+  "target_rows": null,
+  "min_target_effect": 0.5,
+  "max_retain_effect": 0.1,
+  "preferred_target_effect": 1.0,
+  "max_target_effect": null,
+  "lora_scale": 1.0
+ },
+ "selection": {
+  "rule": "usable: German val CE rise >= 0.5 nats and every retention language's (en/fr/es/it) CE rise <= 0.1 nats; among usable: German rise closest to 1.0, then lower mean retention KL(p_0||p), then earlier step",
+  "selected_step": 150,
+  "usable": true
+ },
+ "completed": true,
+ "gates": {
+  "tolerances": {
+   "lora_merge_max_rel_logit_diff": 0.0001,
+   "eval_path_max_abs_ce_doc_diff": 0.0001
+  },
+  "failed": [],
+  "passed": true
+ },
+ "saved": {
+  "written": [
+   "update.pt",
+   "train_log.jsonl",
+   "val.json"
+  ],
+  "saved_step": 150
+ },
+ "checks": {
+  "zero_update_max_abs_logit_diff": 0.0,
+  "frozen_parameters_unchanged": true,
+  "eval_path_vs_training_path_de_val": {
+   "max_abs_ce_doc_diff": 0.0,
+   "mean_ce_eval_path": 4.310403048992157,
+   "mean_ce_training_path": 4.310403048992157
+  }
+ },
+ "timings": {
+  "base_pass_s": 0.4788022041320801,
+  "steps": 200,
+  "mean_step_s": 0.09698964834213257,
+  "median_step_s": 0.09593605995178223,
+  "first_step_s": 0.2167673110961914,
+  "train_s": 19.397929668426514,
+  "val_pass_s": 0.8874309659004211,
+  "total_s": 24.634804725646973,
+  "eval_path_check_s": 0.05991768836975098,
+  "load_s": 0.9015765190124512
+ },
+ "environment": {
+  "python": "3.13.16",
+  "torch": "2.8.0+cu128",
+  "platform": "Linux-6.8.0-137-generic-x86_64-with-glibc2.39",
+  "machine": "x86_64",
+  "device": "cuda",
+  "gpu": "NVIDIA L40S",
+  "cuda": "12.8",
+  "cuda_max_allocated_gb": 3.196875776,
+  "cuda_matmul_allow_tf32": false
+ },
+ "code_sha256": {
+  "finetune.py": "9a85e505bac7d55862a506a508af47dc77fc13cc738ba7e45c174eaff4d817ce"
+ },
+ "data": {
+  "europarl_train_de": {
+   "window": "finetune_train/primary_target/de.npy",
+   "sha256": "92c547472c6bc2441cdcb1fb260a16b4d234f761c2d4ce97b613b835eb170652"
+  },
+  "europarl_train_en": {
+   "window": "finetune_train/primary_target/en.npy",
+   "sha256": "a737548c10c5495fd38c6e3ffd00ef99d6f298a5548c3d6b35a7628e51e0a138"
+  },
+  "europarl_train_fr": {
+   "window": "finetune_train/primary_target/fr.npy",
+   "sha256": "3cb57acf6264c0c563f13fd0c2a3ac1f6c200185bd213249a675792876be4cf5"
+  },
+  "europarl_train_es": {
+   "window": "finetune_train/primary_target/es.npy",
+   "sha256": "f5da60881cac54c3f56932764875d9e3028d402521781e381d3a975db4042129"
+  },
+  "europarl_train_it": {
+   "window": "finetune_train/primary_target/it.npy",
+   "sha256": "2a8127e57f3cc3687f2a7724ae9b48697605cdfa650299033b4be2215a591d15"
+  },
+  "europarl_val_de": {
+   "window": "finetune_val/de.npy",
+   "sha256": "54855f4e57e37c0e555f15958bac79d61217522089932f3f9c2be2209776fb6f"
+  },
+  "europarl_val_en": {
+   "window": "finetune_val/en.npy",
+   "sha256": "7dd12873119d75aaec60977094f94c9140a0acde51342198d5337bbc44b63a9d"
+  },
+  "europarl_val_fr": {
+   "window": "finetune_val/fr.npy",
+   "sha256": "75f420bf03c77981e8c4b9b3db5d5d353b0385978586e2032c31dcfbf15560ea"
+  },
+  "europarl_val_es": {
+   "window": "finetune_val/es.npy",
+   "sha256": "2d6fb2d8fb7d76d316dcb0b362fcf1fc80912f1e46c6cc4d17d7b1b0d9be16bd"
+  },
+  "europarl_val_it": {
+   "window": "finetune_val/it.npy",
+   "sha256": "3e09c3be0703f4e52e9f000d0f0a57c7067cf04d78268446411e0b63ead5ac59"
+  },
+  "europarl_val_nl": {
+   "window": "finetune_val/nl.npy",
+   "sha256": "ca5011257c18fc3a2bd087838b6d95ae87cbd61fcfbfb89226885b3fadde9e20"
+  },
+  "europarl_val_pt": {
+   "window": "finetune_val/pt.npy",
+   "sha256": "95fc680f1f60eb3616c8370928b3bbabff7474b63782dbc3ecbaf6eb085b6a02"
+  }
+ },
+ "finished_utc": "2026-10-11T12:20:33Z",
+ "update_sha256": "c185c143ed4dbf8380eb611f9ebb78538daaf1d435193fcbc889b3338de628fb",
+ "source": {
+  "run_record_sha256": "d0254ad3f5fa359cca9c5856f929410cf7c83ed0324ee33094f30a79c699cfa3",
+  "note": "the run record without its command line; input files named by public windows"
+ }
+}

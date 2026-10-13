@@ -1,0 +1,1016 @@
+{
+  "schema_version": 1,
+  "source": {
+    "path": "results/repair_transfer/analysis.json",
+    "sha256": "529d06b6c146c3c72c01ca74a8c0d69a9ba7176b4491be6ec36523c680548186",
+    "study": "repair_transfer",
+    "uncertainty": "95% percentile bootstrap over evaluation dates, with paired intervals for differences",
+    "n_boot": 5000,
+    "units": "recovery and difference as fractions, rendered as percent and percentage points"
+  },
+  "equivalence_margin": 0.02,
+  "budgets": [
+    {
+      "key": "256",
+      "tokens": 256
+    },
+    {
+      "key": "512",
+      "tokens": 512
+    },
+    {
+      "key": "2K",
+      "tokens": 2048
+    }
+  ],
+  "step_caps": [
+    50,
+    100,
+    200,
+    600
+  ],
+  "targets": [
+    {
+      "key": "primary_target",
+      "label": "Primary target",
+      "n_dates": 92,
+      "primary": {
+        "source_contrast": "donor_init@2K - strengths_best@2K",
+        "diff": 0.11332993845915385,
+        "ci": [
+          0.10010145787993609,
+          0.1267858561620735
+        ]
+      },
+      "full": [
+        {
+          "family": "strengths",
+          "label": "Scalar coefficients only + full-batch optimization",
+          "source_cell": "strengths_best@2K",
+          "recovery": 0.8689796947045201,
+          "ci": [
+            0.8550212398734218,
+            0.882728907453907
+          ]
+        },
+        {
+          "family": "donor_init",
+          "label": "Donor initialization",
+          "source_cell": "donor_init@2K",
+          "recovery": 0.9823096331636739,
+          "ci": [
+            0.9758173696715949,
+            0.9886915711542695
+          ]
+        },
+        {
+          "family": "fresh",
+          "label": "Fresh",
+          "source_cell": "fresh@2K",
+          "recovery": 0.971691468972355,
+          "ci": [
+            0.9650355584554247,
+            0.9781979032819649
+          ]
+        }
+      ],
+      "grid": [
+        {
+          "budget": "256",
+          "step_cap": 50,
+          "strengths": {
+            "source_cell": "strengths@256:le50",
+            "recovery": 0.87200430793017,
+            "ci": [
+              0.8579930793152093,
+              0.8859538341629057
+            ]
+          },
+          "donor": {
+            "source_cell": "donor_init@256:le50",
+            "recovery": 0.9697309610232152,
+            "ci": [
+              0.9628344523128709,
+              0.9764243640209708
+            ]
+          },
+          "fresh": {
+            "source_cell": "fresh@256:le50",
+            "recovery": 0.9259614526840597,
+            "ci": [
+              0.9176651615343341,
+              0.9338557440953853
+            ]
+          },
+          "gap": {
+            "source_contrast": "donor_init@256:le50 - fresh@256:le50",
+            "diff": 0.043769508339155494,
+            "ci": [
+              0.03984280134322717,
+              0.04737188638427208
+            ],
+            "equivalent": null
+          }
+        },
+        {
+          "budget": "256",
+          "step_cap": 100,
+          "strengths": {
+            "source_cell": "strengths@256:le100",
+            "recovery": 0.8727093113003975,
+            "ci": [
+              0.8587280295468622,
+              0.8867318113575824
+            ]
+          },
+          "donor": {
+            "source_cell": "donor_init@256:le100",
+            "recovery": 0.9695370877252862,
+            "ci": [
+              0.9628846738085879,
+              0.9760530842443041
+            ]
+          },
+          "fresh": {
+            "source_cell": "fresh@256:le100",
+            "recovery": 0.9445845004080599,
+            "ci": [
+              0.9371478436636689,
+              0.9518002569911891
+            ]
+          },
+          "gap": {
+            "source_contrast": "donor_init@256:le100 - fresh@256:le100",
+            "diff": 0.024952587317226382,
+            "ci": [
+              0.022155702506670042,
+              0.0275353028213882
+            ],
+            "equivalent": null
+          }
+        },
+        {
+          "budget": "256",
+          "step_cap": 200,
+          "strengths": {
+            "source_cell": "strengths@256:le200",
+            "recovery": 0.8737161154912486,
+            "ci": [
+              0.8596588672094542,
+              0.8879109473047314
+            ]
+          },
+          "donor": {
+            "source_cell": "donor_init@256:le200",
+            "recovery": 0.9688390964819102,
+            "ci": [
+              0.9627589208346259,
+              0.9749029723843285
+            ]
+          },
+          "fresh": {
+            "source_cell": "fresh@256:le200",
+            "recovery": 0.9400309586768274,
+            "ci": [
+              0.9325075713816108,
+              0.9475778443852237
+            ]
+          },
+          "gap": {
+            "source_contrast": "donor_init@256:le200 - fresh@256:le200",
+            "diff": 0.028808137805082845,
+            "ci": [
+              0.025711011748818565,
+              0.03180990751127273
+            ],
+            "equivalent": null
+          }
+        },
+        {
+          "budget": "256",
+          "step_cap": 600,
+          "strengths": {
+            "source_cell": "strengths@256",
+            "recovery": 0.8737655047924939,
+            "ci": [
+              0.8597833390567036,
+              0.8878411397891841
+            ]
+          },
+          "donor": {
+            "source_cell": "donor_init@256",
+            "recovery": 0.9712306416196931,
+            "ci": [
+              0.9651364189746872,
+              0.977205136924734
+            ]
+          },
+          "fresh": {
+            "source_cell": "fresh@256",
+            "recovery": 0.9565980317432929,
+            "ci": [
+              0.9497199543802686,
+              0.9632757209876914
+            ]
+          },
+          "gap": {
+            "source_contrast": "donor_init@256 - fresh@256",
+            "diff": 0.014632609876400138,
+            "ci": [
+              0.01244271400686521,
+              0.016722300311767607
+            ],
+            "equivalent": null
+          }
+        },
+        {
+          "budget": "512",
+          "step_cap": 50,
+          "strengths": {
+            "source_cell": "strengths@512:le50",
+            "recovery": 0.8744521104971368,
+            "ci": [
+              0.8599813953377249,
+              0.8888331472847566
+            ]
+          },
+          "donor": {
+            "source_cell": "donor_init@512:le50",
+            "recovery": 0.9717869379473805,
+            "ci": [
+              0.9652229521128153,
+              0.97813001894839
+            ]
+          },
+          "fresh": {
+            "source_cell": "fresh@512:le50",
+            "recovery": 0.9346841101601892,
+            "ci": [
+              0.9264922335511202,
+              0.9427363075754575
+            ]
+          },
+          "gap": {
+            "source_contrast": "donor_init@512:le50 - fresh@512:le50",
+            "diff": 0.03710282778719132,
+            "ci": [
+              0.03364916115826963,
+              0.04047687935348511
+            ],
+            "equivalent": null
+          }
+        },
+        {
+          "budget": "512",
+          "step_cap": 100,
+          "strengths": {
+            "source_cell": "strengths@512:le100",
+            "recovery": 0.8744521104971368,
+            "ci": [
+              0.8599813953377249,
+              0.8888331472847566
+            ]
+          },
+          "donor": {
+            "source_cell": "donor_init@512:le100",
+            "recovery": 0.9717869379473805,
+            "ci": [
+              0.9652229521128153,
+              0.97813001894839
+            ]
+          },
+          "fresh": {
+            "source_cell": "fresh@512:le100",
+            "recovery": 0.9513388391151294,
+            "ci": [
+              0.943898246657428,
+              0.9586712686115991
+            ]
+          },
+          "gap": {
+            "source_contrast": "donor_init@512:le100 - fresh@512:le100",
+            "diff": 0.02044809883225107,
+            "ci": [
+              0.01784282195084919,
+              0.023080491145701636
+            ],
+            "equivalent": null
+          }
+        },
+        {
+          "budget": "512",
+          "step_cap": 200,
+          "strengths": {
+            "source_cell": "strengths@512:le200",
+            "recovery": 0.8744521104971368,
+            "ci": [
+              0.8599813953377249,
+              0.8888331472847566
+            ]
+          },
+          "donor": {
+            "source_cell": "donor_init@512:le200",
+            "recovery": 0.9725522904315842,
+            "ci": [
+              0.9664769463780788,
+              0.9785335151643861
+            ]
+          },
+          "fresh": {
+            "source_cell": "fresh@512:le200",
+            "recovery": 0.9587042225226076,
+            "ci": [
+              0.951598126878976,
+              0.9657492965168089
+            ]
+          },
+          "gap": {
+            "source_contrast": "donor_init@512:le200 - fresh@512:le200",
+            "diff": 0.013848067908976636,
+            "ci": [
+              0.011204711716572002,
+              0.016664431932944777
+            ],
+            "equivalent": null
+          }
+        },
+        {
+          "budget": "512",
+          "step_cap": 600,
+          "strengths": {
+            "source_cell": "strengths@512",
+            "recovery": 0.8744521104971368,
+            "ci": [
+              0.8599813953377249,
+              0.8888331472847566
+            ]
+          },
+          "donor": {
+            "source_cell": "donor_init@512",
+            "recovery": 0.9737752253737625,
+            "ci": [
+              0.9677765533863331,
+              0.9794683559352665
+            ]
+          },
+          "fresh": {
+            "source_cell": "fresh@512",
+            "recovery": 0.9585865206983084,
+            "ci": [
+              0.9517571765169422,
+              0.965126245331609
+            ]
+          },
+          "gap": {
+            "source_contrast": "donor_init@512 - fresh@512",
+            "diff": 0.015188704675454079,
+            "ci": [
+              0.013485840066290056,
+              0.016863654585481853
+            ],
+            "equivalent": null
+          }
+        },
+        {
+          "budget": "2K",
+          "step_cap": 50,
+          "strengths": {
+            "source_cell": "strengths@2K:le50",
+            "recovery": 0.8693733451588667,
+            "ci": [
+              0.8553224624654574,
+              0.8832993476540295
+            ]
+          },
+          "donor": {
+            "source_cell": "donor_init@2K:le50",
+            "recovery": 0.9749590043677515,
+            "ci": [
+              0.9687903130969763,
+              0.9810835756948808
+            ]
+          },
+          "fresh": {
+            "source_cell": "fresh@2K:le50",
+            "recovery": 0.9589218400872201,
+            "ci": [
+              0.9518315014187785,
+              0.9658382670267129
+            ]
+          },
+          "gap": {
+            "source_contrast": "donor_init@2K:le50 - fresh@2K:le50",
+            "diff": 0.01603716428053137,
+            "ci": [
+              0.013963303741194574,
+              0.018202896029799433
+            ],
+            "equivalent": null
+          }
+        },
+        {
+          "budget": "2K",
+          "step_cap": 100,
+          "strengths": {
+            "source_cell": "strengths@2K:le100",
+            "recovery": 0.8693733451588667,
+            "ci": [
+              0.8553224624654574,
+              0.8832993476540295
+            ]
+          },
+          "donor": {
+            "source_cell": "donor_init@2K:le100",
+            "recovery": 0.9774190416682482,
+            "ci": [
+              0.9714531381022775,
+              0.9833067429787556
+            ]
+          },
+          "fresh": {
+            "source_cell": "fresh@2K:le100",
+            "recovery": 0.9681061000946024,
+            "ci": [
+              0.9615112413101892,
+              0.9746382358066624
+            ]
+          },
+          "gap": {
+            "source_contrast": "donor_init@2K:le100 - fresh@2K:le100",
+            "diff": 0.009312941573645817,
+            "ci": [
+              0.007720012778092864,
+              0.010932549405400628
+            ],
+            "equivalent": null
+          }
+        },
+        {
+          "budget": "2K",
+          "step_cap": 200,
+          "strengths": {
+            "source_cell": "strengths@2K:le200",
+            "recovery": 0.8696996820899267,
+            "ci": [
+              0.8556642182068425,
+              0.8835256009439748
+            ]
+          },
+          "donor": {
+            "source_cell": "donor_init@2K:le200",
+            "recovery": 0.9798734076580682,
+            "ci": [
+              0.9741136393043338,
+              0.9855309011341402
+            ]
+          },
+          "fresh": {
+            "source_cell": "fresh@2K:le200",
+            "recovery": 0.971691468972355,
+            "ci": [
+              0.9650355584554247,
+              0.9781979032819649
+            ]
+          },
+          "gap": {
+            "source_contrast": "donor_init@2K:le200 - fresh@2K:le200",
+            "diff": 0.008181938685713153,
+            "ci": [
+              0.004457870506712089,
+              0.011972534832312169
+            ],
+            "equivalent": null
+          }
+        },
+        {
+          "budget": "2K",
+          "step_cap": 600,
+          "strengths": {
+            "source_cell": "strengths@2K",
+            "recovery": 0.8689796947045201,
+            "ci": [
+              0.8550212398734218,
+              0.882728907453907
+            ]
+          },
+          "donor": {
+            "source_cell": "donor_init@2K",
+            "recovery": 0.9823096331636739,
+            "ci": [
+              0.9758173696715949,
+              0.9886915711542695
+            ]
+          },
+          "fresh": {
+            "source_cell": "fresh@2K",
+            "recovery": 0.971691468972355,
+            "ci": [
+              0.9650355584554247,
+              0.9781979032819649
+            ]
+          },
+          "gap": {
+            "source_contrast": "donor_init@2K - fresh@2K",
+            "diff": 0.01061816419131889,
+            "ci": [
+              0.008223317077080078,
+              0.012997188304854954
+            ],
+            "equivalent": true
+          }
+        }
+      ]
+    },
+    {
+      "key": "replication_target",
+      "label": "Replication target",
+      "n_dates": 92,
+      "primary": {
+        "source_contrast": "donor_init@2K - strengths_best@2K",
+        "diff": 0.2037190706299815,
+        "ci": [
+          0.18961029054142725,
+          0.2174488077894659
+        ]
+      },
+      "full": [
+        {
+          "family": "strengths",
+          "label": "Scalar coefficients only + full-batch optimization",
+          "source_cell": "strengths_best@2K",
+          "recovery": 0.7838082601691363,
+          "ci": [
+            0.7674908197950039,
+            0.8004146118544782
+          ]
+        },
+        {
+          "family": "donor_init",
+          "label": "Donor initialization",
+          "source_cell": "donor_init@2K",
+          "recovery": 0.9875273307991178,
+          "ci": [
+            0.981338756861975,
+            0.9937838383164341
+          ]
+        },
+        {
+          "family": "fresh",
+          "label": "Fresh",
+          "source_cell": "fresh@2K",
+          "recovery": 0.9735082106321377,
+          "ci": [
+            0.966798462188918,
+            0.980385818149618
+          ]
+        }
+      ],
+      "grid": [
+        {
+          "budget": "256",
+          "step_cap": 50,
+          "strengths": {
+            "source_cell": "strengths@256:le50",
+            "recovery": 0.7625510521259098,
+            "ci": [
+              0.7459938996204514,
+              0.7790992179234284
+            ]
+          },
+          "donor": {
+            "source_cell": "donor_init@256:le50",
+            "recovery": 0.967340403684273,
+            "ci": [
+              0.9595003191684031,
+              0.9749862554933378
+            ]
+          },
+          "fresh": {
+            "source_cell": "fresh@256:le50",
+            "recovery": 0.926365023647236,
+            "ci": [
+              0.9168067932819959,
+              0.9359707031169084
+            ]
+          },
+          "gap": {
+            "source_contrast": "donor_init@256:le50 - fresh@256:le50",
+            "diff": 0.040975380037036935,
+            "ci": [
+              0.03639419187454832,
+              0.045291881524752255
+            ],
+            "equivalent": null
+          }
+        },
+        {
+          "budget": "256",
+          "step_cap": 100,
+          "strengths": {
+            "source_cell": "strengths@256:le100",
+            "recovery": 0.7658456220963514,
+            "ci": [
+              0.7488741061917433,
+              0.7828414290614667
+            ]
+          },
+          "donor": {
+            "source_cell": "donor_init@256:le100",
+            "recovery": 0.967340403684273,
+            "ci": [
+              0.9595003191684031,
+              0.9749862554933378
+            ]
+          },
+          "fresh": {
+            "source_cell": "fresh@256:le100",
+            "recovery": 0.9454395035690845,
+            "ci": [
+              0.9366883053334666,
+              0.9543205942760024
+            ]
+          },
+          "gap": {
+            "source_contrast": "donor_init@256:le100 - fresh@256:le100",
+            "diff": 0.021900900115188526,
+            "ci": [
+              0.018234944969028163,
+              0.025359990769336756
+            ],
+            "equivalent": null
+          }
+        },
+        {
+          "budget": "256",
+          "step_cap": 200,
+          "strengths": {
+            "source_cell": "strengths@256:le200",
+            "recovery": 0.7667836054971711,
+            "ci": [
+              0.7500537686270133,
+              0.7836203706545236
+            ]
+          },
+          "donor": {
+            "source_cell": "donor_init@256:le200",
+            "recovery": 0.9711396622056911,
+            "ci": [
+              0.9644428501980878,
+              0.9777499319274984
+            ]
+          },
+          "fresh": {
+            "source_cell": "fresh@256:le200",
+            "recovery": 0.9526922286731933,
+            "ci": [
+              0.944994725368558,
+              0.9603428360094118
+            ]
+          },
+          "gap": {
+            "source_contrast": "donor_init@256:le200 - fresh@256:le200",
+            "diff": 0.018447433532497892,
+            "ci": [
+              0.015598729751258648,
+              0.02107510641499084
+            ],
+            "equivalent": null
+          }
+        },
+        {
+          "budget": "256",
+          "step_cap": 600,
+          "strengths": {
+            "source_cell": "strengths@256",
+            "recovery": 0.7671083550359648,
+            "ci": [
+              0.7506016314139247,
+              0.7836012795288343
+            ]
+          },
+          "donor": {
+            "source_cell": "donor_init@256",
+            "recovery": 0.9725842226634785,
+            "ci": [
+              0.9660347830469037,
+              0.9790823224774254
+            ]
+          },
+          "fresh": {
+            "source_cell": "fresh@256",
+            "recovery": 0.9566572777161106,
+            "ci": [
+              0.9491505095948329,
+              0.964039962906388
+            ]
+          },
+          "gap": {
+            "source_contrast": "donor_init@256 - fresh@256",
+            "diff": 0.015926944947367905,
+            "ci": [
+              0.013552093199917662,
+              0.018276927616137223
+            ],
+            "equivalent": null
+          }
+        },
+        {
+          "budget": "512",
+          "step_cap": 50,
+          "strengths": {
+            "source_cell": "strengths@512:le50",
+            "recovery": 0.770782023898652,
+            "ci": [
+              0.7542489138647007,
+              0.7873875461915254
+            ]
+          },
+          "donor": {
+            "source_cell": "donor_init@512:le50",
+            "recovery": 0.9733605487072117,
+            "ci": [
+              0.9661437548234612,
+              0.9805556207825059
+            ]
+          },
+          "fresh": {
+            "source_cell": "fresh@512:le50",
+            "recovery": 0.9413359444783473,
+            "ci": [
+              0.9326946402142038,
+              0.9499326871521006
+            ]
+          },
+          "gap": {
+            "source_contrast": "donor_init@512:le50 - fresh@512:le50",
+            "diff": 0.03202460422886433,
+            "ci": [
+              0.027970646552547697,
+              0.035974633227211145
+            ],
+            "equivalent": null
+          }
+        },
+        {
+          "budget": "512",
+          "step_cap": 100,
+          "strengths": {
+            "source_cell": "strengths@512:le100",
+            "recovery": 0.772579209576316,
+            "ci": [
+              0.7560909944095348,
+              0.7891542116114894
+            ]
+          },
+          "donor": {
+            "source_cell": "donor_init@512:le100",
+            "recovery": 0.9733605487072117,
+            "ci": [
+              0.9661437548234612,
+              0.9805556207825059
+            ]
+          },
+          "fresh": {
+            "source_cell": "fresh@512:le100",
+            "recovery": 0.9522686368956729,
+            "ci": [
+              0.9444126729707164,
+              0.9601235990132493
+            ]
+          },
+          "gap": {
+            "source_contrast": "donor_init@512:le100 - fresh@512:le100",
+            "diff": 0.0210919118115388,
+            "ci": [
+              0.017820904138572933,
+              0.024288250102762563
+            ],
+            "equivalent": null
+          }
+        },
+        {
+          "budget": "512",
+          "step_cap": 200,
+          "strengths": {
+            "source_cell": "strengths@512:le200",
+            "recovery": 0.7735395108824977,
+            "ci": [
+              0.7571692544550985,
+              0.7901374603540232
+            ]
+          },
+          "donor": {
+            "source_cell": "donor_init@512:le200",
+            "recovery": 0.9733605487072117,
+            "ci": [
+              0.9661437548234612,
+              0.9805556207825059
+            ]
+          },
+          "fresh": {
+            "source_cell": "fresh@512:le200",
+            "recovery": 0.9599649056994419,
+            "ci": [
+              0.9524563311577299,
+              0.967471474091228
+            ]
+          },
+          "gap": {
+            "source_contrast": "donor_init@512:le200 - fresh@512:le200",
+            "diff": 0.013395643007769742,
+            "ci": [
+              0.010217804645406744,
+              0.01643884525184565
+            ],
+            "equivalent": null
+          }
+        },
+        {
+          "budget": "512",
+          "step_cap": 600,
+          "strengths": {
+            "source_cell": "strengths@512",
+            "recovery": 0.7744610843655955,
+            "ci": [
+              0.7581955295805636,
+              0.7909385391737801
+            ]
+          },
+          "donor": {
+            "source_cell": "donor_init@512",
+            "recovery": 0.9733605487072117,
+            "ci": [
+              0.9661437548234612,
+              0.9805556207825059
+            ]
+          },
+          "fresh": {
+            "source_cell": "fresh@512",
+            "recovery": 0.9631089732629314,
+            "ci": [
+              0.955938094252833,
+              0.9701544609718821
+            ]
+          },
+          "gap": {
+            "source_contrast": "donor_init@512 - fresh@512",
+            "diff": 0.010251575444280236,
+            "ci": [
+              0.0072528556665235,
+              0.013148830169027409
+            ],
+            "equivalent": null
+          }
+        },
+        {
+          "budget": "2K",
+          "step_cap": 50,
+          "strengths": {
+            "source_cell": "strengths@2K:le50",
+            "recovery": 0.7692110120521866,
+            "ci": [
+              0.7527922287010471,
+              0.7857150741659643
+            ]
+          },
+          "donor": {
+            "source_cell": "donor_init@2K:le50",
+            "recovery": 0.9789807655747198,
+            "ci": [
+              0.9724313224029026,
+              0.9856096753730125
+            ]
+          },
+          "fresh": {
+            "source_cell": "fresh@2K:le50",
+            "recovery": 0.9609135957297603,
+            "ci": [
+              0.9534154940425138,
+              0.96823563026254
+            ]
+          },
+          "gap": {
+            "source_contrast": "donor_init@2K:le50 - fresh@2K:le50",
+            "diff": 0.018067169844959485,
+            "ci": [
+              0.014844114730902025,
+              0.021229819932134172
+            ],
+            "equivalent": null
+          }
+        },
+        {
+          "budget": "2K",
+          "step_cap": 100,
+          "strengths": {
+            "source_cell": "strengths@2K:le100",
+            "recovery": 0.7691664433496712,
+            "ci": [
+              0.7528086898383658,
+              0.7856016483697436
+            ]
+          },
+          "donor": {
+            "source_cell": "donor_init@2K:le100",
+            "recovery": 0.9789807655747198,
+            "ci": [
+              0.9724313224029026,
+              0.9856096753730125
+            ]
+          },
+          "fresh": {
+            "source_cell": "fresh@2K:le100",
+            "recovery": 0.9718635399135755,
+            "ci": [
+              0.964848747521448,
+              0.9787397931751881
+            ]
+          },
+          "gap": {
+            "source_contrast": "donor_init@2K:le100 - fresh@2K:le100",
+            "diff": 0.007117225661144255,
+            "ci": [
+              0.004801879217921215,
+              0.009404790861357353
+            ],
+            "equivalent": null
+          }
+        },
+        {
+          "budget": "2K",
+          "step_cap": 200,
+          "strengths": {
+            "source_cell": "strengths@2K:le200",
+            "recovery": 0.7719514176797232,
+            "ci": [
+              0.7554003774323335,
+              0.7886171980886517
+            ]
+          },
+          "donor": {
+            "source_cell": "donor_init@2K:le200",
+            "recovery": 0.9796095204742112,
+            "ci": [
+              0.9732971440890309,
+              0.9859394053084564
+            ]
+          },
+          "fresh": {
+            "source_cell": "fresh@2K:le200",
+            "recovery": 0.9718635399135755,
+            "ci": [
+              0.964848747521448,
+              0.9787397931751881
+            ]
+          },
+          "gap": {
+            "source_contrast": "donor_init@2K:le200 - fresh@2K:le200",
+            "diff": 0.00774598056063569,
+            "ci": [
+              0.005455475907497584,
+              0.01004302283661368
+            ],
+            "equivalent": null
+          }
+        },
+        {
+          "budget": "2K",
+          "step_cap": 600,
+          "strengths": {
+            "source_cell": "strengths@2K",
+            "recovery": 0.773295554479779,
+            "ci": [
+              0.7565985685635784,
+              0.7900014872961767
+            ]
+          },
+          "donor": {
+            "source_cell": "donor_init@2K",
+            "recovery": 0.9875273307991178,
+            "ci": [
+              0.981338756861975,
+              0.9937838383164341
+            ]
+          },
+          "fresh": {
+            "source_cell": "fresh@2K",
+            "recovery": 0.9735082106321377,
+            "ci": [
+              0.966798462188918,
+              0.980385818149618
+            ]
+          },
+          "gap": {
+            "source_contrast": "donor_init@2K - fresh@2K",
+            "diff": 0.014019120166980148,
+            "ci": [
+              0.011226526478246731,
+              0.016691332047681206
+            ],
+            "equivalent": true
+          }
+        }
+      ]
+    }
+  ]
+}

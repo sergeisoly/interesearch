@@ -1,0 +1,89 @@
+Third-party code in this repository
+
+src/interesearch/model.py is derived from param-decomp by Goodfire
+(https://github.com/goodfire-ai/param-decomp, tag vpd-paper, commit 74146b555f3eb3cd2bc639c3789fd3b7a099094a,
+file param_decomp/pretrain/models/llama_simple_mlp.py). The changes are listed in the module docstring.
+param-decomp is distributed under the following licence:
+
+MIT License
+
+Copyright (c) 2025 Goodfire
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+
+Third-party data in this repository
+
+The token windows under data/repair_transfer/windows/, data/selective_editing/windows/ and data/quickstart/ are
+sequences of token ids, not text. Each windows.json names the source file, its revision and sha256, and the rows
+each window came from. All windows were made the same way: the source text was tokenized with the target model's
+tokenizer, cut to a window of 257 tokens, and selected by the rule recorded in windows.json. Row ranges below are
+0-based and inclusive.
+
+Europarl v7. Philipp Koehn. Europarl: A Parallel Corpus for Statistical Machine Translation. MT Summit X, 2005.
+https://www.statmt.org/europarl/v7/europarl.tgz
+The corpus's Terms of Use state: "We are not aware of any copyright restrictions of the material."
+https://www.statmt.org/europarl/ (checked 13 October 2026).
+The page requests citation of the corpus paper and contact with its maintainer when the data are used in research.
+This is the source's statement, not a declaration that the material is public domain or covered by this repository's licences.
+  Used in:
+    every directory under data/repair_transfer/windows/
+    data/quickstart/
+    data/selective_editing/windows/train, val, test, guard_europarl_en, protected_europarl_val and protected_europarl_test
+    data/selective_editing/windows/retain_en rows 0-127
+    data/selective_editing/windows/val_en rows 0-31.
+
+WikiText-2 (wikitext-2-raw-v1), collected by Stephen Merity, Caiming Xiong, James Bradbury and Richard Socher from
+text by Wikipedia contributors. Citation: Pointer Sentinel Mixture Models, 2016. Source:
+https://huggingface.co/datasets/Salesforce/wikitext, revision b08601e04326c79dfdd32d625aee71d232d685c3 (validation and
+test parquet files). The original dataset page links to CC BY-SA 3.0 Unported:
+https://www.salesforce.com/blog/the-wikitext-long-term-dependency-language-modeling-dataset/?bc=OTH
+These selected and tokenized excerpts are distributed under CC BY-SA 3.0 Unported:
+https://creativecommons.org/licenses/by-sa/3.0/
+The source Hugging Face metadata also lists GFDL.
+  Changes: selected and tokenized into 257-token windows, as described in windows.json.
+  Covered files and rows:
+    data/selective_editing/windows/guard_wikitext/en.npy, all 32 rows (test split)
+    data/selective_editing/windows/retain_en/en.npy, rows 128-191 (validation split)
+    data/selective_editing/windows/qcheck_en/en.npy, rows 0-63 (validation split).
+
+NTREX-128. Christian Federmann, Tom Kocmi, Ying Xin. NTREX-128 - News Test References for MT Evaluation of 128
+Languages. SUMEval 2022. Source: https://github.com/MicrosoftTranslator/NTREX, commit
+468c6b69c7f6a75d31d4743d9daba2af566cc18d, files NTREX-128/newstest2019-ref.nld.txt and
+NTREX-128/newstest2019-ref.ita.txt. Licence: Creative Commons Attribution-ShareAlike 4.0
+(https://creativecommons.org/licenses/by-sa/4.0/).
+Original English source: Barrault et al. (2019), Findings of the 2019 Conference on Machine Translation (WMT19),
+pp. 1–61. https://aclanthology.org/W19-5301/ DOI: 10.18653/v1/W19-5301.
+  Changes: aligned 16-line blocks joined by newline, tokenized, cut to 257 tokens and selected, as described above.
+  Adapted material, distributed under CC BY-SA 4.0:
+    data/selective_editing/windows/protected_ntrex/nl.npy and it.npy, all 123 rows.
+
+Pile-uncopyrighted. The two dataset cards below give MIT as their licence metadata. They are derived from
+https://huggingface.co/datasets/monology/pile-uncopyrighted, a subset of The Pile (Leo Gao et al., The Pile: An 800GB
+Dataset of Diverse Text for Language Modeling, 2020, arXiv:2101.00027) that omits Books3, BookCorpus2, OpenSubtitles,
+YTSubtitles and OWT2. The remaining components come from many sources, and their own terms may also apply to the text
+(see the component list of Gao et al.). This repository does not record the component of each window. Sources:
+https://huggingface.co/datasets/danbraunai/pile-uncopyrighted, revision 188e502a27a7d7d7def4568f68447decf647072c
+(test shard 00000), and https://huggingface.co/datasets/danbraunai/pile-uncopyrighted-tok-shuffled, revision
+6f141f6e4edc32fea842f2ece0d3477b15c3dc90 (validation shard 00000, already tokenized).
+  Used in:
+    data/selective_editing/windows/guard_pile/en.npy, all 512 rows
+    data/selective_editing/windows/retain_en rows 192-255
+    data/selective_editing/windows/qcheck_en rows 64-255
+    data/selective_editing/windows/val_en rows 32-63.

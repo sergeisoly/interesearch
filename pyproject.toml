@@ -1,0 +1,26 @@
+[project]
+name = "interesearch"
+version = "0.1.0"
+description = "Interpretability research on how language-model parameter changes affect behavior."
+requires-python = "==3.13.*"
+dependencies = [
+    "matplotlib==3.11.2",
+    "numpy==2.5.3",
+    "pyyaml==6.0.3",
+    "safetensors==0.8.0",
+    "tokenizers==0.22.1",
+    "torch==2.8.0",
+]
+
+[dependency-groups]
+dev = ["pytest==9.1.1"]
+
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

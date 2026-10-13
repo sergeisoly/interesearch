@@ -1,0 +1,93 @@
+{
+ "role": "quickstart",
+ "languages": [
+  "de",
+  "nl",
+  "en"
+ ],
+ "dates": [
+  "1996-06-17",
+  "2002-05-30",
+  "1998-01-14",
+  "1998-07-13"
+ ],
+ "source": {
+  "role": "fit",
+  "rows": [
+   0,
+   4
+  ]
+ },
+ "provenance": {
+  "builder": {
+   "description": "donor-stage Europarl build: the eligible train-bucket dates the corpus build did not select, in salted date order, assigned to the roles in sequence (the remaining dates form an unpublished reserve)",
+   "sha256": "451f4b154017e73e9f078461628c4e46d3c87d283c7639416fd03454ee2fc400"
+  },
+  "source": {
+   "name": "Europarl v7 (Koehn 2005)",
+   "url": "https://www.statmt.org/europarl/v7/europarl.tgz",
+   "sha256": "d109549ff35623ded3d375dc04040e3f0b399665680ed726281f877ff5995330"
+  },
+  "tokenizer_sha256": "d4c0d99d84af59e9126913fafe5210822963e9a3065ee43e6833b358b0c2f825",
+  "bucket": {
+   "salt": "vpd-diff-v1",
+   "rule": "int(sha256(salt + '|' + date).hexdigest(), 16) % 100",
+   "split": "train",
+   "range": [
+    0,
+    69
+   ]
+  },
+  "date_order": {
+   "salt": "vpd-rtransfer-v1",
+   "rule": "ascending int(sha256(salt + '|order-date|' + date).hexdigest(), 16)"
+  },
+  "window": "first 257 tokens (target tokenizer, no special tokens) of the session file text, cleaned as in the Pile's EuroParl component, from the speaker line of the chosen turn; row i is the same turn in every language",
+  "turns": [
+   {
+    "member": "txt/<lang>/ep-96-06-17.txt",
+    "chapter_id": "8",
+    "speaker_id": "44",
+    "turn_rank": 0,
+    "char_offset": {
+     "de": 90145,
+     "nl": 90463,
+     "en": 82604
+    }
+   },
+   {
+    "member": "txt/<lang>/ep-02-05-30.txt",
+    "chapter_id": "4",
+    "speaker_id": "117",
+    "turn_rank": 0,
+    "char_offset": {
+     "de": 148419,
+     "nl": 144787,
+     "en": 129344
+    }
+   },
+   {
+    "member": "txt/<lang>/ep-98-01-14.txt",
+    "chapter_id": "5",
+    "speaker_id": "75",
+    "turn_rank": 0,
+    "char_offset": {
+     "de": 206022,
+     "nl": 200943,
+     "en": 179639
+    }
+   },
+   {
+    "member": "txt/<lang>/ep-98-07-13.txt",
+    "chapter_id": "4",
+    "speaker_id": "15",
+    "turn_rank": 0,
+    "char_offset": {
+     "de": 4698,
+     "nl": 4970,
+     "en": 4452
+    }
+   }
+  ]
+ }
+}

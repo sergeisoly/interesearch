@@ -1,0 +1,249 @@
+{
+ "format": 1,
+ "study": "selective_editing",
+ "split": "confirm",
+ "target": "fr",
+ "protected": "it",
+ "draw": 1,
+ "target_key": "confirm_fr",
+ "protected_key": "confirm_it",
+ "groups": [
+  "2003-01-16",
+  "1999-01-13",
+  "2008-09-03",
+  "2005-01-11",
+  "2008-05-22",
+  "1999-09-15",
+  "1996-09-05",
+  "2010-11-24",
+  "2008-01-16",
+  "1999-11-17",
+  "2005-11-16",
+  "2002-02-05",
+  "2005-09-26",
+  "2007-10-25",
+  "2004-10-13",
+  "2000-02-02",
+  "1997-02-17",
+  "2011-05-09",
+  "1997-04-09",
+  "1996-05-09",
+  "2003-01-13",
+  "2006-06-15",
+  "2001-05-14",
+  "2006-05-31",
+  "2000-04-10",
+  "2010-02-11",
+  "2006-10-26",
+  "2002-10-22",
+  "1996-11-28",
+  "2005-04-11",
+  "2002-06-11",
+  "1997-06-12",
+  "2003-06-19",
+  "2009-09-16",
+  "1997-04-11",
+  "2008-03-13",
+  "2006-09-07",
+  "2007-09-24",
+  "2003-11-17",
+  "2010-11-10",
+  "1996-07-19",
+  "1997-07-18",
+  "1999-02-10",
+  "2004-09-16",
+  "1997-12-19",
+  "2002-09-25",
+  "2001-03-15",
+  "2006-04-27",
+  "2009-01-13",
+  "2002-03-11",
+  "2000-06-14",
+  "1999-03-10",
+  "1998-07-16",
+  "2007-06-21",
+  "2002-12-05",
+  "1998-01-29",
+  "1997-01-14",
+  "1997-06-25"
+ ],
+ "measured": [
+  "vpd_atom@0.5",
+  "vpd_atom@1.0",
+  "omp_finetune@0.5",
+  "ci_difference@0.5",
+  "neurons@0.5",
+  "neurons@1.0",
+  "lora_rank1@0.5",
+  "lora_rank1@1.0",
+  "finetune_24@0.5",
+  "finetune_24@1.0"
+ ],
+ "edits": {
+  "vpd_atom@0.5": {
+   "status": "matched",
+   "scale": 0.76202425971407,
+   "k": null,
+   "guards": {
+    "confirm_en": 0.00015511594969650795
+   },
+   "target_test_delta": 0.4965319427950629,
+   "english_kl": {
+    "confirm_en": 0.00029184914619063734
+   },
+   "protected_delta": 0.0008440387660059435
+  },
+  "vpd_atom@1.0": {
+   "status": "matched",
+   "scale": 1.0388325214724778,
+   "k": null,
+   "guards": {
+    "confirm_en": 0.00034308022466199154
+   },
+   "target_test_delta": 1.0141392206323558,
+   "english_kl": {
+    "confirm_en": 0.0005557146354915638
+   },
+   "protected_delta": 0.0016600140209855705
+  },
+  "null_atom@0.5": {
+   "status": "no edit by the declared rule: selector status 'no feasible atom'",
+   "technical_failure": false
+  },
+  "null_atom@1.0": {
+   "status": "no edit by the declared rule: selector status 'no feasible atom'",
+   "technical_failure": false
+  },
+  "omp_finetune@0.5": {
+   "status": "matched",
+   "scale": 1.597271824131503,
+   "k": null,
+   "guards": {
+    "confirm_en": -0.003354031464149212
+   },
+   "target_test_delta": 0.5192718546966026,
+   "english_kl": {
+    "confirm_en": 0.0068357163430031
+   },
+   "protected_delta": 0.8563884866648707
+  },
+  "omp_finetune@1.0": {
+   "status": "not reached on the evaluated grid",
+   "technical_failure": false
+  },
+  "omp_lora@0.5": {
+   "status": "no edit by the declared rule: upstream status 'no update: no checkpoint met the historical checkpoint rule'",
+   "technical_failure": false
+  },
+  "omp_lora@1.0": {
+   "status": "no edit by the declared rule: upstream status 'no update: no checkpoint met the historical checkpoint rule'",
+   "technical_failure": false
+  },
+  "ci_difference@0.5": {
+   "status": "matched",
+   "scale": 1.7803300858899105,
+   "k": null,
+   "guards": {
+    "confirm_en": 0.0012617193419357825
+   },
+   "target_test_delta": 0.5051316351726137,
+   "english_kl": {
+    "confirm_en": 0.0008966448864345599
+   },
+   "protected_delta": 0.012419918487811911
+  },
+  "ci_difference@1.0": {
+   "status": "not reached on the evaluated grid",
+   "technical_failure": false
+  },
+  "historical_atom@0.5": {
+   "status": "not applicable (de only)",
+   "technical_failure": false
+  },
+  "historical_atom@1.0": {
+   "status": "not applicable (de only)",
+   "technical_failure": false
+  },
+  "neurons@0.5": {
+   "status": "matched",
+   "scale": 1.0,
+   "k": 16,
+   "guards": {
+    "confirm_en": 0.0006714771533834523
+   },
+   "target_test_delta": 0.5236211480765507,
+   "english_kl": {
+    "confirm_en": 0.005628344887899685
+   },
+   "protected_delta": 0.4408486012754769
+  },
+  "neurons@1.0": {
+   "status": "matched",
+   "scale": 0.8169417382415922,
+   "k": 256,
+   "guards": {
+    "confirm_en": 0.03753695816829287
+   },
+   "target_test_delta": 0.9832043318912901,
+   "english_kl": {
+    "confirm_en": 0.038023100523599265
+   },
+   "protected_delta": 0.8760490294160515
+  },
+  "lora_rank1@0.5": {
+   "status": "matched",
+   "scale": 0.381012129857035,
+   "k": null,
+   "guards": {
+    "confirm_en": -0.00011846525915737809
+   },
+   "target_test_delta": 0.47299666240297517,
+   "english_kl": {
+    "confirm_en": 7.844388346711639e-05
+   },
+   "protected_delta": 0.027946167978747136
+  },
+  "lora_rank1@1.0": {
+   "status": "matched",
+   "scale": 0.5388325214724776,
+   "k": null,
+   "guards": {
+    "confirm_en": -0.0002005716850017679
+   },
+   "target_test_delta": 0.9501368752841292,
+   "english_kl": {
+    "confirm_en": 0.00015472823818934807
+   },
+   "protected_delta": 0.05393444258591224
+  },
+  "finetune_24@0.5": {
+   "status": "matched",
+   "scale": 0.616497564417433,
+   "k": null,
+   "guards": {
+    "confirm_en": 0.0008764595820985991
+   },
+   "target_test_delta": 0.48294794970545274,
+   "english_kl": {
+    "confirm_en": 8.561368623963187e-05
+   },
+   "protected_delta": 0.06686505778082485
+  },
+  "finetune_24@1.0": {
+   "status": "matched",
+   "scale": 0.835247564417433,
+   "k": null,
+   "guards": {
+    "confirm_en": 0.001232254094090955
+   },
+   "target_test_delta": 0.9667915434672915,
+   "english_kl": {
+    "confirm_en": 0.00015699074481682177
+   },
+   "protected_delta": 0.12038025773804763
+  }
+ },
+ "source": {
+  "readout_sha256": "3642c3ec50e95316a805231c1e7aecd444852129f9cea0654df6e0f583603524"
+ }
+}

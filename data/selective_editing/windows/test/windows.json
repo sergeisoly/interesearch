@@ -1,0 +1,487 @@
+{
+ "role": "test",
+ "languages": [
+  "de",
+  "es",
+  "fr"
+ ],
+ "dates": [
+  "2009-03-24",
+  "2000-09-20",
+  "1997-05-29",
+  "1998-06-16",
+  "2002-10-23",
+  "1997-01-15",
+  "2000-04-14",
+  "2008-01-23",
+  "2008-04-09",
+  "2009-05-06",
+  "2010-02-08",
+  "1999-05-04",
+  "1999-12-01",
+  "2001-09-04",
+  "2000-05-19",
+  "1996-12-11",
+  "2005-06-07",
+  "2006-10-24",
+  "2008-06-19",
+  "2008-01-15",
+  "2007-06-27",
+  "1999-02-08",
+  "2003-12-04",
+  "2011-03-23",
+  "2004-01-13",
+  "2001-12-10",
+  "1998-02-19",
+  "2008-02-20",
+  "1996-09-04",
+  "2009-05-04",
+  "2007-06-06",
+  "2004-04-19",
+  "2011-06-06",
+  "2002-03-13",
+  "2009-04-22",
+  "1999-12-14",
+  "1996-04-19",
+  "2011-05-11",
+  "2005-06-23",
+  "2002-05-14",
+  "2003-06-18",
+  "2006-07-06",
+  "2004-05-04",
+  "1999-10-26",
+  "2008-07-08",
+  "2006-10-11",
+  "2000-12-12",
+  "1999-01-28",
+  "2010-05-05",
+  "1996-05-08",
+  "2002-06-10",
+  "1996-11-12",
+  "2001-06-12",
+  "2003-06-30",
+  "2007-10-23",
+  "2007-05-09",
+  "2005-03-08",
+  "2000-05-16",
+  "2007-02-14",
+  "2009-03-26",
+  "1996-11-11",
+  "2008-10-23",
+  "2006-04-05",
+  "2008-06-05"
+ ],
+ "provenance": {
+  "builder": {
+   "description": "corpus build of the Europarl, WikiText-2, Pile and NTREX-128 windows",
+   "sha256": "b8e309365a2f51302e9298cfd2ca1b8c5be598b639c628210fe936ee4ec3be24"
+  },
+  "source": {
+   "name": "Europarl v7 (Koehn 2005)",
+   "url": "https://www.statmt.org/europarl/v7/europarl.tgz",
+   "sha256": "d109549ff35623ded3d375dc04040e3f0b399665680ed726281f877ff5995330"
+  },
+  "tokenizer_sha256": "d4c0d99d84af59e9126913fafe5210822963e9a3065ee43e6833b358b0c2f825",
+  "bucket": {
+   "salt": "vpd-diff-v1",
+   "rule": "int(sha256(salt + '|' + date).hexdigest(), 16) % 100",
+   "split": "test",
+   "range": [
+    85,
+    99
+   ]
+  },
+  "date_order": {
+   "salt": "vpd-diff-v1",
+   "rule": "ascending int(sha256(salt + '|order-date|' + date).hexdigest(), 16)"
+  },
+  "window": "first 257 tokens (target tokenizer, no special tokens) of the session file text, cleaned as in the Pile's EuroParl component, from the speaker line of the chosen turn; row i is the same turn in every language",
+  "turns": [
+   {
+    "member": "txt/<lang>/ep-09-03-24-010.txt",
+    "chapter_id": "010",
+    "speaker_id": "385",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-00-09-20.txt",
+    "chapter_id": "8",
+    "speaker_id": "88",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-97-05-29.txt",
+    "chapter_id": "2",
+    "speaker_id": "11",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-98-06-16.txt",
+    "chapter_id": "9",
+    "speaker_id": "214",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-02-10-23.txt",
+    "chapter_id": "3",
+    "speaker_id": "68",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-97-01-15.txt",
+    "chapter_id": "11",
+    "speaker_id": "183",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-00-04-14.txt",
+    "chapter_id": "2",
+    "speaker_id": "31",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-08-01-23-006.txt",
+    "chapter_id": "006",
+    "speaker_id": "036",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-08-04-09-020.txt",
+    "chapter_id": "020",
+    "speaker_id": "137",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-09-05-06-006-13.txt",
+    "chapter_id": "006-13",
+    "speaker_id": "255",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-10-02-08-016.txt",
+    "chapter_id": "016",
+    "speaker_id": "197",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-99-05-04.txt",
+    "chapter_id": "3",
+    "speaker_id": "27",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-99-12-01.txt",
+    "chapter_id": "16",
+    "speaker_id": "166",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-01-09-04.txt",
+    "chapter_id": "9",
+    "speaker_id": "231",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-00-05-19.txt",
+    "chapter_id": "4",
+    "speaker_id": "59",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-96-12-11.txt",
+    "chapter_id": "2",
+    "speaker_id": "22",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-05-06-07.txt",
+    "chapter_id": "1",
+    "speaker_id": "311",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-06-10-24-016.txt",
+    "chapter_id": "016",
+    "speaker_id": "294",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-08-06-19-006.txt",
+    "chapter_id": "006",
+    "speaker_id": "129",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-08-01-15-007.txt",
+    "chapter_id": "007",
+    "speaker_id": "062",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-07-06-27-006.txt",
+    "chapter_id": "006",
+    "speaker_id": "043",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-99-02-08.txt",
+    "chapter_id": "5",
+    "speaker_id": "29",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-03-12-04.txt",
+    "chapter_id": "1",
+    "speaker_id": "96",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-11-03-23-014.txt",
+    "chapter_id": "014",
+    "speaker_id": "047",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-04-01-13.txt",
+    "chapter_id": "1",
+    "speaker_id": "212",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-01-12-10.txt",
+    "chapter_id": "4",
+    "speaker_id": "65",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-98-02-19.txt",
+    "chapter_id": "6",
+    "speaker_id": "105",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-08-02-20-003.txt",
+    "chapter_id": "003",
+    "speaker_id": "050",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-96-09-04.txt",
+    "chapter_id": "6",
+    "speaker_id": "33",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-09-05-04-022.txt",
+    "chapter_id": "022",
+    "speaker_id": "202",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-07-06-06-013.txt",
+    "chapter_id": "013",
+    "speaker_id": "083",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-04-04-19.txt",
+    "chapter_id": "1",
+    "speaker_id": "39",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-11-06-06-023.txt",
+    "chapter_id": "023",
+    "speaker_id": "227",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-02-03-13.txt",
+    "chapter_id": "3",
+    "speaker_id": "162",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-09-04-22-010.txt",
+    "chapter_id": "010",
+    "speaker_id": "302",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-99-12-14.txt",
+    "chapter_id": "4",
+    "speaker_id": "42",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-96-04-19.txt",
+    "chapter_id": "4",
+    "speaker_id": "27",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-11-05-11-013.txt",
+    "chapter_id": "013",
+    "speaker_id": "577",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-05-06-23.txt",
+    "chapter_id": "1",
+    "speaker_id": "81",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-02-05-14.txt",
+    "chapter_id": "2",
+    "speaker_id": "114",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-03-06-18.txt",
+    "chapter_id": "3",
+    "speaker_id": "61",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-06-07-06.txt",
+    "chapter_id": "1",
+    "speaker_id": "185",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-04-05-04.txt",
+    "chapter_id": "1",
+    "speaker_id": "186",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-99-10-26.txt",
+    "chapter_id": "3",
+    "speaker_id": "81",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-08-07-08-004.txt",
+    "chapter_id": "004",
+    "speaker_id": "012",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-06-10-11-013.txt",
+    "chapter_id": "013",
+    "speaker_id": "057",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-00-12-12.txt",
+    "chapter_id": "6",
+    "speaker_id": "71",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-99-01-28.txt",
+    "chapter_id": "1",
+    "speaker_id": "82",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-10-05-05-024.txt",
+    "chapter_id": "024",
+    "speaker_id": "602",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-96-05-08.txt",
+    "chapter_id": "8",
+    "speaker_id": "94",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-02-06-10.txt",
+    "chapter_id": "1",
+    "speaker_id": "21",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-96-11-12.txt",
+    "chapter_id": "12",
+    "speaker_id": "290",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-01-06-12.txt",
+    "chapter_id": "1",
+    "speaker_id": "6",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-03-06-30.txt",
+    "chapter_id": "1",
+    "speaker_id": "72",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-07-10-23-018.txt",
+    "chapter_id": "018",
+    "speaker_id": "400",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-07-05-09-021.txt",
+    "chapter_id": "021",
+    "speaker_id": "224",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-05-03-08.txt",
+    "chapter_id": "1",
+    "speaker_id": "104",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-00-05-16.txt",
+    "chapter_id": "7",
+    "speaker_id": "124",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-07-02-14-006.txt",
+    "chapter_id": "006",
+    "speaker_id": "217",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-09-03-26-005.txt",
+    "chapter_id": "005",
+    "speaker_id": "170",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-96-11-11.txt",
+    "chapter_id": "4",
+    "speaker_id": "17",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-08-10-23-008-05.txt",
+    "chapter_id": "008-05",
+    "speaker_id": "070",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-06-04-05.txt",
+    "chapter_id": "1",
+    "speaker_id": "218",
+    "turn_rank": 0
+   },
+   {
+    "member": "txt/<lang>/ep-08-06-05-009.txt",
+    "chapter_id": "009",
+    "speaker_id": "269",
+    "turn_rank": 0
+   }
+  ],
+  "selection": "per split, the eligible dates in salted date order; per date the first of its top 5 turns that passes the text checks (German window flagged German, no other window flagged German, no two languages sharing their first 300 normalized characters); the first n passing dates"
+ }
+}

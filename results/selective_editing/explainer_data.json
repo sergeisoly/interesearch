@@ -1,0 +1,877 @@
+{
+  "description": "Presentation data copied from committed results. No new statistical analysis. Numbers retain source precision.",
+  "sources": {
+    "edits": "results/selective_editing/posthoc.json#edits (confirm, four claim methods)",
+    "protected_intervals": "results/selective_editing/confirm_result.json#reading_table",
+    "target_gap_intervals": "results/selective_editing/posthoc.json#dose_agreement.confirm.rows"
+  },
+  "n_dates": 58,
+  "edits": [
+    {
+      "target": "de",
+      "draw": 0,
+      "method": "vpd_atom",
+      "tau": 0.5,
+      "target_rise": 0.48029260388736067,
+      "protected_rise": 0.0030014884882959827
+    },
+    {
+      "target": "de",
+      "draw": 0,
+      "method": "vpd_atom",
+      "tau": 1.0,
+      "target_rise": 0.982347192435429,
+      "protected_rise": 0.0052622227833188815
+    },
+    {
+      "target": "de",
+      "draw": 0,
+      "method": "neurons",
+      "tau": 0.5,
+      "target_rise": 0.49737099943489865,
+      "protected_rise": 0.43632506502085716
+    },
+    {
+      "target": "de",
+      "draw": 0,
+      "method": "neurons",
+      "tau": 1.0,
+      "target_rise": 0.9959309964344419,
+      "protected_rise": 0.756313159548003
+    },
+    {
+      "target": "de",
+      "draw": 0,
+      "method": "lora_rank1",
+      "tau": 0.5,
+      "target_rise": 0.450562571657115,
+      "protected_rise": 0.05880307329112086
+    },
+    {
+      "target": "de",
+      "draw": 0,
+      "method": "lora_rank1",
+      "tau": 1.0,
+      "target_rise": 0.9229354282905315,
+      "protected_rise": 0.11221048338659878
+    },
+    {
+      "target": "de",
+      "draw": 0,
+      "method": "finetune_24",
+      "tau": 0.5,
+      "target_rise": 0.4659052429528072,
+      "protected_rise": 0.11096507516400568
+    },
+    {
+      "target": "de",
+      "draw": 0,
+      "method": "finetune_24",
+      "tau": 1.0,
+      "target_rise": 0.9535157433871565,
+      "protected_rise": 0.22599101477655872
+    },
+    {
+      "target": "de",
+      "draw": 1,
+      "method": "vpd_atom",
+      "tau": 0.5,
+      "target_rise": 0.48029260388736067,
+      "protected_rise": 0.0030014884882959827
+    },
+    {
+      "target": "de",
+      "draw": 1,
+      "method": "vpd_atom",
+      "tau": 1.0,
+      "target_rise": 0.982347192435429,
+      "protected_rise": 0.0052622227833188815
+    },
+    {
+      "target": "de",
+      "draw": 1,
+      "method": "neurons",
+      "tau": 0.5,
+      "target_rise": 0.49737099943489865,
+      "protected_rise": 0.43632506502085716
+    },
+    {
+      "target": "de",
+      "draw": 1,
+      "method": "neurons",
+      "tau": 1.0,
+      "target_rise": 0.9959309964344419,
+      "protected_rise": 0.756313159548003
+    },
+    {
+      "target": "de",
+      "draw": 1,
+      "method": "lora_rank1",
+      "tau": 0.5,
+      "target_rise": 0.4775912843901536,
+      "protected_rise": 0.050216880337945344
+    },
+    {
+      "target": "de",
+      "draw": 1,
+      "method": "lora_rank1",
+      "tau": 1.0,
+      "target_rise": 0.9320794713908228,
+      "protected_rise": 0.09109198224955592
+    },
+    {
+      "target": "de",
+      "draw": 1,
+      "method": "finetune_24",
+      "tau": 0.5,
+      "target_rise": 0.4777953665831993,
+      "protected_rise": 0.11921033777039626
+    },
+    {
+      "target": "de",
+      "draw": 1,
+      "method": "finetune_24",
+      "tau": 1.0,
+      "target_rise": 0.9651713782343371,
+      "protected_rise": 0.24084097352521172
+    },
+    {
+      "target": "de",
+      "draw": 2,
+      "method": "vpd_atom",
+      "tau": 0.5,
+      "target_rise": 0.48029260388736067,
+      "protected_rise": 0.0030014884882959827
+    },
+    {
+      "target": "de",
+      "draw": 2,
+      "method": "vpd_atom",
+      "tau": 1.0,
+      "target_rise": 0.982347192435429,
+      "protected_rise": 0.0052622227833188815
+    },
+    {
+      "target": "de",
+      "draw": 2,
+      "method": "neurons",
+      "tau": 0.5,
+      "target_rise": 0.49737099943489865,
+      "protected_rise": 0.43632506502085716
+    },
+    {
+      "target": "de",
+      "draw": 2,
+      "method": "neurons",
+      "tau": 1.0,
+      "target_rise": 0.9959309964344419,
+      "protected_rise": 0.756313159548003
+    },
+    {
+      "target": "de",
+      "draw": 2,
+      "method": "lora_rank1",
+      "tau": 0.5,
+      "target_rise": 0.45240721209295864,
+      "protected_rise": 0.04326512895781418
+    },
+    {
+      "target": "de",
+      "draw": 2,
+      "method": "lora_rank1",
+      "tau": 1.0,
+      "target_rise": 0.9211912607324535,
+      "protected_rise": 0.0782679113848456
+    },
+    {
+      "target": "de",
+      "draw": 2,
+      "method": "finetune_24",
+      "tau": 0.5,
+      "target_rise": 0.49174003765500823,
+      "protected_rise": 0.11563752437460012
+    },
+    {
+      "target": "de",
+      "draw": 2,
+      "method": "finetune_24",
+      "tau": 1.0,
+      "target_rise": 0.948819349552023,
+      "protected_rise": 0.2250903557086813
+    },
+    {
+      "target": "es",
+      "draw": 0,
+      "method": "vpd_atom",
+      "tau": 0.5,
+      "target_rise": 0.5173648595809937,
+      "protected_rise": 0.0003140794819798963
+    },
+    {
+      "target": "es",
+      "draw": 0,
+      "method": "vpd_atom",
+      "tau": 1.0,
+      "target_rise": 1.016759070856818,
+      "protected_rise": 0.003015830599028489
+    },
+    {
+      "target": "es",
+      "draw": 0,
+      "method": "neurons",
+      "tau": 0.5,
+      "target_rise": 0.4846645388109931,
+      "protected_rise": 0.522610146423866
+    },
+    {
+      "target": "es",
+      "draw": 0,
+      "method": "neurons",
+      "tau": 1.0,
+      "target_rise": 0.9940617248929781,
+      "protected_rise": 0.7573968213180016
+    },
+    {
+      "target": "es",
+      "draw": 0,
+      "method": "lora_rank1",
+      "tau": 0.5,
+      "target_rise": 0.496626981373491,
+      "protected_rise": 0.1140566036618989
+    },
+    {
+      "target": "es",
+      "draw": 0,
+      "method": "lora_rank1",
+      "tau": 1.0,
+      "target_rise": 0.9758703790861984,
+      "protected_rise": 0.23595840766512113
+    },
+    {
+      "target": "es",
+      "draw": 0,
+      "method": "finetune_24",
+      "tau": 0.5,
+      "target_rise": 0.5078871784539059,
+      "protected_rise": 0.19417572432550892
+    },
+    {
+      "target": "es",
+      "draw": 0,
+      "method": "finetune_24",
+      "tau": 1.0,
+      "target_rise": 0.9910282554297611,
+      "protected_rise": 0.3856342948716262
+    },
+    {
+      "target": "es",
+      "draw": 1,
+      "method": "vpd_atom",
+      "tau": 0.5,
+      "target_rise": 0.5173648595809937,
+      "protected_rise": 0.0003140794819798963
+    },
+    {
+      "target": "es",
+      "draw": 1,
+      "method": "vpd_atom",
+      "tau": 1.0,
+      "target_rise": 1.016759070856818,
+      "protected_rise": 0.003015830599028489
+    },
+    {
+      "target": "es",
+      "draw": 1,
+      "method": "neurons",
+      "tau": 0.5,
+      "target_rise": 0.4846645388109931,
+      "protected_rise": 0.522610146423866
+    },
+    {
+      "target": "es",
+      "draw": 1,
+      "method": "neurons",
+      "tau": 1.0,
+      "target_rise": 0.9992070526912294,
+      "protected_rise": 0.7636838945849188
+    },
+    {
+      "target": "es",
+      "draw": 1,
+      "method": "lora_rank1",
+      "tau": 0.5,
+      "target_rise": 0.5104679979127029,
+      "protected_rise": 0.07997336880914097
+    },
+    {
+      "target": "es",
+      "draw": 1,
+      "method": "lora_rank1",
+      "tau": 1.0,
+      "target_rise": 0.9923692612812437,
+      "protected_rise": 0.13262902457138587
+    },
+    {
+      "target": "es",
+      "draw": 1,
+      "method": "finetune_24",
+      "tau": 0.5,
+      "target_rise": 0.5140188809098869,
+      "protected_rise": 0.20119914104198589
+    },
+    {
+      "target": "es",
+      "draw": 1,
+      "method": "finetune_24",
+      "tau": 1.0,
+      "target_rise": 1.0271758005536835,
+      "protected_rise": 0.40697955263072044
+    },
+    {
+      "target": "es",
+      "draw": 2,
+      "method": "vpd_atom",
+      "tau": 0.5,
+      "target_rise": 0.5173648595809937,
+      "protected_rise": 0.0003140794819798963
+    },
+    {
+      "target": "es",
+      "draw": 2,
+      "method": "vpd_atom",
+      "tau": 1.0,
+      "target_rise": 1.016759070856818,
+      "protected_rise": 0.003015830599028489
+    },
+    {
+      "target": "es",
+      "draw": 2,
+      "method": "neurons",
+      "tau": 0.5,
+      "target_rise": 0.4846645388109931,
+      "protected_rise": 0.522610146423866
+    },
+    {
+      "target": "es",
+      "draw": 2,
+      "method": "neurons",
+      "tau": 1.0,
+      "target_rise": 0.9993449737285746,
+      "protected_rise": 0.7646048151213547
+    },
+    {
+      "target": "es",
+      "draw": 2,
+      "method": "lora_rank1",
+      "tau": 0.5,
+      "target_rise": 0.48924277157619084,
+      "protected_rise": 0.08884819211630986
+    },
+    {
+      "target": "es",
+      "draw": 2,
+      "method": "lora_rank1",
+      "tau": 1.0,
+      "target_rise": 0.9676374073686271,
+      "protected_rise": 0.16715337079146814
+    },
+    {
+      "target": "es",
+      "draw": 2,
+      "method": "finetune_24",
+      "tau": 0.5,
+      "target_rise": 0.4961683215766117,
+      "protected_rise": 0.17583070541250295
+    },
+    {
+      "target": "es",
+      "draw": 2,
+      "method": "finetune_24",
+      "tau": 1.0,
+      "target_rise": 1.0178918180794552,
+      "protected_rise": 0.35787588974525186
+    },
+    {
+      "target": "fr",
+      "draw": 0,
+      "method": "vpd_atom",
+      "tau": 0.5,
+      "target_rise": 0.4965319427950629,
+      "protected_rise": 0.0008440387660059435
+    },
+    {
+      "target": "fr",
+      "draw": 0,
+      "method": "vpd_atom",
+      "tau": 1.0,
+      "target_rise": 1.0141392206323558,
+      "protected_rise": 0.0016600140209855705
+    },
+    {
+      "target": "fr",
+      "draw": 0,
+      "method": "neurons",
+      "tau": 0.5,
+      "target_rise": 0.4909330811993829,
+      "protected_rise": 0.4227541315144506
+    },
+    {
+      "target": "fr",
+      "draw": 0,
+      "method": "neurons",
+      "tau": 1.0,
+      "target_rise": 0.9865761543142384,
+      "protected_rise": 0.8677824858961434
+    },
+    {
+      "target": "fr",
+      "draw": 0,
+      "method": "lora_rank1",
+      "tau": 0.5,
+      "target_rise": 0.47359170584843074,
+      "protected_rise": 0.026865659088924014
+    },
+    {
+      "target": "fr",
+      "draw": 0,
+      "method": "lora_rank1",
+      "tau": 1.0,
+      "target_rise": 0.9793971201469158,
+      "protected_rise": 0.053238486421519314
+    },
+    {
+      "target": "fr",
+      "draw": 0,
+      "method": "finetune_24",
+      "tau": 0.5,
+      "target_rise": 0.4512303451011921,
+      "protected_rise": 0.07480052010766391
+    },
+    {
+      "target": "fr",
+      "draw": 0,
+      "method": "finetune_24",
+      "tau": 1.0,
+      "target_rise": 0.9186799690641206,
+      "protected_rise": 0.1388040616594512
+    },
+    {
+      "target": "fr",
+      "draw": 1,
+      "method": "vpd_atom",
+      "tau": 0.5,
+      "target_rise": 0.4965319427950629,
+      "protected_rise": 0.0008440387660059435
+    },
+    {
+      "target": "fr",
+      "draw": 1,
+      "method": "vpd_atom",
+      "tau": 1.0,
+      "target_rise": 1.0141392206323558,
+      "protected_rise": 0.0016600140209855705
+    },
+    {
+      "target": "fr",
+      "draw": 1,
+      "method": "neurons",
+      "tau": 0.5,
+      "target_rise": 0.5236211480765507,
+      "protected_rise": 0.4408486012754769
+    },
+    {
+      "target": "fr",
+      "draw": 1,
+      "method": "neurons",
+      "tau": 1.0,
+      "target_rise": 0.9832043318912901,
+      "protected_rise": 0.8760490294160515
+    },
+    {
+      "target": "fr",
+      "draw": 1,
+      "method": "lora_rank1",
+      "tau": 0.5,
+      "target_rise": 0.47299666240297517,
+      "protected_rise": 0.027946167978747136
+    },
+    {
+      "target": "fr",
+      "draw": 1,
+      "method": "lora_rank1",
+      "tau": 1.0,
+      "target_rise": 0.9501368752841292,
+      "protected_rise": 0.05393444258591224
+    },
+    {
+      "target": "fr",
+      "draw": 1,
+      "method": "finetune_24",
+      "tau": 0.5,
+      "target_rise": 0.48294794970545274,
+      "protected_rise": 0.06686505778082485
+    },
+    {
+      "target": "fr",
+      "draw": 1,
+      "method": "finetune_24",
+      "tau": 1.0,
+      "target_rise": 0.9667915434672915,
+      "protected_rise": 0.12038025773804763
+    },
+    {
+      "target": "fr",
+      "draw": 2,
+      "method": "vpd_atom",
+      "tau": 0.5,
+      "target_rise": 0.4965319427950629,
+      "protected_rise": 0.0008440387660059435
+    },
+    {
+      "target": "fr",
+      "draw": 2,
+      "method": "vpd_atom",
+      "tau": 1.0,
+      "target_rise": 1.0141392206323558,
+      "protected_rise": 0.0016600140209855705
+    },
+    {
+      "target": "fr",
+      "draw": 2,
+      "method": "neurons",
+      "tau": 0.5,
+      "target_rise": 0.5032747202906115,
+      "protected_rise": 0.42615054804703284
+    },
+    {
+      "target": "fr",
+      "draw": 2,
+      "method": "neurons",
+      "tau": 1.0,
+      "target_rise": 0.99393774312118,
+      "protected_rise": 0.8658530383274473
+    },
+    {
+      "target": "fr",
+      "draw": 2,
+      "method": "lora_rank1",
+      "tau": 0.5,
+      "target_rise": 0.489468056580116,
+      "protected_rise": 0.036043253438226106
+    },
+    {
+      "target": "fr",
+      "draw": 2,
+      "method": "lora_rank1",
+      "tau": 1.0,
+      "target_rise": 0.9973931394774338,
+      "protected_rise": 0.07005446121610444
+    },
+    {
+      "target": "fr",
+      "draw": 2,
+      "method": "finetune_24",
+      "tau": 0.5,
+      "target_rise": 0.45285408661283294,
+      "protected_rise": 0.058239813508658575
+    },
+    {
+      "target": "fr",
+      "draw": 2,
+      "method": "finetune_24",
+      "tau": 1.0,
+      "target_rise": 0.925654699062479,
+      "protected_rise": 0.1047857506521817
+    }
+  ],
+  "comparisons": [
+    {
+      "target": "de",
+      "protected_language": "nl",
+      "tau": 0.5,
+      "comparator": "lora_rank1",
+      "protected": {
+        "estimate": -0.047760205552110385,
+        "lo": -0.05536079257148152,
+        "hi": -0.04015961853273925
+      },
+      "target_gap": {
+        "estimate": 0.0201055811739516,
+        "lo": -0.009585198710068427,
+        "hi": 0.049796361057971625
+      }
+    },
+    {
+      "target": "de",
+      "protected_language": "nl",
+      "tau": 0.5,
+      "comparator": "finetune_24",
+      "protected": {
+        "estimate": -0.1122694903149687,
+        "lo": -0.12380137915913104,
+        "hi": -0.10073760147080636
+      },
+      "target_gap": {
+        "estimate": 0.0018123881570224162,
+        "lo": -0.02522342362308059,
+        "hi": 0.028848199937125424
+      }
+    },
+    {
+      "target": "de",
+      "protected_language": "nl",
+      "tau": 0.5,
+      "comparator": "neurons",
+      "protected": {
+        "estimate": -0.4333235765325612,
+        "lo": -0.4570779835670745,
+        "hi": -0.4095691694980479
+      },
+      "target_gap": {
+        "estimate": -0.01707839554753797,
+        "lo": -0.044951779675922565,
+        "hi": 0.010794988580846626
+      }
+    },
+    {
+      "target": "de",
+      "protected_language": "nl",
+      "tau": 1.0,
+      "comparator": "lora_rank1",
+      "protected": {
+        "estimate": -0.0885945701457817,
+        "lo": -0.1001348991800364,
+        "hi": -0.077054241111527
+      },
+      "target_gap": {
+        "estimate": 0.05694513896415974,
+        "lo": 0.007205252637482187,
+        "hi": 0.10668502529083729
+      }
+    },
+    {
+      "target": "de",
+      "protected_language": "nl",
+      "tau": 1.0,
+      "comparator": "finetune_24",
+      "protected": {
+        "estimate": -0.2253785590673315,
+        "lo": -0.24244961986305133,
+        "hi": -0.20830749827161169
+      },
+      "target_gap": {
+        "estimate": 0.026511702044256798,
+        "lo": -0.013024475297320794,
+        "hi": 0.0660478793858344
+      }
+    },
+    {
+      "target": "de",
+      "protected_language": "nl",
+      "tau": 1.0,
+      "comparator": "neurons",
+      "protected": {
+        "estimate": -0.7510509367646843,
+        "lo": -0.7820237174197366,
+        "hi": -0.7200781561096319
+      },
+      "target_gap": {
+        "estimate": -0.013583803999012914,
+        "lo": -0.05226115862360107,
+        "hi": 0.025093550625575244
+      }
+    },
+    {
+      "target": "es",
+      "protected_language": "pt",
+      "tau": 0.5,
+      "comparator": "lora_rank1",
+      "protected": {
+        "estimate": -0.09397864159485646,
+        "lo": -0.10811008158672235,
+        "hi": -0.07984720160299057
+      },
+      "target_gap": {
+        "estimate": 0.018585609293532094,
+        "lo": -0.015995790657523438,
+        "hi": 0.05316700924458763
+      }
+    },
+    {
+      "target": "es",
+      "protected_language": "pt",
+      "tau": 0.5,
+      "comparator": "finetune_24",
+      "protected": {
+        "estimate": -0.19008777688803344,
+        "lo": -0.2062261930349553,
+        "hi": -0.17394936074111159
+      },
+      "target_gap": {
+        "estimate": 0.011340065934192171,
+        "lo": -0.025761558434496755,
+        "hi": 0.0484416903028811
+      }
+    },
+    {
+      "target": "es",
+      "protected_language": "pt",
+      "tau": 0.5,
+      "comparator": "neurons",
+      "protected": {
+        "estimate": -0.5222960669418861,
+        "lo": -0.5487397728094553,
+        "hi": -0.495852361074317
+      },
+      "target_gap": {
+        "estimate": 0.03270032077000059,
+        "lo": -0.0068505923655303655,
+        "hi": 0.07225123390553154
+      }
+    },
+    {
+      "target": "es",
+      "protected_language": "pt",
+      "tau": 1.0,
+      "comparator": "lora_rank1",
+      "protected": {
+        "estimate": -0.17556443630621352,
+        "lo": -0.1974479190792375,
+        "hi": -0.15368095353318953
+      },
+      "target_gap": {
+        "estimate": 0.03813338827812808,
+        "lo": -0.014008855762494915,
+        "hi": 0.09027563231875108
+      }
+    },
+    {
+      "target": "es",
+      "protected_language": "pt",
+      "tau": 1.0,
+      "comparator": "finetune_24",
+      "protected": {
+        "estimate": -0.3804807472845604,
+        "lo": -0.4076921496094108,
+        "hi": -0.35326934495970996
+      },
+      "target_gap": {
+        "estimate": 0.004727112835851209,
+        "lo": -0.05074197861244812,
+        "hi": 0.06019620428415053
+      }
+    },
+    {
+      "target": "es",
+      "protected_language": "pt",
+      "tau": 1.0,
+      "comparator": "neurons",
+      "protected": {
+        "estimate": -0.758879347094174,
+        "lo": -0.7899710267301178,
+        "hi": -0.7277876674582303
+      },
+      "target_gap": {
+        "estimate": 0.01922115375255717,
+        "lo": -0.03477136839032871,
+        "hi": 0.07321367589544306
+      }
+    },
+    {
+      "target": "fr",
+      "protected_language": "it",
+      "tau": 0.5,
+      "comparator": "lora_rank1",
+      "protected": {
+        "estimate": -0.029440987908636654,
+        "lo": -0.03546235865102028,
+        "hi": -0.023419617166253032
+      },
+      "target_gap": {
+        "estimate": 0.017846467851222243,
+        "lo": -0.02135387899188361,
+        "hi": 0.057046814694328096
+      }
+    },
+    {
+      "target": "fr",
+      "protected_language": "it",
+      "tau": 0.5,
+      "comparator": "finetune_24",
+      "protected": {
+        "estimate": -0.0657910917853487,
+        "lo": -0.07055187700515243,
+        "hi": -0.061030306565544964
+      },
+      "target_gap": {
+        "estimate": 0.03418781565523696,
+        "lo": -0.0008248864368843867,
+        "hi": 0.0692005177473583
+      }
+    },
+    {
+      "target": "fr",
+      "protected_language": "it",
+      "tau": 0.5,
+      "comparator": "neurons",
+      "protected": {
+        "estimate": -0.429073719628926,
+        "lo": -0.45645969013775645,
+        "hi": -0.4016877491200955
+      },
+      "target_gap": {
+        "estimate": -0.009411040393785498,
+        "lo": -0.03819071274879936,
+        "hi": 0.019368631961228358
+      }
+    },
+    {
+      "target": "fr",
+      "protected_language": "it",
+      "tau": 1.0,
+      "comparator": "lora_rank1",
+      "protected": {
+        "estimate": -0.05741578255426781,
+        "lo": -0.06654836429496205,
+        "hi": -0.048283200813573575
+      },
+      "target_gap": {
+        "estimate": 0.03849684232952952,
+        "lo": -0.026794399005959355,
+        "hi": 0.10378808366501839
+      }
+    },
+    {
+      "target": "fr",
+      "protected_language": "it",
+      "tau": 1.0,
+      "comparator": "finetune_24",
+      "protected": {
+        "estimate": -0.11966334309043555,
+        "lo": -0.12644926866817519,
+        "hi": -0.11287741751269594
+      },
+      "target_gap": {
+        "estimate": 0.07709715010105878,
+        "lo": 0.02023654513038111,
+        "hi": 0.13395775507173643
+      }
+    },
+    {
+      "target": "fr",
+      "protected_language": "it",
+      "tau": 1.0,
+      "comparator": "neurons",
+      "protected": {
+        "estimate": -0.8682348347943405,
+        "lo": -0.9141885775990817,
+        "hi": -0.8222810919895993
+      },
+      "target_gap": {
+        "estimate": 0.026233144190119597,
+        "lo": -0.01829996184691197,
+        "hi": 0.07076625022715116
+      }
+    }
+  ]
+}
