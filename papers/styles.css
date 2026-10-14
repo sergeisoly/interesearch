@@ -183,8 +183,8 @@ main table { font-size: .9rem; }
 /* Keep search descriptions in metadata without repeating the introduction. */
 #title-block-header .description { display: none; }
 
-/* Tables use the same paper background as the surrounding page. */
-main table { --bs-table-bg: transparent; --bs-table-color: var(--research-ink); background-color: transparent; }
+/* Override Quarto's full-width column table background as well as Bootstrap's cells. */
+#quarto-document-content table { --bs-table-bg: transparent; --bs-table-color: var(--research-ink); background-color: transparent; }
 main table > :not(caption) > * > * { background-color: transparent; }
 
 /* Quarto appendices share the surrounding page background. */
