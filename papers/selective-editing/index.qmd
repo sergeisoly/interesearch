@@ -112,7 +112,7 @@ the difference in related-language damage carries over to new text.
 
 ## Setup {#sec-setup}
 
-The [method details](#sec-app-methods) give window and set sizes, grids, tolerances and training recipes.
+The [method details](#sec-app-methods) give data sizes, selection and training recipes, and interval construction.
 
 **Model and subcomponents.** The base model $W_0$ is the four-layer, 67M-parameter decoder-only model
 decomposed in the VPD report. It was trained on a subset of the Pile [@bushnaq2026interpreting, sec.
@@ -176,7 +176,7 @@ penalty for target CE rises below 1 nat/token, plus the KL divergence from $W_0$
 with weight 1. The final update is scaled down to reach τ.
 
 Additional comparisons vary the choice of a single subcomponent within the same dictionary. They use a
-separate multiplicity correction and receive no confirmatory verdicts ([appendix](#sec-app-references)).
+separate multiplicity correction and receive no confirmatory verdicts (@sec-references).
 
 ### Calibration and the six edits {#sec-calibration}
 
@@ -326,15 +326,21 @@ do not isolate the dictionary's contribution either (@sec-references; @sec-exten
 
 ### Subcomponents chosen by other rules {#sec-references}
 
-The [alternative selection comparisons](#sec-app-references) test whether other choices within the same
-dictionary give similarly selective edits.
-Every estimable contrast is at or below zero. The causal-importance heuristic picked `0.attn.o:41` in 8 of 9
-target–draw combinations and, on the confirmatory dates, raised the protected CE by 0.48 to 1.37 nat/token
-more than the selected subcomponent, at achieved target rises close to the selected subcomponent's
-(@tbl-references). The previously chosen German subcomponent is the
-selected one, so it gives an identical edit. Selectivity therefore varies among subcomponents
-of the same dictionary. By contrast, the randomized-dictionary control held the selection rule fixed and
-changed the dictionary (@sec-null).
+Four alternatives test other choices within the same dictionary. Two take the first step of orthogonal
+matching pursuit [@pati1993orthogonal; @mallat1993matching]: the subcomponent with the largest absolute
+correlation with a learned update, using that correlation's sign. One uses the full-matrix fine-tuning
+update; the other uses a rank-one LoRA across all 24 matrices, unlike the main one-matrix LoRA comparator.
+A causal-importance heuristic chooses the largest mean target-minus-English importance and a negative sign,
+using the per-position importance learned in VPD [@bushnaq2026interpreting, sec. 2.3]. It adapts
+Bushnaq's top-16 ranking to one subcomponent [@bushnaq2026exploration]. The fourth reuses the previously
+chosen German subcomponent.
+
+All alternatives use the same calibration rule. Some failed to reach τ or lacked an eligible learned-update
+checkpoint, so some contrasts use fewer draws and others have no estimate. Every estimable contrast is at
+or below zero. The causal-importance heuristic picked `0.attn.o:41` in 8 of 9 target–draw combinations and,
+on the confirmatory dates, raised protected CE by 0.48 to 1.37 nat/token more than the selected subcomponent,
+at achieved target rises close to the selected subcomponent's. The previously chosen German subcomponent
+gives an identical edit. Selectivity therefore varies among subcomponents of the same dictionary.
 
 ## Longer training and alternative rank-one directions {#sec-extended-comparisons}
 
@@ -346,14 +352,15 @@ that searches rank-one directions outside the VPD dictionary using the target gr
 English Fisher curvature. All were calibrated to the same τ. A separate SVD control applies the selection rule
 to singular components of the original weight matrices. All 18 protected-CE intervals of the all-run family and all 12 of
 the family excluding unstable learned runs lie below zero. The achieved target rises differ by at most
-0.07 nat/token. The [appendix](#sec-app-extended) gives the methods, full results and study record.
+0.07 nat/token. The [appendix](#sec-app-extended) gives the comparison rules and chronology.
 
 The expanded training recipe lowered the protected-language rise of full-matrix fine-tuning in all six target
 and τ combinations and that of LoRA in five of six. Steps, margin, grid and seeds changed together, with
 retention still limited to English. Convergence remains unestablished at either budget.
 
 The whitened rank-one selector uses the selected VPD subcomponent's norm and the main selector's ε, leaving
-the dictionary's contribution entangled with the selector's. The SVD comparator gave no estimate.
+the dictionary's contribution entangled with the selector's. The SVD comparator gave no estimate: every edit
+that reached τ raised an English guard by more than 0.1 nat/token, and three of nine did not reach τ = 1.
 
 ## Limits of these conclusions {#sec-limits}
 
@@ -393,154 +400,92 @@ peer-review and citation-management workflows used to review organization, claim
 :::
 
 ```{=latex}
-\clearpage
 \compactappendix
 ```
 
 ## Method details {#sec-app-methods .appendix}
 
-**Subcomponents and text.** The decomposition has 512 subcomponents each for query and key, 1,024 each for
-value and output, 3,072 for the MLP input and 3,584 for the MLP output matrix of each layer. The Europarl text
-comes from release v7 of the corpus [@koehn2005europarl], downloaded from
-<https://www.statmt.org/europarl/v7/europarl.tgz>. Each Europarl split has one 257-token window per session date (256
-predictions). Each target has three draws of 64 of its 128 Europarl training windows. Calibration uses 32 target-language
-Europarl validation windows per target. The English validation set has 64 windows: 32 Europarl and 32 English-filtered
-Pile windows. The English retain pool
-has 256 windows: 128 of Europarl English training text, 64 of WikiText-2 validation text and 64 of
-English-filtered Pile validation text.
+**Text.** Europarl v7 [@koehn2005europarl] supplies one 257-token window per session date (256 predictions).
+Each target has three draws of 64 of its 128 training windows and 32 validation windows for calibration.
+The English validation set has 64 windows: 32 Europarl and 32 English-filtered Pile. The retain pool has
+256 windows: 128 Europarl English training, 64 WikiText-2 validation and 64 English-filtered Pile validation.
 
-**Selection.** For softmax cross-entropy, the Fisher information matrix equals the generalized Gauss–Newton
-matrix [@martens2020new, sec. 9.2]. It differs from the empirical Fisher, which uses the data's labels
-[@kunstner2019limitations, sec. 1]. The curvature $q_c$ is the mean squared directional score over the retain pool, with eight sets
-of labels sampled from $W_0$ per window. The floor $\varepsilon$ is the 1st percentile of $q_c / \lVert
-A_c\rVert^2$ over subcomponents. The top 64 subcomponents are re-ranked with the larger of $q_c$ and a second
-estimate on 256 other English windows. The search raises the dose on the grid $0.0625 \cdot \sqrt{2}^{\,k}$
-for $k = 0, \ldots, 10$, that is up to 2. Before any selection, $q$ was checked against finite-difference
-curvature on English windows. The check, including contraction, batch splitting and scaling, passed on the
-NVIDIA L40S used for the original runs. On the tested A10 and L4, the batch-splitting test failed identically
-in the original and released implementations. The checked selection reruns are limited to the L40S, for the
-German target's first draw with the VPD dictionary and one randomized dictionary. Fisher-label sampling
-depends on the GPU model, so selections can differ on other GPUs.
+**Selection.** For softmax cross-entropy, the model Fisher equals the generalized Gauss–Newton matrix
+[@martens2020new, sec. 9.2], unlike the empirical Fisher based on data labels [@kunstner2019limitations, sec. 1].
+The estimate $q_c$ averages squared directional scores using eight model-sampled label sets per retain window.
+The floor $\varepsilon$ is the 1st percentile of $q_c / \lVert A_c\rVert^2$. The top 64 subcomponents are
+re-ranked using the larger of $q_c$ and a second estimate on 256 other English windows, before the dose search
+of @sec-selection. Curvature checks passed on the NVIDIA L40S used for the original runs, but the
+batch-splitting check failed on the tested A10 and L4. Verified selector reruns cover only the German
+target's first draw on the L40S, with the VPD dictionary and one randomized dictionary. GPU-dependent
+Fisher-label sampling can change selections on other hardware.
 
-**Calibration.** The dose grid is scanned and the first crossing of τ is bracketed. Linear bisection, at most
-five steps, stops at the first point within the matching tolerance. The neuron edit scales the output weights
-of the top $k$ neurons by $1 - f$. Its calibration takes the smallest $k$ among powers of two from 1 to 256
-whose full removal reaches τ, then calibrates $f$. The chosen $k$ ranges from 2 to 256. The
-randomized-dictionary permutations use a separate seed per draw.
+**Calibration.** The first dose-grid crossing of τ is bracketed, then bisected for at most five steps until
+within the matching tolerance. Neuron edits scale the top $k$ neurons' output weights by $1-f$: calibration
+takes the smallest power-of-two $k$ from 1 to 256 whose full removal reaches τ, then calibrates $f$.
+Randomized dictionaries use a separate seed per draw.
 
-**Learned updates.** The objective is a hinge on target CE, $\max(0, 1 - \Delta\mathrm{CE})$ per window, plus
-the KL divergence from $W_0$ on the English retain pool with weight 1. Training uses Adam [@kingma2015adam]
-with 10 warm-up steps and gradient clipping at 1.0, 8 target and 8 English windows per step, for 200 steps.
-The edit is the final update $D$ scaled down, $\beta D$ with $\beta \le 1$, and $\beta$ is calibrated like a
-dose. The learning rate was chosen once per target, on draw 0, by the lowest English validation KL at τ = 1.
-The LoRA grid was {1e-4, 3e-4, 1e-3, 3e-3} and the full-matrix fine-tuning grid {1e-6, 3e-6, 1e-5}. The choice
-was 3e-3 for LoRA and 1e-6 for full-matrix fine-tuning on all three targets, the top and the bottom of their
-grids.
+**Learned updates.** The 200-step updates use Adam [@kingma2015adam], 10 warm-up steps, gradient clipping
+at 1.0, and 8 target and 8 English windows per step. Calibration scales the final update $D$ to $\beta D$,
+with $\beta \le 1$. The learning rate is chosen once per target on draw 0, by the lowest English validation
+KL at τ = 1. Every target chose 3e-3 for LoRA and 1e-6 for full-matrix fine-tuning, respectively the upper and
+lower edges of the tested grids.
 
 ### Extended comparisons {#sec-app-extended}
 
-The comparisons were specified before these runs. I measured the six subcomponent edits again, next to four
-comparators calibrated to the same τ:
+The extended learned updates use 2,000 steps, a hinge margin of 1.5, wider learning-rate grids and three
+seeds per draw. The whitened selector maximizes the squared target gradient relative to damped K-FAC
+curvature on English text [@martens2015optimizing], then tests doses from 1/64 to 8. The SVD control applies
+the main selection rule unchanged to the singular components of all 24 weight matrices; these reconstruct
+the weights exactly, whereas VPD leaves a residual. The exploratory rerun selected the same VPD subcomponents
+in all nine target–draw combinations.
 
-```{=latex}
-\begin{samepage}
-```
+Contrasts compare unpaired means over each method's matched and usable runs in one simultaneous family.
+A second family excludes unstable learned runs: 7 of 27 LoRA runs had English validation KL at step 2,000
+greater than twice their minimum from step 100 onward. Training diagnostics did not establish objective
+convergence and were not used to select edits.
 
-- **SVD components.** The selection rule of @sec-selection is applied unchanged to the rank-one terms of a
-  singular value decomposition of the 24 weight matrices. These terms reconstruct the weights, whereas VPD
-  leaves a residual that is unchanged by its subcomponent edits.
-- **A whitened rank-one selector.** In each matrix, this procedure finds a direction outside the VPD dictionary
-  with the largest squared target gradient relative to the damped K-FAC curvature of the English retain text
-  [@martens2015optimizing], using the norm of that target–draw combination's VPD subcomponent and the
-  selector's ε. It then scores the direction with the same rule and tests doses from 1/64 to 8.
-- **Longer-trained rank-one LoRA and full-matrix fine-tuning.** The learned updates are trained for 2,000
-  steps instead of 200, with a hinge margin of 1.5 instead of 1, wider learning-rate grids and three seeds per
-  draw.
-
-```{=latex}
-\end{samepage}
-```
-
-Each side of a contrast is the mean over its matched and usable runs. The analysis compares these means
-without pairing runs by draw. The contrasts form one simultaneous family. The learned-update contrasts are
-repeated as a second family without the runs flagged as unstable, 7 of the 27 LoRA runs. For each interval, the analysis
-reports its direction and whether it lies wholly within ±0.02 nat/token. These runs used a different GPU model,
-which changes the sampled Fisher labels. Selection found the same subcomponents in all nine target–draw
-combinations, and the subcomponent-edit readout matched the main readout within 1.5·10⁻⁶ nat/token.
-
-{{< include ../../results/selective_editing/tables/extended_comparisons_table.md >}}
-
-All 18 estimable intervals of the all-run family and all 12 of the stable-run family lie below zero. None
-lies wholly within ±0.02 (@tbl-extended-comparisons), but this does not establish that each advantage exceeds
-0.02 nat/token. The closest to the band is French and Italian at τ = 0.5
-against rank-one LoRA, −0.017 [−0.021, −0.013]. The achieved target rises of the two sides differ by at most
-0.07 nat/token. The subcomponent edit's target rise is larger in 14 of 18 comparisons.
-
-The expanded training recipe lowered the protected-language rise of full-matrix fine-tuning in all six target and τ
-combinations, to 0.04–0.34 nat/token from 0.06–0.40 at 200 steps, and that of LoRA in five of six, to 0.02–0.18
-from 0.03–0.19. The SVD comparator gave no estimate: every SVD edit that reached τ raised an English guard by
-more than 0.1 nat/token, and three of nine did not reach τ = 1.
-
-**Chronology of the exploratory comparisons.** The comparisons, labels and limits were declared on 12 October
-2026, before the runs. The 5% tolerance for reproducing the main selection's curvature floor across GPU models
-was added after one selection had finished but before its result was read. The analysis rules were fixed
-before any readout, after the selection outcomes, learning-rate choices and target and English validation
-effects of the rate grid had been seen. The records were then frozen, and the readout was run. The analyzer's
-checks of direction and containment within the ±0.02 band were implemented after readout but before any
-readout measurements were opened or analysed.
-This sequence comes from the author's records and is not independently timestamped.
-
-**Diagnostics for the exploratory comparisons.** A learned run is flagged as unstable if its English validation
-KL at step 2,000 is more than twice its minimum from step 100 onward. The second comparison family excludes
-these runs. A change of less than 10% in English validation KL between steps 1,500 and 2,000 is called a
-plateau. Only 6 of the 54 training runs used in the comparisons met it. Including the 18 additional
-learning-rate candidates gives 7 of 72, all full-matrix fine-tuning runs. This diagnostic does not establish
-convergence of the training objective and does not determine which edit is selected.
+The comparisons were specified before the runs, on 12 October 2026. A 5% tolerance for reproducing the
+curvature floor across GPU models was added after one selection finished, before its result was read.
+Analysis rules were fixed before readout, after selection outcomes, learning-rate choices and the rate
+grid's target and English validation effects were known. The analyzer's interval checks were implemented after readout but before its measurements were opened or analysed. This chronology
+comes from the author's records and is not independently timestamped.
 
 ### Readouts and intervals {#sec-app-readouts}
 
-**Readouts.** The development guards are Europarl English test text (64 windows), WikiText-2 test text (32
-windows) and Pile test documents (512 windows). The confirmatory guard is English text from the 58 confirmatory dates. The
-confirmatory set has 48 main and 10 reserve dates, analysed as one set.
+**Readouts.** Development guards use Europarl English test text (64 windows), WikiText-2 test text (32) and
+Pile test documents (512). The confirmatory guard uses English from the 58 confirmatory dates, comprising
+48 main and 10 reserve dates analysed together.
 
-**Intervals.** Dates are resampled with replacement, one resample shared by every contrast of a family. Each
-contrast's standard error is the standard deviation of its resampled means, and the interval is the estimate ±
-$c$ standard errors. The critical value $c$ is the 95% quantile, over resamples, of the largest absolute
-standardized deviation in the family. With 2,000 resamples (seed 0), $c$ = 2.780 for the claim family on the
-58 confirmatory dates and 2.814 on the 64 development dates. For the alternative subcomponent-selection
-family, $c$ is 2.817 on the confirmatory dates and 2.772 on development.
+**Intervals.** The bootstrap uses 2,000 date resamples with replacement, shared across each family.
+A contrast's standard error is the standard deviation of its resampled means. Its interval is the estimate ±
+$c$ standard errors, where $c$ is the 95% quantile of the largest absolute standardized deviation in the family.
 
-**Verdicts.** The first applicable rule in the verdict table determines the result. No interval or a technical
-failure gives "not established". A target flag in any used draw gives "effect not maintained". An interval
-that excludes zero with the development sign gives "reproduced on confirm", and with the opposite sign "not
-reproduced". Anything else is "not established".
+**Verdicts.** The first applicable rule determines the result: missing intervals or technical failures give
+"not established"; a target flag in any used draw gives "effect not maintained"; an interval excluding zero
+with the development sign gives "reproduced on confirm", or with the opposite sign "not reproduced".
+All other cases are "not established".
 
-**Target gaps.** The post hoc target gaps, the protected-CE contrasts and the corresponding protected-KL
-contrasts form one family of 54 coordinates per readout, with the per-date values averaged over draws. The
-family has a joint bootstrap over dates (20,000 resamples, seed 20261011) and a max-|t| critical value of
-3.149 on the confirmatory readout and 3.158 on the development dates.
+**Target gaps.** The post hoc family has 54 coordinates per readout: target gaps, protected-CE contrasts and
+protected-KL contrasts. Per-date values are averaged over draws, with 20,000 shared date resamples.
 
 ### Protocol records and prior access {#sec-access-details}
 
-- **Freeze and readout.** The selection rule, comparators, calibration, guard rule and analysis were fixed in
-  code and a protocol, with a freeze record dated 11 October 2026. The development readout and its analysis
-  ran right after the freeze. A second set of 58 session dates was read once, later the same day, with the
-  frozen edits unchanged. An amendment written before any window was parsed fixed the readout procedure.
-- **Prior knowledge.** The research before the freeze was not blind. The German subcomponent
-  `0.attn.o:268` had been chosen in an earlier experiment with Dutch in view, and it was the top German
-  candidate in an earlier pilot run of this selector. Dutch, Portuguese and Italian text from the development
-  splits, and the NTREX Dutch and Italian sets [@federmann2022ntrex], had been read or used in earlier
-  development. The protected-language damage on the 64 development dates is therefore part of the development readout.
-- **Pretraining.** The Pile contains a European Parliament component [@gao2020pile, sec. 2.17]. I did not
-  establish whether the subset on which the model was trained includes it, so the dates are new to this
-  workflow but may have appeared in pretraining.
-- **Dates and hashes.** The dates come from the documents' own records and the project's run log, and neither is
-  independently timestamped. The original protocol, freeze record and frozen code list are not published.
-  Their recorded hashes identify the files' contents; the date of those contents remains
-  unverified, so the records lack a timestamped preregistration.
+- **Freeze and readout.** The selection, comparison and analysis rules were frozen on 11 October 2026,
+  immediately before the development readout. Later that day, the unchanged edits were evaluated once on
+  58 further dates, under an amendment fixed before any of those windows was parsed.
+- **Prior knowledge.** German subcomponent `0.attn.o:268` had been chosen with Dutch in view in an earlier
+  experiment and was the top German candidate in a pilot of this selector. Dutch, Portuguese and Italian
+  development text and NTREX Dutch and Italian text [@federmann2022ntrex] had been read or used previously.
+  The 64 development dates therefore do not provide a fresh test.
+- **Pretraining.** The Pile contains a European Parliament component [@gao2020pile, sec. 2.17]; whether the
+  model's training subset includes it is unknown. Dates new to this workflow may have appeared in pretraining.
+- **Record limits.** The chronology relies on the author's documents and run log, without independent
+  timestamps. The original protocol, freeze record and frozen code list are unpublished. Their hashes
+  identify contents but do not establish dates, so there is no timestamped preregistration.
 
 ```{=latex}
-\vspace{-\baselineskip}
+\clearpage
 ```
 
 ## The claim contrasts {#sec-app-claims .appendix}
@@ -550,51 +495,14 @@ contrasts have no estimate (@sec-null).
 
 {{< include ../../results/selective_editing/tables/claim_table.md >}}
 
-## Alternative subcomponent-selection comparisons {#sec-app-references .appendix}
+::: {#sec-reproduction}
 
-Each alternative selection rule chooses one subcomponent, which is calibrated in the same way as the main
-edit:
-
-- `omp_finetune` takes the first subcomponent of an orthogonal matching pursuit [@pati1993orthogonal;
-  @mallat1993matching] of the chosen full-matrix fine-tuning update, the subcomponent with the largest absolute
-  correlation with it, with the sign of that correlation.
-- `omp_lora` does the same for a rank-one LoRA on all 24 matrices, learning rate 1e-4, with a checkpoint rule
-  that uses English text only for retention. This differs from the main rank-one LoRA comparator, which
-  updates one matrix.
-- `ci_difference` is a causal-importance heuristic that takes the top-1 subcomponent: the subcomponent with
-  the largest mean causal importance on the target draw minus that on the English retain pool, on the removal
-  side. Causal importance is the per-position importance learned for each subcomponent in VPD
-  [@bushnaq2026interpreting, sec. 2.3]. Bushnaq ranks subcomponents the same way but trains the top 16, and
-  his single-subcomponent edit used a subcomponent chosen by its label instead of the ranking
-  [@bushnaq2026exploration]. The selection heuristic adapts that top-16 procedure to selecting one subcomponent.
-- `historical_atom` uses the previously chosen subcomponent `0.attn.o:268` on the removal side, for German
-  only. This reuses a previously chosen intervention with its selection fixed by the earlier experiment.
-
-As in the main results, @tbl-references gives each alternative edit's achieved target rise next to its
-contrasts, averaged over the same draws.
-
-{{< include ../../results/selective_editing/tables/references_table.md >}}
-
-- **Identical edits.** For German, the previously chosen subcomponent is the selected subcomponent with the
-  same sign and dose, so its contrast is exactly zero. `omp_lora` also picks `0.attn.o:268` in draws 0 and 1,
-  where its edit equals the selected one. In draw 2 it picks `0.attn.v:271`, the subcomponent that
-  `omp_finetune` picks in all German draws. Only draw 2 contributes a nonzero contrast. The reported estimate
-  averages all three draws. For French, `omp_finetune` in draw 0 picks `0.attn.o:640`, the selected
-  subcomponent.
-- **Spanish.** `omp_finetune` picks `3.mlp.up:1435` in all draws, which needs a dose of 1.927 for τ = 0.5 and
-  does not reach τ = 1 within the limit. `omp_lora` reaches τ = 0.5 only in draw 2, where it picks the same
-  subcomponent, so its estimate equals `omp_finetune`'s while its status is conditional. Neither has an edit
-  at τ = 1.
-- **French.** The pursuit of the full-matrix fine-tuning update picks a different subcomponent in each draw.
-  `omp_lora` has an edit only in draw 0: in draws 1 and 2 no checkpoint of the LoRA across all matrices met
-  its checkpoint rule. In draw 1, `omp_finetune` and `ci_difference` do not reach τ = 1.
-
-## Reproducibility and availability {#sec-reproduction .appendix}
-
-Code, saved measurements and reproduction instructions are on
+**Reproducibility and availability.** Code, saved measurements and reproduction instructions are on
 [GitHub](https://github.com/sergeisoly/interesearch/blob/main/papers/guides/selective-editing.md).
 Saved per-date measurements support analysis replay. The confirmatory token windows and texts are not released,
 so that model evaluation cannot be rerun from this checkout. The guide describes the available model procedures.
+
+:::
 
 ::: {.content-visible when-format="html"}
 
