@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.2.0 — unreleased
+## 0.2.0 — 2026-10-14
 
 Code is grouped by numerical method, analysis and model stage within each study. Experimental recipes live
 in each study's `recipe.yaml`; entry points load them and save the resolved settings with a run. Markdown
