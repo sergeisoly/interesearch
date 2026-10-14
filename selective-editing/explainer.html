@@ -4002,6 +4002,145 @@ vertical-align: -.125em;
   }
 }</script>
 
+  <script>/*
+ * Polyfill service v3.111.0
+ * Disable minification (remove `.min` from URL path) for more info
+*/
+
+(function(self, undefined) {!function(t){"use strict";function e(t){switch(typeof t){case"undefined":return"undefined";case"boolean":return"boolean";case"number":return"number";case"string":return"string";default:return null===t?"null":"object"}}function r(t){return Object.prototype.toString.call(t).replace(/^\[object *|\]$/g,"")}function n(t){return"function"==typeof t}function o(t){if(null===t||t===B)throw TypeError();return Object(t)}function i(t){return t>>0}function f(t){return t>>>0}function u(e){if(!("TYPED_ARRAY_POLYFILL_NO_ARRAY_ACCESSORS"in t)){if(e.length>N)throw RangeError("Array too large for polyfill");var r;for(r=0;r<e.length;r+=1)!function n(t){try{Object.defineProperty(e,t,{get:function(){return e._getter(t)},set:function(r){e._setter(t,r)},enumerable:!0,configurable:!1})}catch(r){}}(r)}}function a(t,e){var r=32-e;return t<<r>>r}function h(t,e){var r=32-e;return t<<r>>>r}function y(t){return[255&t]}function s(t){return a(t[0],8)}function l(t){return[255&t]}function p(t){return h(t[0],8)}function c(t){return t=x(Number(t)),[t<0?0:t>255?255:255&t]}function b(t){return[255&t,t>>8&255]}function g(t){return a(t[1]<<8|t[0],16)}function E(t){return[255&t,t>>8&255]}function v(t){return h(t[1]<<8|t[0],16)}function _(t){return[255&t,t>>8&255,t>>16&255,t>>24&255]}function O(t){return a(t[3]<<24|t[2]<<16|t[1]<<8|t[0],32)}function d(t){return[255&t,t>>8&255,t>>16&255,t>>24&255]}function j(t){return h(t[3]<<24|t[2]<<16|t[1]<<8|t[0],32)}function P(t,e,r){function n(t){var e=m(t),r=t-e;return r<.5?e:r>.5?e+1:e%2?e+1:e}var o,i,f,u=(1<<e-1)-1;if(t!==t)i=(1<<e)-1,f=F(2,r-1),o=0;else if(t===Infinity||t===-Infinity)i=(1<<e)-1,f=0,o=t<0?1:0;else if(0===t)i=0,f=0,o=1/t==-Infinity?1:0;else if(o=t<0,(t=M(t))>=F(2,1-u)){i=Y(m(I(t)/S),1023);var a=t/F(2,i);a<1&&(i-=1,a*=2),a>=2&&(i+=1,a/=2);var h=F(2,r);f=n(a*h)-h,i+=u,f/h>=1&&(i+=1,f=0),i>2*u&&(i=(1<<e)-1,f=0)}else i=0,f=n(t/F(2,1-u-r));var y,s=[];for(y=r;y;y-=1)s.push(f%2?1:0),f=m(f/2);for(y=e;y;y-=1)s.push(i%2?1:0),i=m(i/2);s.push(o?1:0),s.reverse();for(var l=s.join(""),p=[];l.length;)p.unshift(parseInt(l.substring(0,8),2)),l=l.substring(8);return p}function T(t,e,r){var n,o,i,f,u,a,h,y,s=[];for(n=0;n<t.length;++n)for(i=t[n],o=8;o;o-=1)s.push(i%2?1:0),i>>=1;return s.reverse(),f=s.join(""),u=(1<<e-1)-1,a=parseInt(f.substring(0,1),2)?-1:1,h=parseInt(f.substring(1,1+e),2),y=parseInt(f.substring(1+e),2),h===(1<<e)-1?0!==y?NaN:a*Infinity:h>0?a*F(2,h-u)*(1+y/F(2,r)):0!==y?a*F(2,-(u-1))*(y/F(2,r)):a<0?-0:0}function w(t){return T(t,11,52)}function A(t){return P(t,11,52)}function L(t){return T(t,8,23)}function R(t){return P(t,8,23)}var B=void 0,N=1e5,S=Math.LN2,M=Math.abs,m=Math.floor,I=Math.log,U=Math.max,Y=Math.min,F=Math.pow,x=Math.round;!function(){var t=Object.defineProperty,e=!function(){try{return Object.defineProperty({},"x",{})}catch(t){return!1}}();t&&!e||(Object.defineProperty=function(e,r,n){if(t)try{return t(e,r,n)}catch(o){}if(e!==Object(e))throw TypeError("Object.defineProperty called on non-object");return Object.prototype.__defineGetter__&&"get"in n&&Object.prototype.__defineGetter__.call(e,r,n.get),Object.prototype.__defineSetter__&&"set"in n&&Object.prototype.__defineSetter__.call(e,r,n.set),"value"in n&&(e[r]=n.value),e})}(),function(){function a(t){if((t=i(t))<0)throw RangeError("ArrayBuffer size is not a small enough positive integer.");Object.defineProperty(this,"byteLength",{value:t}),Object.defineProperty(this,"_bytes",{value:Array(t)});for(var e=0;e<t;e+=1)this._bytes[e]=0}function h(){if(!arguments.length||"object"!=typeof arguments[0])return function(t){if((t=i(t))<0)throw RangeError("length is not a small enough positive integer.");Object.defineProperty(this,"length",{value:t}),Object.defineProperty(this,"byteLength",{value:t*this.BYTES_PER_ELEMENT}),Object.defineProperty(this,"buffer",{value:new a(this.byteLength)}),Object.defineProperty(this,"byteOffset",{value:0})}.apply(this,arguments);if(arguments.length>=1&&"object"===e(arguments[0])&&arguments[0]instanceof h)return function(t){if(this.constructor!==t.constructor)throw TypeError();var e=t.length*this.BYTES_PER_ELEMENT;Object.defineProperty(this,"buffer",{value:new a(e)}),Object.defineProperty(this,"byteLength",{value:e}),Object.defineProperty(this,"byteOffset",{value:0}),Object.defineProperty(this,"length",{value:t.length});for(var r=0;r<this.length;r+=1)this._setter(r,t._getter(r))}.apply(this,arguments);if(arguments.length>=1&&"object"===e(arguments[0])&&!(arguments[0]instanceof h)&&!(arguments[0]instanceof a||"ArrayBuffer"===r(arguments[0])))return function(t){var e=t.length*this.BYTES_PER_ELEMENT;Object.defineProperty(this,"buffer",{value:new a(e)}),Object.defineProperty(this,"byteLength",{value:e}),Object.defineProperty(this,"byteOffset",{value:0}),Object.defineProperty(this,"length",{value:t.length});for(var r=0;r<this.length;r+=1){var n=t[r];this._setter(r,Number(n))}}.apply(this,arguments);if(arguments.length>=1&&"object"===e(arguments[0])&&(arguments[0]instanceof a||"ArrayBuffer"===r(arguments[0])))return function(t,e,r){if((e=f(e))>t.byteLength)throw RangeError("byteOffset out of range");if(e%this.BYTES_PER_ELEMENT)throw RangeError("buffer length minus the byteOffset is not a multiple of the element size.");if(r===B){var n=t.byteLength-e;if(n%this.BYTES_PER_ELEMENT)throw RangeError("length of buffer minus byteOffset not a multiple of the element size");r=n/this.BYTES_PER_ELEMENT}else r=f(r),n=r*this.BYTES_PER_ELEMENT;if(e+n>t.byteLength)throw RangeError("byteOffset and length reference an area beyond the end of the buffer");Object.defineProperty(this,"buffer",{value:t}),Object.defineProperty(this,"byteLength",{value:n}),Object.defineProperty(this,"byteOffset",{value:e}),Object.defineProperty(this,"length",{value:r})}.apply(this,arguments);throw TypeError()}function P(t,e,r){var n=function(){Object.defineProperty(this,"constructor",{value:n}),h.apply(this,arguments),u(this)};"__proto__"in n?n.__proto__=h:(n.from=h.from,n.of=h.of),n.BYTES_PER_ELEMENT=t;var o=function(){};return o.prototype=T,n.prototype=new o,Object.defineProperty(n.prototype,"BYTES_PER_ELEMENT",{value:t}),Object.defineProperty(n.prototype,"_pack",{value:e}),Object.defineProperty(n.prototype,"_unpack",{value:r}),n}t.ArrayBuffer=t.ArrayBuffer||a,Object.defineProperty(h,"from",{value:function(t){return new this(t)}}),Object.defineProperty(h,"of",{value:function(){return new this(arguments)}});var T={};h.prototype=T,Object.defineProperty(h.prototype,"_getter",{value:function(t){if(arguments.length<1)throw SyntaxError("Not enough arguments");if((t=f(t))>=this.length)return B;var e,r,n=[];for(e=0,r=this.byteOffset+t*this.BYTES_PER_ELEMENT;e<this.BYTES_PER_ELEMENT;e+=1,r+=1)n.push(this.buffer._bytes[r]);return this._unpack(n)}}),Object.defineProperty(h.prototype,"get",{value:h.prototype._getter}),Object.defineProperty(h.prototype,"_setter",{value:function(t,e){if(arguments.length<2)throw SyntaxError("Not enough arguments");if(!((t=f(t))>=this.length)){var r,n,o=this._pack(e);for(r=0,n=this.byteOffset+t*this.BYTES_PER_ELEMENT;r<this.BYTES_PER_ELEMENT;r+=1,n+=1)this.buffer._bytes[n]=o[r]}}}),Object.defineProperty(h.prototype,"constructor",{value:h}),Object.defineProperty(h.prototype,"copyWithin",{value:function(t,e){var r=arguments[2],n=o(this),u=n.length,a=f(u);a=U(a,0);var h,y=i(t);h=y<0?U(a+y,0):Y(y,a);var s,l=i(e);s=l<0?U(a+l,0):Y(l,a);var p;p=r===B?a:i(r);var c;c=p<0?U(a+p,0):Y(p,a);var b,g=Y(c-s,a-h);for(s<h&&h<s+g?(b=-1,s=s+g-1,h=h+g-1):b=1;g>0;)n._setter(h,n._getter(s)),s+=b,h+=b,g-=1;return n}}),Object.defineProperty(h.prototype,"every",{value:function(t){if(this===B||null===this)throw TypeError();var e=Object(this),r=f(e.length);if(!n(t))throw TypeError();for(var o=arguments[1],i=0;i<r;i++)if(!t.call(o,e._getter(i),i,e))return!1;return!0}}),Object.defineProperty(h.prototype,"fill",{value:function(t){var e=arguments[1],r=arguments[2],n=o(this),u=n.length,a=f(u);a=U(a,0);var h,y=i(e);h=y<0?U(a+y,0):Y(y,a);var s;s=r===B?a:i(r);var l;for(l=s<0?U(a+s,0):Y(s,a);h<l;)n._setter(h,t),h+=1;return n}}),Object.defineProperty(h.prototype,"filter",{value:function(t){if(this===B||null===this)throw TypeError();var e=Object(this),r=f(e.length);if(!n(t))throw TypeError();for(var o=[],i=arguments[1],u=0;u<r;u++){var a=e._getter(u);t.call(i,a,u,e)&&o.push(a)}return new this.constructor(o)}}),Object.defineProperty(h.prototype,"find",{value:function(t){var e=o(this),r=e.length,i=f(r);if(!n(t))throw TypeError();for(var u=arguments.length>1?arguments[1]:B,a=0;a<i;){var h=e._getter(a),y=t.call(u,h,a,e);if(Boolean(y))return h;++a}return B}}),Object.defineProperty(h.prototype,"findIndex",{value:function(t){var e=o(this),r=e.length,i=f(r);if(!n(t))throw TypeError();for(var u=arguments.length>1?arguments[1]:B,a=0;a<i;){var h=e._getter(a),y=t.call(u,h,a,e);if(Boolean(y))return a;++a}return-1}}),Object.defineProperty(h.prototype,"forEach",{value:function(t){if(this===B||null===this)throw TypeError();var e=Object(this),r=f(e.length);if(!n(t))throw TypeError();for(var o=arguments[1],i=0;i<r;i++)t.call(o,e._getter(i),i,e)}}),Object.defineProperty(h.prototype,"indexOf",{value:function(t){if(this===B||null===this)throw TypeError();var e=Object(this),r=f(e.length);if(0===r)return-1;var n=0;if(arguments.length>0&&(n=Number(arguments[1]),n!==n?n=0:0!==n&&n!==1/0&&n!==-1/0&&(n=(n>0||-1)*m(M(n)))),n>=r)return-1;for(var o=n>=0?n:U(r-M(n),0);o<r;o++)if(e._getter(o)===t)return o;return-1}}),Object.defineProperty(h.prototype,"join",{value:function(t){if(this===B||null===this)throw TypeError();for(var e=Object(this),r=f(e.length),n=Array(r),o=0;o<r;++o)n[o]=e._getter(o);return n.join(t===B?",":t)}}),Object.defineProperty(h.prototype,"lastIndexOf",{value:function(t){if(this===B||null===this)throw TypeError();var e=Object(this),r=f(e.length);if(0===r)return-1;var n=r;arguments.length>1&&(n=Number(arguments[1]),n!==n?n=0:0!==n&&n!==1/0&&n!==-1/0&&(n=(n>0||-1)*m(M(n))));for(var o=n>=0?Y(n,r-1):r-M(n);o>=0;o--)if(e._getter(o)===t)return o;return-1}}),Object.defineProperty(h.prototype,"map",{value:function(t){if(this===B||null===this)throw TypeError();var e=Object(this),r=f(e.length);if(!n(t))throw TypeError();var o=[];o.length=r;for(var i=arguments[1],u=0;u<r;u++)o[u]=t.call(i,e._getter(u),u,e);return new this.constructor(o)}}),Object.defineProperty(h.prototype,"reduce",{value:function(t){if(this===B||null===this)throw TypeError();var e=Object(this),r=f(e.length);if(!n(t))throw TypeError();if(0===r&&1===arguments.length)throw TypeError();var o,i=0;for(o=arguments.length>=2?arguments[1]:e._getter(i++);i<r;)o=t.call(B,o,e._getter(i),i,e),i++;return o}}),Object.defineProperty(h.prototype,"reduceRight",{value:function(t){if(this===B||null===this)throw TypeError();var e=Object(this),r=f(e.length);if(!n(t))throw TypeError();if(0===r&&1===arguments.length)throw TypeError();var o,i=r-1;for(o=arguments.length>=2?arguments[1]:e._getter(i--);i>=0;)o=t.call(B,o,e._getter(i),i,e),i--;return o}}),Object.defineProperty(h.prototype,"reverse",{value:function(){if(this===B||null===this)throw TypeError();for(var t=Object(this),e=f(t.length),r=m(e/2),n=0,o=e-1;n<r;++n,--o){var i=t._getter(n);t._setter(n,t._getter(o)),t._setter(o,i)}return t}}),Object.defineProperty(h.prototype,"set",{value:function(t,e){if(arguments.length<1)throw SyntaxError("Not enough arguments");var r,n,o,i,u,a,h,y,s,l;if("object"==typeof arguments[0]&&arguments[0].constructor===this.constructor){if(r=arguments[0],(o=f(arguments[1]))+r.length>this.length)throw RangeError("Offset plus length of array is out of range");if(y=this.byteOffset+o*this.BYTES_PER_ELEMENT,s=r.length*this.BYTES_PER_ELEMENT,r.buffer===this.buffer){for(l=[],u=0,a=r.byteOffset;u<s;u+=1,a+=1)l[u]=r.buffer._bytes[a];for(u=0,h=y;u<s;u+=1,h+=1)this.buffer._bytes[h]=l[u]}else for(u=0,a=r.byteOffset,h=y;u<s;u+=1,a+=1,h+=1)this.buffer._bytes[h]=r.buffer._bytes[a]}else{if("object"!=typeof arguments[0]||"undefined"==typeof arguments[0].length)throw TypeError("Unexpected argument type(s)");if(n=arguments[0],i=f(n.length),(o=f(arguments[1]))+i>this.length)throw RangeError("Offset plus length of array is out of range");for(u=0;u<i;u+=1)a=n[u],this._setter(o+u,Number(a))}}}),Object.defineProperty(h.prototype,"slice",{value:function(t,e){for(var r=o(this),n=r.length,u=f(n),a=i(t),h=a<0?U(u+a,0):Y(a,u),y=e===B?u:i(e),s=y<0?U(u+y,0):Y(y,u),l=s-h,p=r.constructor,c=new p(l),b=0;h<s;){var g=r._getter(h);c._setter(b,g),++h,++b}return c}}),Object.defineProperty(h.prototype,"some",{value:function(t){if(this===B||null===this)throw TypeError();var e=Object(this),r=f(e.length);if(!n(t))throw TypeError();for(var o=arguments[1],i=0;i<r;i++)if(t.call(o,e._getter(i),i,e))return!0;return!1}}),Object.defineProperty(h.prototype,"sort",{value:function(t){function e(e,r){return e!==e&&r!==r?0:e!==e?1:r!==r?-1:t!==B?t(e,r):e<r?-1:e>r?1:0}if(this===B||null===this)throw TypeError();for(var r=Object(this),n=f(r.length),o=Array(n),i=0;i<n;++i)o[i]=r._getter(i);for(o.sort(e),i=0;i<n;++i)r._setter(i,o[i]);return r}}),Object.defineProperty(h.prototype,"subarray",{value:function(t,e){function r(t,e,r){return t<e?e:t>r?r:t}t=i(t),e=i(e),arguments.length<1&&(t=0),arguments.length<2&&(e=this.length),t<0&&(t=this.length+t),e<0&&(e=this.length+e),t=r(t,0,this.length),e=r(e,0,this.length);var n=e-t;return n<0&&(n=0),new this.constructor(this.buffer,this.byteOffset+t*this.BYTES_PER_ELEMENT,n)}});var N=P(1,y,s),S=P(1,l,p),I=P(1,c,p),F=P(2,b,g),x=P(2,E,v),k=P(4,_,O),C=P(4,d,j),z=P(4,R,L),D=P(8,A,w);t.Int8Array=t.Int8Array||N,t.Uint8Array=t.Uint8Array||S,t.Uint8ClampedArray=t.Uint8ClampedArray||I,t.Int16Array=t.Int16Array||F,t.Uint16Array=t.Uint16Array||x,t.Int32Array=t.Int32Array||k,t.Uint32Array=t.Uint32Array||C,t.Float32Array=t.Float32Array||z,t.Float64Array=t.Float64Array||D}(),function(){function e(t,e){return n(t.get)?t.get(e):t[e]}function o(t,e,n){if(!(t instanceof ArrayBuffer||"ArrayBuffer"===r(t)))throw TypeError();if((e=f(e))>t.byteLength)throw RangeError("byteOffset out of range");if(n=n===B?t.byteLength-e:f(n),e+n>t.byteLength)throw RangeError("byteOffset and length reference an area beyond the end of the buffer");Object.defineProperty(this,"buffer",{value:t}),Object.defineProperty(this,"byteLength",{value:n}),Object.defineProperty(this,"byteOffset",{value:e})}function i(t){return function r(n,o){if((n=f(n))+t.BYTES_PER_ELEMENT>this.byteLength)throw RangeError("Array index out of range");n+=this.byteOffset;for(var i=new Uint8Array(this.buffer,n,t.BYTES_PER_ELEMENT),u=[],h=0;h<t.BYTES_PER_ELEMENT;h+=1)u.push(e(i,h));return Boolean(o)===Boolean(a)&&u.reverse(),e(new t(new Uint8Array(u).buffer),0)}}function u(t){return function r(n,o,i){if((n=f(n))+t.BYTES_PER_ELEMENT>this.byteLength)throw RangeError("Array index out of range");var u,h,y=new t([o]),s=new Uint8Array(y.buffer),l=[];for(u=0;u<t.BYTES_PER_ELEMENT;u+=1)l.push(e(s,u));Boolean(i)===Boolean(a)&&l.reverse(),h=new Uint8Array(this.buffer,n,t.BYTES_PER_ELEMENT),h.set(l)}}var a=function(){var t=new Uint16Array([4660]);return 18===e(new Uint8Array(t.buffer),0)}();Object.defineProperty(o.prototype,"getUint8",{value:i(Uint8Array)}),Object.defineProperty(o.prototype,"getInt8",{value:i(Int8Array)}),Object.defineProperty(o.prototype,"getUint16",{value:i(Uint16Array)}),Object.defineProperty(o.prototype,"getInt16",{value:i(Int16Array)}),Object.defineProperty(o.prototype,"getUint32",{value:i(Uint32Array)}),Object.defineProperty(o.prototype,"getInt32",{value:i(Int32Array)}),Object.defineProperty(o.prototype,"getFloat32",{value:i(Float32Array)}),Object.defineProperty(o.prototype,"getFloat64",{value:i(Float64Array)}),Object.defineProperty(o.prototype,"setUint8",{value:u(Uint8Array)}),Object.defineProperty(o.prototype,"setInt8",{value:u(Int8Array)}),Object.defineProperty(o.prototype,"setUint16",{value:u(Uint16Array)}),Object.defineProperty(o.prototype,"setInt16",{value:u(Int16Array)}),Object.defineProperty(o.prototype,"setUint32",{value:u(Uint32Array)}),Object.defineProperty(o.prototype,"setInt32",{value:u(Int32Array)}),Object.defineProperty(o.prototype,"setFloat32",{value:u(Float32Array)}),Object.defineProperty(o.prototype,"setFloat64",{value:u(Float64Array)}),t.DataView=t.DataView||o}()}(self);if (!("defineProperty"in Object&&function(){try{var e={}
+return Object.defineProperty(e,"test",{value:42}),!0}catch(t){return!1}}()
+)) {!function(e){var t=Object.prototype.hasOwnProperty.call(Object.prototype,"__defineGetter__"),r="A property cannot both have accessors and be writable or have a value";Object.defineProperty=function n(o,i,f){if(e&&(o===window||o===document||o===Element.prototype||o instanceof Element))return e(o,i,f);if(null===o||!(o instanceof Object||"object"==typeof o))throw new TypeError("Object.defineProperty called on non-object");if(!(f instanceof Object))throw new TypeError("Property description must be an object");var c=String(i),a="value"in f||"writable"in f,p="get"in f&&typeof f.get,s="set"in f&&typeof f.set;if(p){if(p===undefined)return o;if("function"!==p)throw new TypeError("Getter must be a function");if(!t)throw new TypeError("Getters & setters cannot be defined on this javascript engine");if(a)throw new TypeError(r);Object.__defineGetter__.call(o,c,f.get)}else o[c]=f.value;if(s){if(s===undefined)return o;if("function"!==s)throw new TypeError("Setter must be a function");if(!t)throw new TypeError("Getters & setters cannot be defined on this javascript engine");if(a)throw new TypeError(r);Object.__defineSetter__.call(o,c,f.set)}return"value"in f&&(o[c]=f.value),o}}(Object.defineProperty);}if (!("name"in Function.prototype
+)) {!function(){var n=/^\s*function\s+([^(\s]*)\s*/,t=Function,e=t.prototype,r=e.constructor,o=function(o){var c,u;return o===t||o===r?u="Function":o!==e&&(c=(""+o).match(n),u=c&&c[1]),u||""};Object.defineProperty(e,"name",{get:function c(){var n=this,t=o(n);return n!==e&&Object.defineProperty(n,"name",{value:t,configurable:!0}),t},configurable:!0})}();}if (!("EPSILON"in Number
+)) {Object.defineProperty(Number,"EPSILON",{enumerable:!1,configurable:!1,writable:!1,value:Math.pow(2,-52)});}if (!("MAX_SAFE_INTEGER"in Number
+)) {Object.defineProperty(Number,"MAX_SAFE_INTEGER",{enumerable:!1,configurable:!1,writable:!1,value:Math.pow(2,53)-1});}if (!("MIN_SAFE_INTEGER"in Number
+)) {Object.defineProperty(Number,"MIN_SAFE_INTEGER",{enumerable:!1,configurable:!1,writable:!1,value:-(Math.pow(2,53)-1)});}function ArrayCreate(r){if(1/r==-Infinity&&(r=0),r>Math.pow(2,32)-1)throw new RangeError("Invalid array length");var n=[];return n.length=r,n}function Call(t,l){var n=arguments.length>2?arguments[2]:[];if(!1===IsCallable(t))throw new TypeError(Object.prototype.toString.call(t)+"is not a function.");return t.apply(l,n)}function CreateDataProperty(e,r,t){var a={value:t,writable:!0,enumerable:!0,configurable:!0};try{return Object.defineProperty(e,r,a),!0}catch(n){return!1}}function CreateDataPropertyOrThrow(t,r,o){var e=CreateDataProperty(t,r,o);if(!e)throw new TypeError("Cannot assign value `"+Object.prototype.toString.call(o)+"` to property `"+Object.prototype.toString.call(r)+"` on object `"+Object.prototype.toString.call(t)+"`");return e}function CreateMethodProperty(e,r,t){var a={value:t,writable:!0,enumerable:!1,configurable:!0};Object.defineProperty(e,r,a)}if (!("acosh"in Math
+)) {CreateMethodProperty(Math,"acosh",function t(a){return isNaN(a)?NaN:a<1?NaN:1===a?0:a===Infinity?Infinity:Math.log(a+Math.sqrt(a*a-1))});}if (!("asinh"in Math
+)) {CreateMethodProperty(Math,"asinh",function n(i){return isNaN(i)?NaN:0===i&&1/i===Infinity?0:0===i&&1/i==-Infinity?-0:i===Infinity?Infinity:i===-Infinity?-Infinity:Math.log(i+Math.sqrt(i*i+1))});}if (!("atanh"in Math
+)) {CreateMethodProperty(Math,"atanh",function n(t){return isNaN(t)?NaN:t<-1?NaN:t>1?NaN:-1===t?-Infinity:1===t?Infinity:0===t&&1/t===Infinity?0:0===t&&1/t==-Infinity?-0:Math.log((1+t)/(1-t))/2});}if (!("cbrt"in Math
+)) {CreateMethodProperty(Math,"cbrt",function n(t){if(isNaN(t))return NaN;if(0===t&&1/t===Infinity)return 0;if(0===t&&1/t==-Infinity)return-0;if(t===Infinity)return Infinity;if(t===-Infinity)return-Infinity;var i=Math.pow(Math.abs(t),1/3);return t<0?-i:i});}if (!("cosh"in Math
+)) {CreateMethodProperty(Math,"cosh",function n(t){if(isNaN(t))return NaN;if(0===t&&1/t===Infinity)return 1;if(0===t&&1/t==-Infinity)return 1;if(t===Infinity)return Infinity;if(t===-Infinity)return Infinity;if((t=Math.abs(t))>709){var i=Math.exp(.5*t);return i/2*i}return((i=Math.exp(t))+1/i)/2});}if (!("expm1"in Math
+)) {CreateMethodProperty(Math,"expm1",function n(i){return isNaN(i)?NaN:0===i&&1/i===Infinity?0:0===i&&1/i==-Infinity?-0:i===Infinity?Infinity:i===-Infinity?-1:i>-1e-6&&i<1e-6?i+i*i/2:Math.exp(i)-1});}if (!("fround"in Math
+)) {CreateMethodProperty(Math,"fround",function(n){return isNaN(n)?NaN:1/n==+Infinity||1/n==-Infinity||n===+Infinity||n===-Infinity?n:new Float32Array([n])[0]});}if (!("hypot"in Math
+)) {CreateMethodProperty(Math,"hypot",function t(n,r){if(0===arguments.length)return 0;for(var i=0,e=0,a=0;a<arguments.length;++a){if(arguments[a]===Infinity)return Infinity;if(arguments[a]===-Infinity)return Infinity;var f=Math.abs(Number(arguments[a]));f>e&&(i*=Math.pow(e/f,2),e=f),0===f&&0===e||(i+=Math.pow(f/e,2))}return e*Math.sqrt(i)});}if (!("log10"in Math
+)) {CreateMethodProperty(Math,"log10",function t(e){return Math.log(e)/Math.LN10});}if (!("log1p"in Math
+)) {CreateMethodProperty(Math,"log1p",function r(t){if(-1<(t=Number(t))&&t<1){for(var o=t,e=2;e<=300;e++)o+=Math.pow(-1,e-1)*Math.pow(t,e)/e;return o}return Math.log(1+t)});}if (!("log2"in Math
+)) {CreateMethodProperty(Math,"log2",function t(e){return Math.log(e)/Math.LN2});}if (!("sign"in Math
+)) {CreateMethodProperty(Math,"sign",function i(n){return n=Number(n),isNaN(n)?NaN:1/n==-Infinity?-0:1/n===Infinity?0:n<0?-1:n>0?1:void 0});}if (!("sinh"in Math
+)) {CreateMethodProperty(Math,"sinh",function r(t){var a=t<0?-1:1,e=Math.abs(t);if(e<22){if(e<Math.pow(2,-28))return t;var h=Math.exp(e)-1;return e<1?a*(2*h-h*h/(h+1))/2:a*(h+h/(h+1))/2}if(e<709.7822265625)return a*Math.exp(e)/2;var n=Math.exp(.5*e);return(h=a*n/2)*n});}if (!("tanh"in Math
+)) {CreateMethodProperty(Math,"tanh",function t(n){var e;return n===Infinity?1:n===-Infinity?-1:((e=Math.exp(2*n))-1)/(e+1)});}if (!("trunc"in Math
+)) {CreateMethodProperty(Math,"trunc",function t(r){return r<0?Math.ceil(r):Math.floor(r)});}if (!("freeze"in Object
+)) {CreateMethodProperty(Object,"freeze",function e(r){return r});}if (!("getPrototypeOf"in Object
+)) {CreateMethodProperty(Object,"getPrototypeOf",function t(o){if(o!==Object(o))throw new TypeError("Object.getPrototypeOf called on non-object");var e=o.__proto__;return e||null===e?e:"function"==typeof o.constructor&&o instanceof o.constructor?o.constructor.prototype:o instanceof Object?Object.prototype:null});}if (!("keys"in Object&&function(){return 2===Object.keys(arguments).length}(1,2)&&function(){try{return Object.keys(""),!0}catch(t){return!1}}()
+)) {CreateMethodProperty(Object,"keys",function(){"use strict";function t(){var t;try{t=Object.create({})}catch(r){return!0}return o.call(t,"__proto__")}function r(t){var r=n.call(t),e="[object Arguments]"===r;return e||(e="[object Array]"!==r&&null!==t&&"object"==typeof t&&"number"==typeof t.length&&t.length>=0&&"[object Function]"===n.call(t.callee)),e}var e=Object.prototype.hasOwnProperty,n=Object.prototype.toString,o=Object.prototype.propertyIsEnumerable,c=!o.call({toString:null},"toString"),l=o.call(function(){},"prototype"),i=["toString","toLocaleString","valueOf","hasOwnProperty","isPrototypeOf","propertyIsEnumerable","constructor"],u=function(t){var r=t.constructor;return r&&r.prototype===t},a={$console:!0,$external:!0,$frame:!0,$frameElement:!0,$frames:!0,$innerHeight:!0,$innerWidth:!0,$outerHeight:!0,$outerWidth:!0,$pageXOffset:!0,$pageYOffset:!0,$parent:!0,$scrollLeft:!0,$scrollTop:!0,$scrollX:!0,$scrollY:!0,$self:!0,$webkitIndexedDB:!0,$webkitStorageInfo:!0,$window:!0},f=function(){if("undefined"==typeof window)return!1;for(var t in window)try{if(!a["$"+t]&&e.call(window,t)&&null!==window[t]&&"object"==typeof window[t])try{u(window[t])}catch(r){return!0}}catch(r){return!0}return!1}(),p=function(t){if("undefined"==typeof window||!f)return u(t);try{return u(t)}catch(r){return!1}};return function s(o){var u="[object Function]"===n.call(o),a=r(o),f="[object String]"===n.call(o),s=[];if(o===undefined||null===o)throw new TypeError("Cannot convert undefined or null to object");var y=l&&u;if(f&&o.length>0&&!e.call(o,0))for(var h=0;h<o.length;++h)s.push(String(h));if(a&&o.length>0)for(var g=0;g<o.length;++g)s.push(String(g));else for(var w in o)t()&&"__proto__"===w||y&&"prototype"===w||!e.call(o,w)||s.push(String(w));if(c)for(var d=p(o),$=0;$<i.length;++$)d&&"constructor"===i[$]||!e.call(o,i[$])||s.push(i[$]);return s}}());}function Get(n,t){return n[t]}function HasOwnProperty(r,t){return Object.prototype.hasOwnProperty.call(r,t)}function HasProperty(n,r){return r in n}function IsArray(r){return"[object Array]"===Object.prototype.toString.call(r)}if (!("isArray"in Array
+)) {CreateMethodProperty(Array,"isArray",function r(e){return IsArray(e)});}function IsCallable(n){return"function"==typeof n}if (!("bind"in Function.prototype
+)) {CreateMethodProperty(Function.prototype,"bind",function t(n){var r=Array,o=Object,e=r.prototype,l=function g(){},p=e.slice,a=e.concat,i=e.push,c=Math.max,u=this;if(!IsCallable(u))throw new TypeError("Function.prototype.bind called on incompatible "+u);for(var y,h=p.call(arguments,1),s=function(){if(this instanceof y){var t=u.apply(this,a.call(h,p.call(arguments)));return o(t)===t?t:this}return u.apply(n,a.call(h,p.call(arguments)))},f=c(0,u.length-h.length),b=[],d=0;d<f;d++)i.call(b,"$"+d);return y=Function("binder","return function ("+b.join(",")+"){ return binder.apply(this, arguments); }")(s),u.prototype&&(l.prototype=u.prototype,y.prototype=new l,l.prototype=null),y});}function RequireObjectCoercible(e){if(null===e||e===undefined)throw TypeError(Object.prototype.toString.call(e)+" is not coercible to Object.");return e}function SameValueNonNumber(e,n){return e===n}function ToBoolean(o){return Boolean(o)}function ToNumber(r){return Number(r)}function ToObject(e){if(null===e||e===undefined)throw TypeError();return Object(e)}function GetV(t,e){return ToObject(t)[e]}function GetMethod(e,n){var r=GetV(e,n);if(null===r||r===undefined)return undefined;if(!1===IsCallable(r))throw new TypeError("Method not callable: "+n);return r}function ToUint32(n){var i=Number(n);return isNaN(i)||1/i===Infinity||1/i==-Infinity||i===Infinity||i===-Infinity?0:(i<0?-1:1)*Math.floor(Math.abs(i))>>>0}if (!("clz32"in Math
+)) {CreateMethodProperty(Math,"clz32",function t(r){var e=ToUint32(r);return e?32-e.toString(2).length:32});}if (!("imul"in Math
+)) {CreateMethodProperty(Math,"imul",function t(r,e){var n=ToUint32(r),o=ToUint32(e),i=n>>>16&65535,a=65535&n,u=o>>>16&65535,h=65535&o;return a*h+(i*h+a*u<<16>>>0)|0});}function Type(e){switch(typeof e){case"undefined":return"undefined";case"boolean":return"boolean";case"number":return"number";case"string":return"string";case"symbol":return"symbol";default:return null===e?"null":"Symbol"in self&&(e instanceof self.Symbol||e.constructor===self.Symbol)?"symbol":"object"}}if (!("isFinite"in Number
+)) {!function(){var e=self;CreateMethodProperty(Number,"isFinite",function i(n){return"number"===Type(n)&&e.isFinite(n)})}();}if (!("isNaN"in Number
+)) {!function(){var e=self;CreateMethodProperty(Number,"isNaN",function r(n){return"number"===Type(n)&&!!e.isNaN(n)})}();}if (!("isExtensible"in Object
+)) {!function(e){CreateMethodProperty(Object,"isExtensible",function t(n){return"object"===Type(n)&&(!e||e(n))})}(Object.isExtensible);}if (!("seal"in Object&&function(){try{return Object.seal("1"),!0}catch(t){return!1}}()
+)) {!function(e){CreateMethodProperty(Object,"seal",function t(c){return"object"===Type(c)?c:e?e(c):c})}(Object.seal);}if (!("flags"in RegExp.prototype
+)) {Object.defineProperty(RegExp.prototype,"flags",{configurable:!0,enumerable:!1,get:function(){var e=this;if("object"!==Type(e))throw new TypeError("Method called on incompatible type: must be an object.");var o="";return ToBoolean(Get(e,"global"))&&(o+="g"),ToBoolean(Get(e,"ignoreCase"))&&(o+="i"),ToBoolean(Get(e,"multiline"))&&(o+="m"),ToBoolean(Get(e,"unicode"))&&(o+="u"),ToBoolean(Get(e,"sticky"))&&(o+="y"),o}});}function CreateIterResultObject(e,r){if("boolean"!==Type(r))throw new Error;var t={};return CreateDataProperty(t,"value",e),CreateDataProperty(t,"done",r),t}function GetPrototypeFromConstructor(t,o){var r=Get(t,"prototype");return"object"!==Type(r)&&(r=o),r}function IsConstructor(t){return"object"===Type(t)&&("function"==typeof t&&!!t.prototype)}function IsRegExp(e){if("object"!==Type(e))return!1;var n="Symbol"in self&&"match"in self.Symbol?Get(e,self.Symbol.match):undefined;if(n!==undefined)return ToBoolean(n);try{var t=e.lastIndex;return e.lastIndex=0,RegExp.prototype.exec.call(e),!0}catch(l){}finally{e.lastIndex=t}return!1}function IteratorClose(r,t){if("object"!==Type(r["[[Iterator]]"]))throw new Error(Object.prototype.toString.call(r["[[Iterator]]"])+"is not an Object.");var e=r["[[Iterator]]"],o=GetMethod(e,"return");if(o===undefined)return t;try{var n=Call(o,e)}catch(c){var a=c}if(t)return t;if(a)throw a;if("object"!==Type(n))throw new TypeError("Iterator's return method returned a non-object.");return t}function IteratorComplete(t){if("object"!==Type(t))throw new Error(Object.prototype.toString.call(t)+"is not an Object.");return ToBoolean(Get(t,"done"))}function IteratorNext(t){if(arguments.length<2)var e=Call(t["[[NextMethod]]"],t["[[Iterator]]"]);else e=Call(t["[[NextMethod]]"],t["[[Iterator]]"],[arguments[1]]);if("object"!==Type(e))throw new TypeError("bad iterator");return e}function IteratorStep(t){var r=IteratorNext(t);return!0!==IteratorComplete(r)&&r}function IteratorValue(t){if("object"!==Type(t))throw new Error(Object.prototype.toString.call(t)+"is not an Object.");return Get(t,"value")}function OrdinaryToPrimitive(r,t){if("string"===t)var e=["toString","valueOf"];else e=["valueOf","toString"];for(var i=0;i<e.length;++i){var n=e[i],a=Get(r,n);if(IsCallable(a)){var o=Call(a,r);if("object"!==Type(o))return o}}throw new TypeError("Cannot convert to primitive.")}function SameValue(e,a){return Type(e)===Type(a)&&("number"===Type(e)?!(!isNaN(e)||!isNaN(a))||(0!==e||0!==a||1/e==1/a)&&e===a:SameValueNonNumber(e,a))}if (!("is"in Object
+)) {CreateMethodProperty(Object,"is",function e(t,r){return SameValue(t,r)});}function SameValueZero(n,e){return Type(n)===Type(e)&&("number"===Type(n)?!(!isNaN(n)||!isNaN(e))||(1/n===Infinity&&1/e==-Infinity||(1/n==-Infinity&&1/e===Infinity||n===e)):SameValueNonNumber(n,e))}function ToInteger(n){if("symbol"===Type(n))throw new TypeError("Cannot convert a Symbol value to a number");var t=Number(n);return isNaN(t)?0:1/t===Infinity||1/t==-Infinity||t===Infinity||t===-Infinity?t:(t<0?-1:1)*Math.floor(Math.abs(t))}if (!("copyWithin"in Array.prototype&&function(){try{var t=function n(){}
+t.prototype[0]="foo"
+var o=new t
+o[1]=1,o[2]=2,o.length=3
+var r=Array.prototype.copyWithin.call(o,1,0)
+return!(!r[0]||Object.prototype.hasOwnProperty.call(r,"0")||!Object.prototype.hasOwnProperty.call(r,"1")||"foo"!==r[0]||"foo"!==r[1]||1!==r[2]||3!==r.length)}catch(e){return!1}}()
+)) {CreateMethodProperty(Array.prototype,"copyWithin",function t(r,e){"use strict";var a=arguments[2];if(null===this||this===undefined)throw new TypeError("Cannot call method on "+this);var n=Object(this),i=ToInteger(n.length);i<=0&&(i=0),i=i===Infinity?Math.pow(2,53)-1:Math.min(i,Math.pow(2,53)-1),i=Math.max(i,0);var h,o=ToInteger(r);h=o<0?Math.max(i+o,0):Math.min(o,i);var M,m=ToInteger(e);M=m<0?Math.max(i+m,0):Math.min(m,i);var v;v=a===undefined?i:ToInteger(a);var p;p=v<0?Math.max(i+v,0):Math.min(v,i);var s,d=Math.min(p-M,i-h);for(M<h&&h<M+d?(s=-1,M=M+d-1,h=h+d-1):s=1;d>0;){var f=String(M),g=String(h);if(HasProperty(n,f)){var l=n[f];n[g]=l}else delete n[g];M+=s,h+=s,d-=1}return n});}if (!("isInteger"in Number
+)) {CreateMethodProperty(Number,"isInteger",function e(n){return"number"===Type(n)&&(!isNaN(n)&&n!==Infinity&&n!==-Infinity&&ToInteger(n)===n)});}if (!("isSafeInteger"in Number
+)) {CreateMethodProperty(Number,"isSafeInteger",function e(r){if("number"!==Type(r))return!1;if(isNaN(r)||r===Infinity||r===-Infinity)return!1;var t=ToInteger(r);return t===r&&Math.abs(t)<=Math.pow(2,53)-1});}function ToLength(n){var t=ToInteger(n);return t<=0?0:Math.min(t,Math.pow(2,53)-1)}function ToPrimitive(e){var t=arguments.length>1?arguments[1]:undefined;if("object"===Type(e)){if(arguments.length<2)var i="default";else t===String?i="string":t===Number&&(i="number");var r="function"==typeof self.Symbol&&"symbol"==typeof self.Symbol.toPrimitive?GetMethod(e,self.Symbol.toPrimitive):undefined;if(r!==undefined){var n=Call(r,e,[i]);if("object"!==Type(n))return n;throw new TypeError("Cannot convert exotic object to primitive.")}return"default"===i&&(i="number"),OrdinaryToPrimitive(e,i)}return e}function ToString(t){switch(Type(t)){case"symbol":throw new TypeError("Cannot convert a Symbol value to a string");case"object":return ToString(ToPrimitive(t,String));default:return String(t)}}if (!("fill"in Array.prototype
+)) {CreateMethodProperty(Array.prototype,"fill",function t(e){for(var r=arguments[1],n=arguments[2],o=ToObject(this),a=ToLength(Get(o,"length")),h=ToInteger(r),i=h<0?Math.max(a+h,0):Math.min(h,a),g=n===undefined?a:ToInteger(n),M=g<0?Math.max(a+g,0):Math.min(g,a);i<M;){o[ToString(i)]=e,i+=1}return o});}if (!("find"in Array.prototype
+)) {CreateMethodProperty(Array.prototype,"find",function e(r){var t=ToObject(this),n=ToLength(Get(t,"length"));if(!1===IsCallable(r))throw new TypeError(r+" is not a function");for(var o=arguments.length>1?arguments[1]:undefined,a=0;a<n;){var i=ToString(a),f=Get(t,i);if(ToBoolean(Call(r,o,[f,a,t])))return f;a+=1}return undefined});}if (!("findIndex"in Array.prototype
+)) {CreateMethodProperty(Array.prototype,"findIndex",function e(r){var t=ToObject(this),n=ToLength(Get(t,"length"));if(!1===IsCallable(r))throw new TypeError(r+" is not a function");for(var o=arguments.length>1?arguments[1]:undefined,a=0;a<n;){var i=ToString(a),l=Get(t,i);if(ToBoolean(Call(r,o,[l,a,t])))return a;a+=1}return-1});}if (!("forEach"in Array.prototype
+)) {CreateMethodProperty(Array.prototype,"forEach",function r(t){var e=ToObject(this),n=e instanceof String?e.split(""):e,o=ToLength(Get(e,"length"));if(!1===IsCallable(t))throw new TypeError(t+" is not a function");for(var a=arguments.length>1?arguments[1]:undefined,i=0;i<o;){var f=ToString(i);if(HasProperty(n,f)){var l=Get(n,f);Call(t,a,[l,i,e])}i+=1}return undefined});}if (!("includes"in Array.prototype
+)) {CreateMethodProperty(Array.prototype,"includes",function e(r){"use strict";var t=ToObject(this),o=ToLength(Get(t,"length"));if(0===o)return!1;var n=ToInteger(arguments[1]);if(n>=0)var a=n;else(a=o+n)<0&&(a=0);for(;a<o;){var i=Get(t,ToString(a));if(SameValueZero(r,i))return!0;a+=1}return!1});}if (!("indexOf"in Array.prototype
+)) {CreateMethodProperty(Array.prototype,"indexOf",function r(t){var e=ToObject(this),n=ToLength(Get(e,"length"));if(0===n)return-1;var i=ToInteger(arguments[1]);if(i>=n)return-1;if(i>=0)var o=1/i==-Infinity?0:i;else(o=n+i)<0&&(o=0);for(;o<n;){if(HasProperty(e,ToString(o))){if(t===Get(e,ToString(o)))return o}o+=1}return-1});}if (!("getOwnPropertyNames"in Object&&function(){try{return Object.getOwnPropertyNames(1),!0}catch(t){return!1}}()
+)) {!function(){var t={}.toString,e="".split,r=[].concat,o=Object.prototype.hasOwnProperty,c=Object.getOwnPropertyNames||Object.keys,n="object"==typeof self?c(self):[];CreateMethodProperty(Object,"getOwnPropertyNames",function l(a){var p=ToObject(a);if("[object Window]"===t.call(p))try{return c(p)}catch(j){return r.call([],n)}p="[object String]"==t.call(p)?e.call(p,""):Object(p);for(var i=c(p),s=["length","prototype"],O=0;O<s.length;O++){var b=s[O];o.call(p,b)&&!i.includes(b)&&i.push(b)}if(i.includes("__proto__")){var f=i.indexOf("__proto__");i.splice(f,1)}return i})}();}if (!("endsWith"in String.prototype
+)) {CreateMethodProperty(String.prototype,"endsWith",function e(t){"use strict";var r=arguments.length>1?arguments[1]:undefined,n=RequireObjectCoercible(this),i=ToString(n);if(IsRegExp(t))throw new TypeError("First argument to String.prototype.endsWith must not be a regular expression");var o=ToString(t),s=i.length,g=r===undefined?s:ToInteger(r),h=Math.min(Math.max(g,0),s),u=o.length,a=h-u;return!(a<0)&&i.substr(a,u)===o});}if (!("includes"in String.prototype
+)) {CreateMethodProperty(String.prototype,"includes",function e(t){"use strict";var r=arguments.length>1?arguments[1]:undefined,n=RequireObjectCoercible(this),i=ToString(n);if(IsRegExp(t))throw new TypeError("First argument to String.prototype.includes must not be a regular expression");var o=ToString(t),g=ToInteger(r),a=i.length,p=Math.min(Math.max(g,0),a);return-1!==String.prototype.indexOf.call(i,o,p)});}if (!("repeat"in String.prototype
+)) {CreateMethodProperty(String.prototype,"repeat",function r(e){"use strict";var t=RequireObjectCoercible(this),n=ToString(t),o=ToInteger(e);if(o<0)throw new RangeError("Invalid count value");if(o===Infinity)throw new RangeError("Invalid count value");return 0===o?"":new Array(o+1).join(n)});}if (!("startsWith"in String.prototype
+)) {CreateMethodProperty(String.prototype,"startsWith",function t(e){"use strict";var r=arguments.length>1?arguments[1]:undefined,n=RequireObjectCoercible(this),i=ToString(n);if(IsRegExp(e))throw new TypeError("First argument to String.prototype.startsWith must not be a regular expression");var o=ToString(e),s=ToInteger(r),a=i.length,g=Math.min(Math.max(s,0),a);return!(o.length+g>a)&&0===i.substr(g).indexOf(e)});}function ToPropertyKey(r){var i=ToPrimitive(r,String);return"symbol"===Type(i)?i:ToString(i)}if (!("getOwnPropertyDescriptor"in Object&&"function"==typeof Object.getOwnPropertyDescriptor&&function(){try{return"3"===Object.getOwnPropertyDescriptor("13.7",1).value}catch(t){return!1}}()
+)) {!function(){var e=Object.getOwnPropertyDescriptor,t=function(){try{return 1===Object.defineProperty(document.createElement("div"),"one",{get:function(){return 1}}).one}catch(e){return!1}},r={}.toString,n="".split;CreateMethodProperty(Object,"getOwnPropertyDescriptor",function c(o,i){var a=ToObject(o);a=("string"===Type(a)||a instanceof String)&&"[object String]"==r.call(o)?n.call(o,""):Object(o);var u=ToPropertyKey(i);if(t)try{return e(a,u)}catch(l){}if(HasOwnProperty(a,u))return{enumerable:!0,configurable:!0,writable:!0,value:a[u]}})}();}if (!("assign"in Object
+)) {CreateMethodProperty(Object,"assign",function e(t,r){var n=ToObject(t);if(1===arguments.length)return n;var o,c,a,l,i=Array.prototype.slice.call(arguments,1);for(o=0;o<i.length;o++){var p=i[o];for(p===undefined||null===p?a=[]:(l="[object String]"===Object.prototype.toString.call(p)?String(p).split(""):ToObject(p),a=Object.keys(l)),c=0;c<a.length;c++){var b,y=a[c];try{var g=Object.getOwnPropertyDescriptor(l,y);b=g!==undefined&&!0===g.enumerable}catch(u){b=Object.prototype.propertyIsEnumerable.call(l,y)}if(b){var j=Get(l,y);n[y]=j}}}return n});}if (!("defineProperties"in Object
+)) {CreateMethodProperty(Object,"defineProperties",function e(r,t){if("object"!==Type(r))throw new TypeError("Object.defineProperties called on non-object");for(var o=ToObject(t),n=Object.keys(o),c=[],i=0;i<n.length;i++){var b=n[i],f=Object.getOwnPropertyDescriptor(o,b);if(f!==undefined&&f.enumerable){var p=Get(o,b),a=p;c.push([b,a])}}for(var j=0;j<c.length;j++){var d=c[j][0];a=c[j][1],Object.defineProperty(r,d,a)}return r});}if (!("create"in Object
+)) {!function(){function e(){}if({__proto__:null}instanceof Object)t=function(){var e=document.createElement("iframe");e.style.display="none";var o=document.body||document.documentElement;o.appendChild(e),e.src="javascript:";var n=e.contentWindow.Object.prototype;o.removeChild(e),e=null,delete n.constructor,delete n.hasOwnProperty,delete n.propertyIsEnumerable,delete n.isPrototypeOf,delete n.toLocaleString,delete n.toString,delete n.valueOf;var r=function l(){};return r.prototype=n,t=function(){return new r},new r};else var t=function(){return{__proto__:null}};CreateMethodProperty(Object,"create",function o(n,r){if("object"!==Type(n)&&"null"!==Type(n))throw new TypeError("Object prototype may only be an Object or null");if("null"===Type(n))var l=t();else e.prototype=n,l=new e,l.__proto__=n,l.constructor.prototype=n,l.__proto__=n;return 1 in arguments?Object.defineProperties(l,r):l})}();}function OrdinaryCreateFromConstructor(r,e){var t=arguments[2]||{},o=GetPrototypeFromConstructor(r,e),a=Object.create(o);for(var n in t)Object.prototype.hasOwnProperty.call(t,n)&&Object.defineProperty(a,n,{configurable:!0,enumerable:!1,writable:!0,value:t[n]});return a}function Construct(r){var t=arguments.length>2?arguments[2]:r,o=arguments.length>1?arguments[1]:[];if(!IsConstructor(r))throw new TypeError("F must be a constructor.");if(!IsConstructor(t))throw new TypeError("newTarget must be a constructor.");if(t===r)return new(Function.prototype.bind.apply(r,[null].concat(o)));var n=OrdinaryCreateFromConstructor(t,Object.prototype);return Call(r,n,o)}if (!("of"in Array
+)) {CreateMethodProperty(Array,"of",function r(){var r=arguments.length,t=arguments,e=this;if(IsConstructor(e))var a=Construct(e,[r]);else a=ArrayCreate(r);for(var o=0;o<r;){var n=t[o],h=ToString(o);CreateDataPropertyOrThrow(a,h,n),o+=1}return a.length=r,a});}function ArraySpeciesCreate(e,r){if(0===r&&1/r==-Infinity&&(r=0),!1===IsArray(e))return ArrayCreate(r);var n=Get(e,"constructor");if("object"===Type(n)&&null===(n="Symbol"in self&&"species"in self.Symbol?Get(n,self.Symbol.species):undefined)&&(n=undefined),n===undefined)return ArrayCreate(r);if(!IsConstructor(n))throw new TypeError("C must be a constructor");return Construct(n,[r])}if (!("filter"in Array.prototype
+)) {CreateMethodProperty(Array.prototype,"filter",function r(e){var t=ToObject(this),o=ToLength(Get(t,"length"));if(!1===IsCallable(e))throw new TypeError(e+" is not a function");for(var a=arguments.length>1?arguments[1]:undefined,n=ArraySpeciesCreate(t,0),i=0,l=0;i<o;){var f=ToString(i);if(HasProperty(t,f)){var h=Get(t,f);ToBoolean(Call(e,a,[h,i,t]))&&(CreateDataPropertyOrThrow(n,ToString(l),h),l+=1)}i+=1}return n});}if (!("map"in Array.prototype
+)) {CreateMethodProperty(Array.prototype,"map",function r(e){var t=ToObject(this),a=ToLength(Get(t,"length"));if(!1===IsCallable(e))throw new TypeError(e+" is not a function");for(var o=arguments.length>1?arguments[1]:undefined,n=ArraySpeciesCreate(t,a),i=0;i<a;){var p=ToString(i);if(HasProperty(t,p)){var h=Get(t,p),l=Call(e,o,[h,i,t]);CreateDataPropertyOrThrow(n,p,l)}i+=1}return n});}if (!("sort"in Array.prototype&&function(){var r={length:3,0:2,1:1,2:3}
+return Array.prototype.sort.call(r,function(r,t){return r-t})===r}()
+)) {"use strict";var origSort=Array.prototype.sort;CreateMethodProperty(Array.prototype,"sort",function r(t){if(t!==undefined&&!1===IsCallable(t))throw new TypeError("The comparison function must be either a function or undefined");if(t===undefined)origSort.call(this);else{var e=Array.prototype.map.call(this,function(r,t){return{item:r,index:t}});origSort.call(e,function(r,e){var i=t.call(undefined,r.item,e.item);return 0===i?r.index-e.index:i});for(var i in e)Object.prototype.hasOwnProperty.call(e,i)&&e[i].item!==this[i]&&(this[i]=e[i].item)}return this});}if (!("setPrototypeOf"in Object
+)) {!function(){if(!Object.setPrototypeOf){var t,e,o=Object.getOwnPropertyNames,r=Object.getOwnPropertyDescriptor,n=Object.create,c=Object.defineProperty,_=Object.getPrototypeOf,f=Object.prototype,p=function(t,e){return o(e).forEach(function(o){c(t,o,r(e,o))}),t},O=function i(t,e){return p(n(e),t)};try{t=r(f,"__proto__").set,t.call({},null),e=function a(e,o){return t.call(e,o),e}}catch(u){t={__proto__:null},t instanceof Object?e=O:(t.__proto__=f,e=t instanceof Object?function o(t,e){return t.__proto__=e,t}:function r(t,e){return _(t)?(t.__proto__=e,t):O(t,e)})}CreateMethodProperty(Object,"setPrototypeOf",e)}}();}if (!("Symbol"in self&&0===self.Symbol.length
+)) {!function(e,r,n){"use strict";function t(e){if("symbol"===Type(e))return e;throw TypeError(e+" is not a symbol")}var u,o=function(){try{var r={};return e.defineProperty(r,"t",{configurable:!0,enumerable:!1,get:function(){return!0},set:undefined}),!!r.t}catch(n){return!1}}(),i=0,a=""+Math.random(),c="__symbol:",l=c.length,f="__symbol@@"+a,s={},v="defineProperty",y="defineProperties",b="getOwnPropertyNames",p="getOwnPropertyDescriptor",h="propertyIsEnumerable",m=e.prototype,d=m.hasOwnProperty,g=m[h],w=m.toString,S=Array.prototype.concat,P=e.getOwnPropertyNames?e.getOwnPropertyNames(self):[],O=e[b],j=function $(e){if("[object Window]"===w.call(e))try{return O(e)}catch(r){return S.call([],P)}return O(e)},E=e[p],N=e.create,T=e.keys,_=e.freeze||e,k=e[v],F=e[y],I=E(e,b),x=function(e,r,n){if(!d.call(e,f))try{k(e,f,{enumerable:!1,configurable:!1,writable:!1,value:{}})}catch(t){e[f]={}}e[f]["@@"+r]=n},z=function(e,r){var n=N(e);return j(r).forEach(function(e){q.call(r,e)&&L(n,e,r[e])}),n},A=function(e){var r=N(e);return r.enumerable=!1,r},D=function ee(){},M=function(e){return e!=f&&!d.call(H,e)},W=function(e){return e!=f&&d.call(H,e)},q=function re(e){var r=""+e;return W(r)?d.call(this,r)&&this[f]&&this[f]["@@"+r]:g.call(this,e)},B=function(r){var n={enumerable:!1,configurable:!0,get:D,set:function(e){u(this,r,{enumerable:!1,configurable:!0,writable:!0,value:e}),x(this,r,!0)}};try{k(m,r,n)}catch(o){m[r]=n.value}H[r]=k(e(r),"constructor",J);var t=E(G.prototype,"description");return t&&k(H[r],"description",t),_(H[r])},C=function(e){var r=t(e);if(Y){var n=V(r);if(""!==n)return n.slice(1,-1)}if(s[r]!==undefined)return s[r];var u=r.toString(),o=u.lastIndexOf("0.");return u=u.slice(10,o),""===u?undefined:u},G=function ne(){var r=arguments[0];if(this instanceof ne)throw new TypeError("Symbol is not a constructor");var n=c.concat(r||"",a,++i);r===undefined||null!==r&&!isNaN(r)&&""!==String(r)||(s[n]=String(r));var t=B(n);return o||e.defineProperty(t,"description",{configurable:!0,enumerable:!1,value:C(t)}),t},H=N(null),J={value:G},K=function(e){return H[e]},L=function te(e,r,n){var t=""+r;return W(t)?(u(e,t,n.enumerable?A(n):n),x(e,t,!!n.enumerable)):k(e,r,n),e},Q=function(e){return function(r){return d.call(e,f)&&d.call(e[f],"@@"+r)}},R=function ue(e){return j(e).filter(e===m?Q(e):W).map(K)};I.value=L,k(e,v,I),I.value=R,k(e,"getOwnPropertySymbols",I),I.value=function oe(e){return j(e).filter(M)},k(e,b,I),I.value=function ie(e,r){var n=R(r);return n.length?T(r).concat(n).forEach(function(n){q.call(r,n)&&L(e,n,r[n])}):F(e,r),e},k(e,y,I),I.value=q,k(m,h,I),I.value=G,k(n,"Symbol",I),I.value=function(e){var r=c.concat(c,e,a);return r in m?H[r]:B(r)},k(G,"for",I),I.value=function(e){if(M(e))throw new TypeError(e+" is not a symbol");return d.call(H,e)?e.slice(2*l,-a.length):void 0},k(G,"keyFor",I),I.value=function ae(e,r){var n=E(e,r);return n&&W(r)&&(n.enumerable=q.call(e,r)),n},k(e,p,I),I.value=function ce(e,r){return 1===arguments.length||void 0===r?N(e):z(e,r)},k(e,"create",I);var U=null===function(){return this}.call(null);if(I.value=U?function(){var e=w.call(this);return"[object String]"===e&&W(this)?"[object Symbol]":e}:function(){if(this===window)return"[object Null]";var e=w.call(this);return"[object String]"===e&&W(this)?"[object Symbol]":e},k(m,"toString",I),u=function(e,r,n){var t=E(m,r);delete m[r],k(e,r,n),e!==m&&k(m,r,t)},function(){try{var r={};return e.defineProperty(r,"t",{configurable:!0,enumerable:!1,get:function(){return!0},set:undefined}),!!r.t}catch(n){return!1}}()){var V;try{V=Function("s","var v = s.valueOf(); return { [v]() {} }[v].name;")}catch(Z){}var X=function(){},Y=V&&"inferred"===X.name?V:null;e.defineProperty(n.Symbol.prototype,"description",{configurable:!0,enumerable:!1,get:function(){return C(this)}})}}(Object,0,self);}if (!("Symbol"in self&&"hasInstance"in self.Symbol
+)) {Object.defineProperty(Symbol,"hasInstance",{value:Symbol("hasInstance")});}if (!("Symbol"in self&&"isConcatSpreadable"in self.Symbol
+)) {Object.defineProperty(Symbol,"isConcatSpreadable",{value:Symbol("isConcatSpreadable")});}if (!("Symbol"in self&&"iterator"in self.Symbol
+)) {Object.defineProperty(self.Symbol,"iterator",{value:self.Symbol("iterator")});}function GetIterator(t){var e=arguments.length>1?arguments[1]:GetMethod(t,Symbol.iterator),r=Call(e,t);if("object"!==Type(r))throw new TypeError("bad iterator");var o=GetV(r,"next"),a=Object.create(null);return a["[[Iterator]]"]=r,a["[[NextMethod]]"]=o,a["[[Done]]"]=!1,a}if (!("Symbol"in self&&"match"in self.Symbol
+)) {Object.defineProperty(Symbol,"match",{value:Symbol("match")});}if (!("Symbol"in self&&"replace"in self.Symbol
+)) {Object.defineProperty(Symbol,"replace",{value:Symbol("replace")});}if (!("Symbol"in self&&"search"in self.Symbol
+)) {Object.defineProperty(Symbol,"search",{value:Symbol("search")});}if (!("Symbol"in self&&"species"in self.Symbol
+)) {Object.defineProperty(Symbol,"species",{value:Symbol("species")});}if (!("Map"in self&&function(t){try{var n=new t.Map([[1,1],[2,2]])
+return 0===t.Map.length&&2===n.size&&"Symbol"in t&&"iterator"in t.Symbol&&"function"==typeof n[t.Symbol.iterator]}catch(e){return!1}}(self)
+)) {!function(e){function t(e,t){if("object"!==Type(e))throw new TypeError("createMapIterator called on incompatible receiver "+Object.prototype.toString.call(e));if(!0!==e._es6Map)throw new TypeError("createMapIterator called on incompatible receiver "+Object.prototype.toString.call(e));var r=Object.create(u);return Object.defineProperty(r,"[[Map]]",{configurable:!0,enumerable:!1,writable:!0,value:e}),Object.defineProperty(r,"[[MapNextIndex]]",{configurable:!0,enumerable:!1,writable:!0,value:0}),Object.defineProperty(r,"[[MapIterationKind]]",{configurable:!0,enumerable:!1,writable:!0,value:t}),r}var r=function(){try{var e={};return Object.defineProperty(e,"t",{configurable:!0,enumerable:!1,get:function(){return!0},set:undefined}),!!e.t}catch(t){return!1}}(),o=0,a=Symbol("meta_"+(1e8*Math.random()+"").replace(".","")),n=function(e){if("object"==typeof e?null!==e:"function"==typeof e){if(!Object.isExtensible(e))return!1;if(!Object.prototype.hasOwnProperty.call(e,a)){var t=typeof e+"-"+ ++o;Object.defineProperty(e,a,{configurable:!1,enumerable:!1,writable:!1,value:t})}return e[a]}return""+e},i=function(e,t){var r=n(t);if(!1===r)return p(e,t);var o=e._table[r];return o!==undefined&&o},p=function(e,t){for(var r=0;r<e._keys.length;r++){var o=e._keys[r];if(o!==c&&SameValueZero(o,t))return r}return!1},l=function(e,t,r){var o=n(t);return!1!==o&&(!1===r?delete e._table[o]:e._table[o]=r,!0)},c=Symbol("undef"),y=function f(){if(!(this instanceof f))throw new TypeError('Constructor Map requires "new"');var e=OrdinaryCreateFromConstructor(this,f.prototype,{_table:{},_keys:[],_values:[],_size:0,_es6Map:!0});r||Object.defineProperty(e,"size",{configurable:!0,enumerable:!1,writable:!0,value:0});var t=arguments.length>0?arguments[0]:undefined;if(null===t||t===undefined)return e;var o=e.set;if(!IsCallable(o))throw new TypeError("Map.prototype.set is not a function");try{for(var a=GetIterator(t);;){var n=IteratorStep(a);if(!1===n)return e;var i=IteratorValue(n);if("object"!==Type(i))try{throw new TypeError("Iterator value "+i+" is not an entry object")}catch(u){return IteratorClose(a,u)}try{var p=i[0],l=i[1];o.call(e,p,l)}catch(s){return IteratorClose(a,s)}}}catch(s){if(Array.isArray(t)||"[object Arguments]"===Object.prototype.toString.call(t)||t.callee){var c,y=t.length;for(c=0;c<y;c++)o.call(e,t[c][0],t[c][1])}}return e};Object.defineProperty(y,"prototype",{configurable:!1,enumerable:!1,writable:!1,value:{}}),r?Object.defineProperty(y,Symbol.species,{configurable:!0,enumerable:!1,get:function(){return this},set:undefined}):CreateMethodProperty(y,Symbol.species,y),CreateMethodProperty(y.prototype,"clear",function b(){var e=this;if("object"!==Type(e))throw new TypeError("Method Map.prototype.clear called on incompatible receiver "+Object.prototype.toString.call(e));if(!0!==e._es6Map)throw new TypeError("Method Map.prototype.clear called on incompatible receiver "+Object.prototype.toString.call(e));for(var t=e._keys,o=0;o<t.length;o++)e._keys[o]=c,e._values[o]=c;return this._size=0,r||(this.size=this._size),this._table={},undefined}),CreateMethodProperty(y.prototype,"constructor",y),CreateMethodProperty(y.prototype,"delete",function(e){var t=this;if("object"!==Type(t))throw new TypeError("Method Map.prototype.clear called on incompatible receiver "+Object.prototype.toString.call(t));if(!0!==t._es6Map)throw new TypeError("Method Map.prototype.clear called on incompatible receiver "+Object.prototype.toString.call(t));var o=i(t,e);if(!1!==o){var a=t._keys[o];if(a!==c&&SameValueZero(a,e))return this._keys[o]=c,this._values[o]=c,this._size=--this._size,r||(this.size=this._size),l(this,e,!1),!0}return!1}),CreateMethodProperty(y.prototype,"entries",function h(){return t(this,"key+value")}),CreateMethodProperty(y.prototype,"forEach",function(e){var t=this;if("object"!==Type(t))throw new TypeError("Method Map.prototype.forEach called on incompatible receiver "+Object.prototype.toString.call(t));if(!0!==t._es6Map)throw new TypeError("Method Map.prototype.forEach called on incompatible receiver "+Object.prototype.toString.call(t));if(!IsCallable(e))throw new TypeError(Object.prototype.toString.call(e)+" is not a function.");if(arguments[1])var r=arguments[1];for(var o=t._keys,a=0;a<o.length;a++)t._keys[a]!==c&&t._values[a]!==c&&e.call(r,t._values[a],t._keys[a],t);return undefined}),CreateMethodProperty(y.prototype,"get",function d(e){var t=this;if("object"!==Type(t))throw new TypeError("Method Map.prototype.get called on incompatible receiver "+Object.prototype.toString.call(t));if(!0!==t._es6Map)throw new TypeError("Method Map.prototype.get called on incompatible receiver "+Object.prototype.toString.call(t));var r=i(t,e);if(!1!==r){var o=t._keys[r];if(o!==c&&SameValueZero(o,e))return t._values[r]}return undefined}),CreateMethodProperty(y.prototype,"has",function v(e){var t=this;if("object"!=typeof t)throw new TypeError("Method Map.prototype.has called on incompatible receiver "+Object.prototype.toString.call(t));if(!0!==t._es6Map)throw new TypeError("Method Map.prototype.has called on incompatible receiver "+Object.prototype.toString.call(t));var r=i(t,e);if(!1!==r){var o=t._keys[r];if(o!==c&&SameValueZero(o,e))return!0}return!1}),CreateMethodProperty(y.prototype,"keys",function M(){return t(this,"key")}),CreateMethodProperty(y.prototype,"set",function w(e,t){var o=this;if("object"!==Type(o))throw new TypeError("Method Map.prototype.set called on incompatible receiver "+Object.prototype.toString.call(o));if(!0!==o._es6Map)throw new TypeError("Method Map.prototype.set called on incompatible receiver "+Object.prototype.toString.call(o));var a=i(o,e);if(!1!==a)o._values[a]=t;else{-0===e&&(e=0);var n={"[[Key]]":e,"[[Value]]":t};o._keys.push(n["[[Key]]"]),o._values.push(n["[[Value]]"]),l(o,e,o._keys.length-1),++o._size,r||(o.size=o._size)}return o}),r&&Object.defineProperty(y.prototype,"size",{configurable:!0,enumerable:!1,get:function(){var e=this;if("object"!==Type(e))throw new TypeError("Method Map.prototype.size called on incompatible receiver "+Object.prototype.toString.call(e));if(!0!==e._es6Map)throw new TypeError("Method Map.prototype.size called on incompatible receiver "+Object.prototype.toString.call(e));return this._size},set:undefined}),CreateMethodProperty(y.prototype,"values",function j(){return t(this,"value")}),CreateMethodProperty(y.prototype,Symbol.iterator,y.prototype.entries),"name"in y||Object.defineProperty(y,"name",{configurable:!0,enumerable:!1,writable:!1,value:"Map"});var u={};Object.defineProperty(u,"isMapIterator",{configurable:!1,enumerable:!1,writable:!1,value:!0}),CreateMethodProperty(u,"next",function _(){var e=this;if("object"!==Type(e))throw new TypeError("Method %MapIteratorPrototype%.next called on incompatible receiver "+Object.prototype.toString.call(e));if(!e.isMapIterator)throw new TypeError("Method %MapIteratorPrototype%.next called on incompatible receiver "+Object.prototype.toString.call(e));var t=e["[[Map]]"],r=e["[[MapNextIndex]]"],o=e["[[MapIterationKind]]"];if(t===undefined)return CreateIterResultObject(undefined,!0);if(!t._es6Map)throw new Error(Object.prototype.toString.call(t)+" has a [[MapData]] internal slot.");for(var a=t._keys,n=a.length;r<n;){var i=Object.create(null);if(i["[[Key]]"]=t._keys[r],i["[[Value]]"]=t._values[r],r+=1,e["[[MapNextIndex]]"]=r,i["[[Key]]"]!==c){if("key"===o)var p=i["[[Key]]"];else if("value"===o)p=i["[[Value]]"];else{if("key+value"!==o)throw new Error;p=[i["[[Key]]"],i["[[Value]]"]]}return CreateIterResultObject(p,!1)}}return e["[[Map]]"]=undefined,CreateIterResultObject(undefined,!0)}),CreateMethodProperty(u,Symbol.iterator,function g(){return this});try{CreateMethodProperty(e,"Map",y)}catch(s){e.Map=y}}(self);}if (!("Set"in self&&function(){try{var e=new self.Set([1,2])
+return 0===self.Set.length&&2===e.size&&"Symbol"in self&&"iterator"in self.Symbol&&"function"==typeof e[self.Symbol.iterator]}catch(t){return!1}}()
+)) {!function(e){function t(e,t){if("object"!=typeof e)throw new TypeError("createSetIterator called on incompatible receiver "+Object.prototype.toString.call(e));if(!0!==e._es6Set)throw new TypeError("createSetIterator called on incompatible receiver "+Object.prototype.toString.call(e));var r=Object.create(i);return Object.defineProperty(r,"[[IteratedSet]]",{configurable:!0,enumerable:!1,writable:!0,value:e}),Object.defineProperty(r,"[[SetNextIndex]]",{configurable:!0,enumerable:!1,writable:!0,value:0}),Object.defineProperty(r,"[[SetIterationKind]]",{configurable:!0,enumerable:!1,writable:!0,value:t}),r}var r=function(){try{var e={};return Object.defineProperty(e,"t",{configurable:!0,enumerable:!1,get:function(){return!0},set:undefined}),!!e.t}catch(t){return!1}}(),o=Symbol("undef"),n=function c(){if(!(this instanceof c))throw new TypeError('Constructor Set requires "new"');var e=OrdinaryCreateFromConstructor(this,c.prototype,{_values:[],_size:0,_es6Set:!0});r||Object.defineProperty(e,"size",{configurable:!0,enumerable:!1,writable:!0,value:0});var t=arguments.length>0?arguments[0]:undefined;if(null===t||t===undefined)return e;var o=e.add;if(!IsCallable(o))throw new TypeError("Set.prototype.add is not a function");try{for(var n=GetIterator(t);;){var a=IteratorStep(n);if(!1===a)return e;var i=IteratorValue(a);try{o.call(e,i)}catch(y){return IteratorClose(n,y)}}}catch(y){if(!Array.isArray(t)&&"[object Arguments]"!==Object.prototype.toString.call(t)&&!t.callee)throw y;var l,p=t.length;for(l=0;l<p;l++)o.call(e,t[l])}return e};Object.defineProperty(n,"prototype",{configurable:!1,enumerable:!1,writable:!1,value:{}}),r?Object.defineProperty(n,Symbol.species,{configurable:!0,enumerable:!1,get:function(){return this},set:undefined}):CreateMethodProperty(n,Symbol.species,n),CreateMethodProperty(n.prototype,"add",function p(e){var t=this;if("object"!=typeof t)throw new TypeError("Method Set.prototype.add called on incompatible receiver "+Object.prototype.toString.call(t));if(!0!==t._es6Set)throw new TypeError("Method Set.prototype.add called on incompatible receiver "+Object.prototype.toString.call(t));for(var n=t._values,a=0;a<n.length;a++){var i=n[a];if(i!==o&&SameValueZero(i,e))return t}return 0===e&&1/e==-Infinity&&(e=0),t._values.push(e),this._size=++this._size,r||(this.size=this._size),t}),CreateMethodProperty(n.prototype,"clear",function y(){var e=this;if("object"!=typeof e)throw new TypeError("Method Set.prototype.clear called on incompatible receiver "+Object.prototype.toString.call(e));if(!0!==e._es6Set)throw new TypeError("Method Set.prototype.clear called on incompatible receiver "+Object.prototype.toString.call(e));for(var t=e._values,n=0;n<t.length;n++)t[n]=o;return this._size=0,r||(this.size=this._size),undefined}),CreateMethodProperty(n.prototype,"constructor",n),CreateMethodProperty(n.prototype,"delete",function(e){var t=this;if("object"!=typeof t)throw new TypeError("Method Set.prototype.delete called on incompatible receiver "+Object.prototype.toString.call(t));if(!0!==t._es6Set)throw new TypeError("Method Set.prototype.delete called on incompatible receiver "+Object.prototype.toString.call(t));for(var n=t._values,a=0;a<n.length;a++){var i=n[a];if(i!==o&&SameValueZero(i,e))return n[a]=o,this._size=--this._size,r||(this.size=this._size),!0}return!1}),CreateMethodProperty(n.prototype,"entries",function u(){return t(this,"key+value")}),CreateMethodProperty(n.prototype,"forEach",function f(e){var t=this;if("object"!=typeof t)throw new TypeError("Method Set.prototype.forEach called on incompatible receiver "+Object.prototype.toString.call(t));if(!0!==t._es6Set)throw new TypeError("Method Set.prototype.forEach called on incompatible receiver "+Object.prototype.toString.call(t));if(!IsCallable(e))throw new TypeError(Object.prototype.toString.call(e)+" is not a function.");if(arguments[1])var r=arguments[1];for(var n=t._values,a=0;a<n.length;a++){var i=n[a];i!==o&&e.call(r,i,i,t)}return undefined}),CreateMethodProperty(n.prototype,"has",function d(e){var t=this;if("object"!=typeof t)throw new TypeError("Method Set.prototype.forEach called on incompatible receiver "+Object.prototype.toString.call(t));if(!0!==t._es6Set)throw new TypeError("Method Set.prototype.forEach called on incompatible receiver "+Object.prototype.toString.call(t));for(var r=t._values,n=0;n<r.length;n++){var a=r[n];if(a!==o&&SameValueZero(a,e))return!0}return!1});var a=function h(){return t(this,"value")};CreateMethodProperty(n.prototype,"values",a),CreateMethodProperty(n.prototype,"keys",a),r&&Object.defineProperty(n.prototype,"size",{configurable:!0,enumerable:!1,get:function(){var e=this;if("object"!=typeof e)throw new TypeError("Method Set.prototype.size called on incompatible receiver "+Object.prototype.toString.call(e));if(!0!==e._es6Set)throw new TypeError("Method Set.prototype.size called on incompatible receiver "+Object.prototype.toString.call(e));for(var t=e._values,r=0,n=0;n<t.length;n++){t[n]!==o&&(r+=1)}return r},set:undefined}),CreateMethodProperty(n.prototype,Symbol.iterator,a),"name"in n||Object.defineProperty(n,"name",{configurable:!0,enumerable:!1,writable:!1,value:"Set"});var i={};Object.defineProperty(i,"isSetIterator",{configurable:!1,enumerable:!1,writable:!1,value:!0}),CreateMethodProperty(i,"next",function b(){var e=this;if("object"!=typeof e)throw new TypeError("Method %SetIteratorPrototype%.next called on incompatible receiver "+Object.prototype.toString.call(e));if(!e.isSetIterator)throw new TypeError("Method %SetIteratorPrototype%.next called on incompatible receiver "+Object.prototype.toString.call(e));var t=e["[[IteratedSet]]"],r=e["[[SetNextIndex]]"],n=e["[[SetIterationKind]]"];if(t===undefined)return CreateIterResultObject(undefined,!0);if(!t._es6Set)throw new Error(Object.prototype.toString.call(t)+" does not have [[SetData]] internal slot.");for(var a=t._values,i=a.length;r<i;){var l=a[r];if(r+=1,e["[[SetNextIndex]]"]=r,l!==o)return"key+value"===n?CreateIterResultObject([l,l],!1):CreateIterResultObject(l,!1)}return e["[[IteratedSet]]"]=undefined,CreateIterResultObject(undefined,!0)}),CreateMethodProperty(i,Symbol.iterator,function s(){return this});try{CreateMethodProperty(e,"Set",n)}catch(l){e.Set=n}}(self);}if (!("from"in Array&&function(){try{return Array.from({length:-Infinity}),"a"===Array.from(new self.Set(["a"]))[0]&&"a"===Array.from(new self.Map([["a","one"]]))[0][0]}catch(r){return!1}}()
+)) {!function(){function r(r){return"string"==typeof r||"object"==typeof r&&"[object String]"===t.call(r)}var t=Object.prototype.toString,e=String.prototype.match;CreateMethodProperty(Array,"from",function o(t){var o=this,a=arguments.length>1?arguments[1]:undefined;if(a===undefined)var n=!1;else{if(!1===IsCallable(a))throw new TypeError(Object.prototype.toString.call(a)+" is not a function.");var i=arguments.length>2?arguments[2]:undefined;if(i!==undefined)var l=i;else l=undefined;n=!0}var u=GetMethod(t,Symbol.iterator);if(u!==undefined){if(IsConstructor(o))var f=Construct(o);else f=ArrayCreate(0);for(var c=GetIterator(t,u),s=0;;){if(s>=Math.pow(2,53)-1){var h=new TypeError("Iteration count can not be greater than or equal 9007199254740991.");return IteratorClose(c,h)}var y=ToString(s),C=IteratorStep(c);if(!1===C)return f.length=s,f;var g=IteratorValue(C);if(n)try{var p=Call(a,l,[g,s])}catch(b){return IteratorClose(c,b)}else p=g;try{CreateDataPropertyOrThrow(f,y,p)}catch(b){return IteratorClose(c,b)}s+=1}}if(r(t))var v=e.call(t,/[\uD800-\uDBFF][\uDC00-\uDFFF]?|[^\uD800-\uDFFF]|./g)||[];else v=ToObject(t);var d=ToLength(Get(v,"length"));for(f=IsConstructor(o)?Construct(o,[d]):ArrayCreate(d),s=0;s<d;){y=ToString(s);var I=Get(v,y);p=!0===n?Call(a,l,[I,s]):I,CreateDataPropertyOrThrow(f,y,p),s+=1}return f.length=d,f})}();}if (!("Symbol"in self&&"split"in self.Symbol
+)) {Object.defineProperty(Symbol,"split",{value:Symbol("split")});}if (!("Symbol"in self&&"toPrimitive"in self.Symbol
+)) {Object.defineProperty(Symbol,"toPrimitive",{value:Symbol("toPrimitive")});}if (!("Symbol"in self&&"toStringTag"in self.Symbol
+)) {Object.defineProperty(Symbol,"toStringTag",{value:Symbol("toStringTag")});}if (!("Promise"in self
+)) {!function(){"use strict";function n(){return tn[q][B]||D}function t(n){return n&&"object"==typeof n}function e(n){return"function"==typeof n}function r(n,t){return n instanceof t}function o(n){return r(n,A)}function i(n,t,e){if(!t(n))throw a(e)}function u(){try{return b.apply(R,arguments)}catch(n){return Y.e=n,Y}}function c(n,t){return b=n,R=t,u}function f(n,t){function e(){for(var e=0;e<o;)t(r[e],r[e+1]),r[e++]=T,r[e++]=T;o=0,r.length>n&&(r.length=n)}var r=L(n),o=0;return function(n,t){r[o++]=n,r[o++]=t,2===o&&tn.nextTick(e)}}function s(n,t){var o,i,u,f,s=0;if(!n)throw a(N);var l=n[tn[q][z]];if(e(l))i=l.call(n);else{if(!e(n.next)){if(r(n,L)){for(o=n.length;s<o;)t(n[s],s++);return s}throw a(N)}i=n}for(;!(u=i.next()).done;)if((f=c(t)(u.value,s++))===Y)throw e(i[G])&&i[G](),f.e;return s}function a(n){return new TypeError(n)}function l(n){return(n?"":Q)+(new A).stack}function h(n,t){var e="on"+n.toLowerCase(),r=F[e];E&&E.listeners(n).length?n===X?E.emit(n,t._v,t):E.emit(n,t):r?r({reason:t._v,promise:t}):tn[n](t._v,t)}function v(n){return n&&n._s}function _(n){if(v(n))return new n(Z);var t,r,o;return t=new n(function(n,e){if(t)throw a();r=n,o=e}),i(r,e),i(o,e),t}function d(n,t){var e=!1;return function(r){e||(e=!0,I&&(n[M]=l(!0)),t===U?g(n,r):y(n,t,r))}}function p(n,t,r,o){return e(r)&&(t._onFulfilled=r),e(o)&&(n[J]&&h(W,n),t._onRejected=o),I&&(t._p=n),n[n._c++]=t,n._s!==$&&rn(n,t),t}function m(n){if(n._umark)return!0;n._umark=!0;for(var t,e=0,r=n._c;e<r;)if(t=n[e++],t._onRejected||m(t))return!0}function w(n,t){function e(n){return r.push(n.replace(/^\s+|\s+$/g,""))}var r=[];return I&&(t[M]&&e(t[M]),function o(n){n&&K in n&&(o(n._next),e(n[K]+""),o(n._p))}(t)),(n&&n.stack?n.stack:n)+("\n"+r.join("\n")).replace(nn,"")}function j(n,t){return n(t)}function y(n,t,e){var r=0,i=n._c;if(n._s===$)for(n._s=t,n._v=e,t===O&&(I&&o(e)&&(e.longStack=w(e,n)),on(n));r<i;)rn(n,n[r++]);return n}function g(n,r){if(r===n&&r)return y(n,O,a(V)),n;if(r!==S&&(e(r)||t(r))){var o=c(k)(r);if(o===Y)return y(n,O,o.e),n;e(o)?(I&&v(r)&&(n._next=r),v(r)?x(n,r,o):tn.nextTick(function(){x(n,r,o)})):y(n,U,r)}else y(n,U,r);return n}function k(n){return n.then}function x(n,t,e){var r=c(e,t)(function(e){t&&(t=S,g(n,e))},function(e){t&&(t=S,y(n,O,e))});r===Y&&t&&(y(n,O,r.e),t=S)}var T,b,R,S=null,C="object"==typeof self,F=self,P=F.Promise,E=F.process,H=F.console,I=!0,L=Array,A=Error,O=1,U=2,$=3,q="Symbol",z="iterator",B="species",D=q+"("+B+")",G="return",J="_uh",K="_pt",M="_st",N="Invalid argument",Q="\nFrom previous ",V="Chaining cycle detected for promise",W="rejectionHandled",X="unhandledRejection",Y={e:S},Z=function(){},nn=/^.+\/node_modules\/yaku\/.+\n?/gm,tn=function(n){var r,o=this;if(!t(o)||o._s!==T)throw a("Invalid this");if(o._s=$,I&&(o[K]=l()),n!==Z){if(!e(n))throw a(N);r=c(n)(d(o,U),d(o,O)),r===Y&&y(o,O,r.e)}};tn["default"]=tn,function en(n,t){for(var e in t)n[e]=t[e]}(tn.prototype,{then:function(n,t){if(this._s===undefined)throw a();return p(this,_(tn.speciesConstructor(this,tn)),n,t)},"catch":function(n){return this.then(T,n)},"finally":function(n){return this.then(function(t){return tn.resolve(n()).then(function(){return t})},function(t){return tn.resolve(n()).then(function(){throw t})})},_c:0,_p:S}),tn.resolve=function(n){return v(n)?n:g(_(this),n)},tn.reject=function(n){return y(_(this),O,n)},tn.race=function(n){var t=this,e=_(t),r=function(n){y(e,U,n)},o=function(n){y(e,O,n)},i=c(s)(n,function(n){t.resolve(n).then(r,o)});return i===Y?t.reject(i.e):e},tn.all=function(n){function t(n){y(o,O,n)}var e,r=this,o=_(r),i=[];return(e=c(s)(n,function(n,u){r.resolve(n).then(function(n){i[u]=n,--e||y(o,U,i)},t)}))===Y?r.reject(e.e):(e||y(o,U,[]),o)},tn.Symbol=F[q]||{},c(function(){Object.defineProperty(tn,n(),{get:function(){return this}})})(),tn.speciesConstructor=function(t,e){var r=t.constructor;return r?r[n()]||e:e},tn.unhandledRejection=function(n,t){H&&H.error("Uncaught (in promise)",I?t.longStack:w(n,t))},tn.rejectionHandled=Z,tn.enableLongStackTrace=function(){I=!0},tn.nextTick=C?function(n){P?new P(function(n){n()}).then(n):setTimeout(n)}:E.nextTick,tn._s=1;var rn=f(999,function(n,t){var e,r;return(r=n._s!==O?t._onFulfilled:t._onRejected)===T?void y(t,n._s,n._v):(e=c(j)(r,n._v))===Y?void y(t,O,e.e):void g(t,e)}),on=f(9,function(n){m(n)||(n[J]=1,h(X,n))});F.Promise=tn}();}if (!("Symbol"in self&&"unscopables"in self.Symbol
+)) {Object.defineProperty(Symbol,"unscopables",{value:Symbol("unscopables")});}if (!((function(){try{if("WeakMap"in self&&0===self.WeakMap.length){var e={},t=new self.WeakMap([[e,"test"]])
+return"test"===t.get(e)&&!1===t["delete"](0)}return!1}catch(a){return!1}})()
+)) {!function(e){var t=Symbol("undef"),r=function a(){if(!(this instanceof a))throw new TypeError('Constructor WeakMap requires "new"');var e=OrdinaryCreateFromConstructor(this,a.prototype,{_keys:[],_values:[],_es6WeakMap:!0}),t=arguments.length>0?arguments[0]:undefined;if(null===t||t===undefined)return e;var r=Get(e,"set");if(!IsCallable(r))throw new TypeError("WeakMap.prototype.set is not a function");try{for(var o=GetIterator(t);;){var p=IteratorStep(o);if(!1===p)return e;var n=IteratorValue(p);if("object"!==Type(n))try{throw new TypeError("Iterator value "+n+" is not an entry object")}catch(s){return IteratorClose(o,s)}try{var i=Get(n,"0"),l=Get(n,"1");Call(r,e,[i,l])}catch(u){return IteratorClose(o,u)}}}catch(u){if(Array.isArray(t)||"[object Arguments]"===Object.prototype.toString.call(t)||t.callee){var y,c=t.length;for(y=0;y<c;y++)i=t[y][0],l=t[y][1],Call(r,e,[i,l])}}return e};Object.defineProperty(r,"prototype",{configurable:!1,enumerable:!1,writable:!1,value:{}}),CreateMethodProperty(r.prototype,"constructor",r),CreateMethodProperty(r.prototype,"delete",function(e){var r=this;if("object"!==Type(r))throw new TypeError("Method WeakMap.prototype.clear called on incompatible receiver "+Object.prototype.toString.call(r));if(!0!==r._es6WeakMap)throw new TypeError("Method WeakMap.prototype.clear called on incompatible receiver "+Object.prototype.toString.call(r));var o=r._keys;if("object"!==Type(e))return!1;for(var a=0;a<o.length;a++)if(r._keys[a]!==t&&SameValue(r._keys[a],e))return this._keys[a]=t,this._values[a]=t,this._size=--this._size,!0;return!1}),CreateMethodProperty(r.prototype,"get",function p(e){var r=this;if("object"!==Type(r))throw new TypeError("Method WeakMap.prototype.get called on incompatible receiver "+Object.prototype.toString.call(r));if(!0!==r._es6WeakMap)throw new TypeError("Method WeakMap.prototype.get called on incompatible receiver "+Object.prototype.toString.call(r));var o=r._keys;if("object"!==Type(e))return undefined;for(var a=0;a<o.length;a++)if(r._keys[a]!==t&&SameValue(r._keys[a],e))return r._values[a];return undefined}),CreateMethodProperty(r.prototype,"has",function n(e){var r=this;if("object"!=typeof r)throw new TypeError("Method WeakMap.prototype.has called on incompatible receiver "+Object.prototype.toString.call(r));if(!0!==r._es6WeakMap)throw new TypeError("Method WeakMap.prototype.has called on incompatible receiver "+Object.prototype.toString.call(r));var o=r._keys;if("object"!==Type(e))return!1;for(var a=0;a<o.length;a++)if(r._keys[a]!==t&&SameValue(r._keys[a],e))return!0;return!1}),CreateMethodProperty(r.prototype,"set",function i(e,r){var o=this;if("object"!==Type(o))throw new TypeError("Method WeakMap.prototype.set called on incompatible receiver "+Object.prototype.toString.call(o));if(!0!==o._es6WeakMap)throw new TypeError("Method WeakMap.prototype.set called on incompatible receiver "+Object.prototype.toString.call(o));var a=o._keys;if("object"!==Type(e))throw new TypeError("Invalid value used as weak map key");for(var p=0;p<a.length;p++)if(o._keys[p]!==t&&SameValue(o._keys[p],e))return o._values[p]=r,o;var n={"[[Key]]":e,"[[Value]]":r};return o._keys.push(n["[[Key]]"]),o._values.push(n["[[Value]]"]),o}),Object.defineProperty(r.prototype,Symbol.toStringTag,{configurable:!0,enumerable:!1,writable:!1,value:"WeakMap"}),"name"in r||Object.defineProperty(r,"name",{configurable:!0,enumerable:!1,writable:!1,value:"WeakMap"});try{CreateMethodProperty(e,"WeakMap",r)}catch(o){e.WeakMap=r}}(self);}if (!((function(e){try{if(Object.prototype.hasOwnProperty.call(e,"WeakSet")&&0===e.WeakSet.length){var t={},r=new e.WeakSet([t])
+return r.has(t)&&!1===r["delete"](0)}return!1}catch(a){return!1}})(self)
+)) {!function(e){var t=Symbol("undef"),r=function a(){if(!(this instanceof a))throw new TypeError('Constructor WeakSet requires "new"');var e=OrdinaryCreateFromConstructor(this,a.prototype,{_values:[],_size:0,_es6WeakSet:!0}),t=arguments.length>0?arguments[0]:undefined;if(null===t||t===undefined)return e;var r=Get(e,"add");if(!IsCallable(r))throw new TypeError("WeakSet.prototype.add is not a function");try{for(var o=GetIterator(t);;){var n=IteratorStep(o);if(!1===n)return e;var l=IteratorValue(n);try{Call(r,e,[l])}catch(c){return IteratorClose(o,c)}}}catch(c){if(IsArray(t)||"[object Arguments]"===Object.prototype.toString.call(t)||t.callee){var p,i=t.length;for(p=0;p<i;p++)Call(r,e,[t[p]])}}return e};Object.defineProperty(r,"prototype",{configurable:!1,enumerable:!1,writable:!1,value:{}}),CreateMethodProperty(r.prototype,"add",function n(e){var r=this;if("object"!==Type(r))throw new TypeError("Method WeakSet.prototype.add called on incompatible receiver "+Object.prototype.toString.call(r));if(!0!==r._es6WeakSet)throw new TypeError("Method WeakSet.prototype.add called on incompatible receiver "+Object.prototype.toString.call(r));if("object"!==Type(e))throw new TypeError("Invalid value used in weak set");for(var o=r._values,a=0;a<o.length;a++){var n=o[a];if(n!==t&&SameValueZero(n,e))return r}return r._values.push(e),r}),CreateMethodProperty(r.prototype,"constructor",r),CreateMethodProperty(r.prototype,"delete",function(e){var r=this;if("object"!==Type(r))throw new TypeError("Method WeakSet.prototype.delete called on incompatible receiver "+Object.prototype.toString.call(r));if(!0!==r._es6WeakSet)throw new TypeError("Method WeakSet.prototype.delete called on incompatible receiver "+Object.prototype.toString.call(r));if("object"!==Type(e))return!1;for(var o=r._values,a=0;a<o.length;a++){var n=o[a];if(n!==t&&SameValueZero(n,e))return o[a]=t,!0}return!1}),CreateMethodProperty(r.prototype,"has",function l(e){var r=this;if("object"!==Type(r))throw new TypeError("Method WeakSet.prototype.has called on incompatible receiver "+Object.prototype.toString.call(r));if(!0!==r._es6WeakSet)throw new TypeError("Method WeakSet.prototype.has called on incompatible receiver "+Object.prototype.toString.call(r));var o=r._values;if("object"!==Type(e))return!1;for(var a=0;a<o.length;a++){var n=o[a];if(n!==t&&SameValueZero(n,e))return!0}return!1}),"name"in r||Object.defineProperty(r,"name",{configurable:!0,enumerable:!1,writable:!1,value:"WeakSet"});try{CreateMethodProperty(e,"WeakSet",r)}catch(o){e.WeakSet=r}}(self);}function TrimString(e,u){var r=RequireObjectCoercible(e),t=ToString(r),n=/[\x09\x0A\x0B\x0C\x0D\x20\xA0\u1680\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000\u2028\u2029\uFEFF]+/.source;if("start"===u)var p=String.prototype.replace.call(t,new RegExp("^"+n,"g"),"");else p="end"===u?String.prototype.replace.call(t,new RegExp(n+"$","g"),""):String.prototype.replace.call(t,new RegExp("^"+n+"|"+n+"$","g"),"");return p}if (!("trim"in String.prototype&&function(){var r="​᠎"
+return!"\t\n\x0B\f\r                　\u2028\u2029\ufeff".trim()&&r.trim()===r}()
+)) {CreateMethodProperty(String.prototype,"trim",function t(){"use strict";var t=this;return TrimString(t,"start+end")});}if (!("parseFloat"in Number&&1/parseFloat("\t\n\x0B\f\r                　\u2028\u2029\ufeff-0")==-Infinity
+)) {!function(r,t){var a=function o(t){var a=String(t).trim(),e=r(a);return 0===e&&"-"==a.charAt(0)?-0:e};try{CreateMethodProperty(t,"parseFloat",a)}catch(e){t.parseFloat=a}CreateMethodProperty(Number,"parseFloat",t.parseFloat)}(parseFloat,this);}if (!("parseInt"in Number&&8===Number.parseInt("08")
+)) {!function(t,r){var e=function a(r,e){var n=String(r).trim();return t(n,e>>>0||(/^[-+]?0[xX]/.test(n)?16:10))};try{CreateMethodProperty(r,"parseInt",e)}catch(n){r.parseInt=e}CreateMethodProperty(Number,"parseInt",r.parseInt)}(parseInt,this);}function UTF16Decode(e,n){return 1024*(e-55296)+(n-56320)+65536}if (!("codePointAt"in String.prototype
+)) {CreateMethodProperty(String.prototype,"codePointAt",function e(t){var r=RequireObjectCoercible(this),o=ToString(r),n=ToInteger(t),i=o.length;if(n<0||n>=i)return undefined;var c=String.prototype.charCodeAt.call(o,n);if(c<55296||c>56319||n+1===i)return c;var a=String.prototype.charCodeAt.call(o,n+1);return a<56320||a>57343?c:UTF16Decode(c,a)});}function UTF16Encoding(n){return n<=65535?n:[Math.floor((n-65536)/1024)+55296,(n-65536)%1024+56320]}if (!("fromCodePoint"in String&&1===String.fromCodePoint.length
+)) {CreateMethodProperty(String,"fromCodePoint",function r(o){for(var t=[],e=arguments,n=arguments.length,a=[],i=0;i<n;){a=[];var l=e[i],p=ToNumber(l);if(!1===SameValue(p,ToInteger(p)))throw new RangeError("Invalid code point "+Object.prototype.toString.call(p));if(p<0||p>1114111)throw new RangeError("Invalid code point "+Object.prototype.toString.call(p));var c=UTF16Encoding(p);IsArray(c)?a=a.concat(c):a.push(c),i+=1,t.push(String.fromCharCode.apply(null,a))}return 0===n?"":t.join("")});}var Iterator=function(){var e=function(){return this.length=0,this},t=function(e){if("function"!=typeof e)throw new TypeError(e+" is not a function");return e},_=function(e,n){if(!(this instanceof _))return new _(e,n);Object.defineProperties(this,{__list__:{writable:!0,value:e},__context__:{writable:!0,value:n},__nextIndex__:{writable:!0,value:0}}),n&&(t(n.on),n.on("_add",this._onAdd.bind(this)),n.on("_delete",this._onDelete.bind(this)),n.on("_clear",this._onClear.bind(this)))};return Object.defineProperties(_.prototype,Object.assign({constructor:{value:_,configurable:!0,enumerable:!1,writable:!0},_next:{value:function(){var e;if(this.__list__)return this.__redo__&&(e=this.__redo__.shift())!==undefined?e:this.__nextIndex__<this.__list__.length?this.__nextIndex__++:void this._unBind()},configurable:!0,enumerable:!1,writable:!0},next:{value:function(){return this._createResult(this._next())},configurable:!0,enumerable:!1,writable:!0},_createResult:{value:function(e){return e===undefined?{done:!0,value:undefined}:{done:!1,value:this._resolve(e)}},configurable:!0,enumerable:!1,writable:!0},_resolve:{value:function(e){return this.__list__[e]},configurable:!0,enumerable:!1,writable:!0},_unBind:{value:function(){this.__list__=null,delete this.__redo__,this.__context__&&(this.__context__.off("_add",this._onAdd.bind(this)),this.__context__.off("_delete",this._onDelete.bind(this)),this.__context__.off("_clear",this._onClear.bind(this)),this.__context__=null)},configurable:!0,enumerable:!1,writable:!0},toString:{value:function(){return"[object Iterator]"},configurable:!0,enumerable:!1,writable:!0}},{_onAdd:{value:function(e){if(!(e>=this.__nextIndex__)){if(++this.__nextIndex__,!this.__redo__)return void Object.defineProperty(this,"__redo__",{value:[e],configurable:!0,enumerable:!1,writable:!1});this.__redo__.forEach(function(t,_){t>=e&&(this.__redo__[_]=++t)},this),this.__redo__.push(e)}},configurable:!0,enumerable:!1,writable:!0},_onDelete:{value:function(e){var t;e>=this.__nextIndex__||(--this.__nextIndex__,this.__redo__&&(t=this.__redo__.indexOf(e),-1!==t&&this.__redo__.splice(t,1),this.__redo__.forEach(function(t,_){t>e&&(this.__redo__[_]=--t)},this)))},configurable:!0,enumerable:!1,writable:!0},_onClear:{value:function(){this.__redo__&&e.call(this.__redo__),this.__nextIndex__=0},configurable:!0,enumerable:!1,writable:!0}})),Object.defineProperty(_.prototype,Symbol.iterator,{value:function(){return this},configurable:!0,enumerable:!1,writable:!0}),Object.defineProperty(_.prototype,Symbol.toStringTag,{value:"Iterator",configurable:!1,enumerable:!1,writable:!0}),_}();var ArrayIterator=function(){var e=function(t,r){if(!(this instanceof e))return new e(t,r);Iterator.call(this,t),r=r?String.prototype.includes.call(r,"key+value")?"key+value":String.prototype.includes.call(r,"key")?"key":"value":"value",Object.defineProperty(this,"__kind__",{value:r,configurable:!1,enumerable:!1,writable:!1})};return Object.setPrototypeOf&&Object.setPrototypeOf(e,Iterator.prototype),e.prototype=Object.create(Iterator.prototype,{constructor:{value:e,configurable:!0,enumerable:!1,writable:!0},_resolve:{value:function(e){return"value"===this.__kind__?this.__list__[e]:"key+value"===this.__kind__?[e,this.__list__[e]]:e},configurable:!0,enumerable:!1,writable:!0},toString:{value:function(){return"[object Array Iterator]"},configurable:!0,enumerable:!1,writable:!0}}),e}();if (!("Symbol"in self&&"iterator"in self.Symbol&&!!Array.prototype.entries
+)) {CreateMethodProperty(Array.prototype,"entries",function r(){var r=ToObject(this);return new ArrayIterator(r,"key+value")});}if (!("Symbol"in self&&"iterator"in self.Symbol&&!!Array.prototype.keys
+)) {CreateMethodProperty(Array.prototype,"keys",function r(){var r=ToObject(this);return new ArrayIterator(r,"key")});}if (!("values"in Array.prototype
+)) {"Symbol"in self&&"iterator"in Symbol&&"function"==typeof Array.prototype[Symbol.iterator]?CreateMethodProperty(Array.prototype,"values",Array.prototype[Symbol.iterator]):CreateMethodProperty(Array.prototype,"values",function r(){var r=ToObject(this);return new ArrayIterator(r,"value")});}if (!("Symbol"in self&&"iterator"in self.Symbol&&!!Array.prototype[self.Symbol.iterator]
+)) {CreateMethodProperty(Array.prototype,Symbol.iterator,Array.prototype.values);}var StringIterator=function(){var t=function(e){if(!(this instanceof t))return new t(e);e=String(e),Iterator.call(this,e),Object.defineProperty(this,"__length__",{value:e.length,configurable:!1,enumerable:!1,writable:!1})};return Object.setPrototypeOf&&Object.setPrototypeOf(t,Iterator),t.prototype=Object.create(Iterator.prototype,{constructor:{value:t,configurable:!0,enumerable:!1,writable:!0},_next:{value:function(){if(this.__list__)return this.__nextIndex__<this.__length__?this.__nextIndex__++:void this._unBind()},configurable:!0,enumerable:!1,writable:!0},_resolve:{value:function(t){var e,r=this.__list__[t];return this.__nextIndex__===this.__length__?r:(e=r.charCodeAt(0),e>=55296&&e<=56319?r+this.__list__[this.__nextIndex__++]:r)},configurable:!0,enumerable:!1,writable:!0},toString:{value:function(){return"[object String Iterator]"},configurable:!0,enumerable:!1,writable:!0}}),t}();if (!("Symbol"in self&&"iterator"in self.Symbol&&!!String.prototype[self.Symbol.iterator]
+)) {CreateMethodProperty(String.prototype,Symbol.iterator,function(){var r=RequireObjectCoercible(this),t=ToString(r);return new StringIterator(t)});}})('object' === typeof window && window || 'object' === typeof self && self || 'object' === typeof global && global || {});</script>
+  
+  <script>
+    (function () {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src  = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js";
+      document.getElementsByTagName("head")[0].appendChild(script);
+    })();
+  </script>
+
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <style type="text/css">
 @media (max-width: 767.98px) {
@@ -4066,6 +4205,10 @@ main table { font-size: .9rem; }
 .research-hero h1 { font-size: clamp(2.15rem, 4vw, 3.3rem); line-height: 1.15; margin: 0; }
 .research-lead { font-size: 1.35rem; line-height: 1.55; max-width: 780px; }
 .research-intro { color: var(--research-muted); max-width: 720px; }
+.research-hero h1 + .research-intro { margin-top: 1.3rem; }
+.research-ai-note { max-width: 720px; margin-top: 1.75rem; color: var(--research-muted); }
+.research-ai-note h2 { color: var(--research-ink); font-size: 1.35rem; margin: 0 0 .75rem; }
+.research-ai-note p:last-child { margin-bottom: 0; }
 .research-story { border-top: 1px solid var(--research-rule); padding: 3rem 0; display: grid; grid-template-columns: 1.12fr 1fr; align-items: center; gap: 3rem; }
 .research-story h2 { font-size: clamp(1.9rem, 3vw, 2.45rem); margin: 0 0 1.2rem; }
 .research-story-copy>p:not(.research-eyebrow) { max-width: 560px; }
@@ -4178,7 +4321,7 @@ body { font-size: 16px; }
 
 #title-block-header .description { display: none; }
 
-main table { --bs-table-bg: transparent; --bs-table-color: var(--research-ink); background-color: transparent; }
+#quarto-document-content table { --bs-table-bg: transparent; --bs-table-color: var(--research-ink); background-color: transparent; }
 main table > :not(caption) > * > * { background-color: transparent; }
 
 #quarto-appendix.default { background-color: transparent; }
@@ -4272,20 +4415,32 @@ main table > :not(caption) > * > * { background-color: transparent; }
 <p><a href="../selective-editing/index.html">Paper</a> · <a href="index.pdf">PDF</a> · <a href="https://github.com/sergeisoly/interesearch/blob/main/papers/guides/selective-editing.md">GitHub</a></p>
 </div>
 <div class="visual-intro">
-<p>Changing one behaviour in a language model can also affect behaviours we want to preserve. I test edit selectivity by deliberately weakening next-token prediction in one language and measuring the unwanted damage to another.</p>
-<p>Lucius Bushnaq’s <a href="https://www.lesswrong.com/posts/ieoWstubDQWLrMnhH/exploration-fine-tuning-with-parameter-decomposition">Exploration: Fine-Tuning with Parameter Decomposition</a> showed that changing one subcomponent’s coefficient in <a href="https://www.goodfire.com/research/interpreting-lm-parameters">Goodfire’s four-layer, 67-million-parameter language model</a> could suppress German while largely sparing French and Spanish. I extend the comparison to a close relative of each target language: German/Dutch, Spanish/Portuguese and French/Italian. Using the same model and decomposition, I compare subcomponent edits with learned weight updates and neuron edits calibrated to the same target damage on validation text.</p>
+<p>I deliberately worsen next-token prediction in a <strong>target language</strong> to test whether that change can largely spare a close relative. For German → Dutch, German is the target and Dutch is the language I want to spare. I make this change by modifying the model’s learned weights: a <strong>weight edit</strong>.</p>
+<p>Lucius Bushnaq’s <a href="https://www.lesswrong.com/posts/ieoWstubDQWLrMnhH/exploration-fine-tuning-with-parameter-decomposition">Exploration: Fine-Tuning with Parameter Decomposition</a> showed that changing one subcomponent’s coefficient in <a href="https://www.goodfire.com/research/interpreting-lm-parameters">Goodfire’s four-layer, 67-million-parameter language model</a> could weaken German predictions while largely sparing French and Spanish. I use the same model and decomposition to test three pairs of close relatives: German/Dutch, Spanish/Portuguese and French/Italian.</p>
 </div>
 <section id="edit-one-rank-one-subcomponent" class="level2">
 <h2 class="anchored" data-anchor-id="edit-one-rank-one-subcomponent">Edit one rank-one subcomponent</h2>
-<p><a href="https://www.goodfire.com/research/interpreting-lm-parameters">Goodfire’s adVersarial Parameter Decomposition (VPD)</a> writes a weight matrix as a sum of <strong>rank-one subcomponents</strong> plus a residual. Each subcomponent is formed from an input vector and an output vector. The edit changes one selected subcomponent’s scalar coefficient, keeping both vectors fixed. All other coefficients and the residual stay fixed. A coefficient of zero removes the selected contribution. A negative coefficient reverses it.</p>
+<p>To make a targeted weight change, I select one subcomponent from <a href="https://www.goodfire.com/research/interpreting-lm-parameters">Goodfire’s adVersarial Parameter Decomposition (VPD)</a> and adjust its contribution. VPD writes a weight matrix <span class="math inline">\(W\)</span> as a sum of <strong>rank-one subcomponents</strong> plus a residual. The decomposition is trained so that few subcomponents are needed on any input. Each subcomponent <span class="math inline">\(A\)</span> is the outer product of an output vector <span class="math inline">\(u_{\mathrm{out}}\)</span> and an input vector <span class="math inline">\(v_{\mathrm{in}}\)</span>:</p>
+<p><span class="math display">\[
+A = u_{\mathrm{out}}v_{\mathrm{in}}^\top.
+\]</span></p>
+<p>For an input <span class="math inline">\(x\)</span>, the input vector reads out one number, <span class="math inline">\(v_{\mathrm{in}}^\top x\)</span>. The output vector determines the direction in which that number contributes to the matrix’s output:</p>
+<p><span class="math display">\[
+Ax = u_{\mathrm{out}}\bigl(v_{\mathrm{in}}^\top x\bigr).
+\]</span></p>
+<p>The edit changes a single number, the selected subcomponent’s coefficient <span class="math inline">\(c\)</span>:</p>
+<p><span class="math display">\[
+W_{\mathrm{edited}} = (W-A) + cA.
+\]</span></p>
+<p>Changing this coefficient changes many entries of the weight matrix. The subcomponent’s two vectors stay fixed, as do all other subcomponents and the residual. At <span class="math inline">\(c=1\)</span> the matrix is unchanged. <span class="math inline">\(c=0\)</span> removes the selected contribution, and <span class="math inline">\(c&lt;0\)</span> reverses its sign. The slider below illustrates this operation on a toy matrix.</p>
 <figure class="visual-figure visual-concept figure" aria-label="Schematic weight edit" aria-describedby="visual-matrix-caption">
   <div class="visual-coefficient-control" id="visual-coefficient-control" hidden>
-    <label for="visual-coefficient">Selected subcomponent&#39;s coefficient <output id="visual-coefficient-value" for="visual-coefficient">0</output></label>
+    <label for="visual-coefficient">Selected subcomponent&#39;s coefficient c <output id="visual-coefficient-value" for="visual-coefficient">0</output></label>
     <input id="visual-coefficient" type="range" min="-1" max="1" step="0.05" value="0" aria-describedby="visual-matrix-state">
     <div class="visual-range-labels"><span>−1 · reversed</span><span>0 · removed</span><span>1 · original</span></div>
   </div>
-  <div class="visual-matrix-equation" role="group" aria-label="Other components plus a scaled selected subcomponent equals the edited matrix">
-    <div class="visual-matrix-term"><p>Other components</p>
+  <div class="visual-matrix-equation" role="group" aria-label="The remaining components and residual plus the scaled selected subcomponent equal the edited matrix">
+    <div class="visual-matrix-term"><p>Rest of the matrix</p>
       <svg viewbox="0 0 134 134" aria-hidden="true"><g id="visual-matrix-cells-0"><rect x="2" y="2" width="130" height="130" rx="4" fill="#e6eeeb" stroke="#78968a" /><text x="67" y="79" text-anchor="middle" font-size="28" fill="#39574a">W − A</text></g></svg>
     </div>
     <span class="visual-matrix-operator" aria-hidden="true">+</span>
@@ -4298,21 +4453,38 @@ main table > :not(caption) > * > * { background-color: transparent; }
     </div>
   </div>
   <p id="visual-matrix-state" class="visual-matrix-state" aria-live="polite">The selected subcomponent is removed.</p>
-  <figcaption id="visual-matrix-caption">Schematic illustration with a toy matrix. The measured results below use the calibrated study edits.</figcaption>
+  <figcaption id="visual-matrix-caption">Toy illustration of changing one subcomponent&#39;s contribution. The experiment uses a real model and sets the coefficient from text.</figcaption>
 </figure>
-<p>Rank-one LoRA learns both vectors of an update to the same matrix. Full-matrix fine-tuning can change all 24 weight matrices, and neuron edits scale selected neurons’ output weights.</p>
-<p>I measure next-token prediction on parliamentary text. The selection and training procedures use target and English text. The selection rule ranks subcomponents by their estimated effect on the target language relative to their effect on English. Each method’s edit is calibrated to raise the target language’s prediction error, measured as cross-entropy (CE), by the same amount on validation text: <strong>0.5 or 1 nat per token</strong>. A nat is a unit of information based on natural logarithms. 1 nat is about 1.44 bits. A larger rise means worse next-token prediction. Matching this rise gives the methods the same intended effect before I compare their side effects on separate evaluation text.</p>
+</section>
+<section id="comparing-ways-to-change-the-weights" class="level2">
+<h2 class="anchored" data-anchor-id="comparing-ways-to-change-the-weights">Comparing ways to change the weights</h2>
+<p>I compare the VPD edit with three other ways to change the weights, all aimed at worsening target-language prediction while preserving English predictions.</p>
+<p><strong>Rank-one LoRA</strong> learns its own output and input vectors in the same weight matrix:</p>
+<p><span class="math display">\[
+\Delta W_{\mathrm{LoRA}} = a_{\mathrm{out}}b_{\mathrm{in}}^\top.
+\]</span></p>
+<p>This lets LoRA choose a different direction while keeping the update’s rank and the edited matrix fixed.</p>
+<p><strong>Full-matrix fine-tuning</strong> gives the learned update more freedom: it can change every entry in the model’s 24 attention and feed-forward weight matrices.</p>
+<p>The <strong>neuron edit</strong> selects neurons by how much more often they activate on target text than on English text, then scales their output weights.</p>
+<p>The VPD rule ranks subcomponents by their estimated target effect relative to their English effect. LoRA and full-matrix fine-tuning penalize changes to the original model’s English predictions during training.</p>
+<p>These selection and training steps use no Dutch, Portuguese or Italian text. Those languages test whether the methods also spare a close relative that they were not explicitly trained to preserve.</p>
+</section>
+<section id="matching-the-intended-damage" class="level2">
+<h2 class="anchored" data-anchor-id="matching-the-intended-damage">Matching the intended damage</h2>
+<p>To compare side effects fairly, I first make each method worsen the target language by a similar amount. Otherwise, a method might spare Dutch simply because it barely changed German.</p>
+<p>I <strong>calibrate</strong> each edit by adjusting its strength on target-language validation text. I use two targets: an increase of <strong>0.5 or 1 nat/token</strong> in average prediction loss (cross-entropy) relative to the original model.</p>
+<p>I use <strong>Europarl v7</strong>, a corpus of European Parliament proceedings. After calibration, I measure the damage to both languages on separate text from <strong>58 session dates</strong>.</p>
 </section>
 <section id="target-and-related-language-damage" class="level2">
 <h2 class="anchored" data-anchor-id="target-and-related-language-damage">Target and related-language damage</h2>
-<p>The learned baselines were each trained on three overlapping samples of training text, called <strong>draws</strong>. The plotted ranges span the edits from these draws. I evaluate the six fixed subcomponent edits and the comparators on <strong>58 European Parliament session dates</strong>. The target and related-language panels use the same scale.</p>
+<p>Choose a language pair and strength. The first chart shows the measured damage to the target language. The second shows the unwanted damage to its relative.</p>
 <figure class="visual-figure visual-results figure" aria-labelledby="visual-results-caption">
   <div id="visual-results-interactive" hidden>
     <div class="visual-controls">
       <label for="visual-pair">Language pair
         <select id="visual-pair"><option value="de">German → Dutch</option><option value="es">Spanish → Portuguese</option><option value="fr">French → Italian</option></select>
       </label>
-      <fieldset class="visual-dose"><legend>Calibrated target rise</legend>
+      <fieldset class="visual-dose"><legend>Target loss increase on validation text</legend>
         <button type="button" data-visual-tau="0.5" aria-pressed="false">0.5 nat/token</button>
         <button type="button" data-visual-tau="1" aria-pressed="true">1 nat/token</button>
       </fieldset>
@@ -4324,7 +4496,7 @@ main table > :not(caption) > * > * { background-color: transparent; }
     <p id="visual-result-sentence" class="visual-result-sentence" aria-live="polite" aria-atomic="true"></p>
   </div>
   <div id="visual-results-fallback">
-    <p><strong>German → Dutch, calibrated target rise of 1 nat/token.</strong> Measured CE rises on the 58 dates. Comparator ranges span the three training draws.</p>
+    <p><strong>German → Dutch, target loss increase of 1 nat/token on validation text.</strong> Changing one VPD subcomponent&#39;s coefficient worsened German next-token prediction while leaving average prediction loss on Dutch text almost unchanged. The table shows the loss increases on evaluation text. Ranges span the results from three training subsets.</p>
     
 <table class="caption-top table">
 <caption>Target and related-language damage, in nat/token</caption>
@@ -4359,30 +4531,52 @@ main table > :not(caption) > * > * { background-color: transparent; }
 </tbody>
 </table>
 
-    <p>See the <a href="index.html#sec-effects">paper&#39;s figure</a> for all three language pairs and both calibrated effects.</p>
+    <p>See the <a href="index.html#sec-effects">paper&#39;s figure</a> for all three language pairs and both target loss settings.</p>
   </div>
-  <figcaption id="visual-results-caption">CE rise relative to the unedited model. Dots are individual edits. Lines show the range across training draws. Repeated values overlap. The selected subcomponent is the same in all three draws. Learned updates here use 200 training steps.</figcaption>
+  <figcaption id="visual-results-caption">Each method is run on three overlapping training subsets, each with 64 of the 128 available text windows. Points show individual results. Lines span their range, not a confidence interval. Identical results overlap. The dashed line marks the calibration target.</figcaption>
 </figure>
-<p>Across all three pairs and both calibrated effects, related-language CE rose by about <strong>0.0003–0.0053 nat/token</strong>. The subcomponent edits caused less related-language damage than each comparator: all 18 simultaneous intervals for those differences lie below zero. These comparisons share the same six fixed edits.</p>
-<p>Earlier development had used related-language text and identified the German subcomponent. The new dates test the fixed edits; the selection history was not blind.</p>
-<p>The methods differ in what they preserve. The subcomponent edits cause less damage to the related language, while the learned updates keep English predictions closer to the original model, measured by KL divergence.</p>
+<p>Across all three pairs and both strengths, the VPD changes largely spared the related language: its average loss rose by only <strong>0.0003–0.0053 nat/token</strong>. Each of these six changes in this model caused less related-language damage than rank-one LoRA, full-matrix fine-tuning or the neuron edit.</p>
+</section>
+<section id="what-changed-in-english" class="level2">
+<h2 class="anchored" data-anchor-id="what-changed-in-english">English, innit?</h2>
+<p><strong>Rank-one LoRA and full-matrix fine-tuning preserved the original model’s English predictions more closely</strong> than the VPD changes did. Prediction loss scores the probability of the actual next token. KL divergence compares probabilities over all possible next tokens before and after the edit. Lower KL means the English predictions stayed closer to the original model.</p>
+<figure class="visual-figure figure" aria-labelledby="visual-english-caption">
+  <div id="visual-english-interactive" hidden>
+    <div class="visual-controls">
+      <label for="visual-english-pair">Language being changed
+        <select id="visual-english-pair"><option value="de">German</option><option value="es">Spanish</option><option value="fr">French</option></select>
+      </label>
+      <fieldset class="visual-dose"><legend>Target loss increase on validation text</legend>
+        <button type="button" data-visual-tau="0.5" aria-pressed="false">0.5 nat/token</button>
+        <button type="button" data-visual-tau="1" aria-pressed="true">1 nat/token</button>
+      </fieldset>
+    </div>
+    <div class="visual-chart-pair">
+      <div id="visual-english-chart"></div>
+    </div>
+  </div>
+  <div id="visual-english-fallback">
+    <p>The VPD edits&#39; English KL is below 0.001 nat/token for every language and strength. Both learned methods have lower English KL in all 18 comparisons. The <a href="index.html#sec-english">paper&#39;s English comparison</a> includes the values for all four methods.</p>
+  </div>
+  <figcaption id="visual-english-caption">English predictions after editing the selected language, measured on the same 58 evaluation dates. Points and ranges show results from the three training subsets. The horizontal scale is logarithmic: each tick is ten times the previous value. KL is measured from the original distribution to the edited one. Zero would mean identical distributions.</figcaption>
+</figure>
+<p>On the evaluated English text, the VPD edits changed next-token probabilities <strong>little on average</strong>: mean KL stayed below <strong>0.001 nat/token</strong> for every language and strength. For a sense of scale, changing a two-outcome distribution from <strong>50%/50% to 52%/48%</strong> gives KL ≈ <strong>0.00080</strong>, close to the German VPD edit’s 0.00077 at the 1 nat/token target. This is an illustration of scale, not a measured change of two percentage points for each token. Individual contexts can change more than the average suggests.</p>
 <details class="visual-details">
-  <summary>Uncertainty and the achieved target effects</summary>
+  <summary>Measurement details and study limits</summary>
+  <p>A nat is a unit of information based on natural logarithms. Loss increases are measured relative to the unedited model.</p>
+  <p>The evaluation tests six fixed weight changes on new text in one model. Those dates were not used to select or calibrate the changes. Earlier development had used related-language text and identified the German subcomponent, so the selection history was not blind.</p>
+  <p>Each text window contains 257 tokens, giving 256 next-token predictions. LoRA and full-matrix fine-tuning use 200 training steps per subset and yield three updates each. All three subsets select the same VPD subcomponent and produce the same scaled edit. Three target languages at two calibrated strengths give six fixed subcomponent edits.</p>
+  <p>All 18 simultaneous 95% intervals for the related-language differences lie below zero. These comparisons share the six fixed subcomponent edits, each compared with three methods.</p>
   <p>Intervals describe variation across the 58 session dates for each fixed edit. The edits, training seeds, subcomponents, languages and model stay fixed during resampling. Negative related-language differences favour the subcomponent edit.</p>
   <div id="visual-uncertainty"><p>The <a href="index.html#sec-contrasts">paper&#39;s comparison figure</a> gives all simultaneous 95% intervals and the achieved target-effect checks.</p></div>
-  <p>Calibration matched validation effects. A separate, post hoc check asked whether achieved target effects agreed within ±0.1 nat/token on the evaluation dates: 15 of 18 comparisons did. The other three had a larger mean target effect for the subcomponent edit. One target-gap interval also allows a smaller effect for the subcomponent edit. The target-gap intervals use a separate simultaneous family.</p>
+  <p>Calibration matched validation effects. A separate, post hoc check counted agreement on the evaluation dates only if the entire simultaneous 95% interval for the target-effect difference lay within ±0.1 nat/token. This band was chosen after the results: 15 of 18 comparisons met the criterion. The three exceptions had larger mean target effects for the subcomponent edit, but their mean gaps were still inside the band. One interval also allows a smaller effect. The target-gap intervals use a separate simultaneous family.</p>
 </details>
-</section>
-<section id="longer-training-and-alternative-directions" class="level2">
-<h2 class="anchored" data-anchor-id="longer-training-and-alternative-directions">Longer training and alternative directions</h2>
-<p>To check how the comparison depends on the training recipe, I trained the learned updates for 2,000 steps under an expanded recipe. These updates generally reduced related-language damage, but still caused more than the subcomponent edits. A separate selector searched for rank-one directions outside VPD’s fixed set of subcomponents. Its edits also caused more related-language damage; it reused the selected subcomponent’s norm.</p>
-<p>A randomized-dictionary control produced no comparable edit, so the dictionary’s contribution remains unresolved.</p>
-<p>These exploratory comparisons reuse development text examined earlier. Convergence of the learned updates was not established. The paper gives the <a href="../selective-editing/index.html#sec-extended-comparisons">comparison details</a> and <a href="../selective-editing/index.html#sec-limits">study limits</a>.</p>
 <script type="application/json" id="visual-selective-data">
 {
   "description": "Presentation data copied from committed results. No new statistical analysis. Numbers retain source precision.",
   "sources": {
     "edits": "results/selective_editing/posthoc.json#edits (confirm, four claim methods)",
+    "english_kl": "results/selective_editing/posthoc.json#edits[].english_kl.confirm_en",
     "protected_intervals": "results/selective_editing/confirm_result.json#reading_table",
     "target_gap_intervals": "results/selective_editing/posthoc.json#dose_agreement.confirm.rows"
   },
@@ -4394,7 +4588,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "vpd_atom",
       "tau": 0.5,
       "target_rise": 0.48029260388736067,
-      "protected_rise": 0.0030014884882959827
+      "protected_rise": 0.0030014884882959827,
+      "english_kl": 0.0004078117660889081
     },
     {
       "target": "de",
@@ -4402,7 +4597,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "vpd_atom",
       "tau": 1.0,
       "target_rise": 0.982347192435429,
-      "protected_rise": 0.0052622227833188815
+      "protected_rise": 0.0052622227833188815,
+      "english_kl": 0.0007705748312532548
     },
     {
       "target": "de",
@@ -4410,7 +4606,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "neurons",
       "tau": 0.5,
       "target_rise": 0.49737099943489865,
-      "protected_rise": 0.43632506502085716
+      "protected_rise": 0.43632506502085716,
+      "english_kl": 0.003533431089980977
     },
     {
       "target": "de",
@@ -4418,7 +4615,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "neurons",
       "tau": 1.0,
       "target_rise": 0.9959309964344419,
-      "protected_rise": 0.756313159548003
+      "protected_rise": 0.756313159548003,
+      "english_kl": 0.01337814327040366
     },
     {
       "target": "de",
@@ -4426,7 +4624,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "lora_rank1",
       "tau": 0.5,
       "target_rise": 0.450562571657115,
-      "protected_rise": 0.05880307329112086
+      "protected_rise": 0.05880307329112086,
+      "english_kl": 6.809307354881733e-05
     },
     {
       "target": "de",
@@ -4434,7 +4633,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "lora_rank1",
       "tau": 1.0,
       "target_rise": 0.9229354282905315,
-      "protected_rise": 0.11221048338659878
+      "protected_rise": 0.11221048338659878,
+      "english_kl": 0.00013107533442084315
     },
     {
       "target": "de",
@@ -4442,7 +4642,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "finetune_24",
       "tau": 0.5,
       "target_rise": 0.4659052429528072,
-      "protected_rise": 0.11096507516400568
+      "protected_rise": 0.11096507516400568,
+      "english_kl": 0.00017956535364270355
     },
     {
       "target": "de",
@@ -4450,7 +4651,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "finetune_24",
       "tau": 1.0,
       "target_rise": 0.9535157433871565,
-      "protected_rise": 0.22599101477655872
+      "protected_rise": 0.22599101477655872,
+      "english_kl": 0.00036475107468692745
     },
     {
       "target": "de",
@@ -4458,7 +4660,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "vpd_atom",
       "tau": 0.5,
       "target_rise": 0.48029260388736067,
-      "protected_rise": 0.0030014884882959827
+      "protected_rise": 0.0030014884882959827,
+      "english_kl": 0.0004078117660889081
     },
     {
       "target": "de",
@@ -4466,7 +4669,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "vpd_atom",
       "tau": 1.0,
       "target_rise": 0.982347192435429,
-      "protected_rise": 0.0052622227833188815
+      "protected_rise": 0.0052622227833188815,
+      "english_kl": 0.0007705748312532548
     },
     {
       "target": "de",
@@ -4474,7 +4678,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "neurons",
       "tau": 0.5,
       "target_rise": 0.49737099943489865,
-      "protected_rise": 0.43632506502085716
+      "protected_rise": 0.43632506502085716,
+      "english_kl": 0.003533431089980977
     },
     {
       "target": "de",
@@ -4482,7 +4687,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "neurons",
       "tau": 1.0,
       "target_rise": 0.9959309964344419,
-      "protected_rise": 0.756313159548003
+      "protected_rise": 0.756313159548003,
+      "english_kl": 0.01337814327040366
     },
     {
       "target": "de",
@@ -4490,7 +4696,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "lora_rank1",
       "tau": 0.5,
       "target_rise": 0.4775912843901536,
-      "protected_rise": 0.050216880337945344
+      "protected_rise": 0.050216880337945344,
+      "english_kl": 6.935754171191265e-05
     },
     {
       "target": "de",
@@ -4498,7 +4705,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "lora_rank1",
       "tau": 1.0,
       "target_rise": 0.9320794713908228,
-      "protected_rise": 0.09109198224955592
+      "protected_rise": 0.09109198224955592,
+      "english_kl": 0.00012720204697337788
     },
     {
       "target": "de",
@@ -4506,7 +4714,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "finetune_24",
       "tau": 0.5,
       "target_rise": 0.4777953665831993,
-      "protected_rise": 0.11921033777039626
+      "protected_rise": 0.11921033777039626,
+      "english_kl": 0.00020954566564890636
     },
     {
       "target": "de",
@@ -4514,7 +4723,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "finetune_24",
       "tau": 1.0,
       "target_rise": 0.9651713782343371,
-      "protected_rise": 0.24084097352521172
+      "protected_rise": 0.24084097352521172,
+      "english_kl": 0.00042304905469665817
     },
     {
       "target": "de",
@@ -4522,7 +4732,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "vpd_atom",
       "tau": 0.5,
       "target_rise": 0.48029260388736067,
-      "protected_rise": 0.0030014884882959827
+      "protected_rise": 0.0030014884882959827,
+      "english_kl": 0.0004078117660889081
     },
     {
       "target": "de",
@@ -4530,7 +4741,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "vpd_atom",
       "tau": 1.0,
       "target_rise": 0.982347192435429,
-      "protected_rise": 0.0052622227833188815
+      "protected_rise": 0.0052622227833188815,
+      "english_kl": 0.0007705748312532548
     },
     {
       "target": "de",
@@ -4538,7 +4750,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "neurons",
       "tau": 0.5,
       "target_rise": 0.49737099943489865,
-      "protected_rise": 0.43632506502085716
+      "protected_rise": 0.43632506502085716,
+      "english_kl": 0.003533431089980977
     },
     {
       "target": "de",
@@ -4546,7 +4759,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "neurons",
       "tau": 1.0,
       "target_rise": 0.9959309964344419,
-      "protected_rise": 0.756313159548003
+      "protected_rise": 0.756313159548003,
+      "english_kl": 0.01337814327040366
     },
     {
       "target": "de",
@@ -4554,7 +4768,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "lora_rank1",
       "tau": 0.5,
       "target_rise": 0.45240721209295864,
-      "protected_rise": 0.04326512895781418
+      "protected_rise": 0.04326512895781418,
+      "english_kl": 6.308370989402114e-05
     },
     {
       "target": "de",
@@ -4562,7 +4777,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "lora_rank1",
       "tau": 1.0,
       "target_rise": 0.9211912607324535,
-      "protected_rise": 0.0782679113848456
+      "protected_rise": 0.0782679113848456,
+      "english_kl": 0.00011828548053143032
     },
     {
       "target": "de",
@@ -4570,7 +4786,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "finetune_24",
       "tau": 0.5,
       "target_rise": 0.49174003765500823,
-      "protected_rise": 0.11563752437460012
+      "protected_rise": 0.11563752437460012,
+      "english_kl": 0.00019598826525154812
     },
     {
       "target": "de",
@@ -4578,7 +4795,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "finetune_24",
       "tau": 1.0,
       "target_rise": 0.948819349552023,
-      "protected_rise": 0.2250903557086813
+      "protected_rise": 0.2250903557086813,
+      "english_kl": 0.00038216591151310773
     },
     {
       "target": "es",
@@ -4586,7 +4804,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "vpd_atom",
       "tau": 0.5,
       "target_rise": 0.5173648595809937,
-      "protected_rise": 0.0003140794819798963
+      "protected_rise": 0.0003140794819798963,
+      "english_kl": 0.00027516920818015933
     },
     {
       "target": "es",
@@ -4594,7 +4813,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "vpd_atom",
       "tau": 1.0,
       "target_rise": 1.016759070856818,
-      "protected_rise": 0.003015830599028489
+      "protected_rise": 0.003015830599028489,
+      "english_kl": 0.000494022529516048
     },
     {
       "target": "es",
@@ -4602,7 +4822,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "neurons",
       "tau": 0.5,
       "target_rise": 0.4846645388109931,
-      "protected_rise": 0.522610146423866
+      "protected_rise": 0.522610146423866,
+      "english_kl": 0.0032901678967956005
     },
     {
       "target": "es",
@@ -4610,7 +4831,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "neurons",
       "tau": 1.0,
       "target_rise": 0.9940617248929781,
-      "protected_rise": 0.7573968213180016
+      "protected_rise": 0.7573968213180016,
+      "english_kl": 0.0198819973538148
     },
     {
       "target": "es",
@@ -4618,7 +4840,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "lora_rank1",
       "tau": 0.5,
       "target_rise": 0.496626981373491,
-      "protected_rise": 0.1140566036618989
+      "protected_rise": 0.1140566036618989,
+      "english_kl": 5.914103123108487e-05
     },
     {
       "target": "es",
@@ -4626,7 +4849,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "lora_rank1",
       "tau": 1.0,
       "target_rise": 0.9758703790861984,
-      "protected_rise": 0.23595840766512113
+      "protected_rise": 0.23595840766512113,
+      "english_kl": 0.0001179399771680092
     },
     {
       "target": "es",
@@ -4634,7 +4858,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "finetune_24",
       "tau": 0.5,
       "target_rise": 0.5078871784539059,
-      "protected_rise": 0.19417572432550892
+      "protected_rise": 0.19417572432550892,
+      "english_kl": 0.00011451953349901957
     },
     {
       "target": "es",
@@ -4642,7 +4867,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "finetune_24",
       "tau": 1.0,
       "target_rise": 0.9910282554297611,
-      "protected_rise": 0.3856342948716262
+      "protected_rise": 0.3856342948716262,
+      "english_kl": 0.00021643838333367402
     },
     {
       "target": "es",
@@ -4650,7 +4876,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "vpd_atom",
       "tau": 0.5,
       "target_rise": 0.5173648595809937,
-      "protected_rise": 0.0003140794819798963
+      "protected_rise": 0.0003140794819798963,
+      "english_kl": 0.00027516920818015933
     },
     {
       "target": "es",
@@ -4658,7 +4885,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "vpd_atom",
       "tau": 1.0,
       "target_rise": 1.016759070856818,
-      "protected_rise": 0.003015830599028489
+      "protected_rise": 0.003015830599028489,
+      "english_kl": 0.000494022529516048
     },
     {
       "target": "es",
@@ -4666,7 +4894,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "neurons",
       "tau": 0.5,
       "target_rise": 0.4846645388109931,
-      "protected_rise": 0.522610146423866
+      "protected_rise": 0.522610146423866,
+      "english_kl": 0.0032901678967956005
     },
     {
       "target": "es",
@@ -4674,7 +4903,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "neurons",
       "tau": 1.0,
       "target_rise": 0.9992070526912294,
-      "protected_rise": 0.7636838945849188
+      "protected_rise": 0.7636838945849188,
+      "english_kl": 0.01972074188484714
     },
     {
       "target": "es",
@@ -4682,7 +4912,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "lora_rank1",
       "tau": 0.5,
       "target_rise": 0.5104679979127029,
-      "protected_rise": 0.07997336880914097
+      "protected_rise": 0.07997336880914097,
+      "english_kl": 8.07034470951827e-05
     },
     {
       "target": "es",
@@ -4690,7 +4921,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "lora_rank1",
       "tau": 1.0,
       "target_rise": 0.9923692612812437,
-      "protected_rise": 0.13262902457138587
+      "protected_rise": 0.13262902457138587,
+      "english_kl": 0.00012773353855350408
     },
     {
       "target": "es",
@@ -4698,7 +4930,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "finetune_24",
       "tau": 0.5,
       "target_rise": 0.5140188809098869,
-      "protected_rise": 0.20119914104198589
+      "protected_rise": 0.20119914104198589,
+      "english_kl": 0.00012146916134074202
     },
     {
       "target": "es",
@@ -4706,7 +4939,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "finetune_24",
       "tau": 1.0,
       "target_rise": 1.0271758005536835,
-      "protected_rise": 0.40697955263072044
+      "protected_rise": 0.40697955263072044,
+      "english_kl": 0.0002388890486678253
     },
     {
       "target": "es",
@@ -4714,7 +4948,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "vpd_atom",
       "tau": 0.5,
       "target_rise": 0.5173648595809937,
-      "protected_rise": 0.0003140794819798963
+      "protected_rise": 0.0003140794819798963,
+      "english_kl": 0.00027516920818015933
     },
     {
       "target": "es",
@@ -4722,7 +4957,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "vpd_atom",
       "tau": 1.0,
       "target_rise": 1.016759070856818,
-      "protected_rise": 0.003015830599028489
+      "protected_rise": 0.003015830599028489,
+      "english_kl": 0.000494022529516048
     },
     {
       "target": "es",
@@ -4730,7 +4966,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "neurons",
       "tau": 0.5,
       "target_rise": 0.4846645388109931,
-      "protected_rise": 0.522610146423866
+      "protected_rise": 0.522610146423866,
+      "english_kl": 0.0032901678967956005
     },
     {
       "target": "es",
@@ -4738,7 +4975,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "neurons",
       "tau": 1.0,
       "target_rise": 0.9993449737285746,
-      "protected_rise": 0.7646048151213547
+      "protected_rise": 0.7646048151213547,
+      "english_kl": 0.019723093891837472
     },
     {
       "target": "es",
@@ -4746,7 +4984,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "lora_rank1",
       "tau": 0.5,
       "target_rise": 0.48924277157619084,
-      "protected_rise": 0.08884819211630986
+      "protected_rise": 0.08884819211630986,
+      "english_kl": 4.6187114266699764e-05
     },
     {
       "target": "es",
@@ -4754,7 +4993,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "lora_rank1",
       "tau": 1.0,
       "target_rise": 0.9676374073686271,
-      "protected_rise": 0.16715337079146814
+      "protected_rise": 0.16715337079146814,
+      "english_kl": 8.444312635251193e-05
     },
     {
       "target": "es",
@@ -4762,7 +5002,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "finetune_24",
       "tau": 0.5,
       "target_rise": 0.4961683215766117,
-      "protected_rise": 0.17583070541250295
+      "protected_rise": 0.17583070541250295,
+      "english_kl": 8.447081801995379e-05
     },
     {
       "target": "es",
@@ -4770,7 +5011,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "finetune_24",
       "tau": 1.0,
       "target_rise": 1.0178918180794552,
-      "protected_rise": 0.35787588974525186
+      "protected_rise": 0.35787588974525186,
+      "english_kl": 0.00016007271313293162
     },
     {
       "target": "fr",
@@ -4778,7 +5020,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "vpd_atom",
       "tau": 0.5,
       "target_rise": 0.4965319427950629,
-      "protected_rise": 0.0008440387660059435
+      "protected_rise": 0.0008440387660059435,
+      "english_kl": 0.00029184914619063734
     },
     {
       "target": "fr",
@@ -4786,7 +5029,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "vpd_atom",
       "tau": 1.0,
       "target_rise": 1.0141392206323558,
-      "protected_rise": 0.0016600140209855705
+      "protected_rise": 0.0016600140209855705,
+      "english_kl": 0.0005557146354915638
     },
     {
       "target": "fr",
@@ -4794,7 +5038,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "neurons",
       "tau": 0.5,
       "target_rise": 0.4909330811993829,
-      "protected_rise": 0.4227541315144506
+      "protected_rise": 0.4227541315144506,
+      "english_kl": 0.005279680360750905
     },
     {
       "target": "fr",
@@ -4802,7 +5047,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "neurons",
       "tau": 1.0,
       "target_rise": 0.9865761543142384,
-      "protected_rise": 0.8677824858961434
+      "protected_rise": 0.8677824858961434,
+      "english_kl": 0.038671062038890244
     },
     {
       "target": "fr",
@@ -4810,7 +5056,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "lora_rank1",
       "tau": 0.5,
       "target_rise": 0.47359170584843074,
-      "protected_rise": 0.026865659088924014
+      "protected_rise": 0.026865659088924014,
+      "english_kl": 7.477712915715529e-05
     },
     {
       "target": "fr",
@@ -4818,7 +5065,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "lora_rank1",
       "tau": 1.0,
       "target_rise": 0.9793971201469158,
-      "protected_rise": 0.053238486421519314
+      "protected_rise": 0.053238486421519314,
+      "english_kl": 0.0001542834706924623
     },
     {
       "target": "fr",
@@ -4826,7 +5074,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "finetune_24",
       "tau": 0.5,
       "target_rise": 0.4512303451011921,
-      "protected_rise": 0.07480052010766391
+      "protected_rise": 0.07480052010766391,
+      "english_kl": 0.00011852641935171238
     },
     {
       "target": "fr",
@@ -4834,7 +5083,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "finetune_24",
       "tau": 1.0,
       "target_rise": 0.9186799690641206,
-      "protected_rise": 0.1388040616594512
+      "protected_rise": 0.1388040616594512,
+      "english_kl": 0.00023379276059005922
     },
     {
       "target": "fr",
@@ -4842,7 +5092,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "vpd_atom",
       "tau": 0.5,
       "target_rise": 0.4965319427950629,
-      "protected_rise": 0.0008440387660059435
+      "protected_rise": 0.0008440387660059435,
+      "english_kl": 0.00029184914619063734
     },
     {
       "target": "fr",
@@ -4850,7 +5101,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "vpd_atom",
       "tau": 1.0,
       "target_rise": 1.0141392206323558,
-      "protected_rise": 0.0016600140209855705
+      "protected_rise": 0.0016600140209855705,
+      "english_kl": 0.0005557146354915638
     },
     {
       "target": "fr",
@@ -4858,7 +5110,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "neurons",
       "tau": 0.5,
       "target_rise": 0.5236211480765507,
-      "protected_rise": 0.4408486012754769
+      "protected_rise": 0.4408486012754769,
+      "english_kl": 0.005628344887899685
     },
     {
       "target": "fr",
@@ -4866,7 +5119,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "neurons",
       "tau": 1.0,
       "target_rise": 0.9832043318912901,
-      "protected_rise": 0.8760490294160515
+      "protected_rise": 0.8760490294160515,
+      "english_kl": 0.038023100523599265
     },
     {
       "target": "fr",
@@ -4874,7 +5128,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "lora_rank1",
       "tau": 0.5,
       "target_rise": 0.47299666240297517,
-      "protected_rise": 0.027946167978747136
+      "protected_rise": 0.027946167978747136,
+      "english_kl": 7.844388346711639e-05
     },
     {
       "target": "fr",
@@ -4882,7 +5137,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "lora_rank1",
       "tau": 1.0,
       "target_rise": 0.9501368752841292,
-      "protected_rise": 0.05393444258591224
+      "protected_rise": 0.05393444258591224,
+      "english_kl": 0.00015472823818934807
     },
     {
       "target": "fr",
@@ -4890,7 +5146,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "finetune_24",
       "tau": 0.5,
       "target_rise": 0.48294794970545274,
-      "protected_rise": 0.06686505778082485
+      "protected_rise": 0.06686505778082485,
+      "english_kl": 8.561368623963187e-05
     },
     {
       "target": "fr",
@@ -4898,7 +5155,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "finetune_24",
       "tau": 1.0,
       "target_rise": 0.9667915434672915,
-      "protected_rise": 0.12038025773804763
+      "protected_rise": 0.12038025773804763,
+      "english_kl": 0.00015699074481682177
     },
     {
       "target": "fr",
@@ -4906,7 +5164,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "vpd_atom",
       "tau": 0.5,
       "target_rise": 0.4965319427950629,
-      "protected_rise": 0.0008440387660059435
+      "protected_rise": 0.0008440387660059435,
+      "english_kl": 0.00029184914619063734
     },
     {
       "target": "fr",
@@ -4914,7 +5173,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "vpd_atom",
       "tau": 1.0,
       "target_rise": 1.0141392206323558,
-      "protected_rise": 0.0016600140209855705
+      "protected_rise": 0.0016600140209855705,
+      "english_kl": 0.0005557146354915638
     },
     {
       "target": "fr",
@@ -4922,7 +5182,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "neurons",
       "tau": 0.5,
       "target_rise": 0.5032747202906115,
-      "protected_rise": 0.42615054804703284
+      "protected_rise": 0.42615054804703284,
+      "english_kl": 0.005479920179791877
     },
     {
       "target": "fr",
@@ -4930,7 +5191,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "neurons",
       "tau": 1.0,
       "target_rise": 0.99393774312118,
-      "protected_rise": 0.8658530383274473
+      "protected_rise": 0.8658530383274473,
+      "english_kl": 0.03835745451265368
     },
     {
       "target": "fr",
@@ -4938,7 +5200,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "lora_rank1",
       "tau": 0.5,
       "target_rise": 0.489468056580116,
-      "protected_rise": 0.036043253438226106
+      "protected_rise": 0.036043253438226106,
+      "english_kl": 6.648296525311488e-05
     },
     {
       "target": "fr",
@@ -4946,7 +5209,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "lora_rank1",
       "tau": 1.0,
       "target_rise": 0.9973931394774338,
-      "protected_rise": 0.07005446121610444
+      "protected_rise": 0.07005446121610444,
+      "english_kl": 0.0001318004780277361
     },
     {
       "target": "fr",
@@ -4954,7 +5218,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "finetune_24",
       "tau": 0.5,
       "target_rise": 0.45285408661283294,
-      "protected_rise": 0.058239813508658575
+      "protected_rise": 0.058239813508658575,
+      "english_kl": 9.099018417804598e-05
     },
     {
       "target": "fr",
@@ -4962,7 +5227,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
       "method": "finetune_24",
       "tau": 1.0,
       "target_rise": 0.925654699062479,
-      "protected_rise": 0.1047857506521817
+      "protected_rise": 0.1047857506521817,
+      "english_kl": 0.00017359218916932024
     }
   ],
   "comparisons": [
@@ -5309,7 +5575,7 @@ main table > :not(caption) > * > * { background-color: transparent; }
     const height = compact ? 386 : 324;
     const svg = el("svg", {viewBox: `0 0 ${width} ${height}`, role: "img", "aria-label": `${language}: ${targetPanel ? "target effect" : "related-language damage"}, cross-entropy rise in nat per token`});
     svg.append(el("text", {x: 16, y: 28, fill: "#243c3d", "font-size": 20, "font-weight": 600}, language));
-    svg.append(el("text", {x: 16, y: 50, fill: "#53625d", "font-size": 14}, targetPanel ? "Target effect · measured rise" : "Related language · less is better"));
+    svg.append(el("text", {x: 16, y: 50, fill: "#53625d", "font-size": 14}, targetPanel ? "Target language · measured damage" : "Related language · less is better"));
     const left = compact ? 16 : 188, right = width - 19;
     const x = value => left + value / 1.2 * (right - left);
     const top = compact ? 108 : 76, bottom = compact ? 322 : 270;
@@ -5329,18 +5595,50 @@ main table > :not(caption) > * > * { background-color: transparent; }
       svg.append(el("text", {x: compact ? right : 16, y: compact ? y - 21 : y + 15, "text-anchor": compact ? "end" : "start", fill: "#344946", "font-size": 14, "font-weight": 600}, range(values)));
       svg.append(el("line", {x1: x(Math.min(...values)), x2: x(Math.max(...values)), y1: y, y2: y, stroke: method.color, "stroke-width": 2}));
       const visibleRows = method.id === "vpd_atom" ? rows.slice(0, 1) : rows;
-      visibleRows.forEach(row => mark(svg, method, x(row[field]), y, `${method.label}${method.id === "vpd_atom" ? "" : `, draw ${row.draw + 1}`}: ${number(row[field])} nat/token`));
+      visibleRows.forEach(row => mark(svg, method, x(row[field]), y, `${method.label}${method.id === "vpd_atom" ? "" : `, training subset ${row.draw + 1}`}: ${number(row[field])} nat/token`));
     });
-    svg.append(el("text", {x: right, y: height - 5, "text-anchor": "end", fill: "#53625d", "font-size": 13}, "CE rise · nat/token"));
+    svg.append(el("text", {x: right, y: height - 5, "text-anchor": "end", fill: "#53625d", "font-size": 13}, "Prediction loss increase · nat/token"));
     const accessibleValues = methods.map(method => `${method.label}: ${range(edits.filter(e => e.method === method.id).map(e => e[field]))} nat per token`).join(". ");
     svg.setAttribute("aria-label", `${language}, ${targetPanel ? "target effect" : "related-language damage"}. Cross-entropy rise relative to the unedited model. ${accessibleValues}. Both panels use the same zero to 1.2 nat per token scale.`);
+    return svg;
+  }
+  function englishPlot(edits) {
+    const container = document.getElementById("visual-english-chart");
+    const width = Math.max(280, container.clientWidth || 470);
+    const compact = width < 430;
+    const height = compact ? 386 : 324;
+    const svg = el("svg", {viewBox: `0 0 ${width} ${height}`, role: "img"});
+    svg.append(el("text", {x: 16, y: 28, fill: "#243c3d", "font-size": 20, "font-weight": 600}, "Change in English predictions"));
+    svg.append(el("text", {x: 16, y: 51, fill: "#53625d", "font-size": 14}, `${pairs[state.target][0]} edit · ${state.tau} nat/token target · lower is better`));
+    const left = compact ? 30 : 188, right = width - 30;
+    const x = value => left + (Math.log10(value) + 5) / 4 * (right - left);
+    const top = compact ? 108 : 78, bottom = compact ? 321 : 273;
+    [0.00001, 0.0001, 0.001, 0.01, 0.1].forEach(tick => {
+      svg.append(el("line", {x1: x(tick), x2: x(tick), y1: top, y2: bottom, stroke: "#dce3df", "stroke-width": 1}));
+      svg.append(el("text", {x: x(tick), y: compact ? 347 : 296, "text-anchor": "middle", fill: "#53625d", "font-size": compact ? 11 : 13}, tick.toString()));
+    });
+    methods.forEach((method, index) => {
+      const rows = edits.filter(row => row.method === method.id);
+      const values = rows.map(row => row.english_kl);
+      if (values.some(value => !Number.isFinite(value) || value < 0.00001 || value > 0.1)) throw new Error("English KL outside plotted scale");
+      const y = compact ? 120 + index * 65 : 104 + index * 49;
+      if (compact) svg.append(el("rect", {x: 0, y: y - 38, width, height: 25, fill: "#faf9f5"}));
+      svg.append(el("text", {x: 16, y: compact ? y - 21 : y - 4, fill: "#344946", "font-size": 14}, method.label));
+      svg.append(el("text", {x: compact ? width - 16 : 16, y: compact ? y - 21 : y + 15, "text-anchor": compact ? "end" : "start", fill: "#344946", "font-size": 14, "font-weight": 600}, range(values)));
+      svg.append(el("line", {x1: x(Math.min(...values)), x2: x(Math.max(...values)), y1: y, y2: y, stroke: method.color, "stroke-width": 2}));
+      const visibleRows = method.id === "vpd_atom" ? rows.slice(0, 1) : rows;
+      visibleRows.forEach(row => mark(svg, method, x(row.english_kl), y, `${method.label}${method.id === "vpd_atom" ? "" : `, training subset ${row.draw + 1}`}: English KL ${number(row.english_kl)} nat/token`));
+    });
+    svg.append(el("text", {x: right, y: height - 5, "text-anchor": "end", fill: "#53625d", "font-size": 13}, "KL divergence · nat/token · log scale"));
+    const values = methods.map(method => `${method.label}: ${range(edits.filter(row => row.method === method.id).map(row => row.english_kl))} nat per token`).join(". ");
+    svg.setAttribute("aria-label", `English predictions after the ${pairs[state.target][0]} edit at a ${state.tau} nat per token calibration target. KL divergence from the original distribution to the edited one, averaged over English text on ${data.n_dates} evaluation dates. Lower is closer to the original model. ${values}. Logarithmic scale from 0.00001 to 0.1, with the same scale for every language and strength.`);
     return svg;
   }
   function uncertainty(rows) {
     const table = document.createElement("table");
     table.className = "visual-uncertainty-table";
     const caption = table.createCaption();
-    caption.textContent = `${pairs[state.target].join(" → ")}, calibrated rise ${state.tau} nat/token. Subcomponent edit minus comparator: estimate [simultaneous 95% interval], nat/token.`;
+    caption.textContent = `${pairs[state.target].join(" → ")}, target loss increase on validation text: ${state.tau} nat/token. Subcomponent edit minus comparator: estimate [simultaneous 95% interval], nat/token.`;
     const head = table.createTHead().insertRow();
     ["Comparator", "Related-language difference", "Achieved target gap (post hoc)"].forEach(text => {
       const th = document.createElement("th"); th.scope = "col"; th.textContent = text; head.append(th);
@@ -5365,10 +5663,12 @@ main table > :not(caption) > * > * { background-color: transparent; }
     const [target, protectedLanguage] = pairs[state.target];
     document.getElementById("visual-target-chart").replaceChildren(plot("target_rise", target, true, edits));
     document.getElementById("visual-protected-chart").replaceChildren(plot("protected_rise", protectedLanguage, false, edits));
+    document.getElementById("visual-english-chart").replaceChildren(englishPlot(edits));
     const atom = edits.find(e => e.method === "vpd_atom");
-    document.getElementById("visual-result-sentence").textContent = `The subcomponent edit raised ${target} CE by ${number(atom.target_rise)} and ${protectedLanguage} CE by ${number(atom.protected_rise)} nat/token. The dashed line marks the rise the edits were calibrated to on validation text.`;
+    document.getElementById("visual-result-sentence").textContent = `Changing one VPD subcomponent's coefficient worsened ${target} next-token prediction while leaving average prediction loss on ${protectedLanguage} text almost unchanged. On the evaluation text, loss rose by ${number(atom.target_rise)} nat/token for ${target} but only ${number(atom.protected_rise)} nat/token for ${protectedLanguage}.`;
     document.getElementById("visual-uncertainty").replaceChildren(uncertainty(comparisons));
     document.querySelectorAll("[data-visual-tau]").forEach(button => button.setAttribute("aria-pressed", String(Number(button.dataset.visualTau) === state.tau)));
+    ["visual-pair", "visual-english-pair"].forEach(id => { document.getElementById(id).value = state.target; });
   }
   // The matrix toy is deliberately independent of every measured result above.
   function matrixIllustration(coefficient) {
@@ -5392,11 +5692,13 @@ main table > :not(caption) > * > * { background-color: transparent; }
   }
   try {
     document.getElementById("visual-results-interactive").hidden = false;
+    document.getElementById("visual-english-interactive").hidden = false;
     render();
     matrixIllustration(0);
     document.getElementById("visual-results-fallback").hidden = true;
+    document.getElementById("visual-english-fallback").hidden = true;
     document.getElementById("visual-coefficient-control").hidden = false;
-    document.getElementById("visual-pair").addEventListener("change", event => { state.target = event.target.value; render(); });
+    ["visual-pair", "visual-english-pair"].forEach(id => document.getElementById(id).addEventListener("change", event => { state.target = event.target.value; render(); }));
     document.querySelectorAll("[data-visual-tau]").forEach(button => button.addEventListener("click", () => { state.tau = Number(button.dataset.visualTau); render(); }));
     document.getElementById("visual-coefficient").addEventListener("input", event => matrixIllustration(Number(event.target.value)));
     let frame;
@@ -5419,6 +5721,8 @@ main table > :not(caption) > * > * { background-color: transparent; }
   } catch (error) {
     document.getElementById("visual-results-interactive").hidden = true;
     document.getElementById("visual-results-fallback").hidden = false;
+    document.getElementById("visual-english-interactive").hidden = true;
+    document.getElementById("visual-english-fallback").hidden = false;
     // Keep the complete static example available when a build has missing data.
     console.warn("Selective-editing visual could not initialize.", error);
   }

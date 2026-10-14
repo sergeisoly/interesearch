@@ -162,14 +162,20 @@ ul.task-list li input[type="checkbox"] {
 
 <header class="research-hero">
 <h1>Some Studies of Language Model Weight Edits</h1>
-<p class="research-intro">Changing a model's weights can affect more than the intended behaviour. These studies examine selective language edits and the reuse of repairs for collateral damage, using <a href="https://www.goodfire.com/research/interpreting-lm-parameters">Goodfire's 67M-parameter model</a>.</p>
+<p class="research-intro">The work presented here is my attempt to understand interpretability and model editing methods more deeply. By building on recent advances and trying to find something new, I also learn what others have done before me. For me, the best way to learn is through practice.</p>
+<p class="research-intro">Although these studies are written in the form of research papers, I’m not yet confident that I can call them rigorous scientific work. I’m sharing them in the hope that they may be useful to someone besides me.</p>
+<section class="research-ai-note" aria-labelledby="ai-assistance">
+<h2 id="ai-assistance" class="anchored">AI assistance</h2>
+<p>I made extensive use of Codex with GPT-6 Astra and GPT-6.1 Sol, as well as Claude Code with Opus 5.5, throughout this work. I personally supervised the experiments and guided their direction based on the results and the questions I wanted to explore.</p>
+<p>Most of the text was also written with AI assistance and went through several rounds of careful editing. I hope attentive readers will forgive me for that.</p>
+</section>
 </header>
 
 <section class="research-story">
 <div class="research-story-copy">
 <h2 class="anchored">Selective language editing</h2>
-<p>This study tests how selectively weight edits can weaken one language while sparing a close relative, following up on <a href="https://www.lesswrong.com/posts/ieoWstubDQWLrMnhH/exploration-fine-tuning-with-parameter-decomposition">Lucius Bushnaq’s exploration of fine-tuning with parameter decomposition</a>. Across three related-language pairs, selected subcomponent edits caused less damage to the related language than learned updates and neuron edits calibrated to the same target effect on validation text. The learned updates preserved English predictions better.</p>
-<p><a class="research-main-link" href="./selective-editing/explainer.html">Visual guide</a></p>
+<p>To test selectivity, I deliberately weaken predictions in one language and measure damage to a close relative, following up on <a href="https://www.lesswrong.com/posts/ieoWstubDQWLrMnhH/exploration-fine-tuning-with-parameter-decomposition">Lucius Bushnaq’s exploration of fine-tuning with parameter decomposition</a>. Across three related-language pairs, selected subcomponent edits caused less damage to the related language than rank-one LoRA, full-matrix fine-tuning and neuron edits calibrated to the same target effect on validation text. LoRA and full-matrix fine-tuning preserved English predictions better.</p>
+<p><a class="research-main-link" href="./selective-editing/explainer.html">Short summary</a></p>
 <p class="research-secondary-links"><a href="./selective-editing/index.html">Paper</a><a href="selective-editing/index.pdf">PDF</a><a href="https://github.com/sergeisoly/interesearch/blob/main/papers/guides/selective-editing.md">Study guide on GitHub</a></p>
 </div>
 <div class="research-story-visual" aria-label="The experiment changes German and checks the effect on Dutch. Diagram of the question, not measured data.">
@@ -190,8 +196,8 @@ ul.task-list li input[type="checkbox"] {
 <section class="research-story">
 <div class="research-story-copy">
 <h2 class="anchored">Repair transfer</h2>
-<p>This study tests ways to reuse an earlier repair on two fine-tunes trained independently from the same base model on samples from the same data distribution. Using the repair as an initialization removed more Dutch damage than fresh fitting when data and steps were limited, while fresh fitting nearly caught up at the full budget. Rescaling the repair's fixed directions left more Dutch damage.</p>
-<p><a class="research-main-link" href="./repair-transfer/explainer.html">Visual guide</a></p>
+<p>Reusing a repair could reduce the work needed to fix collateral damage in another fine-tune. I compare ways to reuse it on two fine-tunes trained independently from the same base model on samples from the same data distribution. Starting from the earlier repair removed more Dutch damage than fitting a new repair when data and steps were limited, while fresh fitting nearly caught up at the full budget. Fitting only scalar coefficients over the repair's fixed directions left more Dutch damage.</p>
+<p><a class="research-main-link" href="./repair-transfer/explainer.html">Short summary</a></p>
 <p class="research-secondary-links"><a href="./repair-transfer/index.html">Paper</a><a href="repair-transfer/index.pdf">PDF</a><a href="https://github.com/sergeisoly/interesearch/blob/main/papers/guides/repair-transfer.md">Study guide on GitHub</a></p>
 </div>
 <div class="research-story-visual" aria-label="A learned repair can provide fixed directions for fitting scalar coefficients or initialize new directions. Schematic of the two approaches.">
