@@ -16,7 +16,7 @@ abstract: |
   exceed the prespecified 3 pp margin. Donor initialization is ahead of fresh fitting by 1.1 and 1.4 pp at the same budget, inside the
   prespecified ±2 pp equivalence band and comparable to the difference between two fresh seeds. Its advantage is
   larger with less data and fewer steps. On the tested grid, it reaches the quality of the first fresh seed with
-  fewer fit-token presentations, while both families reach the reference with the same minimum number of unique tokens. For this donor, model and fine-tuning recipe,
+  fewer fit-token presentations, while both families reach the reference with the same minimum number of unique tokens. For the tested donor, model, fine-tuning recipe, initializations and fitting windows,
   the learned repair helps most as an initialization when fitting data and steps are limited.
 citation:
   type: article
@@ -269,7 +269,8 @@ seed variation.
 
 The scalar-only shortfall applies to the tested search and norm cap ([optimization details](#sec-app-checks)).
 The mechanism and the contribution of the donor repair's input vectors remain unresolved ([control details](#sec-app-methods)). The cost projection uses
-the first fresh seed as its reference and depends on the tested grid ([cost accounting](#sec-app-cost)).
+the first fresh seed as its reference and depends on the chosen ±2 pp quality criterion and tested grid
+([cost accounting](#sec-app-cost)).
 
 The repair addresses collateral Dutch CE damage after a fine-tune that deliberately worsens German prediction. Safety alignment and
 transfer of a new skill remain outside the study's scope.
@@ -403,7 +404,7 @@ from the convergence criteria.
 | Replication | initial scalar coefficients | line-search floor | 69 | 0.08323 → 0.03682 | 0.0002 |
 | Replication | best checkpoint | relative decrease | 49 | 0.03870 → 0.03682 | 0.0004 |
 
-: Full-batch scalar optimization converged from both starts on both targets. The end losses differ by a relative
+: The scalar runs met the declared stopping criteria from both starts on both targets. The end losses differ by a relative
 2.0e-5 on the primary and 1.1e-6 on the replication target. {#tbl-polish tbl-colwidths="[14,20,18,12,22,14]"}
 
 The scalar-only shortfall applies to the tested search: four learning rates for 600 steps and optimization to

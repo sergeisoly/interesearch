@@ -76,7 +76,7 @@ limits increases in prediction loss on the other preserved languages.
 </figure>
 ```
 
-## Keeping the directions leaves damage behind
+## The tested scalar search leaves damage behind {#keeping-the-directions-leaves-damage-behind}
 
 Recovery is the fraction of the fine-tune's extra Dutch prediction loss removed by a repair.
 At the full budget, fitting scalar coefficients only recovers about **87%** of the Dutch damage on the first target and **78%** on the second.

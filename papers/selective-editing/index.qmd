@@ -250,8 +250,9 @@ with each comparator. On the confirmatory dates, all 18 claim contrasts that hav
 with upper interval ends at −0.023 or below, and every verdict is "reproduced on confirm" (@fig-contrasts, top
 row, @tbl-claims). The largest difference between a confirmatory estimate and its development estimate is 0.033.
 
-The 18 contrasts share six subcomponent edits: each edit is compared with three comparators. The three draws
-vary only the comparators' training data, so the contrasts are dependent.
+The 18 contrasts share six subcomponent edits: each edit is compared with three comparators. Across draws,
+the comparators' training samples and the learned updates' random seeds vary; the subcomponent edits stay fixed.
+The contrasts are therefore dependent.
 
 ### Achieved target effects {#sec-agreement}
 
@@ -359,8 +360,9 @@ the dictionary's contribution entangled with the selector's. The SVD comparator 
 The result covers six edits in one four-layer model, three language pairs and two values of τ. The measured
 outcomes are protected-language CE on parliamentary text and English CE guards and KL. The confirmatory
 readout tests fixed edits on new text in the same languages; uncertainty varies session dates only
-(@sec-analysis). Testing the selection rule in other models, explaining the edits' selectivity and evaluating
-tasks beyond next-token prediction remain open.
+(@sec-analysis). Calibration matches mean target effects, while the learned updates optimize a per-window
+hinge. English retention is not matched across methods. Testing the selection rule in other models, explaining
+the edits' selectivity and evaluating tasks beyond next-token prediction remain open.
 
 ## Conclusion {#sec-conclusion}
 
