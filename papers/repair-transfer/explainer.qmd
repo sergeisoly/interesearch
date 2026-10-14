@@ -91,8 +91,9 @@ is separate.
 <figure class="explainer-figure" aria-labelledby="repair-full-caption">
   <div id="repair-full-chart" class="explainer-chart"></div>
   <figcaption id="repair-full-caption">Full budget: 2,048 fit tokens and checkpoint selection from runs of up to 600 steps.
+  Scalar selection also includes two additional converged candidates.
   Fit tokens count prediction positions, excluding the initial context token of each window.
-  0% means no repair; 100% restores the base model's Dutch prediction loss. Whiskers show 95% bootstrap intervals
+  0% means none of the extra Dutch prediction loss is removed; 100% restores the base model's Dutch prediction loss. Whiskers show 95% bootstrap intervals
   over 92 Europarl readout dates for each fixed target; variation across new fine-tunes or donors remains unmeasured.</figcaption>
 </figure>
 <p id="repair-primary-result" class="explainer-finding">Donor initialization exceeds the scalar-coefficient fit by 11.3 percentage

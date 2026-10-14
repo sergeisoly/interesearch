@@ -29,8 +29,9 @@ German/Dutch, I add Spanish/Portuguese and French/Italian to check the compariso
 ## Edit one rank-one subcomponent
 
 [Goodfire's adVersarial Parameter Decomposition (VPD)](https://www.goodfire.com/research/interpreting-lm-parameters)
-writes a weight matrix $W$ as a sum of **rank-one subcomponents** plus a residual. Each subcomponent $A$ is
-the outer product of an output vector $u_{\mathrm{out}}$ and an input vector $v_{\mathrm{in}}$:
+writes a weight matrix $W$ as a sum of **rank-one subcomponents** plus a residual. The decomposition is trained
+so that few subcomponents are needed on any input. Each subcomponent $A$ is the outer product of an output
+vector $u_{\mathrm{out}}$ and an input vector $v_{\mathrm{in}}$:
 
 $$
 A = u_{\mathrm{out}}v_{\mathrm{in}}^\top.
@@ -191,13 +192,17 @@ but still caused more than the subcomponent edits. Convergence of the learned up
 
 To compare with directions outside VPD's fixed set of subcomponents, I used a separate rank-one selector.
 Its edits also caused more related-language damage. The search used the selected VPD subcomponent's norm to
-set the size of its candidate direction, so it still depended on the decomposition. I also applied the selection
-rule to a randomized set of subcomponents, disrupting their alignment with the model's weights. This control
+set the size of its candidate direction, so it still depended on the decomposition.
+
+The longer-training and separate rank-one-selector comparisons reuse development text examined earlier.
+
+The original planned comparison also applied the selection rule to a randomized set of subcomponents,
+disrupting their alignment with the model's weights. This control
 produced no matched edit: no shortlisted candidate reached even the smaller target effect, 0.5 nat/token,
 within the allowed dose range. Its selectivity therefore could not be compared, leaving the contribution of
 VPD's original set of subcomponents unresolved.
 
-These exploratory comparisons reuse development text examined earlier. The paper gives the
+The paper gives the
 [comparison details](index.qmd#sec-extended-comparisons) and
 [study limits](index.qmd#sec-limits).
 

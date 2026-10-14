@@ -537,6 +537,10 @@ family has a joint bootstrap over dates (20,000 resamples, seed 20261011) and a 
   Their recorded hashes identify the files' contents; the date of those contents remains
   unverified, so the records lack a timestamped preregistration.
 
+```{=latex}
+\vspace{-\baselineskip}
+```
+
 ## The claim contrasts {#sec-app-claims .appendix}
 
 @tbl-claims lists the 18 claim contrasts of @fig-contrasts with their intervals. The six randomized-dictionary

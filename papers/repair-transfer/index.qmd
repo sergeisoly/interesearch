@@ -305,12 +305,17 @@ peer-review and citation-management workflows used to review organization, claim
 ## Method details {#sec-app-methods .appendix}
 
 **Model and fine-tunes.** The base model has 66,931,200 parameters (residual width 768, MLP width 3,072). The 24
-matrices are the query, key, value, output and two MLP matrices of each layer. Each fine-tune trains with Adam
+matrices are the query, key, value, output and two MLP matrices of each layer. Each fine-tune learns the entries
+of a full-matrix additive update $D_m$ for each matrix. It trains with Adam
 [@kingma2015adam] at learning rate 3e-6 for 200 steps on a hinge term with a 1-nat margin,
 $\max(0, 1 - \Delta\mathrm{CE}_{\text{de}})$ per window, and a KL term of weight 1 on the retain languages. Its
 checkpoint is chosen on German validation dates.
 
-**Repairs.** Families initialized from the donor repair use $\min(1, \lVert D\rVert_F / \lVert
+**Repairs.** Ordinary donor and target repair fitting uses Adam with $\beta=(0.9,0.999)$, $\epsilon=10^{-8}$,
+and no weight decay. Donor fitting uses learning rates 3e-4, 1e-3 and 3e-3, with checkpoints every 25 steps.
+The donor checkpoint is selected on its own validation windows using the same rule as target repairs below.
+
+Target families initialized from the donor repair use $\min(1, \lVert D\rVert_F / \lVert
 E_{\text{donor}}\rVert_F)\, E_{\text{donor}}$. Fresh input factors have variance $1/d_{\text{in}}$. Every family uses 10 warm-up steps, followed by a
 constant learning rate, with gradient clipping at 1.0. Saving a checkpoint every 50 steps at four learning rates
 (@tbl-lrs) gives 48 candidates.
@@ -334,7 +339,8 @@ training only the output factor.
 **Selection.** A candidate is feasible if the ratio of German damage with and without the repair lies between
 0.9 and 1.1, its German KL drift from the fine-tuned model is at most 0.05 times the base model's German KL from
 the fine-tune, and it moves Dutch toward the base model. Feasible candidates are ranked by Dutch recovery, then by
-smaller norm. Of the top five, the first that raises no retain language's CE by more than 0.01 nat/token is chosen.
+smaller norm, then by listing order. Of the top five, the first that raises no retain language's CE by more than
+0.01 nat/token is chosen.
 
 **Data.** Portuguese, a seventh language, is measured as a diagnostic on the selection and readout dates. Its selection windows
 are included in the selection-token and evaluation costs. Its role is diagnostic only; it is excluded from
@@ -361,6 +367,10 @@ Each resample computes recovery ratios from the mean damages across dates. The r
 to the point estimates on all dates. Equivalence is assessed for the five contrasts
 marked in @tbl-secondary; equivalence between donor and random initialization remains unestablished at every
 budget and step cap.
+
+```{=latex}
+\vspace{-\baselineskip}
+```
 
 ## Checks behind the primary reading {#sec-app-checks .appendix}
 
