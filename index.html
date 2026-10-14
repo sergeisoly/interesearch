@@ -196,7 +196,7 @@ ul.task-list li input[type="checkbox"] {
 <section class="research-story">
 <div class="research-story-copy">
 <h2 class="anchored">Repair transfer</h2>
-<p>Reusing a repair could reduce the work needed to fix collateral damage in another fine-tune. I compare ways to reuse it on two fine-tunes trained independently from the same base model on samples from the same data distribution. Starting from the earlier repair removed more Dutch damage than fitting a new repair when data and steps were limited, while fresh fitting nearly caught up at the full budget. Fitting only scalar coefficients over the repair's fixed directions left more Dutch damage.</p>
+<p>In these experiments, fine-tuning a model to worsen German predictions also damages Dutch predictions. A repair is an added weight update trained to reduce the Dutch damage while keeping the intended German change. I compare ways to reuse an earlier repair on two fine-tunes trained independently from the same base model on samples from the same data distribution. Fitting only scalar coefficients over the repair's fixed directions left more Dutch damage than training the directions. Starting from the earlier repair removed more Dutch damage than fitting a new repair when data and steps were limited. With the most data and steps tested, a new repair nearly caught up.</p>
 <p><a class="research-main-link" href="./repair-transfer/explainer.html">Short summary</a></p>
 <p class="research-secondary-links"><a href="./repair-transfer/index.html">Paper</a><a href="repair-transfer/index.pdf">PDF</a><a href="https://github.com/sergeisoly/interesearch/blob/main/papers/guides/repair-transfer.md">Study guide on GitHub</a></p>
 </div>
