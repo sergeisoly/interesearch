@@ -21,8 +21,9 @@ body-classes: research-explainer
 Fine-tuning a model can change behaviour we want to preserve. In this study, training [Goodfire's four-layer, 67-million-parameter language model](https://www.goodfire.com/research/interpreting-lm-parameters) to predict German less accurately also damages its Dutch.
 The deliberate German change provides an intended effect to preserve while testing whether a repair restores Dutch prediction quality.
 
-A compact repair can undo much of this damage. I test whether reusing it helps repair two new fine-tunes
-trained independently from the same base model, with the same recipe on different samples from the same data distribution.
+A compact repair can undo much of this damage. If a new fine-tune causes similar damage, can we reuse that repair?
+I test this on two fine-tunes trained independently from the same base model, with the same recipe on different
+samples from the same data distribution.
 
 ## The same starting repair, two ways to reuse it
 
@@ -31,9 +32,12 @@ use different Europarl session dates. Each repair adds a rank-one update to each
 other weights fixed. Each update is formed from an input vector and an output vector. The repairs operate directly on
 the weight matrices, independently of Goodfire's parameter decomposition.
 
-I reuse the donor repair in two ways: keep its input and output vectors fixed and learn 24 scalar coefficients,
-or start from the donor repair and train both vectors. Fresh fitting learns both vectors from a new initialization. All three
-have the same rank, objective and norm limit, so the comparison asks what the earlier repair contributes.
+To test whether the donor's directions suffice for the new damage, I keep its input and output vectors fixed
+and fit 24 scalar coefficients. I compare this with donor initialization: starting from the same repair and
+training both vectors.
+
+Fresh fitting learns both vectors from a new initialization. Comparing it with donor initialization tests
+whether the earlier repair provides a useful starting point. All three have the same rank, objective and norm limit.
 
 ```{=html}
 <figure class="explainer-diagram" aria-label="Schematic repair directions for one weight matrix" aria-describedby="repair-transfer-diagram-caption">
@@ -72,7 +76,7 @@ have the same rank, objective and norm limit, so the comparison asks what the ea
 
 Recovery is the fraction of the fine-tune's extra Dutch prediction loss removed by a repair.
 At the full budget, fitting scalar coefficients only recovers about **87%** of the Dutch damage on the first target and **78%** on the second.
-Donor initialization, which lets the directions change, raises recovery to about **98–99%**. Fresh initialization also works well.
+Donor initialization, which lets the directions change, raises recovery to about **98–99%**.
 All full-budget repairs shown preserved the German effect and met the constraints on the other languages.
 
 Fitting budgets exclude a separate selection and diagnostic pool of **57,344 prediction positions**, shared by all families.
@@ -92,19 +96,24 @@ points on the first target and 20.4 points on the second.</p>
 <details class="visual-details">
 <summary>How the scalar coefficients were fitted</summary>
 
-The scalar-coefficient search includes full-batch optimization to convergence from two starting points, though
-the selected repair may still be an ordinary training checkpoint. The shortfall survives that expanded search, but the
-experiment cannot rule out every possible choice of coefficients.
+The gap could reflect incomplete scalar fitting. To check this, the scalar-coefficient search includes full-batch
+optimization to convergence from two starting points. The selected repair may still be an ordinary training
+checkpoint. The shortfall survives that expanded search, but the experiment cannot rule out every possible choice
+of coefficients.
 
 </details>
 
 ## The donor helps most when fitting is constrained
 
-Fresh fitting also recovers most of the damage, so I compare how much the donor start helps at different fitting budgets.
+Allowing the directions to change improves recovery, but fresh fitting also recovers most of the damage. I compare donor
+initialization with fresh fitting to see what the donor contributes as a starting point.
+
 At the full budget, donor initialization leads the first fresh seed by **1.1–1.4 percentage points**. Both
 confidence intervals lie inside the study’s ±2 percentage-point equivalence band, and the lead is comparable to
-differences between two fresh seeds. At 256 fit tokens and 50 steps, the lead is about **4 percentage points**;
-only one fresh seed was tested at that budget.
+differences between two fresh seeds.
+
+To see whether the donor helps more when fitting is constrained, I vary both the fit-token budget and the step cap.
+At 256 fit tokens and 50 steps, the lead is about **4 percentage points**; only one fresh seed was tested at that budget.
 
 ```{=html}
 <section class="explainer-interactive" aria-label="Explore recovery at different fitting budgets">

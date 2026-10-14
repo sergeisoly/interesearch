@@ -49,7 +49,7 @@
     const height = compact ? 386 : 324;
     const svg = el("svg", {viewBox: `0 0 ${width} ${height}`, role: "img", "aria-label": `${language}: ${targetPanel ? "target effect" : "related-language damage"}, cross-entropy rise in nat per token`});
     svg.append(el("text", {x: 16, y: 28, fill: "#243c3d", "font-size": 20, "font-weight": 600}, language));
-    svg.append(el("text", {x: 16, y: 50, fill: "#53625d", "font-size": 14}, targetPanel ? "Target effect · measured rise" : "Related language · less is better"));
+    svg.append(el("text", {x: 16, y: 50, fill: "#53625d", "font-size": 14}, targetPanel ? "Target language · measured damage" : "Related language · less is better"));
     const left = compact ? 16 : 188, right = width - 19;
     const x = value => left + value / 1.2 * (right - left);
     const top = compact ? 108 : 76, bottom = compact ? 322 : 270;
@@ -69,9 +69,9 @@
       svg.append(el("text", {x: compact ? right : 16, y: compact ? y - 21 : y + 15, "text-anchor": compact ? "end" : "start", fill: "#344946", "font-size": 14, "font-weight": 600}, range(values)));
       svg.append(el("line", {x1: x(Math.min(...values)), x2: x(Math.max(...values)), y1: y, y2: y, stroke: method.color, "stroke-width": 2}));
       const visibleRows = method.id === "vpd_atom" ? rows.slice(0, 1) : rows;
-      visibleRows.forEach(row => mark(svg, method, x(row[field]), y, `${method.label}${method.id === "vpd_atom" ? "" : `, draw ${row.draw + 1}`}: ${number(row[field])} nat/token`));
+      visibleRows.forEach(row => mark(svg, method, x(row[field]), y, `${method.label}${method.id === "vpd_atom" ? "" : `, training sample ${row.draw + 1}`}: ${number(row[field])} nat/token`));
     });
-    svg.append(el("text", {x: right, y: height - 5, "text-anchor": "end", fill: "#53625d", "font-size": 13}, "CE rise · nat/token"));
+    svg.append(el("text", {x: right, y: height - 5, "text-anchor": "end", fill: "#53625d", "font-size": 13}, "Prediction loss increase · nat/token"));
     const accessibleValues = methods.map(method => `${method.label}: ${range(edits.filter(e => e.method === method.id).map(e => e[field]))} nat per token`).join(". ");
     svg.setAttribute("aria-label", `${language}, ${targetPanel ? "target effect" : "related-language damage"}. Cross-entropy rise relative to the unedited model. ${accessibleValues}. Both panels use the same zero to 1.2 nat per token scale.`);
     return svg;
@@ -80,7 +80,7 @@
     const table = document.createElement("table");
     table.className = "visual-uncertainty-table";
     const caption = table.createCaption();
-    caption.textContent = `${pairs[state.target].join(" → ")}, calibrated rise ${state.tau} nat/token. Subcomponent edit minus comparator: estimate [simultaneous 95% interval], nat/token.`;
+    caption.textContent = `${pairs[state.target].join(" → ")}, target loss increase on validation text: ${state.tau} nat/token. Subcomponent edit minus comparator: estimate [simultaneous 95% interval], nat/token.`;
     const head = table.createTHead().insertRow();
     ["Comparator", "Related-language difference", "Achieved target gap (post hoc)"].forEach(text => {
       const th = document.createElement("th"); th.scope = "col"; th.textContent = text; head.append(th);
@@ -106,7 +106,7 @@
     document.getElementById("visual-target-chart").replaceChildren(plot("target_rise", target, true, edits));
     document.getElementById("visual-protected-chart").replaceChildren(plot("protected_rise", protectedLanguage, false, edits));
     const atom = edits.find(e => e.method === "vpd_atom");
-    document.getElementById("visual-result-sentence").textContent = `The subcomponent edit raised ${target} CE by ${number(atom.target_rise)} and ${protectedLanguage} CE by ${number(atom.protected_rise)} nat/token. The dashed line marks the rise the edits were calibrated to on validation text.`;
+    document.getElementById("visual-result-sentence").textContent = `On the evaluation text, the subcomponent edit increased ${target} prediction loss by ${number(atom.target_rise)} and ${protectedLanguage} prediction loss by ${number(atom.protected_rise)} nat/token. The dashed line shows the ${number(state.tau)} nat/token increase used to set edit strength on validation text.`;
     document.getElementById("visual-uncertainty").replaceChildren(uncertainty(comparisons));
     document.querySelectorAll("[data-visual-tau]").forEach(button => button.setAttribute("aria-pressed", String(Number(button.dataset.visualTau) === state.tau)));
   }

@@ -156,14 +156,17 @@ the first layer and have sign $-1$.
 
 ### Comparators {#sec-comparators}
 
-Like the selection rule, the comparators use only target and English text for selection and training.
+The comparators test other ways to produce the target effect, with different choices of which weights may
+change. Like the selection rule, they use only target and English text for selection and training.
 
 - **Rank-one LoRA** [@hu2022lora] learns both vectors of an update to the matrix that holds the selected subcomponent, the attention
-  output projection of layer 0. It uses the same matrix and rank as the subcomponent edit.
-- **Full-matrix fine-tuning** updates all 24 weight matrices.
+  output projection of layer 0. Keeping the same matrix and rank allows a comparison between the fixed
+  subcomponent direction and a learned direction.
+- **Full-matrix fine-tuning** updates all 24 weight matrices, allowing a broader learned edit.
 - **Neuron edits** use the top $k$ MLP neurons ranked by how much more often they are active on the target
   draw than on the English retain pool. The edit scales their output weights down, with $k$ and the scale
   calibrated to τ, in the spirit of language-specific neurons [@tang2024language; @kojima2024multilingual].
+  This localizes the edit through neuron activity rather than a decomposition of the weights.
 - **The randomized-dictionary control** applies the same selection rule to a randomized dictionary. In each
   matrix, one random signed permutation transforms the output coordinates of every subcomponent, and another
   transforms the input coordinates. This preserves their norms and pairwise angles but removes their alignment
@@ -172,7 +175,7 @@ Like the selection rule, the comparators use only target and English text for se
 The two learned updates are trained, one per draw, on a target CE objective plus the KL divergence from $W_0$
 on the English retain pool, for a fixed 200 steps. The final update is scaled down to reach τ.
 
-A separate comparison family uses single subcomponents chosen by alternative selection rules:
+A separate comparison family keeps the dictionary fixed and varies how a single subcomponent is chosen:
 
 - the top subcomponent of an orthogonal matching pursuit [@pati1993orthogonal; @mallat1993matching] of the
   full-matrix fine-tuning update or of a LoRA update trained across all matrices
@@ -185,9 +188,11 @@ These comparisons have their own multiplicity correction and receive no confirma
 
 ### Calibration and the six edits {#sec-calibration}
 
-Every method is calibrated on target Europarl validation text. A short search over its dose sets the target CE
-rise to τ. An edit is *matched* if its validation effect lies within 0.02 nat/token of τ. Only matched edits
-enter a contrast. The effects achieved on the readout dates can differ and are reported with the results.
+An edit could spare the protected language simply because it has little effect on the target. To compare
+methods at a common target effect, I calibrate every method on target Europarl validation text. A short search
+over its dose sets the target CE rise to τ. An edit is *matched* if its validation effect lies within 0.02
+nat/token of τ. Only matched edits enter a contrast. The effects achieved on the readout dates can differ and
+are reported with the results.
 
 {{< include ../../results/selective_editing/tables/interventions_table.md >}}
 
@@ -236,8 +241,8 @@ less (@sec-english).
 
 ### Target change against protected damage {#sec-effects}
 
+@fig-effects places the intended target effect next to the unwanted protected-language damage.
 All matched edits passed the English guards, and on the confirmatory dates no edit raised the target flag.
-@fig-effects shows each edit on the confirmatory dates as target CE rise against protected-language CE rise.
 At both values of τ and for all three pairs, the subcomponent edits have the lowest protected-language CE rise.
 Across the six subcomponent edits, the protected-language rise is 0.0003 to 0.0053 nat/token. The other
 methods raise it by about 0.03 to 0.88 (@tbl-effects).
@@ -249,8 +254,10 @@ subcomponent edits raise the protected language's CE far less than the edits cal
 
 ### The protected contrasts {#sec-contrasts}
 
-On the confirmatory dates, all 18 claim contrasts that have an estimate lie below zero, with upper interval
-ends at −0.023 or below, and every verdict is "reproduced on confirm" (@fig-contrasts, top row, @tbl-claims). The largest difference between a confirmatory estimate and its development estimate is 0.033.
+To assess the protected-language differences across session dates, I compare each subcomponent edit directly
+with each comparator. On the confirmatory dates, all 18 claim contrasts that have an estimate lie below zero,
+with upper interval ends at −0.023 or below, and every verdict is "reproduced on confirm" (@fig-contrasts, top
+row, @tbl-claims). The largest difference between a confirmatory estimate and its development estimate is 0.033.
 
 The 18 contrasts share six subcomponent edits: each edit is compared with three comparators. The three draws
 vary only the comparators' training data, so the contrasts are dependent.
@@ -295,7 +302,8 @@ $D_{\mathrm{KL}}(p_{W_0} \,\|\, p_{\text{edit}})$, averaged over next-token posi
 
 ### English: where the learned updates are better {#sec-english}
 
-The guard rule only asks whether English CE rose past its limit. A finer measure is the KL divergence
+Less damage to the related language does not imply better preservation of English. The guard rule only asks
+whether English CE rose past its limit. A finer measure is the KL divergence
 $D_{\mathrm{KL}}(p_{W_0} \,\|\, p_{\text{edit}})$ of the edited model's English next-token distribution from
 that of $W_0$, averaged over positions. By this measure, both learned updates preserve English better than the
 subcomponent edits (@tbl-effects). On the development readout, over three pairs × three draws × two values of τ ×
@@ -314,21 +322,22 @@ their training objective.
 
 ### The randomized-dictionary control gave no estimate {#sec-null}
 
-The control applies the selection rule to the randomized dictionary. It found no feasible subcomponent in any
-of the 9 target–draw combinations: no shortlisted subcomponent reached even 0.5 nat/token on the target
+The randomized-dictionary control was intended to test how selective an edit of the same form is when the
+subcomponents are unrelated to the model's weights. Applying the same selection rule, it found no feasible
+subcomponent in any of the 9 target–draw combinations: no shortlisted subcomponent reached even 0.5 nat/token on the target
 training draw within the dose limit of 2. The randomized-dictionary control therefore has no edit, and its six
 claim contrasts have no estimate. Because some planned contrasts are empty, the frozen analysis has the
 overall status "conditional" rather than "complete".
 
-The control was meant to measure how selective an edit of the same form is when the subcomponents are
-unrelated to the model’s weights. Its failure to produce an edit leaves the dictionary's contribution unresolved.
+Without an edit to compare, the control leaves the dictionary's contribution unresolved.
 Whether a randomized subcomponent at a larger dose could spare the protected language remains unknown. The
 alternative subcomponent comparisons and whitened rank-one selector leave the contributions of the dictionary
 and selection rule unresolved as well (@sec-references; @sec-extended-comparisons).
 
 ### Subcomponents chosen by other rules {#sec-references}
 
-The [alternative selection comparisons](#sec-app-references) use single subcomponents of the same dictionary.
+The [alternative selection comparisons](#sec-app-references) test whether other choices within the same
+dictionary give similarly selective edits.
 Every estimable contrast is at or below zero. The causal-importance heuristic picked `0.attn.o:41` in 8 of 9
 target–draw combinations and, on the confirmatory dates, raised the protected CE by 0.48 to 1.37 nat/token
 more than the selected subcomponent, at achieved target rises close to the selected subcomponent's
@@ -339,7 +348,9 @@ changed the dictionary (@sec-null).
 
 ## Longer training and alternative rank-one directions {#sec-extended-comparisons}
 
-After the confirmatory readout, I ran exploratory comparisons on the previously evaluated development dates.
+The main comparison leaves open how the result depends on the learned updates' training recipe and on the
+available rank-one directions. After the confirmatory readout, I examined these dependencies in exploratory
+comparisons on the previously evaluated development dates.
 The six subcomponent edits were compared with a whitened rank-one selector outside the VPD dictionary and learned
 updates trained for 2,000 steps, all calibrated to the same τ. All 18 protected-CE intervals of the all-run family and all 12 of
 the family excluding unstable learned runs lie below zero. The achieved target rises differ by at most
@@ -473,7 +484,7 @@ lies within ±0.02 (@tbl-extended-comparisons). The closest to the band is Frenc
 against rank-one LoRA, −0.017 [−0.021, −0.013]. The achieved target rises of the two sides differ by at most
 0.07 nat/token. The subcomponent edit's target rise is larger in 14 of 18 comparisons.
 
-The longer budget lowered the protected-language rise of full-matrix fine-tuning in all six target and τ
+The expanded training recipe lowered the protected-language rise of full-matrix fine-tuning in all six target and τ
 combinations, to 0.04–0.34 nat/token from 0.06–0.40 at 200 steps, and that of LoRA in five of six, to 0.02–0.18
 from 0.03–0.19. The SVD comparator gave no estimate: every SVD edit that reached τ raised an English guard by
 more than 0.1 nat/token, and three of nine did not reach τ = 1.

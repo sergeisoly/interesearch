@@ -16,7 +16,7 @@ toc: false
 <section class="research-story">
 <div class="research-story-copy">
 <h2>Selective language editing</h2>
-<p>This study tests how selectively weight edits can weaken one language while sparing a close relative, following up on <a href="https://www.lesswrong.com/posts/ieoWstubDQWLrMnhH/exploration-fine-tuning-with-parameter-decomposition">Lucius Bushnaq’s exploration of fine-tuning with parameter decomposition</a>. Across three related-language pairs, selected subcomponent edits caused less damage to the related language than learned updates and neuron edits calibrated to the same target effect on validation text. The learned updates preserved English predictions better.</p>
+<p>To test selectivity, I deliberately weaken predictions in one language and measure damage to a close relative, following up on <a href="https://www.lesswrong.com/posts/ieoWstubDQWLrMnhH/exploration-fine-tuning-with-parameter-decomposition">Lucius Bushnaq’s exploration of fine-tuning with parameter decomposition</a>. Across three related-language pairs, selected subcomponent edits caused less damage to the related language than rank-one LoRA, full-matrix fine-tuning and neuron edits calibrated to the same target effect on validation text. LoRA and full-matrix fine-tuning preserved English predictions better.</p>
 <p><a class="research-main-link" href="selective-editing/explainer.qmd">Visual guide</a></p>
 <p class="research-secondary-links"><a href="selective-editing/index.qmd">Paper</a><a href="selective-editing/index.pdf">PDF</a><a href="https://github.com/sergeisoly/interesearch/blob/main/papers/guides/selective-editing.md">Study guide on GitHub</a></p>
 </div>
@@ -38,7 +38,7 @@ toc: false
 <section class="research-story">
 <div class="research-story-copy">
 <h2>Repair transfer</h2>
-<p>This study tests ways to reuse an earlier repair on two fine-tunes trained independently from the same base model on samples from the same data distribution. Using the repair as an initialization removed more Dutch damage than fresh fitting when data and steps were limited, while fresh fitting nearly caught up at the full budget. Rescaling the repair's fixed directions left more Dutch damage.</p>
+<p>Reusing a repair could reduce the work needed to fix collateral damage in another fine-tune. I compare ways to reuse it on two fine-tunes trained independently from the same base model on samples from the same data distribution. Starting from the earlier repair removed more Dutch damage than fitting a new repair when data and steps were limited, while fresh fitting nearly caught up at the full budget. Fitting only scalar coefficients over the repair's fixed directions left more Dutch damage.</p>
 <p><a class="research-main-link" href="repair-transfer/explainer.qmd">Visual guide</a></p>
 <p class="research-secondary-links"><a href="repair-transfer/index.qmd">Paper</a><a href="repair-transfer/index.pdf">PDF</a><a href="https://github.com/sergeisoly/interesearch/blob/main/papers/guides/repair-transfer.md">Study guide on GitHub</a></p>
 </div>

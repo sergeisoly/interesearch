@@ -130,8 +130,8 @@ the coefficients $c_m$ trains 24 parameters. The other families train one or bot
 rule. The number of trained parameters varies by family despite their equal rank. The fixed donor repair is
 included as a reference: it is capped and held fixed. {#tbl-families tbl-colwidths="[17,26,20,37]"}
 
-Varying the fit budget and the step cap separates a gain in final recovery from a gain in reaching it sooner. The
-output-only and fresh families have counterparts in low-rank adapters. The output factor of an adapter matters more than its
+Varying the fit budget and the step cap tests whether donor initialization helps chiefly when fitting data and
+training steps are limited. The output-only and fresh families have counterparts in low-rank adapters. The output factor of an adapter matters more than its
 input factor when the input factor is random and frozen [@zhu2024asymmetry]. Here, the output-only family's frozen
 input vectors are the donor repair's trained ones. Fresh fitting uses the zero-output initialization of such adapters
 [@hu2022lora]. A second seed of fresh and of random initialization, at the full budget only, shows how far a result
@@ -153,10 +153,11 @@ period, separate from the project's earlier data windows ([data details](#sec-ap
 can precede the cell's step cap. All cells of a target share one bootstrap over readout dates [@efron1979bootstrap],
 so contrasts are paired. Intervals are 95% percentile intervals.
 
-**Additional scalar optimization.** At the 2,048-token budget, two additional runs optimize the scalar coefficients
-to convergence on the exact full-batch fit loss from two starts. The selection rule then chooses among the
-48 training checkpoints and these 2 converged candidates. Both kinds are eligible, including the ordinary training
-checkpoints ([appendix](#sec-app-checks)).
+**Additional scalar optimization.** A scalar-only shortfall could reflect unfinished optimization. To check this,
+at the 2,048-token budget, two additional runs optimize the scalar coefficients to convergence on the exact
+full-batch fit loss from two starts. The selection rule then chooses among the 48 training checkpoints and these
+2 converged candidates. The selected repair can therefore still be an ordinary training checkpoint
+([appendix](#sec-app-checks)).
 
 **Interpretation rules.** The primary contrast compares donor initialization with the scalar-only search with
 full-batch optimization at 2,048 tokens and 600 steps. An advantage of more than 3 pp is established if its whole interval
@@ -180,18 +181,25 @@ The gap is nearly as large at 256 and 512 tokens, where scalar fitting received 
 convergence (@fig-recovery). Scalar-only fitting recovers about 87% of the damage on the primary target and 77% on
 the replication target, and adding the converged candidates changes this little (@tbl-secondary). Every family that
 trains the factors recovers at least 95.6%. The shortfall is already present on the scalar-only repair's own fit
-tokens ([appendix](#sec-app-checks)). Training only the output vectors, with the donor repair's input vectors fixed,
-closes most of the gap (@tbl-secondary). Training both factors recovers only slightly more.
+tokens ([appendix](#sec-app-checks)).
+
+The output-only control tests how much of this gap can be closed while keeping the donor repair's input vectors
+fixed. It closes most of the gap (@tbl-secondary); training both factors recovers only slightly more. Without an
+output-only control with frozen random input vectors, this result does not isolate the contribution of the
+donor repair's learned input vectors ([control details](#sec-app-methods)).
 
 ![Recovery of the Dutch damage on the readout dates, selected from runs of up to 600 steps for each family and fit budget, with 95%
 bootstrap intervals over 92 dates (most are smaller than the markers). The band is the fixed donor repair and its
 interval. Scalar-only fitting falls well short of every family that trains the factors, at every budget and on both
 targets. Including the converged full-batch candidates in selection at 2,048 tokens (hollow marker) does not close
-the gap.](../../results/repair_transfer/figures/recovery.svg){#fig-recovery width="100%" fig-pos="tbp" fig-alt="Two panels show Dutch-damage recovery on primary and replication targets selected from runs of up to 600 steps at three fitting budgets, with 95% date-bootstrap intervals. Families that train the repair factors recover at least 95.6%. Scalar-only fitting remains below 90%, including the expanded full-batch search at 2,048 tokens. Shapes identify methods, and a dashed line and band show the fixed donor repair and its interval."}
+the gap.](../../results/repair_transfer/figures/recovery.svg){#fig-recovery width="100%" fig-pos="H" fig-alt="Two panels show Dutch-damage recovery on primary and replication targets selected from runs of up to 600 steps at three fitting budgets, with 95% date-bootstrap intervals. Families that train the repair factors recover at least 95.6%. Scalar-only fitting remains below 90%, including the expanded full-batch search at 2,048 tokens. Shapes identify methods, and a dashed line and band show the fixed donor repair and its interval."}
 
 {{< include ../../results/repair_transfer/tables/primary_table.md >}}
 
 ### The donor as an initialization {#sec-warm}
+
+Training the directions improves on scalar rescaling. To measure the donor repair's contribution to that
+recovery, I compare donor initialization with fresh fitting and with random directions of the same norm.
 
 At the full budget, donor initialization is ahead of fresh fitting by +1.1 pp [+0.8, +1.3] on the primary target
 and +1.4 pp [+1.1, +1.7] on the replication target (@tbl-secondary). Both intervals lie above zero and inside
@@ -199,9 +207,11 @@ the ±2 pp band, so the advantage is positive but small enough to count as pract
 seed, donor initialization differs by only +0.04 pp [−0.19, +0.26] on the primary target and +0.7 pp [+0.5, +1.0]
 on the replication target.
 
-Compared with random initialization of the same norm, donor initialization is ahead at the full budget on the
-primary target. The sign is undecided on the replication target (@tbl-secondary). The donor repair’s directions
-help more in short runs with little data (@fig-warm-start). With 256 fit tokens and at most 50 steps, donor initialization beats random initialization by
+Against random initialization, donor initialization is ahead at the full budget on the primary target. The sign
+is undecided on the replication target (@tbl-secondary).
+
+Reducing the fit budget and step cap shows where the donor start helps more (@fig-warm-start). With 256 fit
+tokens and at most 50 steps, donor initialization beats random initialization by
 +4.9 and +4.5 pp, and fresh fitting by +4.4 and +4.1 pp. These advantages are larger than at the full budget.
 Only one fresh seed and one random seed were tested at this small budget.
 
@@ -217,7 +227,8 @@ The full-budget contrasts in @tbl-secondary include output-only fitting and the 
 
 ### What donor initialization saves {#sec-cost}
 
-To compare fitting costs at similar recovery, I use the first fresh seed at 2,048 tokens with a 600-step cap
+The advantage in short runs suggests a possible saving in fitting cost. To compare costs at similar recovery,
+I use the first fresh seed at 2,048 tokens with a 600-step cap
 as a reference. A grid cell *reaches* it if the selected
 repair satisfies the constraints and the lower end of its paired interval against the reference lies above −2 pp.
 Fit-token presentations count the optimizer steps of all four learning-rate runs multiplied by the unique fit
@@ -227,10 +238,10 @@ On the tested grid, donor initialization reaches this reference with one eighth 
 Counted in presentations, the one-time donor cost is amortized after 11 targets. This is a descriptive projection
 from two tested targets; the intervals cover individual cells, not the selected cost ratio.
 
-The cheapest reaching cells by unique-token cost use the same number of tokens: fresh fitting also reaches the reference,
-narrowly, with 256 fit tokens under a 600-step cap. In GPU seconds, break-even comes much later (about 151 and
-106 targets). These seconds estimate allocated shared work from different runs; a saving claim would require
-more than these estimates.
+This saving counts repeated presentations to the optimizer. By unique-token cost, the cheapest reaching cells
+use the same number of tokens: fresh fitting also reaches the reference, narrowly, with 256 fit tokens under a
+600-step cap. In GPU seconds, break-even comes much later (about 151 and 106 targets). These seconds estimate
+allocated shared work from different runs; a saving claim would require more than these estimates.
 
 ![Quality against cost on the primary (left) and replication (right) target. Each point is a grid cell at its
 fit-token presentations, with its paired difference from the reference, fresh at 2,048 tokens with a 600-step cap, and its
@@ -349,14 +360,16 @@ budget and step cap.
 
 ## Checks behind the primary reading {#sec-app-checks .appendix}
 
-@tbl-readout lists recovery for every 2,048-token cell and the fixed donor repair, together with the quantities
-constrained during selection, now evaluated on the readout dates. All satisfy the constraints. On its own fit
-tokens, the chosen scalar-only repair removes 87.0% and 79.2% of the fine-tune's Dutch KL
+The primary comparison requires the selected repairs to preserve the intended fine-tuning effect on the readout
+dates. @tbl-readout lists recovery for every 2,048-token cell and the fixed donor repair, together with the
+quantities constrained during selection, now evaluated on those dates. All satisfy the constraints. The
+scalar-only shortfall is also present on the fit tokens: the chosen scalar-only repair removes 87.0% and 79.2% of the fine-tune's Dutch KL
 from the base model. Every family that trains the factors removes at least 98.4%.
 
 {{< include ../../results/repair_transfer/tables/readout_table.md >}}
 
-The additional full-batch optimization uses coordinates $e_m = c_m \lVert b_m\rVert \lVert a_m\rVert$, in which
+To test whether further scalar optimization closes the gap, the additional full-batch search uses coordinates
+$e_m = c_m \lVert b_m\rVert \lVert a_m\rVert$, in which
 $\lVert E\rVert_F = \lVert e\rVert_2$. The norm cap is therefore a ball, and radial scaling is its exact
 projection. Optimization uses the spectral step of @barzilai1988two in the projected-gradient scheme of
 @birgin2000nonmonotone with a monotone Armijo line search, for at most 300 iterations. It runs from the initial
