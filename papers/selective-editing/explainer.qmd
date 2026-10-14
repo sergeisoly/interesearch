@@ -91,18 +91,15 @@ LoRA learns its own output vector $a_{\mathrm{out}}$ and input vector $b_{\mathr
 LoRA freedom to choose a different direction while holding the update's rank and the edited matrix fixed.
 
 To allow changes beyond one matrix, I also use **full-matrix fine-tuning**. It learns updates to every entry in
-the model's 24 attention and feed-forward weight matrices. There are six in each of the four layers: four
-attention projections and two feed-forward matrices. The **neuron edit** takes another route to targeting a
+the model's 24 attention and feed-forward weight matrices. The **neuron edit** takes another route to targeting a
 language: it selects neurons by how much more often they activate on target text than on English text, then
 scales their output weights.
 
-Selection and training use target-language and English text, with English providing behaviour to retain.
-The VPD selection rule ranks subcomponents by their estimated effect on the target language relative to their
-effect on English. LoRA and full-matrix fine-tuning learn their updates from text while also trying to preserve
-English predictions.
-
-These selection and training procedures do not use related-language text. Measuring its damage tests selectivity
-beyond the English behaviour that these procedures try to retain.
+Selection and training use target-language and English text. The VPD rule ranks subcomponents by their
+estimated target effect relative to their English effect. LoRA and full-matrix fine-tuning are trained to
+worsen target predictions while penalizing changes to the original model's English predictions. These selection
+and training procedures exclude related-language text, so its damage tests selectivity beyond the English
+behaviour they aim to retain.
 
 ## Matching the intended damage
 
@@ -113,7 +110,7 @@ in the target language's prediction loss on validation text. This adjustment is 
 I measure target and related-language prediction on **Europarl v7**, a corpus of European Parliament proceedings. Prediction loss is measured
 as cross-entropy (CE): a higher value means worse next-token predictions. I set two target loss increases,
 **0.5 and 1 nat per token**, relative to the unedited model. A nat is a unit of information based on natural
-logarithms; 1 nat is about 1.44 bits.
+logarithms.
 
 Once the edit strengths are set, I evaluate them on separate text from **58 European Parliament session dates**.
 These dates were not used to select or calibrate the edits. Matching the effects on validation text does not
@@ -126,11 +123,9 @@ worsened prediction in the target language; the second shows its side effect on 
 Both charts use the same horizontal scale, so the size of the unwanted change can be compared directly with
 the intended one. Values near zero in the related-language chart mean little unwanted damage.
 
-For each target language, I trained LoRA and full-matrix fine-tuning separately on three overlapping samples of training text, producing
-three updates for each method. Each plotted point is an edit's measured effect, and a line spans the lowest
-and highest effects obtained from the three samples. For the subcomponent method, all three samples selected
-the same component and produced the same scaled edit. With three target languages and two target loss settings,
-there are six fixed subcomponent edits in total.
+Each target language has three overlapping training samples. LoRA and full-matrix fine-tuning yield three
+updates each; all three samples select the same subcomponent and produce the same scaled edit. Three target
+languages at two calibrated strengths give six fixed subcomponent edits.
 
 ```{=html}
 <figure class="visual-figure visual-results" aria-labelledby="visual-results-caption">
@@ -164,12 +159,10 @@ there are six fixed subcomponent edits in total.
 </figure>
 ```
 
-In the default German–Dutch comparison, calibrated to a target loss increase of 1 nat/token, all four methods
-substantially worsen German prediction. The subcomponent edit causes much less Dutch damage.
-
 Across all three pairs and both target loss settings, the subcomponent edits raised related-language CE by
 about **0.0003–0.0053 nat/token**. They caused less related-language damage than each comparator: all 18
-simultaneous intervals for those differences lie below zero. These comparisons share the same six fixed edits.
+simultaneous 95% intervals for those differences lie below zero. These comparisons share the six fixed edits,
+each compared with three methods.
 
 The new dates test those fixed edits. Earlier development had used related-language text and identified the
 German subcomponent, so the selection history was not blind.
@@ -184,7 +177,7 @@ the edited and original models' distributions of next-token probabilities.
   <summary>Uncertainty and the achieved target effects</summary>
   <p>Intervals describe variation across the 58 session dates for each fixed edit. The edits, training seeds, subcomponents, languages and model stay fixed during resampling. Negative related-language differences favour the subcomponent edit.</p>
   <div id="visual-uncertainty"><p>The <a href="index.html#sec-contrasts">paper's comparison figure</a> gives all simultaneous 95% intervals and the achieved target-effect checks.</p></div>
-  <p>Calibration matched validation effects. A separate, post hoc check asked whether achieved target effects agreed within ±0.1 nat/token on the evaluation dates: 15 of 18 comparisons did. The other three had a larger mean target effect for the subcomponent edit. One target-gap interval also allows a smaller effect for the subcomponent edit. The target-gap intervals use a separate simultaneous family.</p>
+  <p>Calibration matched validation effects. A separate, post hoc check counted agreement on the evaluation dates only if the entire simultaneous 95% interval for the target-effect difference lay within ±0.1 nat/token. This band was chosen after the results: 15 of 18 comparisons met the criterion. The three exceptions had larger mean target effects for the subcomponent edit, but their mean gaps were still inside the band; one interval also allows a smaller effect. The target-gap intervals use a separate simultaneous family.</p>
 </details>
 ```
 
@@ -200,7 +193,9 @@ To compare with directions outside VPD's fixed set of subcomponents, I used a se
 Its edits also caused more related-language damage. The search used the selected VPD subcomponent's norm to
 set the size of its candidate direction, so it still depended on the decomposition. I also applied the selection
 rule to a randomized set of subcomponents, disrupting their alignment with the model's weights. This control
-produced no comparable edit, so the contribution of VPD's original set of subcomponents remains unresolved.
+produced no matched edit: no shortlisted candidate reached even the smaller target effect, 0.5 nat/token,
+within the allowed dose range. Its selectivity therefore could not be compared, leaving the contribution of
+VPD's original set of subcomponents unresolved.
 
 These exploratory comparisons reuse development text examined earlier. The paper gives the
 [comparison details](index.qmd#sec-extended-comparisons) and
