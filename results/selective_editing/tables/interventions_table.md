@@ -7,4 +7,4 @@
 | fr → it | 0.attn.o:640 | 0.5 | 0.762 | 0.238 | 0.31 | 0.53 | 0.50 | 0.0008 |
 |  |  | 1 | 1.039 | −0.039 | 0.42 | 1.06 | 1.01 | 0.0017 |
 
-: The six VPD subcomponent interventions, each shared by the three draws: dose a, the subcomponent's mask coefficient 1 − a after the edit, edit norm |α| · ‖A‖ and the achieved CE rises in nat/token. C: confirmation. D: development. {#tbl-interventions tbl-colwidths="[9,13,5,9,12,9,13,14,16]"}
+: Selected subcomponent edits, shared across training draws. Coefficient: 1 − a; edit norm: |α| · ‖A‖. CE rises are in nat/token. C: confirmation; D: development. {#tbl-interventions tbl-colwidths="[9,13,5,9,12,9,13,14,16]"}

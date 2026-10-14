@@ -68,7 +68,7 @@ Cite the relevant paper for its findings. For use of the code, see [CITATION.cff
   title  = {Transferring Learned Repairs Between Fine-Tunes},
   year   = {2026},
   month  = oct,
-  note   = {Version 0.1.0},
+  note   = {Version 0.1.1},
   url    = {https://sergeisoly.github.io/interesearch/repair-transfer/}
 }
 
@@ -77,7 +77,7 @@ Cite the relevant paper for its findings. For use of the code, see [CITATION.cff
   title  = {Selective Language Damage with Parameter-Decomposition Subcomponents},
   year   = {2026},
   month  = oct,
-  note   = {Version 0.1.0},
+  note   = {Version 0.1.1},
   url    = {https://sergeisoly.github.io/interesearch/selective-editing/}
 }
 ```

@@ -164,12 +164,17 @@ def contrasts_figure(res: dict, path: Path) -> None:
     claims = _claims(res)
     gaps = {s: res["posthoc"]["dose_agreement"][s]["rows"] for s in ("confirm", "dev")}
     rows, pairs = _rows(res), _pairs(res)
-    fig, axes = plt.subplots(2, 3, figsize=(WIDTH, 4.1), sharey=True, gridspec_kw={"hspace": 0.55, "wspace": 0.12})
+    fig, axes = plt.subplots(2, 3, figsize=(WIDTH, 4.1), sharey=True)
+    fig.subplots_adjust(left=0.18, right=0.99, bottom=0.11, top=0.81, hspace=0.48, wspace=0.13)
     gap_lim = 0.0
     for col, m in enumerate(COMPARATORS):
         top, bottom = axes[0, col], axes[1, col]
         for ax in (top, bottom):
             ax.axvline(0, color=GREY, lw=0.6, zorder=1)
+            # Separate language pairs without repeating a full pair label at both doses.
+            for boundary in (1.5, 3.5):
+                ax.axhline(boundary, color=LIGHT, lw=0.55, zorder=0)
+            ax.tick_params(axis="y", length=0, pad=5)
         bottom.axvspan(-0.1, 0.1, color=LIGHT, alpha=0.7, lw=0, zorder=0)
         lims = []
         for k, (t, tau) in enumerate(rows):
@@ -184,21 +189,26 @@ def contrasts_figure(res: dict, path: Path) -> None:
                 gap_lim = max(gap_lim, abs(g["lo"]), abs(g["hi"]))
         lo, hi = min(lims), max(0.0, max(lims))
         top.set_xlim(lo - 0.08 * (hi - lo), hi + 0.08 * (hi - lo))
-        comparator_label = LABEL[m][0].lower() + LABEL[m][1:]
-        top.set_title(f"{LABEL[MAIN]} −\n{comparator_label}", loc="left")
-        bottom.set_title(f"{LABEL[MAIN]} −\n{comparator_label}", loc="left")
+        top.xaxis.set_major_locator(matplotlib.ticker.MaxNLocator(nbins=3, steps=[1, 2, 5, 10]))
+        top.set_title(LABEL[m], fontsize=7.5, pad=8)
     for ax in axes[1]:
         ax.set_xlim(-1.12 * gap_lim, 1.12 * gap_lim)
-    axes[0, 1].set_xlabel("Difference in protected CE rise (nat/token), frozen claim family")
-    axes[1, 1].set_xlabel("Difference in target CE rise (nat/token), post hoc dose-agreement family")
+    axes[0, 1].set_xlabel("Protected CE rise difference (nat/token)", labelpad=6)
+    axes[1, 1].set_xlabel("Target CE rise difference (nat/token)", labelpad=6)
     for ax in axes[:, 0]:
-        ax.set_yticks(range(len(rows)), [f"{pair_text(t, pairs[t])}, {tau_text(tau)}" for t, tau in rows])
+        ax.set_yticks(range(len(rows)), [f"{float(tau):g}" for _, tau in rows], fontsize=7)
+        for k, t in enumerate(pairs):
+            ax.text(-0.22, 2 * k + 0.5, pair_text(t, pairs[t]), transform=ax.get_yaxis_transform(),
+                    ha="right", va="center", fontsize=7, color=GREY)
+        ax.text(-0.22, 1.035, "Pair", transform=ax.transAxes, ha="right", fontsize=6.5, color=GREY)
+        ax.text(-0.055, 1.035, "τ", transform=ax.transAxes, ha="right", fontsize=6.5, color=GREY)
     axes[0, 0].set_ylim(len(rows) - 0.5, -0.5)
     handles = [Line2D([], [], color=GREY, marker="o", ls="-", lw=1.0, ms=4.0, label="Confirmation (58 dates)"),
                Line2D([], [], color=GREY, marker="o", ls="-", lw=1.0, ms=4.0, mfc="white", label="Development (64 dates)"),
-               Patch(color=LIGHT, alpha=0.7, label="±0.1 nat (post hoc agreement band)")]
-    fig.legend(handles=handles, loc="upper center", ncol=3, frameon=False, bbox_to_anchor=(0.5, 1.02),
-               columnspacing=1.5)
+               Patch(color=LIGHT, alpha=0.7, label="±0.1 band (bottom row)")]
+    fig.text(0.5, 0.985, f"{LABEL[MAIN]} − comparator", ha="center", va="top", fontsize=9)
+    fig.legend(handles=handles, loc="upper center", ncol=3, frameon=False, bbox_to_anchor=(0.5, 0.943),
+               fontsize=7, handlelength=1.5, handletextpad=0.4, columnspacing=1.2)
     _save(fig, path)
 
 
@@ -215,16 +225,18 @@ def effects_table(res: dict) -> str:
             prot, en = [e["protected_rise"] for e in c], [e["guards"]["confirm_en"] for e in c]
             kl_c = [1e3 * v for e in c for v in e["english_kl"].values()]
             kl_d = [1e3 * v for e in d for v in e["english_kl"].values()]
-            lines.append(f"| {LABEL[m] if tau == 0.5 else ''} | {tau:g} | {span([e['target_rise'] for e in c], '.2f')} | "
+            # Repeat the method because the PDF can split its two rows across pages.
+            lines.append(f"| {LABEL[m]} | {tau:g} | {span([e['target_rise'] for e in c], '.2f')} | "
                          f"{span(prot, rise_spec(prot))} | {span(en, rise_spec(en))} | {span(kl_c, '.2f')} | "
                          f"{span(kl_d, '.2f')} | {span([e['edit_norm'] for e in d], '.2f')} |")
     n = len({(e["target"], e["draw"]) for e in conf})
     n_dates = res["posthoc"]["dose_agreement"]["confirm"]["n_dates"]
-    lines += ["", (f": What the edits did on the {n_dates} confirmation dates, as the range over {n} edits per row "
-              "(3 targets × 3 draws, with the VPD subcomponent draws sharing one edit per target). Rises are CE rises in nat/token "
-              "on the target, the protected language and English. C: confirmation. D: development. English KL is from the base model. "
-              "On development data it covers the English validation set and the three guards. Edit norm: Frobenius norm of the "
-              'weight change. {#tbl-effects tbl-colwidths="[13,4,10,14,17,14,14,10]"}'), ""]
+    lines += ["", (f": Confirmation effects on {n_dates} dates and development English KL. Each method–τ row covers "
+              f"3 targets × 3 draws; VPD repeats one fixed edit per target. Confirmation ranges span these {n} run entries. "
+              "Development English KL spans all four English sets per run: the validation set and three evaluation sets. "
+              "CE rises and KL are in nat/token. C: confirmation; D: development. "
+              "KL is from the base model; edit norm is the Frobenius norm of the weight change. "
+              '{#tbl-effects tbl-colwidths="[13,4,10,14,17,14,14,10]"}'), ""]
     return "\n".join(lines)
 
 
@@ -241,9 +253,9 @@ def claim_table(res: dict) -> str:
             pair = pair_text(t, pairs[t]) if i == 0 and tau == TAUS[0] else ""
             lines.append(f"| {pair} | {f'{float(tau):g}' if i == 0 else ''} | {LABEL[m]} | {interval(r['confirm'])} | "
                          f"{interval(r['dev'])} | {interval(g, est='mean')} |")
-    lines += ["", (": The 18 claim contrasts, VPD subcomponent minus comparator, in nat/token, with simultaneous 95% intervals. "
-              "Protected: difference in protected CE rise, the frozen claim family. Target gap: difference in "
-              "achieved target CE rise, from the post hoc 54-coordinate family. "
+    lines += ["", (": VPD subcomponent minus comparator, in nat/token, with simultaneous 95% intervals. "
+              "Protected: prespecified differences in protected-language CE rise. Target gap: differences in achieved "
+              "target CE rise from the separate post hoc analysis. "
               '{#tbl-claims tbl-colwidths="[9,4,14,24,24,25]"}'), ""]
     return "\n".join(lines)
 
@@ -266,8 +278,8 @@ def interventions_table(res: dict) -> str:
                      f"{one([e['target_rise'] for e in es['dev']]):.2f} | "
                      f"{one([e['target_rise'] for e in es['confirm']]):.2f} | "
                      f"{one([e['protected_rise'] for e in es['confirm']]):.4f} |")
-    lines += ["", (": The six VPD subcomponent interventions, each shared by the three draws: dose a, the subcomponent's mask "
-              "coefficient 1\u00a0−\u00a0a after the edit, edit norm |α| · ‖A‖ and the achieved CE rises in nat/token. C: confirmation. D: development. "
+    lines += ["", (": Selected subcomponent edits, shared across training draws. Coefficient: 1\u00a0−\u00a0a; "
+              "edit norm: |α| · ‖A‖. CE rises are in nat/token. C: confirmation; D: development. "
               '{#tbl-interventions tbl-colwidths="[9,13,5,9,12,9,13,14,16]"}'), ""]
     return "\n".join(lines)
 

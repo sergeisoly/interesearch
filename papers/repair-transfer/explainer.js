@@ -89,7 +89,7 @@
       },
       fresh: {
         title: "Learn a new repair",
-        text: "Start with random input vectors and zero output vectors, then train both on the new fine-tune. This learns a repair without using the donor.",
+        text: "Start from a zero update and learn both vectors without using the donor repair.",
         description: "The donor arrow disappears. A new direction is learned from a zero-update start.",
         path: "M58 177 L333 89 M322 88 L333 89 L326 98", label: [278, 71]
       }
@@ -139,7 +139,7 @@
         target.full.forEach((cell, row) => {
           const y = y0 + 65 + row * 72;
           text(svg, left, y, familyLabel(cell.family), { "font-size": 14 });
-          if (cell.family === "strengths") text(svg, left, y + 18, "24 learned multipliers", { "font-size": 12, fill: MUTED });
+          if (cell.family === "strengths") text(svg, left, y + 18, "24 learned coefficients", { "font-size": 12, fill: MUTED });
           const barY = y + (cell.family === "strengths" ? 25 : 12);
           text(svg, right, y, `${pct(cell.recovery)}%`, { "text-anchor": "end", "font-weight": 650 });
           add(svg, "rect", { x: left, y: barY, width: right - left, height: 14, fill: "#eaece9", rx: 2 });
@@ -155,7 +155,7 @@
         text(svg, left, y0 + 310, "Share of Dutch damage recovered", { fill: MUTED, "font-size": 12 });
       });
       const primaryText = data.targets.map((target, i) =>
-        `${signed(target.primary.diff)} pp (95% CI ${interval(target.primary.ci)}) on the ${i ? "replication" : "primary"} target`).join(" and ");
+        `${pct(target.primary.diff)} percentage points on the ${i ? "replication" : "primary"} target`).join(" and ");
       document.getElementById("repair-primary-result").textContent =
         `Compared with scalar coefficients only, donor initialization increases Dutch recovery by ${primaryText}.`;
     }
@@ -223,10 +223,10 @@
       document.getElementById("repair-step-value").textContent = `${step} steps`;
       stepInput.setAttribute("aria-valuetext", `${step} steps per run`);
       document.getElementById("repair-curve-result").textContent =
-        `With ${comma(budget.tokens)} fit tokens and up to ${step} steps, Dutch recovery is ${pct(current.strengths.recovery)}% with scalar coefficients only, ${pct(current.donor.recovery)}% with donor initialization and ${pct(current.fresh.recovery)}% with fresh initialization. The donor's advantage over fresh initialization is ${signed(current.gap.diff)} percentage points (95% CI ${interval(current.gap.ci)}).`;
+        `With ${comma(budget.tokens)} fit tokens and up to ${step} steps, Dutch recovery is ${pct(current.strengths.recovery)}% with scalar coefficients only, ${pct(current.donor.recovery)}% with donor initialization and ${pct(current.fresh.recovery)}% with fresh initialization. The donor's advantage over fresh initialization is ${signed(current.gap.diff)} percentage points.`;
       const fullBudget = budget.key === "2K" && step === 600;
       document.getElementById("repair-curve-interpretation").textContent = fullBudget
-        ? `Fresh fitting has nearly caught up: the donor's small positive lead meets the study's practical-equivalence criterion (the paired 95% interval is within ±${data.equivalence_margin * 100} percentage points).`
+        ? "At this budget, learning a repair from scratch nearly catches up."
         : "";
       drawTable(points, target.label, budget.tokens);
     }
@@ -234,10 +234,10 @@
     function drawTable(points, targetLabel, tokens) {
       const table = document.createElement("table");
       const caption = document.createElement("caption");
-      caption.textContent = `${targetLabel}, ${comma(tokens)} unique fit tokens. Values in brackets are 95% confidence intervals. Differences are in percentage points (pp).`;
+      caption.textContent = `${targetLabel}, ${comma(tokens)} unique fit tokens. Values in brackets are 95% confidence intervals.`;
       table.append(caption);
       const head = table.createTHead().insertRow();
-      ["Step cap", "Scalar coefficients only (%)", "Donor initialization (%)", "Fresh initialization (%)", "Donor − fresh (pp)"].forEach(label => {
+      ["Step cap", "Scalar coefficients only (%)", "Donor initialization (%)", "Fresh initialization (%)"].forEach(label => {
         const th = document.createElement("th");
         th.scope = "col";
         th.textContent = label;
@@ -252,8 +252,7 @@
         row.append(label);
         [`${pct(p.strengths.recovery)} [${interval(p.strengths.ci)}]`,
           `${pct(p.donor.recovery)} [${interval(p.donor.ci)}]`,
-          `${pct(p.fresh.recovery)} [${interval(p.fresh.ci)}]`,
-          `${signed(p.gap.diff)} [${interval(p.gap.ci)}]`].forEach(value => {
+          `${pct(p.fresh.recovery)} [${interval(p.fresh.ci)}]`].forEach(value => {
           row.insertCell().textContent = value;
         });
       });

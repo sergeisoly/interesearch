@@ -23,6 +23,9 @@ Lucius Bushnaq's [Exploration: Fine-Tuning with Parameter Decomposition](https:/
 showed that changing one subcomponent's coefficient in [Goodfire's four-layer, 67-million-parameter language model](https://www.goodfire.com/research/interpreting-lm-parameters)
 could weaken German predictions while largely sparing French and Spanish. I use the same model and
 decomposition to test three pairs of close relatives: German/Dutch, Spanish/Portuguese and French/Italian.
+
+Across all three pairs, single-subcomponent edits caused much less damage to the related language than
+the other methods I tested. LoRA and full-matrix fine-tuning preserved English predictions better.
 :::
 
 ## Edit one rank-one subcomponent
@@ -44,6 +47,9 @@ $$
 Ax = u_{\mathrm{out}}\bigl(v_{\mathrm{in}}^\top x\bigr).
 $$
 
+A fixed rule uses target-language and English text to favor subcomponents expected to weaken the target
+language while changing English predictions little.
+
 The edit changes a single number, the selected subcomponent's coefficient $c$:
 
 $$
@@ -52,7 +58,7 @@ $$
 
 Changing this coefficient changes many entries of the weight matrix. The subcomponent's two vectors stay
 fixed, as do all other subcomponents and the residual. At $c=1$ the matrix is unchanged.
-$c=0$ removes the selected contribution, and $c<0$ reverses its sign. The slider below illustrates this operation
+Setting $c=0$ removes the selected contribution, and $c<0$ reverses its sign. The slider below illustrates this operation
 on a toy matrix.
 
 ```{=html}
@@ -76,7 +82,7 @@ on a toy matrix.
     </div>
   </div>
   <p id="visual-matrix-state" class="visual-matrix-state" aria-live="polite">The selected subcomponent is removed.</p>
-  <figcaption id="visual-matrix-caption">Toy illustration of changing one subcomponent's contribution. The experiment uses a real model and sets the coefficient from text.</figcaption>
+  <figcaption id="visual-matrix-caption">Toy illustration of changing one subcomponent's contribution.</figcaption>
 </figure>
 ```
 
@@ -99,10 +105,8 @@ This lets LoRA choose a different direction while keeping the update's rank and 
 The **neuron edit** selects neurons by how much more often they activate on target text than on English
 text, then scales their output weights.
 
-The VPD rule ranks subcomponents by their estimated target effect
-relative to their English effect. LoRA and full-matrix fine-tuning penalize changes to the original model's
+LoRA and full-matrix fine-tuning penalize changes to the original model's
 English predictions during training.
-
 These selection and training steps use no Dutch, Portuguese or Italian text. Those languages test whether
 the methods also spare a close relative that they were not explicitly trained to preserve.
 
@@ -111,7 +115,7 @@ the methods also spare a close relative that they were not explicitly trained to
 To compare side effects fairly, I first make each method worsen the target language by a similar amount.
 Otherwise, a method might spare Dutch simply because it barely changed German.
 
-I **calibrate** each edit by adjusting its strength on target-language validation text. I use two targets:
+I **calibrate** each edit by adjusting its strength on target-language validation text. I use two calibration levels:
 an increase of **0.5 or 1 nat/token** in average prediction loss (cross-entropy) relative to the original model.
 
 I use **Europarl v7**, a corpus of European Parliament proceedings. After calibration, I measure the damage
@@ -119,7 +123,7 @@ to both languages on separate text from **58 session dates**.
 
 ## Target and related-language damage
 
-Choose a language pair and strength. The first chart shows the measured damage to the target language.
+Choose a language pair and calibration level. The first chart shows the measured damage to the target language.
 The second shows the unwanted damage to its relative.
 
 ```{=html}
@@ -148,22 +152,23 @@ The second shows the unwanted damage to its relative.
       <tr><th scope="row">Full-matrix fine-tuning</th><td>0.95–0.97</td><td>0.23–0.24</td></tr>
       <tr><th scope="row">Neuron edit</th><td>1.00</td><td>0.76</td></tr>
     </tbody></table>
-    <p>See the <a href="index.html#sec-effects">paper's figure</a> for all three language pairs and both target loss settings.</p>
+    <p>See the <a href="index.html#sec-effects">paper's figure</a> for all three language pairs and both calibration levels.</p>
   </div>
-  <figcaption id="visual-results-caption">Each method is run on three overlapping training subsets, each with 64 of the 128 available text windows. Points show individual results. Lines span their range, not a confidence interval. Identical results overlap. The dashed line marks the calibration target.</figcaption>
+  <figcaption id="visual-results-caption">Points show results from three training subsets. Lines span their range, not a confidence interval. The dashed line marks the calibration target.</figcaption>
 </figure>
 ```
 
-Across all three pairs and both strengths, the VPD changes largely spared the related language: its average
-loss rose by only **0.0003–0.0053 nat/token**. Each of these six changes in this model caused less
-related-language damage than rank-one LoRA, full-matrix fine-tuning or the neuron edit.
+Across all three pairs and both calibration levels, the VPD edits raised related-language loss by
+**0.0003–0.0053 nat/token**, compared with **0.03–0.88 nat/token** for the other methods.
+These ranges span individual run results. The comparison tests six fixed edits in one small model.
+Whether the selection rule works reliably on new tasks remains untested.
 
 ## English, innit? {#what-changed-in-english}
 
-**Rank-one LoRA and full-matrix fine-tuning preserved the original model's English predictions more
-closely** than the VPD changes did. Prediction loss scores the probability of the actual next token.
-KL divergence compares probabilities over all possible next tokens before and after the edit.
-Lower KL means the English predictions stayed closer to the original model.
+In a post hoc comparison, **rank-one LoRA and full-matrix fine-tuning preserved the original model's English
+predictions more closely** than the VPD edits did. Prediction loss scores only the probability of the actual
+next token, so this comparison uses KL divergence, which compares probabilities over all possible next
+tokens before and after the edit. Lower KL means the English predictions stayed closer to the original model.
 
 ```{=html}
 <figure class="visual-figure" aria-labelledby="visual-english-caption">
@@ -182,31 +187,19 @@ Lower KL means the English predictions stayed closer to the original model.
     </div>
   </div>
   <div id="visual-english-fallback">
-    <p>The VPD edits' English KL is below 0.001 nat/token for every language and strength. Both learned methods have lower English KL in all 18 comparisons. The <a href="index.html#sec-english">paper's English comparison</a> includes the values for all four methods.</p>
+    <p>The VPD edits' English KL is below 0.001 nat/token for every language and calibration level. Both learned methods have lower English KL throughout these comparisons. The <a href="index.html#sec-english">paper's English comparison</a> includes the values for all four methods.</p>
   </div>
-  <figcaption id="visual-english-caption">English predictions after editing the selected language, measured on the same 58 evaluation dates. Points and ranges show results from the three training subsets. The horizontal scale is logarithmic: each tick is ten times the previous value. KL is measured from the original distribution to the edited one. Zero would mean identical distributions.</figcaption>
+  <figcaption id="visual-english-caption">Points and lines show results from three training subsets. The horizontal scale is logarithmic: each tick is ten times the previous value.</figcaption>
 </figure>
 ```
 
 On the evaluated English text, the VPD edits changed next-token probabilities **little on average**:
-mean KL stayed below **0.001 nat/token** for every language and strength. For a sense of scale, changing
-a two-outcome distribution from **50%/50% to 52%/48%** gives KL ≈ **0.00080**, close to the German VPD
-edit's 0.00077 at the 1 nat/token target. This is an illustration of scale, not a measured change of two
-percentage points for each token. Individual contexts can change more than the average suggests.
+mean KL stayed below **0.001 nat/token** for every language and calibration level. For scale, changing
+a coin's probabilities from **50%/50% to 52%/48%** gives KL ≈ **0.00080**, close to the German VPD
+edit's 0.00077 at the 1 nat/token level. This illustrates the size of KL, not a measured two-percentage-point
+change for each token. Individual contexts can change more than the average suggests.
 
-```{=html}
-<details class="visual-details">
-  <summary>Measurement details and study limits</summary>
-  <p>A nat is a unit of information based on natural logarithms. Loss increases are measured relative to the unedited model.</p>
-  <p>The evaluation tests six fixed weight changes on new text in one model. Those dates were not used to select or calibrate the changes. Earlier development had used related-language text and identified the German subcomponent, so the selection history was not blind.</p>
-  <p>Each text window contains 257 tokens, giving 256 next-token predictions. LoRA and full-matrix fine-tuning use 200 training steps per subset and yield three updates each. All three subsets select the same VPD subcomponent and produce the same scaled edit. Three target languages at two calibrated strengths give six fixed subcomponent edits.</p>
-  <p>All 18 simultaneous 95% intervals for the related-language differences lie below zero. These comparisons share the six fixed subcomponent edits, each compared with three methods.</p>
-  <p>Intervals describe variation across the 58 session dates for each fixed edit. The edits, training seeds, subcomponents, languages and model stay fixed during resampling. Negative related-language differences favour the subcomponent edit.</p>
-  <div id="visual-uncertainty"><p>The <a href="index.html#sec-contrasts">paper's comparison figure</a> gives all simultaneous 95% intervals and the achieved target-effect checks.</p></div>
-  <p>Calibration matched validation effects. A separate, post hoc check counted agreement on the evaluation dates only if the entire simultaneous 95% interval for the target-effect difference lay within ±0.1 nat/token. This band was chosen after the results: 15 of 18 comparisons met the criterion. The three exceptions had larger mean target effects for the subcomponent edit, but their mean gaps were still inside the band. One interval also allows a smaller effect. The target-gap intervals use a separate simultaneous family.</p>
-</details>
-```
-
+[Methods](index.qmd#sec-setup) and [study limitations](index.qmd#sec-limits) in the paper.
 
 ```{=html}
 <script type="application/json" id="visual-selective-data">

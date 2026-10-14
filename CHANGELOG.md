@@ -1,5 +1,13 @@
 # Changelog
 
+## Papers 0.1.1 — 2026-10-15
+
+Both papers have revised abstracts, explanations, discussion and appendices. Their short summaries now
+focus on the research questions, methods and main results, with detailed procedures linked from the papers.
+Appendix labels are consistent across HTML and PDF. Citation entries identify this revision.
+
+No new experiments were run, and the numerical results are unchanged. The software remains at version 0.2.0.
+
 ## 0.2.0 — 2026-10-14
 
 Code is grouped by numerical method, analysis and model stage within each study. Experimental recipes live

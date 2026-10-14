@@ -45,7 +45,7 @@
       "full": [
         {
           "family": "strengths",
-          "label": "Scalar coefficients only + full-batch optimization",
+          "label": "Scalar coefficients only + expanded search",
           "source_cell": "strengths_best@2K",
           "recovery": 0.8689796947045201,
           "ci": [
@@ -536,7 +536,7 @@
       "full": [
         {
           "family": "strengths",
-          "label": "Scalar coefficients only + full-batch optimization",
+          "label": "Scalar coefficients only + expanded search",
           "source_cell": "strengths_best@2K",
           "recovery": 0.7838082601691363,
           "ci": [

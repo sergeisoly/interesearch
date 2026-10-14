@@ -19,4 +19,4 @@
 |  |  | Full-matrix fine-tuning | −0.120 [−0.126, −0.113] | −0.117 [−0.123, −0.110] | +0.077 [+0.020, +0.134] |
 |  |  | Neuron edits | −0.868 [−0.914, −0.822] | −0.901 [−0.943, −0.859] | +0.026 [−0.018, +0.071] |
 
-: The 18 claim contrasts, VPD subcomponent minus comparator, in nat/token, with simultaneous 95% intervals. Protected: difference in protected CE rise, the frozen claim family. Target gap: difference in achieved target CE rise, from the post hoc 54-coordinate family. {#tbl-claims tbl-colwidths="[9,4,14,24,24,25]"}
+: VPD subcomponent minus comparator, in nat/token, with simultaneous 95% intervals. Protected: prespecified differences in protected-language CE rise. Target gap: differences in achieved target CE rise from the separate post hoc analysis. {#tbl-claims tbl-colwidths="[9,4,14,24,24,25]"}

@@ -27,7 +27,6 @@
     const digits = a >= 0.1 ? 2 : a >= 0.01 ? 3 : a >= 0.001 ? 4 : Math.max(0, 1 - Math.floor(Math.log10(a)));
     return value.toFixed(digits).replace("-", "−");
   };
-  const signed = value => `${value > 0 ? "+" : ""}${number(value)}`;
   const range = values => {
     const lo = number(Math.min(...values)), hi = number(Math.max(...values));
     return lo === hi ? lo : `${lo}–${hi}`;
@@ -105,42 +104,18 @@
     });
     svg.append(el("text", {x: right, y: height - 5, "text-anchor": "end", fill: "#53625d", "font-size": 13}, "KL divergence · nat/token · log scale"));
     const values = methods.map(method => `${method.label}: ${range(edits.filter(row => row.method === method.id).map(row => row.english_kl))} nat per token`).join(". ");
-    svg.setAttribute("aria-label", `English predictions after the ${pairs[state.target][0]} edit at a ${state.tau} nat per token calibration target. KL divergence from the original distribution to the edited one, averaged over English text on ${data.n_dates} evaluation dates. Lower is closer to the original model. ${values}. Logarithmic scale from 0.00001 to 0.1, with the same scale for every language and strength.`);
+    svg.setAttribute("aria-label", `English predictions after the ${pairs[state.target][0]} edit at a ${state.tau} nat per token calibration target. KL divergence from the original distribution to the edited one, averaged over English text on ${data.n_dates} evaluation dates. Lower is closer to the original model. ${values}. Logarithmic scale from 0.00001 to 0.1, with the same scale for every language and calibration level.`);
     return svg;
-  }
-  function uncertainty(rows) {
-    const table = document.createElement("table");
-    table.className = "visual-uncertainty-table";
-    const caption = table.createCaption();
-    caption.textContent = `${pairs[state.target].join(" → ")}, target loss increase on validation text: ${state.tau} nat/token. Subcomponent edit minus comparator: estimate [simultaneous 95% interval], nat/token.`;
-    const head = table.createTHead().insertRow();
-    ["Comparator", "Related-language difference", "Achieved target gap (post hoc)"].forEach(text => {
-      const th = document.createElement("th"); th.scope = "col"; th.textContent = text; head.append(th);
-    });
-    const body = table.createTBody();
-    methods.slice(1).forEach(method => {
-      const row = rows.find(r => r.comparator === method.id);
-      const tr = body.insertRow(), th = document.createElement("th");
-      th.scope = "row"; th.textContent = method.label; tr.append(th);
-      [row.protected, row.target_gap].forEach((interval, index) => {
-        // The ±0.1 agreement boundary needs three decimals: 0.104 must not read as 0.10.
-        const format = index === 1 ? value => `${value > 0 ? "+" : ""}${Math.abs(value) < 0.001 ? number(value) : value.toFixed(3).replace("-", "−")}` : signed;
-        tr.insertCell().textContent = `${format(interval.estimate)} [${format(interval.lo)}, ${format(interval.hi)}]`;
-      });
-    });
-    return table;
   }
   function render() {
     const edits = data.edits.filter(e => e.target === state.target && e.tau === state.tau);
-    const comparisons = data.comparisons.filter(e => e.target === state.target && e.tau === state.tau);
-    if (edits.length !== 12 || comparisons.length !== 3) throw new Error("Incomplete presentation data");
+    if (edits.length !== 12) throw new Error("Incomplete presentation data");
     const [target, protectedLanguage] = pairs[state.target];
     document.getElementById("visual-target-chart").replaceChildren(plot("target_rise", target, true, edits));
     document.getElementById("visual-protected-chart").replaceChildren(plot("protected_rise", protectedLanguage, false, edits));
     document.getElementById("visual-english-chart").replaceChildren(englishPlot(edits));
     const atom = edits.find(e => e.method === "vpd_atom");
     document.getElementById("visual-result-sentence").textContent = `Changing one VPD subcomponent's coefficient worsened ${target} next-token prediction while leaving average prediction loss on ${protectedLanguage} text almost unchanged. On the evaluation text, loss rose by ${number(atom.target_rise)} nat/token for ${target} but only ${number(atom.protected_rise)} nat/token for ${protectedLanguage}.`;
-    document.getElementById("visual-uncertainty").replaceChildren(uncertainty(comparisons));
     document.querySelectorAll("[data-visual-tau]").forEach(button => button.setAttribute("aria-pressed", String(Number(button.dataset.visualTau) === state.tau)));
     ["visual-pair", "visual-english-pair"].forEach(id => { document.getElementById(id).value = state.target; });
   }

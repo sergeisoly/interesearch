@@ -28,7 +28,7 @@ from ..recipes import load_recipe
 TARGETS = {"primary_target": "Primary target", "replication_target": "Replication target"}
 LABEL = {
     "strengths": "Scalar coefficients only",
-    "strengths_best": "Scalar coefficients only + full-batch optimization",
+    "strengths_best": "Scalar coefficients only + expanded search",
     "donor_init": "Donor initialization",
     "donor_init_output": "Donor initialization, output only",
     "random_init": "Random initialization",
@@ -37,7 +37,7 @@ LABEL = {
     "fresh_seed2": "Fresh, second seed",
     "donor_fixed": "Fixed donor repair",
 }
-CHART_LABEL = {**LABEL, "strengths_best": "Scalar coefficients only\n+ full-batch optimization",
+CHART_LABEL = {**LABEL, "strengths_best": "Scalar coefficients only\n+ expanded search",
                "donor_init_output": "Donor initialization,\noutput only"}
 COLOR = {"donor_init": "#2a78d6", "donor_init_output": "#12865f", "random_init": "#4a3aa7", "fresh": "#c85224",
          "strengths": "#52514e", "strengths_best": "#52514e", "donor_fixed": "#8a8984"}
@@ -242,18 +242,18 @@ def primary_table(result: dict, recipe: dict) -> str:
     if pr["reading"] == "basis limit supported":
         reading = (
             f"Donor-initialized fitting exceeds the tested scalar-coefficient search by more than {100 * recipe["analysis"]["delta"]:g} "
-            "percentage points. The scalar search includes 4 learning rates × 600 steps plus two full-batch "
-            "optimizations, with 50 candidates in total.")
+            "percentage points. The scalar search includes 48 checkpoints from 4 learning-rate runs with a "
+            "600-step cap and two final candidates from additional full-batch runs that met the declared stopping criteria.")
     lines = [
         "| Repair | Recovery of Dutch damage (%) | 95% CI |",
         "|:--|--:|:--|",
         row("Donor initialization (both factors trained)", cx.get("point", {}).get("r_nl"), cx.get("ci_r_nl"), ".1f"),
-        row("Scalar coefficients only + full-batch optimization", cy.get("point", {}).get("r_nl"), cy.get("ci_r_nl"), ".1f"),
+        row("Scalar coefficients only + expanded search", cy.get("point", {}).get("r_nl"), cy.get("ci_r_nl"), ".1f"),
         row("Difference (percentage points)", pr["diff"], pr["ci"], "+.1f"),
         "",
         f": {res['target'].replace('_', ' ').capitalize()}, 2,048 fit tokens, {res['n_dates']} readout dates. 95% "
-        f"intervals from a joint bootstrap over dates ({recipe["bootstrap"]["n_boot"]:,} draws). {reading} Selection considers both ordinary "
-        "training checkpoints and converged candidates. {#tbl-primary}",
+        f"intervals from a joint bootstrap over dates ({recipe["bootstrap"]["n_boot"]:,} draws). {reading} Selection considers "
+        "all 50 candidates and can retain an ordinary checkpoint. {#tbl-primary}",
         "",
     ]
     return "\n".join(lines)
@@ -275,9 +275,10 @@ def secondary_table(res: dict, recipe: dict) -> str:
             band.append("yes" if c.get("equivalent") else "no")
         lines.append(f"| {contrast_label(key)} | {cells[0]} | {cells[1]} | "
                      f"{' / '.join(band) if (x, y) in EQUIV_PAIRS else '—'} |")
-    lines += ["", (": Secondary contrasts at the full budget (2,048 unique fit tokens, up to 600 steps): paired difference "
+    lines += ["", (": Secondary contrasts at the full fit budget (2,048 unique fit tokens, 600-step cap for ordinary runs): paired difference "
               f"in recovery (pp) with its 95% interval, {res['targets']['primary_target']['n_dates']} readout dates "
-              "per target. Rows marked '+ full-batch optimization' also include the two converged candidates. "
+              "per target. For rows marked '+ expanded search', scalar-repair selection also considers two final "
+              "candidates from additional runs that met the declared stopping criteria. "
               "These intervals are descriptive, without multiplicity correction. The last column applies "
               "only to the five contrasts named in the protocol for an equivalence reading (primary / replication): "
               f"'yes' means that the whole interval lies inside the ±{margin} pp band. "
@@ -331,10 +332,11 @@ def readout_table(res: dict, recipe: dict) -> str:
                          f"{pct(p['r_nl'])} {interval(c['ci_r_nl'], '.1f')} | "
                          f"{pct(p['r_kl'])} | {p['rho_de']:.3f} | {p['phi_de']:.4f} | "
                          f"{format(max(p['retain'].values()), '+.4f').replace('-', MINUS)} |")
-    lines += ["", (": Readout of the 2,048-token cells (up to 600 steps) and the fixed donor repair on the "
-              f"{res['targets']['primary_target']['n_dates']} readout dates. Rows marked '+ full-batch "
-              "optimization' also include the two converged candidates. KL recovery (%) is the share of the "
-              "fine-tune's Dutch KL from the base model that the repair removes. German effect kept is the ratio of "
+    lines += ["", (": Readout of the 2,048-token cells (600-step cap for ordinary runs) and the fixed donor repair on the "
+              f"{res['targets']['primary_target']['n_dates']} readout dates. Rows marked '+ expanded "
+              "search' report the repair selected from ordinary checkpoints and two final candidates from additional "
+              "runs that met the declared stopping criteria. KL recovery (%) is the share of the "
+              "fine-tune's Dutch KL from the base model that the repair removes (required to be positive). German effect kept is the ratio of "
               f"German CE damage with and without the repair (required {recipe["selection"]["rho_lo"]}–{recipe["selection"]["rho_hi"]}). German drift is the "
               "repair's German KL from the fine-tuned model relative to the base model's KL from the fine-tuned "
               f"model (required at most {recipe["selection"]["phi_max"]}). Worst retain change is the largest CE change in English, French, "
