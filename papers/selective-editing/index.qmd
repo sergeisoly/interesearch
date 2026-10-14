@@ -65,7 +65,7 @@ crossref:
 
 ::: {.content-visible when-format="html"}
 ::: {.study-resources}
-[Visual guide](explainer.qmd) · [PDF](index.pdf) · [GitHub](https://github.com/sergeisoly/interesearch/blob/main/papers/guides/selective-editing.md)
+[Short summary](explainer.qmd) · [PDF](index.pdf) · [GitHub](https://github.com/sergeisoly/interesearch/blob/main/papers/guides/selective-editing.md)
 :::
 :::
 

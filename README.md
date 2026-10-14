@@ -12,7 +12,7 @@ learned weight updates (including full-matrix fine-tuning), and neuron edits are
 effect on validation text. On 58 new session dates in the same model, the six subcomponent edits caused less
 related-language damage than the comparators. The learned updates preserved English predictions better.
 
-[Visual guide](https://sergeisoly.github.io/interesearch/selective-editing/explainer.html) · [Selective Language Damage with Parameter-Decomposition Subcomponents](https://sergeisoly.github.io/interesearch/selective-editing/) · [Study guide](papers/guides/selective-editing.md)
+[Short summary](https://sergeisoly.github.io/interesearch/selective-editing/explainer.html) · [Selective Language Damage with Parameter-Decomposition Subcomponents](https://sergeisoly.github.io/interesearch/selective-editing/) · [Study guide](papers/guides/selective-editing.md)
 
 **Repair transfer.** I reuse a learned repair for new fine-tunes trained independently from the same base model
 on different samples from the same data distribution.
@@ -21,7 +21,7 @@ varying the available data and training budget. On two new fine-tunes, fixed dir
 donor initialization helped most when fitting data and steps were limited, while fresh fitting nearly caught up
 at the full budget.
 
-[Visual guide](https://sergeisoly.github.io/interesearch/repair-transfer/explainer.html) · [Transferring Learned Repairs Between Fine-Tunes](https://sergeisoly.github.io/interesearch/repair-transfer/) · [Study guide](papers/guides/repair-transfer.md)
+[Short summary](https://sergeisoly.github.io/interesearch/repair-transfer/explainer.html) · [Transferring Learned Repairs Between Fine-Tunes](https://sergeisoly.github.io/interesearch/repair-transfer/) · [Study guide](papers/guides/repair-transfer.md)
 
 Both studies use Goodfire's small language model. Selective editing also uses its released parameter decomposition.
 

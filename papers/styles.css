@@ -63,6 +63,10 @@ main table { font-size: .9rem; }
 .research-hero h1 { font-size: clamp(2.15rem, 4vw, 3.3rem); line-height: 1.15; margin: 0; }
 .research-lead { font-size: 1.35rem; line-height: 1.55; max-width: 780px; }
 .research-intro { color: var(--research-muted); max-width: 720px; }
+.research-hero h1 + .research-intro { margin-top: 1.3rem; }
+.research-ai-note { max-width: 720px; margin-top: 1.75rem; color: var(--research-muted); }
+.research-ai-note h2 { color: var(--research-ink); font-size: 1.35rem; margin: 0 0 .75rem; }
+.research-ai-note p:last-child { margin-bottom: 0; }
 .research-story { border-top: 1px solid var(--research-rule); padding: 3rem 0; display: grid; grid-template-columns: 1.12fr 1fr; align-items: center; gap: 3rem; }
 .research-story h2 { font-size: clamp(1.9rem, 3vw, 2.45rem); margin: 0 0 1.2rem; }
 .research-story-copy>p:not(.research-eyebrow) { max-width: 560px; }

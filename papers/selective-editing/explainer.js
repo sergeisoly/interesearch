@@ -69,11 +69,43 @@
       svg.append(el("text", {x: compact ? right : 16, y: compact ? y - 21 : y + 15, "text-anchor": compact ? "end" : "start", fill: "#344946", "font-size": 14, "font-weight": 600}, range(values)));
       svg.append(el("line", {x1: x(Math.min(...values)), x2: x(Math.max(...values)), y1: y, y2: y, stroke: method.color, "stroke-width": 2}));
       const visibleRows = method.id === "vpd_atom" ? rows.slice(0, 1) : rows;
-      visibleRows.forEach(row => mark(svg, method, x(row[field]), y, `${method.label}${method.id === "vpd_atom" ? "" : `, training sample ${row.draw + 1}`}: ${number(row[field])} nat/token`));
+      visibleRows.forEach(row => mark(svg, method, x(row[field]), y, `${method.label}${method.id === "vpd_atom" ? "" : `, training subset ${row.draw + 1}`}: ${number(row[field])} nat/token`));
     });
     svg.append(el("text", {x: right, y: height - 5, "text-anchor": "end", fill: "#53625d", "font-size": 13}, "Prediction loss increase · nat/token"));
     const accessibleValues = methods.map(method => `${method.label}: ${range(edits.filter(e => e.method === method.id).map(e => e[field]))} nat per token`).join(". ");
     svg.setAttribute("aria-label", `${language}, ${targetPanel ? "target effect" : "related-language damage"}. Cross-entropy rise relative to the unedited model. ${accessibleValues}. Both panels use the same zero to 1.2 nat per token scale.`);
+    return svg;
+  }
+  function englishPlot(edits) {
+    const container = document.getElementById("visual-english-chart");
+    const width = Math.max(280, container.clientWidth || 470);
+    const compact = width < 430;
+    const height = compact ? 386 : 324;
+    const svg = el("svg", {viewBox: `0 0 ${width} ${height}`, role: "img"});
+    svg.append(el("text", {x: 16, y: 28, fill: "#243c3d", "font-size": 20, "font-weight": 600}, "Change in English predictions"));
+    svg.append(el("text", {x: 16, y: 51, fill: "#53625d", "font-size": 14}, `${pairs[state.target][0]} edit · ${state.tau} nat/token target · lower is better`));
+    const left = compact ? 30 : 188, right = width - 30;
+    const x = value => left + (Math.log10(value) + 5) / 4 * (right - left);
+    const top = compact ? 108 : 78, bottom = compact ? 321 : 273;
+    [0.00001, 0.0001, 0.001, 0.01, 0.1].forEach(tick => {
+      svg.append(el("line", {x1: x(tick), x2: x(tick), y1: top, y2: bottom, stroke: "#dce3df", "stroke-width": 1}));
+      svg.append(el("text", {x: x(tick), y: compact ? 347 : 296, "text-anchor": "middle", fill: "#53625d", "font-size": compact ? 11 : 13}, tick.toString()));
+    });
+    methods.forEach((method, index) => {
+      const rows = edits.filter(row => row.method === method.id);
+      const values = rows.map(row => row.english_kl);
+      if (values.some(value => !Number.isFinite(value) || value < 0.00001 || value > 0.1)) throw new Error("English KL outside plotted scale");
+      const y = compact ? 120 + index * 65 : 104 + index * 49;
+      if (compact) svg.append(el("rect", {x: 0, y: y - 38, width, height: 25, fill: "#faf9f5"}));
+      svg.append(el("text", {x: 16, y: compact ? y - 21 : y - 4, fill: "#344946", "font-size": 14}, method.label));
+      svg.append(el("text", {x: compact ? width - 16 : 16, y: compact ? y - 21 : y + 15, "text-anchor": compact ? "end" : "start", fill: "#344946", "font-size": 14, "font-weight": 600}, range(values)));
+      svg.append(el("line", {x1: x(Math.min(...values)), x2: x(Math.max(...values)), y1: y, y2: y, stroke: method.color, "stroke-width": 2}));
+      const visibleRows = method.id === "vpd_atom" ? rows.slice(0, 1) : rows;
+      visibleRows.forEach(row => mark(svg, method, x(row.english_kl), y, `${method.label}${method.id === "vpd_atom" ? "" : `, training subset ${row.draw + 1}`}: English KL ${number(row.english_kl)} nat/token`));
+    });
+    svg.append(el("text", {x: right, y: height - 5, "text-anchor": "end", fill: "#53625d", "font-size": 13}, "KL divergence · nat/token · log scale"));
+    const values = methods.map(method => `${method.label}: ${range(edits.filter(row => row.method === method.id).map(row => row.english_kl))} nat per token`).join(". ");
+    svg.setAttribute("aria-label", `English predictions after the ${pairs[state.target][0]} edit at a ${state.tau} nat per token calibration target. KL divergence from the original distribution to the edited one, averaged over English text on ${data.n_dates} evaluation dates. Lower is closer to the original model. ${values}. Logarithmic scale from 0.00001 to 0.1, with the same scale for every language and strength.`);
     return svg;
   }
   function uncertainty(rows) {
@@ -105,10 +137,12 @@
     const [target, protectedLanguage] = pairs[state.target];
     document.getElementById("visual-target-chart").replaceChildren(plot("target_rise", target, true, edits));
     document.getElementById("visual-protected-chart").replaceChildren(plot("protected_rise", protectedLanguage, false, edits));
+    document.getElementById("visual-english-chart").replaceChildren(englishPlot(edits));
     const atom = edits.find(e => e.method === "vpd_atom");
-    document.getElementById("visual-result-sentence").textContent = `On the evaluation text, the subcomponent edit increased ${target} prediction loss by ${number(atom.target_rise)} and ${protectedLanguage} prediction loss by ${number(atom.protected_rise)} nat/token. The dashed line shows the ${number(state.tau)} nat/token increase used to set edit strength on validation text.`;
+    document.getElementById("visual-result-sentence").textContent = `Changing one VPD subcomponent's coefficient worsened ${target} next-token prediction while leaving average prediction loss on ${protectedLanguage} text almost unchanged. On the evaluation text, loss rose by ${number(atom.target_rise)} nat/token for ${target} but only ${number(atom.protected_rise)} nat/token for ${protectedLanguage}.`;
     document.getElementById("visual-uncertainty").replaceChildren(uncertainty(comparisons));
     document.querySelectorAll("[data-visual-tau]").forEach(button => button.setAttribute("aria-pressed", String(Number(button.dataset.visualTau) === state.tau)));
+    ["visual-pair", "visual-english-pair"].forEach(id => { document.getElementById(id).value = state.target; });
   }
   // The matrix toy is deliberately independent of every measured result above.
   function matrixIllustration(coefficient) {
@@ -132,11 +166,13 @@
   }
   try {
     document.getElementById("visual-results-interactive").hidden = false;
+    document.getElementById("visual-english-interactive").hidden = false;
     render();
     matrixIllustration(0);
     document.getElementById("visual-results-fallback").hidden = true;
+    document.getElementById("visual-english-fallback").hidden = true;
     document.getElementById("visual-coefficient-control").hidden = false;
-    document.getElementById("visual-pair").addEventListener("change", event => { state.target = event.target.value; render(); });
+    ["visual-pair", "visual-english-pair"].forEach(id => document.getElementById(id).addEventListener("change", event => { state.target = event.target.value; render(); }));
     document.querySelectorAll("[data-visual-tau]").forEach(button => button.addEventListener("click", () => { state.tau = Number(button.dataset.visualTau); render(); }));
     document.getElementById("visual-coefficient").addEventListener("input", event => matrixIllustration(Number(event.target.value)));
     let frame;
@@ -159,6 +195,8 @@
   } catch (error) {
     document.getElementById("visual-results-interactive").hidden = true;
     document.getElementById("visual-results-fallback").hidden = false;
+    document.getElementById("visual-english-interactive").hidden = true;
+    document.getElementById("visual-english-fallback").hidden = false;
     // Keep the complete static example available when a build has missing data.
     console.warn("Selective-editing visual could not initialize.", error);
   }

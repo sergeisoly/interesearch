@@ -1,33 +1,14 @@
----
-image: ../social-card.png
-description: "Replay the repair-transfer analysis and fit repairs."
-title: "Repair transfer: study guide"
-format: html
----
+# Repair transfer
 
-The experiment deliberately weakens German prediction, then tries to repair the collateral damage to Dutch while
-preserving the fine-tune's German effect and meeting constraints on other languages. Reusing a repair could reduce
-the fitting needed for a new fine-tune. The earlier fine-tune is the *donor*, and its learned repair is the *donor repair*.
-The new fine-tunes are the *targets*. Donor and targets are trained independently from the same base model with
-the same recipe, using different seeds and Europarl samples from the same data distribution.
+[Summary](https://sergeisoly.github.io/interesearch/repair-transfer/explainer.html) · [Paper](https://sergeisoly.github.io/interesearch/repair-transfer/index.html) · [PDF](https://sergeisoly.github.io/interesearch/repair-transfer/index.pdf)
 
-::: {.study-resources}
-[Visual guide](../repair-transfer/explainer.qmd) · [Paper](../repair-transfer/index.qmd) · [PDF](../repair-transfer/index.pdf)
-:::
+Complete the [shared setup](reproduction.md#setup), then run these commands from the repository root.
 
-[Setup, data and validation](reproduction.md)
-
-::: {.guide-task-options}
-| Task | Inputs and requirements | Output |
-|---|---|---|
-| [Replay the analysis](#replay-the-papers-analysis) | Saved measurements; CPU, no model download | Recovery comparisons, figures and cost accounting |
-| [Run targets and repairs](#run-a-new-target-and-its-repairs) | Model assets, published donor repair and token windows; CUDA by default | New fine-tunes, fitted repairs and readout measurements |
-| [Rebuild the donor](#rebuild-the-donor-repair) | Model assets and published donor windows; CUDA by default | A donor repair, validation record and fitting cost record |
-:::
+- [Replay the analysis](#replay-the-papers-analysis): CPU, saved measurements, no model download.
+- [Run targets and repairs](#run-a-new-target-and-its-repairs): model assets, published token windows and donor repair; CUDA by default.
+- [Rebuild the donor](#rebuild-the-donor-repair): optional training and repair fitting.
 
 ## Replay the paper's analysis
-
-These commands turn saved measurements into repair comparisons and figures. They run on the CPU without a model download.
 
 ```bash
 uv run python -m interesearch.repair_transfer.analysis.recovery data/repair_transfer \
@@ -36,116 +17,78 @@ uv run python -m interesearch.repair_transfer.figures runs/replay/repair_transfe
     --out runs/replay/repair_transfer
 ```
 
-Outputs in `runs/replay/repair_transfer/`:
+Compare the outputs with [`results/repair_transfer`](../../results/repair_transfer):
 
-| Output | What to look for |
+| Output under `runs/replay/repair_transfer/` | Contents |
 |---|---|
-| `tables/primary_table.md` | Recovery from fitting scalar coefficients over fixed donor directions versus donor initialization with trainable directions. |
-| `figures/recovery.svg` | How much Dutch damage each repair removes. |
-| `figures/warm_start.svg` | Whether donor initialization helps when fitting data or training steps are limited. |
-| `tables/readout_table.md` | Whether recovering Dutch preserves the German effect and the other language constraints. |
-| `tables/break_even_table.md` | When reuse can repay the cost of learning the donor. |
-| `analysis.json` | Selections, confidence intervals, exclusions and cost accounting behind the summaries. |
-
-Compare with `results/repair_transfer`. The results describe transfer from this donor to the two tested targets
-under the same model and fine-tuning recipe. Transfer across a population of fine-tunes remains untested.
-
-## Recipes and saved runs
-
-Each study ships one `recipe.yaml`; Repair Transfer stores its published profile in
-`src/interesearch/repair_transfer/recipe.yaml`. Pass a complete replacement with `--recipe PATH` to fine-tuning,
-donor fitting or block fitting. The existing concrete command-line options override the corresponding recipe values.
-Every model stage writes the complete resolved recipe into `run.json` before loading the model, and successful
-block and donor exports carry that profile with their measurement records.
-
-A changed scientific profile makes a donor run reduced. For a block it requires `--target standin` and stand-in
-readout windows; protected study readout roles remain unavailable to reduced runs. Changing only the recipe's
-filename or comments does not change its scientific profile.
-
-Analysis replays the profile saved with each export. The published legacy exports use the packaged published
-profile. On the analysis command, `--recipe PATH` checks that the requested replay settings match the saved
-settings; it does not override them. Figures and tables use the resulting analysis and its saved profile.
-
-## Reading the saved identifiers
-
-| Identifier | Meaning in the paper |
-|---|---|
-| `strengths` | Scalar coefficients fitted over the donor's frozen input and output factors. |
-| `strengths_converged`, `strengths_best` | The additional candidates from full-batch optimization, and the selection over these together with the regular `strengths` candidates. |
-| `donor_init`, `donor_init_output` | Donor initialization with both factors trained, or only the output factor trained. |
-| `fresh`, `random_init` | Fresh initialization, or initialization from a norm-matched randomized donor. The `_seed2` suffix marks the second seed. |
-| `donor_fixed`, `donor_raw` | The donor repair scaled down if needed to satisfy the target norm cap, or the unchanged donor repair without that cap. Neither is fitted on the target. `donor_raw` is a descriptive reference. |
-
-In a key such as `donor_init@2K:le50`, `2K` means 2,048 fit prediction positions and `:le50` restricts checkpoint
-selection to steps up to 50. The `256` and `512` budgets use prefixes of the same fitting windows.
+| `analysis.json` | Selections, intervals, exclusions and costs |
+| `tables/` | Recovery, readout constraints and break-even comparisons |
+| `figures/` | Recovery, warm starts and quality–cost curves |
 
 ## Run a new target and its repairs
 
-The commands use the published donor repair and token windows. Each target is trained and validated before
-repair fitting and readout. Use empty output directories; the runner refuses non-empty directories.
-
-To analyze the new measurements, complete both targets and both repair blocks below. The analysis also needs
-the donor's cost record and checksums; the final step assembles this directory layout.
-
-Fetch the model assets once:
+Use empty output directories. The model stages default to CUDA; see [validated environments](reproduction.md#validated-environments).
+Fetch assets once:
 
 ```bash
 uv run python -m interesearch.assets fetch assets
 ```
 
-Model commands default to CUDA and use the model assets directly, without dictionary extraction. See the
-[validated environments](reproduction.md#validated-environments) for reproduction limits.
-
-Train the primary target:
+The loop trains both targets, then fits their repairs using the published donor. `main` uses 2,048 fit prediction positions;
+`nested` uses 256 and 512. Each block selects checkpoints before evaluating separate readout windows.
 
 ```bash
-uv run python -m interesearch.repair_transfer.method.finetune train --lr 3e-6 --seed 14 --assets assets \
-    --train data/repair_transfer/windows/finetune_train/primary_target \
-    --val data/repair_transfer/windows/finetune_val --out runs/finetune/primary_target
-```
+for target in primary_target replication_target; do
+  case "$target" in
+    primary_target) seed=14 ;;
+    replication_target) seed=15 ;;
+  esac
+  uv run python -m interesearch.repair_transfer.method.finetune train \
+      --lr 3e-6 --seed "$seed" --assets assets \
+      --train "data/repair_transfer/windows/finetune_train/$target" \
+      --val data/repair_transfer/windows/finetune_val --out "runs/finetune/$target"
 
-The target must pass the fine-tune validation checks before repair fitting can proceed. Outputs include the selected `update.pt`,
-`val.json` and the run record `run.json`.
-
-`main` fits repairs with 2,048 tokens. `nested` uses 256 and 512 tokens from prefixes of the same fitting windows.
-These budgets count prediction positions, excluding the initial context token of each window.
-Each block chooses checkpoints on selection windows before evaluating them on separate readout windows.
-
-```bash
-for block in main nested; do
-  uv run python -m interesearch.repair_transfer.stages.run block \
-      --target primary_target --block "$block" --assets assets \
-      --finetune runs/finetune/primary_target \
-      --finetune-train data/repair_transfer/windows/finetune_train/primary_target \
-      --finetune-val data/repair_transfer/windows/finetune_val \
-      --donor-repair data/repair_transfer/donor/donor_repair.pt \
-      --fit data/repair_transfer/windows/fit \
-      --selection data/repair_transfer/windows/selection \
-      --readout data/repair_transfer/windows/readout \
-      --out "runs/blocks/primary_target/$block"
+  for block in main nested; do
+    uv run python -m interesearch.repair_transfer.stages.run block \
+        --target "$target" --block "$block" --assets assets \
+        --finetune "runs/finetune/$target" \
+        --finetune-train "data/repair_transfer/windows/finetune_train/$target" \
+        --finetune-val data/repair_transfer/windows/finetune_val \
+        --donor-repair data/repair_transfer/donor/donor_repair.pt \
+        --fit data/repair_transfer/windows/fit \
+        --selection data/repair_transfer/windows/selection \
+        --readout data/repair_transfer/windows/readout \
+        --out "runs/blocks/$target/$block"
+  done
 done
 ```
 
-For the replication target, repeat the fine-tune with `--seed 15`, replacing `primary_target` with
-`replication_target` in the training-window path and output directory. Repeat both blocks with
-`--target replication_target` and the corresponding fine-tune, training-window and output paths. Keep the fit,
-selection and readout directories unchanged.
+Repair fitting requires the fine-tune to pass validation. Analysis requires both targets, both blocks and completed
+readouts. Add the donor's cost record and checksums, then analyze the new measurements:
 
-The analysis command expects both targets and both blocks, plus a `donor/` directory containing its fit-cost
-record and checksums, in the same layout as `data/repair_transfer/`. When using the committed donor above, copy
-`data/repair_transfer/donor/` into `runs/blocks/donor/`, then replace the analysis input `data/repair_transfer`
-with `runs/blocks`. If you rebuild the donor below, use that donor's exported records and repair consistently.
+```bash
+cp -R data/repair_transfer/donor runs/blocks/donor
+uv run python -m interesearch.repair_transfer.analysis.recovery runs/blocks \
+    --out runs/repair_transfer/analysis.json
+uv run python -m interesearch.repair_transfer.figures runs/repair_transfer/analysis.json \
+    --out runs/repair_transfer
+```
 
-Analysis requires a completed readout. Reduced runs require `--target standin` and stand-in windows and reject
-the study's readout windows.
+## Change settings
 
-On the NVIDIA A10 I tested, the primary fine-tune took 57 seconds and wrote a 113 MB update.
+See [recipe settings](reproduction.md#recipes) and the published [`recipe.yaml`](../../src/interesearch/repair_transfer/recipe.yaml).
+Analysis uses saved settings; its `--recipe PATH` only checks that they match.
+
+Changes to the scientific settings require `--target standin` for repair blocks and stand-in readout windows.
+Reduced runs reject the study's readout windows. Donor runs with changed scientific settings are also marked reduced.
+The paper-analysis command does not accept reduced runs.
 
 ## Rebuild the donor repair
 
-The target commands above use the published donor. This optional procedure repeats its training and repair fitting.
+<details>
+<summary>Optional: train and validate a replacement donor</summary>
 
-Train the donor at both learning rates, then select a checkpoint across both runs:
+After fetching assets, train both donor learning rates and select a run:
 
 ```bash
 for lr in 3e-6 1e-5; do
@@ -157,7 +100,7 @@ uv run python -m interesearch.repair_transfer.method.finetune select \
     runs/finetune/donor_lr3e-6 runs/finetune/donor_lr1e-5
 ```
 
-Use the selected run's directory as `--finetune` below, replacing `CHOSEN_DONOR_RUN`:
+Replace `CHOSEN_DONOR_RUN` with the selected run's directory:
 
 ```bash
 uv run python -m interesearch.repair_transfer.stages.run donor --assets assets \
@@ -167,6 +110,9 @@ uv run python -m interesearch.repair_transfer.stages.run donor --assets assets \
     --readout data/repair_transfer/windows/donor_readout --out runs/donor
 ```
 
-Check that `gate.pass` is true in `run.json`; a zero process exit code alone does not validate the donor. A valid result can
-replace the committed donor through `--donor-repair runs/donor/donor_repair.pt`. Keep the adjacent `run.json`,
-which validates the rebuilt donor. Its exported `fit_record.json` supplies the donor cost for analysis.
+Require `gate.pass: true` in `runs/donor/run.json`; a zero exit code alone does not validate the donor.
+Use `--donor-repair runs/donor/donor_repair.pt` in both targets' repair blocks and keep its adjacent `run.json`.
+For analysis, copy `runs/donor` to `runs/blocks/donor` instead of the published donor; its `fit_record.json` and
+`SHA256SUMS` supply the matching cost record.
+
+</details>

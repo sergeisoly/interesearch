@@ -2,6 +2,7 @@
   "description": "Presentation data copied from committed results. No new statistical analysis. Numbers retain source precision.",
   "sources": {
     "edits": "results/selective_editing/posthoc.json#edits (confirm, four claim methods)",
+    "english_kl": "results/selective_editing/posthoc.json#edits[].english_kl.confirm_en",
     "protected_intervals": "results/selective_editing/confirm_result.json#reading_table",
     "target_gap_intervals": "results/selective_editing/posthoc.json#dose_agreement.confirm.rows"
   },
@@ -13,7 +14,8 @@
       "method": "vpd_atom",
       "tau": 0.5,
       "target_rise": 0.48029260388736067,
-      "protected_rise": 0.0030014884882959827
+      "protected_rise": 0.0030014884882959827,
+      "english_kl": 0.0004078117660889081
     },
     {
       "target": "de",
@@ -21,7 +23,8 @@
       "method": "vpd_atom",
       "tau": 1.0,
       "target_rise": 0.982347192435429,
-      "protected_rise": 0.0052622227833188815
+      "protected_rise": 0.0052622227833188815,
+      "english_kl": 0.0007705748312532548
     },
     {
       "target": "de",
@@ -29,7 +32,8 @@
       "method": "neurons",
       "tau": 0.5,
       "target_rise": 0.49737099943489865,
-      "protected_rise": 0.43632506502085716
+      "protected_rise": 0.43632506502085716,
+      "english_kl": 0.003533431089980977
     },
     {
       "target": "de",
@@ -37,7 +41,8 @@
       "method": "neurons",
       "tau": 1.0,
       "target_rise": 0.9959309964344419,
-      "protected_rise": 0.756313159548003
+      "protected_rise": 0.756313159548003,
+      "english_kl": 0.01337814327040366
     },
     {
       "target": "de",
@@ -45,7 +50,8 @@
       "method": "lora_rank1",
       "tau": 0.5,
       "target_rise": 0.450562571657115,
-      "protected_rise": 0.05880307329112086
+      "protected_rise": 0.05880307329112086,
+      "english_kl": 6.809307354881733e-05
     },
     {
       "target": "de",
@@ -53,7 +59,8 @@
       "method": "lora_rank1",
       "tau": 1.0,
       "target_rise": 0.9229354282905315,
-      "protected_rise": 0.11221048338659878
+      "protected_rise": 0.11221048338659878,
+      "english_kl": 0.00013107533442084315
     },
     {
       "target": "de",
@@ -61,7 +68,8 @@
       "method": "finetune_24",
       "tau": 0.5,
       "target_rise": 0.4659052429528072,
-      "protected_rise": 0.11096507516400568
+      "protected_rise": 0.11096507516400568,
+      "english_kl": 0.00017956535364270355
     },
     {
       "target": "de",
@@ -69,7 +77,8 @@
       "method": "finetune_24",
       "tau": 1.0,
       "target_rise": 0.9535157433871565,
-      "protected_rise": 0.22599101477655872
+      "protected_rise": 0.22599101477655872,
+      "english_kl": 0.00036475107468692745
     },
     {
       "target": "de",
@@ -77,7 +86,8 @@
       "method": "vpd_atom",
       "tau": 0.5,
       "target_rise": 0.48029260388736067,
-      "protected_rise": 0.0030014884882959827
+      "protected_rise": 0.0030014884882959827,
+      "english_kl": 0.0004078117660889081
     },
     {
       "target": "de",
@@ -85,7 +95,8 @@
       "method": "vpd_atom",
       "tau": 1.0,
       "target_rise": 0.982347192435429,
-      "protected_rise": 0.0052622227833188815
+      "protected_rise": 0.0052622227833188815,
+      "english_kl": 0.0007705748312532548
     },
     {
       "target": "de",
@@ -93,7 +104,8 @@
       "method": "neurons",
       "tau": 0.5,
       "target_rise": 0.49737099943489865,
-      "protected_rise": 0.43632506502085716
+      "protected_rise": 0.43632506502085716,
+      "english_kl": 0.003533431089980977
     },
     {
       "target": "de",
@@ -101,7 +113,8 @@
       "method": "neurons",
       "tau": 1.0,
       "target_rise": 0.9959309964344419,
-      "protected_rise": 0.756313159548003
+      "protected_rise": 0.756313159548003,
+      "english_kl": 0.01337814327040366
     },
     {
       "target": "de",
@@ -109,7 +122,8 @@
       "method": "lora_rank1",
       "tau": 0.5,
       "target_rise": 0.4775912843901536,
-      "protected_rise": 0.050216880337945344
+      "protected_rise": 0.050216880337945344,
+      "english_kl": 6.935754171191265e-05
     },
     {
       "target": "de",
@@ -117,7 +131,8 @@
       "method": "lora_rank1",
       "tau": 1.0,
       "target_rise": 0.9320794713908228,
-      "protected_rise": 0.09109198224955592
+      "protected_rise": 0.09109198224955592,
+      "english_kl": 0.00012720204697337788
     },
     {
       "target": "de",
@@ -125,7 +140,8 @@
       "method": "finetune_24",
       "tau": 0.5,
       "target_rise": 0.4777953665831993,
-      "protected_rise": 0.11921033777039626
+      "protected_rise": 0.11921033777039626,
+      "english_kl": 0.00020954566564890636
     },
     {
       "target": "de",
@@ -133,7 +149,8 @@
       "method": "finetune_24",
       "tau": 1.0,
       "target_rise": 0.9651713782343371,
-      "protected_rise": 0.24084097352521172
+      "protected_rise": 0.24084097352521172,
+      "english_kl": 0.00042304905469665817
     },
     {
       "target": "de",
@@ -141,7 +158,8 @@
       "method": "vpd_atom",
       "tau": 0.5,
       "target_rise": 0.48029260388736067,
-      "protected_rise": 0.0030014884882959827
+      "protected_rise": 0.0030014884882959827,
+      "english_kl": 0.0004078117660889081
     },
     {
       "target": "de",
@@ -149,7 +167,8 @@
       "method": "vpd_atom",
       "tau": 1.0,
       "target_rise": 0.982347192435429,
-      "protected_rise": 0.0052622227833188815
+      "protected_rise": 0.0052622227833188815,
+      "english_kl": 0.0007705748312532548
     },
     {
       "target": "de",
@@ -157,7 +176,8 @@
       "method": "neurons",
       "tau": 0.5,
       "target_rise": 0.49737099943489865,
-      "protected_rise": 0.43632506502085716
+      "protected_rise": 0.43632506502085716,
+      "english_kl": 0.003533431089980977
     },
     {
       "target": "de",
@@ -165,7 +185,8 @@
       "method": "neurons",
       "tau": 1.0,
       "target_rise": 0.9959309964344419,
-      "protected_rise": 0.756313159548003
+      "protected_rise": 0.756313159548003,
+      "english_kl": 0.01337814327040366
     },
     {
       "target": "de",
@@ -173,7 +194,8 @@
       "method": "lora_rank1",
       "tau": 0.5,
       "target_rise": 0.45240721209295864,
-      "protected_rise": 0.04326512895781418
+      "protected_rise": 0.04326512895781418,
+      "english_kl": 6.308370989402114e-05
     },
     {
       "target": "de",
@@ -181,7 +203,8 @@
       "method": "lora_rank1",
       "tau": 1.0,
       "target_rise": 0.9211912607324535,
-      "protected_rise": 0.0782679113848456
+      "protected_rise": 0.0782679113848456,
+      "english_kl": 0.00011828548053143032
     },
     {
       "target": "de",
@@ -189,7 +212,8 @@
       "method": "finetune_24",
       "tau": 0.5,
       "target_rise": 0.49174003765500823,
-      "protected_rise": 0.11563752437460012
+      "protected_rise": 0.11563752437460012,
+      "english_kl": 0.00019598826525154812
     },
     {
       "target": "de",
@@ -197,7 +221,8 @@
       "method": "finetune_24",
       "tau": 1.0,
       "target_rise": 0.948819349552023,
-      "protected_rise": 0.2250903557086813
+      "protected_rise": 0.2250903557086813,
+      "english_kl": 0.00038216591151310773
     },
     {
       "target": "es",
@@ -205,7 +230,8 @@
       "method": "vpd_atom",
       "tau": 0.5,
       "target_rise": 0.5173648595809937,
-      "protected_rise": 0.0003140794819798963
+      "protected_rise": 0.0003140794819798963,
+      "english_kl": 0.00027516920818015933
     },
     {
       "target": "es",
@@ -213,7 +239,8 @@
       "method": "vpd_atom",
       "tau": 1.0,
       "target_rise": 1.016759070856818,
-      "protected_rise": 0.003015830599028489
+      "protected_rise": 0.003015830599028489,
+      "english_kl": 0.000494022529516048
     },
     {
       "target": "es",
@@ -221,7 +248,8 @@
       "method": "neurons",
       "tau": 0.5,
       "target_rise": 0.4846645388109931,
-      "protected_rise": 0.522610146423866
+      "protected_rise": 0.522610146423866,
+      "english_kl": 0.0032901678967956005
     },
     {
       "target": "es",
@@ -229,7 +257,8 @@
       "method": "neurons",
       "tau": 1.0,
       "target_rise": 0.9940617248929781,
-      "protected_rise": 0.7573968213180016
+      "protected_rise": 0.7573968213180016,
+      "english_kl": 0.0198819973538148
     },
     {
       "target": "es",
@@ -237,7 +266,8 @@
       "method": "lora_rank1",
       "tau": 0.5,
       "target_rise": 0.496626981373491,
-      "protected_rise": 0.1140566036618989
+      "protected_rise": 0.1140566036618989,
+      "english_kl": 5.914103123108487e-05
     },
     {
       "target": "es",
@@ -245,7 +275,8 @@
       "method": "lora_rank1",
       "tau": 1.0,
       "target_rise": 0.9758703790861984,
-      "protected_rise": 0.23595840766512113
+      "protected_rise": 0.23595840766512113,
+      "english_kl": 0.0001179399771680092
     },
     {
       "target": "es",
@@ -253,7 +284,8 @@
       "method": "finetune_24",
       "tau": 0.5,
       "target_rise": 0.5078871784539059,
-      "protected_rise": 0.19417572432550892
+      "protected_rise": 0.19417572432550892,
+      "english_kl": 0.00011451953349901957
     },
     {
       "target": "es",
@@ -261,7 +293,8 @@
       "method": "finetune_24",
       "tau": 1.0,
       "target_rise": 0.9910282554297611,
-      "protected_rise": 0.3856342948716262
+      "protected_rise": 0.3856342948716262,
+      "english_kl": 0.00021643838333367402
     },
     {
       "target": "es",
@@ -269,7 +302,8 @@
       "method": "vpd_atom",
       "tau": 0.5,
       "target_rise": 0.5173648595809937,
-      "protected_rise": 0.0003140794819798963
+      "protected_rise": 0.0003140794819798963,
+      "english_kl": 0.00027516920818015933
     },
     {
       "target": "es",
@@ -277,7 +311,8 @@
       "method": "vpd_atom",
       "tau": 1.0,
       "target_rise": 1.016759070856818,
-      "protected_rise": 0.003015830599028489
+      "protected_rise": 0.003015830599028489,
+      "english_kl": 0.000494022529516048
     },
     {
       "target": "es",
@@ -285,7 +320,8 @@
       "method": "neurons",
       "tau": 0.5,
       "target_rise": 0.4846645388109931,
-      "protected_rise": 0.522610146423866
+      "protected_rise": 0.522610146423866,
+      "english_kl": 0.0032901678967956005
     },
     {
       "target": "es",
@@ -293,7 +329,8 @@
       "method": "neurons",
       "tau": 1.0,
       "target_rise": 0.9992070526912294,
-      "protected_rise": 0.7636838945849188
+      "protected_rise": 0.7636838945849188,
+      "english_kl": 0.01972074188484714
     },
     {
       "target": "es",
@@ -301,7 +338,8 @@
       "method": "lora_rank1",
       "tau": 0.5,
       "target_rise": 0.5104679979127029,
-      "protected_rise": 0.07997336880914097
+      "protected_rise": 0.07997336880914097,
+      "english_kl": 8.07034470951827e-05
     },
     {
       "target": "es",
@@ -309,7 +347,8 @@
       "method": "lora_rank1",
       "tau": 1.0,
       "target_rise": 0.9923692612812437,
-      "protected_rise": 0.13262902457138587
+      "protected_rise": 0.13262902457138587,
+      "english_kl": 0.00012773353855350408
     },
     {
       "target": "es",
@@ -317,7 +356,8 @@
       "method": "finetune_24",
       "tau": 0.5,
       "target_rise": 0.5140188809098869,
-      "protected_rise": 0.20119914104198589
+      "protected_rise": 0.20119914104198589,
+      "english_kl": 0.00012146916134074202
     },
     {
       "target": "es",
@@ -325,7 +365,8 @@
       "method": "finetune_24",
       "tau": 1.0,
       "target_rise": 1.0271758005536835,
-      "protected_rise": 0.40697955263072044
+      "protected_rise": 0.40697955263072044,
+      "english_kl": 0.0002388890486678253
     },
     {
       "target": "es",
@@ -333,7 +374,8 @@
       "method": "vpd_atom",
       "tau": 0.5,
       "target_rise": 0.5173648595809937,
-      "protected_rise": 0.0003140794819798963
+      "protected_rise": 0.0003140794819798963,
+      "english_kl": 0.00027516920818015933
     },
     {
       "target": "es",
@@ -341,7 +383,8 @@
       "method": "vpd_atom",
       "tau": 1.0,
       "target_rise": 1.016759070856818,
-      "protected_rise": 0.003015830599028489
+      "protected_rise": 0.003015830599028489,
+      "english_kl": 0.000494022529516048
     },
     {
       "target": "es",
@@ -349,7 +392,8 @@
       "method": "neurons",
       "tau": 0.5,
       "target_rise": 0.4846645388109931,
-      "protected_rise": 0.522610146423866
+      "protected_rise": 0.522610146423866,
+      "english_kl": 0.0032901678967956005
     },
     {
       "target": "es",
@@ -357,7 +401,8 @@
       "method": "neurons",
       "tau": 1.0,
       "target_rise": 0.9993449737285746,
-      "protected_rise": 0.7646048151213547
+      "protected_rise": 0.7646048151213547,
+      "english_kl": 0.019723093891837472
     },
     {
       "target": "es",
@@ -365,7 +410,8 @@
       "method": "lora_rank1",
       "tau": 0.5,
       "target_rise": 0.48924277157619084,
-      "protected_rise": 0.08884819211630986
+      "protected_rise": 0.08884819211630986,
+      "english_kl": 4.6187114266699764e-05
     },
     {
       "target": "es",
@@ -373,7 +419,8 @@
       "method": "lora_rank1",
       "tau": 1.0,
       "target_rise": 0.9676374073686271,
-      "protected_rise": 0.16715337079146814
+      "protected_rise": 0.16715337079146814,
+      "english_kl": 8.444312635251193e-05
     },
     {
       "target": "es",
@@ -381,7 +428,8 @@
       "method": "finetune_24",
       "tau": 0.5,
       "target_rise": 0.4961683215766117,
-      "protected_rise": 0.17583070541250295
+      "protected_rise": 0.17583070541250295,
+      "english_kl": 8.447081801995379e-05
     },
     {
       "target": "es",
@@ -389,7 +437,8 @@
       "method": "finetune_24",
       "tau": 1.0,
       "target_rise": 1.0178918180794552,
-      "protected_rise": 0.35787588974525186
+      "protected_rise": 0.35787588974525186,
+      "english_kl": 0.00016007271313293162
     },
     {
       "target": "fr",
@@ -397,7 +446,8 @@
       "method": "vpd_atom",
       "tau": 0.5,
       "target_rise": 0.4965319427950629,
-      "protected_rise": 0.0008440387660059435
+      "protected_rise": 0.0008440387660059435,
+      "english_kl": 0.00029184914619063734
     },
     {
       "target": "fr",
@@ -405,7 +455,8 @@
       "method": "vpd_atom",
       "tau": 1.0,
       "target_rise": 1.0141392206323558,
-      "protected_rise": 0.0016600140209855705
+      "protected_rise": 0.0016600140209855705,
+      "english_kl": 0.0005557146354915638
     },
     {
       "target": "fr",
@@ -413,7 +464,8 @@
       "method": "neurons",
       "tau": 0.5,
       "target_rise": 0.4909330811993829,
-      "protected_rise": 0.4227541315144506
+      "protected_rise": 0.4227541315144506,
+      "english_kl": 0.005279680360750905
     },
     {
       "target": "fr",
@@ -421,7 +473,8 @@
       "method": "neurons",
       "tau": 1.0,
       "target_rise": 0.9865761543142384,
-      "protected_rise": 0.8677824858961434
+      "protected_rise": 0.8677824858961434,
+      "english_kl": 0.038671062038890244
     },
     {
       "target": "fr",
@@ -429,7 +482,8 @@
       "method": "lora_rank1",
       "tau": 0.5,
       "target_rise": 0.47359170584843074,
-      "protected_rise": 0.026865659088924014
+      "protected_rise": 0.026865659088924014,
+      "english_kl": 7.477712915715529e-05
     },
     {
       "target": "fr",
@@ -437,7 +491,8 @@
       "method": "lora_rank1",
       "tau": 1.0,
       "target_rise": 0.9793971201469158,
-      "protected_rise": 0.053238486421519314
+      "protected_rise": 0.053238486421519314,
+      "english_kl": 0.0001542834706924623
     },
     {
       "target": "fr",
@@ -445,7 +500,8 @@
       "method": "finetune_24",
       "tau": 0.5,
       "target_rise": 0.4512303451011921,
-      "protected_rise": 0.07480052010766391
+      "protected_rise": 0.07480052010766391,
+      "english_kl": 0.00011852641935171238
     },
     {
       "target": "fr",
@@ -453,7 +509,8 @@
       "method": "finetune_24",
       "tau": 1.0,
       "target_rise": 0.9186799690641206,
-      "protected_rise": 0.1388040616594512
+      "protected_rise": 0.1388040616594512,
+      "english_kl": 0.00023379276059005922
     },
     {
       "target": "fr",
@@ -461,7 +518,8 @@
       "method": "vpd_atom",
       "tau": 0.5,
       "target_rise": 0.4965319427950629,
-      "protected_rise": 0.0008440387660059435
+      "protected_rise": 0.0008440387660059435,
+      "english_kl": 0.00029184914619063734
     },
     {
       "target": "fr",
@@ -469,7 +527,8 @@
       "method": "vpd_atom",
       "tau": 1.0,
       "target_rise": 1.0141392206323558,
-      "protected_rise": 0.0016600140209855705
+      "protected_rise": 0.0016600140209855705,
+      "english_kl": 0.0005557146354915638
     },
     {
       "target": "fr",
@@ -477,7 +536,8 @@
       "method": "neurons",
       "tau": 0.5,
       "target_rise": 0.5236211480765507,
-      "protected_rise": 0.4408486012754769
+      "protected_rise": 0.4408486012754769,
+      "english_kl": 0.005628344887899685
     },
     {
       "target": "fr",
@@ -485,7 +545,8 @@
       "method": "neurons",
       "tau": 1.0,
       "target_rise": 0.9832043318912901,
-      "protected_rise": 0.8760490294160515
+      "protected_rise": 0.8760490294160515,
+      "english_kl": 0.038023100523599265
     },
     {
       "target": "fr",
@@ -493,7 +554,8 @@
       "method": "lora_rank1",
       "tau": 0.5,
       "target_rise": 0.47299666240297517,
-      "protected_rise": 0.027946167978747136
+      "protected_rise": 0.027946167978747136,
+      "english_kl": 7.844388346711639e-05
     },
     {
       "target": "fr",
@@ -501,7 +563,8 @@
       "method": "lora_rank1",
       "tau": 1.0,
       "target_rise": 0.9501368752841292,
-      "protected_rise": 0.05393444258591224
+      "protected_rise": 0.05393444258591224,
+      "english_kl": 0.00015472823818934807
     },
     {
       "target": "fr",
@@ -509,7 +572,8 @@
       "method": "finetune_24",
       "tau": 0.5,
       "target_rise": 0.48294794970545274,
-      "protected_rise": 0.06686505778082485
+      "protected_rise": 0.06686505778082485,
+      "english_kl": 8.561368623963187e-05
     },
     {
       "target": "fr",
@@ -517,7 +581,8 @@
       "method": "finetune_24",
       "tau": 1.0,
       "target_rise": 0.9667915434672915,
-      "protected_rise": 0.12038025773804763
+      "protected_rise": 0.12038025773804763,
+      "english_kl": 0.00015699074481682177
     },
     {
       "target": "fr",
@@ -525,7 +590,8 @@
       "method": "vpd_atom",
       "tau": 0.5,
       "target_rise": 0.4965319427950629,
-      "protected_rise": 0.0008440387660059435
+      "protected_rise": 0.0008440387660059435,
+      "english_kl": 0.00029184914619063734
     },
     {
       "target": "fr",
@@ -533,7 +599,8 @@
       "method": "vpd_atom",
       "tau": 1.0,
       "target_rise": 1.0141392206323558,
-      "protected_rise": 0.0016600140209855705
+      "protected_rise": 0.0016600140209855705,
+      "english_kl": 0.0005557146354915638
     },
     {
       "target": "fr",
@@ -541,7 +608,8 @@
       "method": "neurons",
       "tau": 0.5,
       "target_rise": 0.5032747202906115,
-      "protected_rise": 0.42615054804703284
+      "protected_rise": 0.42615054804703284,
+      "english_kl": 0.005479920179791877
     },
     {
       "target": "fr",
@@ -549,7 +617,8 @@
       "method": "neurons",
       "tau": 1.0,
       "target_rise": 0.99393774312118,
-      "protected_rise": 0.8658530383274473
+      "protected_rise": 0.8658530383274473,
+      "english_kl": 0.03835745451265368
     },
     {
       "target": "fr",
@@ -557,7 +626,8 @@
       "method": "lora_rank1",
       "tau": 0.5,
       "target_rise": 0.489468056580116,
-      "protected_rise": 0.036043253438226106
+      "protected_rise": 0.036043253438226106,
+      "english_kl": 6.648296525311488e-05
     },
     {
       "target": "fr",
@@ -565,7 +635,8 @@
       "method": "lora_rank1",
       "tau": 1.0,
       "target_rise": 0.9973931394774338,
-      "protected_rise": 0.07005446121610444
+      "protected_rise": 0.07005446121610444,
+      "english_kl": 0.0001318004780277361
     },
     {
       "target": "fr",
@@ -573,7 +644,8 @@
       "method": "finetune_24",
       "tau": 0.5,
       "target_rise": 0.45285408661283294,
-      "protected_rise": 0.058239813508658575
+      "protected_rise": 0.058239813508658575,
+      "english_kl": 9.099018417804598e-05
     },
     {
       "target": "fr",
@@ -581,7 +653,8 @@
       "method": "finetune_24",
       "tau": 1.0,
       "target_rise": 0.925654699062479,
-      "protected_rise": 0.1047857506521817
+      "protected_rise": 0.1047857506521817,
+      "english_kl": 0.00017359218916932024
     }
   ],
   "comparisons": [

@@ -18,30 +18,44 @@ body-classes: research-explainer
 ::: {.visual-explainer .explainer-repair}
 
 
-Fine-tuning [Goodfire's four-layer, 67-million-parameter language model](https://www.goodfire.com/research/interpreting-lm-parameters) to predict German less accurately also worsens its Dutch predictions.
-The repair must restore Dutch prediction quality while preserving the intended German change.
+I test whether a correction learned for one fine-tuned model can help repair another. As in
+[Selective editing](../selective-editing/explainer.qmd), I deliberately worsen predictions in one language
+and measure the side effects on another.
 
-A compact repair can undo much of this damage. If a new fine-tune causes similar damage, can we reuse that repair?
-I test this on two fine-tunes trained independently from the same base model, with the same recipe on different
-samples from the same data distribution.
+Here I fine-tune [Goodfire's four-layer, 67-million-parameter language model](https://www.goodfire.com/research/interpreting-lm-parameters)
+by training updates to its 24 attention and feed-forward weight matrices. The training objective pushes
+**German prediction loss up** while penalizing changes to English, French, Spanish and Italian predictions,
+leaving Dutch unprotected during fine-tuning.
 
-## The same starting repair, two ways to reuse it
+The model shares weights across languages, so the German edit can also affect Dutch. In these runs, Dutch
+prediction loss increases relative to the base model. This increase is the **Dutch damage** to be repaired.
+A **repair** is an additional weight change trained to restore Dutch prediction quality while keeping the
+intended German change.
 
-The earlier fine-tune is the **donor** and its correction is the **donor repair**. Each repair adds a rank-one update,
-formed from an input and an output vector, to each of 24 weight matrices; all other weights stay fixed. The repairs
-operate directly on the weight matrices, independently of Goodfire's parameter decomposition.
+On two new fine-tunes, the earlier repair was most useful **as a starting point when fitting data and steps
+were limited**. Rescaling its fixed directions left more Dutch damage. Allowing those directions to adapt
+removed almost all of it. At the full fitting budget, a new repair learned from scratch nearly caught up.
 
-To test whether the donor's directions suffice for the new damage, I keep its input and output vectors fixed
-and fit 24 scalar coefficients. I compare this with donor initialization: starting from the same repair and
-training both vectors.
+## Training the repair {#the-same-starting-repair-two-ways-to-reuse-it}
 
-Fresh fitting learns both vectors from a new initialization. Comparing it with donor initialization tests
-whether the earlier repair provides a useful starting point. All three have the same rank, objective and norm limit,
-but different numbers of fitted parameters: 24 for scalar fitting and 55,296 for donor-initialized or fresh fitting.
+The earlier fine-tune is the **donor** and its correction is the **donor repair**. The **primary target** is
+the first new fine-tuned model I repair. I repeat the comparison on a second model, the **replication target**.
+All three models are fine-tuned separately from the same base model, using the same recipe with different
+seeds and samples from the same distribution of European Parliament text (Europarl).
 
-The repair is trained to match the base model's predictions on Dutch and the fine-tuned model's predictions on
-German, English, French, Spanish and Italian. [Selection](index.qmd#sec-app-methods) constrains German drift and
-limits increases in prediction loss on the other preserved languages.
+To learn a repair, I hold the fine-tuned model's weights fixed and train an added update to match the base
+model's next-token probabilities on Dutch while keeping the fine-tuned model's predictions on German and
+the four other languages. I first learn the donor repair from scratch, then reuse that same repair for
+both targets.
+
+Each repair adds a **rank-one update**, formed from an input and an output vector, to each of 24 weight
+matrices. I compare **three ways to train the repair**:
+
+1. **Scalar coefficients only:** keep the donor's vectors fixed and learn one scalar coefficient per matrix.
+2. **Donor initialization:** start from the donor's vectors and train both on the new fine-tune.
+3. **Fresh initialization:** start with random input vectors and zero output vectors, then train both.
+
+The fresh start tests whether the donor provides a useful head start over learning a new correction.
 
 ```{=html}
 <figure class="explainer-diagram" aria-label="Schematic repair directions for one weight matrix" aria-describedby="repair-transfer-diagram-caption">
@@ -50,7 +64,8 @@ limits increases in prediction loss on the other preserved languages.
     <span class="explainer-transfer-arrow" aria-hidden="true">→</span>
     <div><span class="explainer-kicker">New fine-tune</span><strong>Repair the new damage</strong></div>
   </div>
-  <div class="explainer-method-controls" role="group" aria-label="Choose how to fit the new repair">
+  <p id="repair-method-label"><strong>Repair training method</strong></p>
+  <div class="explainer-method-controls" role="group" aria-labelledby="repair-method-label">
     <button type="button" data-repair-method="strengths" aria-pressed="true" aria-controls="repair-method-illustration repair-method-copy">Scalar coefficients only</button>
     <button type="button" data-repair-method="donor_init" aria-pressed="false" aria-controls="repair-method-illustration repair-method-copy">Donor initialization</button>
     <button type="button" data-repair-method="fresh" aria-pressed="false" aria-controls="repair-method-illustration repair-method-copy">Fresh initialization</button>
@@ -72,29 +87,32 @@ limits increases in prediction loss on the other preserved languages.
       <p>Keep the donor repair's input and output directions fixed. Learn one scalar coefficient per matrix, 24 numbers in all.</p>
     </div>
   </div>
-  <figcaption id="repair-transfer-diagram-caption">Conceptual illustration: arrow angles and lengths are not measurements. Dashes and the outlined endpoint mark the donor repair; the solid arrow marks the newly fitted update.</figcaption>
+  <figcaption id="repair-transfer-diagram-caption">Schematic for one weight matrix. The dashed arrow shows the donor repair and the solid arrow shows the new repair.</figcaption>
 </figure>
 ```
 
-## The tested scalar search leaves damage behind {#keeping-the-directions-leaves-damage-behind}
+## Changing the directions repairs more damage {#keeping-the-directions-leaves-damage-behind}
 
-Recovery is the fraction of the fine-tune's extra Dutch prediction loss removed by a repair.
-At the full budget, fitting scalar coefficients only recovers about **87%** of the Dutch damage on the first target and **78%** on the second.
-Donor initialization, which lets the directions change, raises recovery to about **98–99%**.
-All full-budget repairs shown preserved the German effect and met the constraints on the other languages.
+For each target, scalar-only fitting learns **24 multipliers for the donor repair**, one per weight matrix.
+The donor's input and output vectors stay fixed. Each target gets its own fitted multipliers.
+Here **recovery** is the share of the fine-tune's extra Dutch prediction loss removed:
+100% restores the base model's Dutch loss.
 
-Fitting budgets exclude a separate selection and diagnostic pool of **57,344 prediction positions**, shared by all
-families. The two methods that reuse the donor repair assume it already exists; its [one-time cost](index.qmd#sec-app-cost)
-is separate.
+For each method and budget, I choose a checkpoint—a repair saved during training—on separate selection
+text, taking the one that recovers the most Dutch damage while passing the checks on German and the other
+languages. I then evaluate that repair on 92 Europarl session dates held out of both repair fitting and selection.
+
+At the full fitting budget, scalar coefficients recover about **87%** on the first target and **78%** on the
+second. Donor initialization recovers about **98–99%**. All full-budget repairs shown preserved the German
+effect and met the constraints on the other languages.
 
 ```{=html}
 <figure class="explainer-figure" aria-labelledby="repair-full-caption">
   <div id="repair-full-chart" class="explainer-chart"></div>
-  <figcaption id="repair-full-caption">Full budget: 2,048 fit tokens and checkpoint selection from runs of up to 600 steps.
-  Scalar selection also includes two additional converged candidates.
-  Fit tokens count prediction positions, excluding the initial context token of each window.
-  0% means none of the extra Dutch prediction loss is removed; 100% restores the base model's Dutch prediction loss. Whiskers show 95% bootstrap intervals
-  over 92 Europarl readout dates for each fixed target; variation across new fine-tunes or donors remains unmeasured.</figcaption>
+  <figcaption id="repair-full-caption">Full budget: 2,048 fit tokens, with checkpoints selected from runs of up to 600 steps.
+  Scalar-only selection also considers two extra runs per target that optimize the coefficients until convergence.
+  Whiskers show 95% bootstrap intervals
+  over 92 Europarl evaluation dates.</figcaption>
 </figure>
 <p id="repair-primary-result" class="explainer-finding">Donor initialization exceeds the scalar-coefficient fit by 11.3 percentage
 points on the first target and 20.4 points on the second.</p>
@@ -103,28 +121,42 @@ points on the first target and 20.4 points on the second.</p>
 <details class="visual-details">
 <summary>How the scalar coefficients were fitted</summary>
 
-The gap could reflect incomplete scalar fitting. To check this, two additional runs optimize the same full-batch
-loss to convergence from different starts. Selection includes those candidates and ordinary training checkpoints.
-The shortfall survives this expanded search; other choices of coefficients remain untested.
+To check whether the scalar fit simply needed more optimization, I ran two additional searches for each
+target. One starts from the donor repair, scaled down if its weight norm exceeds the fine-tune's. The other
+starts from the ordinary checkpoint with the lowest fitting loss. Like ordinary training, both use all
+2,048 fitting tokens at each step, but continue until further updates make negligible progress under the
+study's stopping rules.
+
+The regular search saves a checkpoint every 50 steps up to step 600 at each of four learning rates, giving
+48 checkpoints. The two extra results join these in the selection pool. A separate selection set chooses
+the repair shown above. On the primary target, an ordinary checkpoint is still selected (**86.9% recovery**).
+On the replication target, one of the extra runs is selected (**78.4%**, compared with **77.3%** from the
+ordinary search). The larger search still leaves a recovery gap. It does not rule out every other choice
+of coefficients.
 
 </details>
 
 ## The donor helps most when fitting is constrained
 
-Allowing the directions to change improves recovery, but fresh fitting also recovers most of the damage. I compare donor
-initialization with fresh fitting to see what the donor contributes as a starting point.
+To find out when the earlier repair is useful, I compare all three training methods at different
+amounts of fitting data and training steps.
 
-At the full budget, donor initialization leads the first fresh seed by **1.1–1.4 percentage points**. Both
-confidence intervals are above zero but inside the study's chosen **±2 percentage-point tolerance** for treating
-performance as practically equivalent. The lead is comparable to differences between two fresh seeds.
+The fitting budget counts distinct prediction positions across Dutch, German and the four other languages.
+For a given budget, all methods reuse the same fitting text at every step.
 
-To see whether the donor helps more when fitting is constrained, I vary both the fit-token budget and the step cap.
-At 256 fit tokens and 50 steps, the lead is about **4 percentage points**; only one fresh seed was tested at that budget.
+With **256 fit tokens and up to 50 steps**, starting from the donor recovers about **4 percentage points**
+more Dutch damage than fresh initialization. With **2,048 tokens and up to 600 steps**, fresh fitting nearly
+catches up: the donor's lead is **1.1–1.4 points**, with both 95% intervals entirely inside the study's
+**±2-point band for practical equivalence**.
+
+In the regular search, scalar-only recovery changes little across these budgets: **86.9–87.4%** on the primary target and
+**76.3–77.4%** on the replication target.
+Use the controls below to compare the two fine-tunes and fitting budgets.
 
 ```{=html}
 <section class="explainer-interactive" aria-label="Explore recovery at different fitting budgets">
   <div class="explainer-controls">
-    <label for="repair-target">New fine-tune
+    <label for="repair-target">Model to repair
       <select id="repair-target">
         <option value="primary_target">Primary target</option>
         <option value="replication_target">Replication target</option>
@@ -140,26 +172,26 @@ At 256 fit tokens and 50 steps, the lead is about **4 percentage points**; only 
   </div>
   <figure class="explainer-figure" aria-labelledby="repair-curve-caption">
     <div id="repair-curve-chart" class="explainer-chart"></div>
-    <figcaption id="repair-curve-caption">Recovery of Dutch damage (%), with 95% bootstrap intervals over 92 readout dates for the selected target. Each point uses the best
-    eligible checkpoint chosen on separate selection data, at the stated step cap. The vertical axis starts at
-    70%. Step spacing is logarithmic. The scalar-coefficient fit uses the regular fitting search here.
-    The full-budget comparison above also includes additional full-batch optimization.</figcaption>
+    <figcaption id="repair-curve-caption">Each point uses a checkpoint chosen on separate selection data from runs up to the stated step cap.
+    Whiskers show 95% bootstrap intervals. Step spacing is logarithmic.
+    Scalar results here use the regular fitting search, without the two extra optimization runs described above.</figcaption>
   </figure>
   <div class="explainer-step-control">
     <label for="repair-step">Step cap per run: <output id="repair-step-value" for="repair-step">50 steps</output></label>
     <input id="repair-step" type="range" min="0" max="3" step="1" value="0" aria-valuetext="50 steps per run">
     <div class="explainer-step-labels" aria-hidden="true"><span>50</span><span>100</span><span>200</span><span>600</span></div>
   </div>
-  <p class="explainer-reading">At 2,048 tokens and 600 steps, equivalence is assessed using a ±2 percentage-point band.</p>
   <p id="repair-curve-result" class="explainer-finding" aria-live="polite" aria-atomic="true"></p>
   <p id="repair-curve-interpretation" class="explainer-reading"></p>
   <details class="explainer-data-table">
     <summary>Read the plotted values</summary>
     <div id="repair-curve-table"></div>
+    <p>At the full budget, both 95% intervals for the donor's lead over the first fresh seed are above zero and inside the chosen ±2 percentage-point band. The result is a small positive advantage that meets the study's practical-equivalence criterion. Its size is comparable to differences between two fresh seeds. Only one fresh seed was tested at the small budget.</p>
   </details>
 </section>
 <noscript><p>The interactive view needs JavaScript. At 256 tokens and 50 steps, recovery with donor initialization is 97.0%
 versus 92.6% for fresh on the primary target, and 96.7% versus 92.6% on the replication target.
+Scalar-only fitting recovers 87.2% on the primary target and 76.3% on the replication target.
 The <a href="index.html#sec-warm">paper's static figures</a> show every measured budget.</p></noscript>
 ```
 

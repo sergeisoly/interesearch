@@ -384,11 +384,13 @@ def explainer_data(res: dict) -> dict:
                        "Numbers retain source precision.",
         "sources": {
             "edits": "results/selective_editing/posthoc.json#edits (confirm, four claim methods)",
+            "english_kl": "results/selective_editing/posthoc.json#edits[].english_kl.confirm_en",
             "protected_intervals": "results/selective_editing/confirm_result.json#reading_table",
             "target_gap_intervals": "results/selective_editing/posthoc.json#dose_agreement.confirm.rows",
         },
         "n_dates": res["confirm_result"]["n_groups"],
-        "edits": [{key: edit[key] for key in ("target", "draw", "method", "tau", "target_rise", "protected_rise")}
+        "edits": [{**{key: edit[key] for key in ("target", "draw", "method", "tau", "target_rise", "protected_rise")},
+                   "english_kl": edit["english_kl"]["confirm_en"]}
                   for edit in _edits(res, "confirm") if edit["method"] in METHODS],
         "comparisons": comparisons,
     }
