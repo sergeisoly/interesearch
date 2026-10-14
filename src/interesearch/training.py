@@ -1,4 +1,4 @@
-"""Fine-tuning primitives shared by both studies.
+"""Fine-tuning updates, deterministic sampling, per-window losses, and numerical precision settings.
 
 Window convention: a window ``w`` has ``T+1`` tokens. The model reads ``w[:, :-1]`` and its ``T`` logits predict
 ``w[:, 1:]``. Dtypes and the order of casts and reductions are those of the original runs: CE and KL are computed in
@@ -33,7 +33,7 @@ TRAINING_SEED_SALT = "vpd-ft"
 
 
 def seeded_generator(seed: int, purpose: str) -> torch.Generator:
-    """A CPU generator per (seed, purpose). The original study salt preserves the published data order."""
+    """A CPU generator per (seed, purpose), using the published training seed namespace."""
     h = int(hashlib.sha256(f"{TRAINING_SEED_SALT}|{seed}|{purpose}".encode()).hexdigest(), 16) % (2**63 - 1)
     return torch.Generator().manual_seed(h)
 
@@ -55,7 +55,8 @@ class EpochSampler:
 
 
 # --------------------------------------------------------------------------- matrix-only update
-def _key(module: str) -> str:
+def parameter_key(module: str) -> str:
+    """Encode a dotted module name as a ParameterDict key."""
     return module.replace(".", "-")
 
 
@@ -67,15 +68,15 @@ class DenseUpdate(nn.Module):
     def __init__(self, shapes: Mapping[str, tuple[int, int]], dtype: torch.dtype = torch.float32) -> None:
         super().__init__()
         self.module_names = list(shapes)
-        self.D = nn.ParameterDict({_key(m): nn.Parameter(torch.zeros(shapes[m], dtype=dtype)) for m in shapes})
+        self.D = nn.ParameterDict({parameter_key(m): nn.Parameter(torch.zeros(shapes[m], dtype=dtype)) for m in shapes})
 
     def delta(self, module: str) -> Tensor:
-        return self.D[_key(module)]
+        return self.D[parameter_key(module)]
 
     @torch.no_grad()
     def update(self) -> dict[str, Tensor]:
         """``D`` per module on the CPU, in the training dtype (float32 for the real model): exact, no subtraction."""
-        return {m: self.D[_key(m)].detach().cpu().clone() for m in self.module_names}
+        return {m: self.D[parameter_key(m)].detach().cpu().clone() for m in self.module_names}
 
     def state(self) -> dict:
         return {}

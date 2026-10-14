@@ -406,8 +406,9 @@ def main(argv=None) -> int:
     with plt.rc_context(STYLE):
         for name, draw in FIGURES.items():
             draw(res, a.out / "figures" / name)
+    (a.out / "tables").mkdir(parents=True, exist_ok=True)
     for name, make in TABLES.items():
-        (a.out / name).write_text(make(res))
+        (a.out / "tables" / name).write_text(make(res))
     (a.out / "explainer_data.json").write_text(json.dumps(explainer_data(res), indent=2) + "\n")
     return 0
 

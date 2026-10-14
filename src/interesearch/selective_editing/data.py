@@ -27,7 +27,7 @@ from pathlib import Path
 import numpy as np
 import torch
 
-from ..checksums import sha256_file, verify_checksums
+from interesearch.checksums import sha256_file, verify_checksums
 
 SPLITS = ("dev", "confirm")
 CELL_FILES = ("cell.json", "protected.npz", "posthoc.npz")
@@ -76,8 +76,16 @@ def _load_cell(directory: Path) -> Cell:
                 posthoc)
 
 
-def _protocol(root: Path, allow_reduced: bool) -> dict:
+def load_protocol(root: Path, allow_reduced: bool) -> dict:
     protocol = json.loads((root / "protocol.json").read_text())
+    if protocol.get("format") == 2:
+        recipe = protocol.get("recipe")
+        required = {"targets", "draws", "taus", "selection", "calibration", "readout", "training", "omp_lora",
+                    "bootstrap", "posthoc", "reduced", "extended"}
+        if not isinstance(recipe, dict) or required - recipe.keys():
+            raise ValueError(f"{root}: new records require a complete recipe snapshot")
+        from interesearch.selective_editing.configuration import validate
+        validate(recipe)
     if protocol.get("reduced") and not allow_reduced:
         raise ValueError(f"{root}: records of a reduced run (code-path checks only). They load with allow_reduced")
     return protocol
@@ -85,7 +93,7 @@ def _protocol(root: Path, allow_reduced: bool) -> dict:
 
 def load_study(root: str | Path, allow_reduced: bool = False) -> Study:
     root = Path(root)
-    protocol = _protocol(root, allow_reduced)
+    protocol = load_protocol(root, allow_reduced)
     cells = expected_cells(protocol)
     files = ["protocol.json"] + [f"calibration/{_cell_dir(t, d)}.json" for t, d in cells]
     files += [f"{s}/{_cell_dir(t, d)}/{f}" for s in SPLITS for t, d in cells for f in CELL_FILES]
@@ -102,7 +110,7 @@ def load_dev(root: str | Path, allow_reduced: bool = False) -> Study:
     analysis reads the others as "missing readout") and the calibration records present. SHA256SUMS must list
     exactly these files."""
     root = Path(root)
-    protocol = _protocol(root, allow_reduced)
+    protocol = load_protocol(root, allow_reduced)
     cells = [c for c in expected_cells(protocol) if (root / "dev" / _cell_dir(*c)).is_dir()]
     calibrated = [c for c in expected_cells(protocol) if (root / f"calibration/{_cell_dir(*c)}.json").is_file()]
     files = ["protocol.json"] + [f"calibration/{_cell_dir(*c)}.json" for c in calibrated]

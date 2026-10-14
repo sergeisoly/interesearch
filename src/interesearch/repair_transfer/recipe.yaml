@@ -1,0 +1,217 @@
+# Published Repair Transfer profile. Explicit recipes replace this complete mapping.
+profile: published-v0.1.0
+finetune:
+  config:
+    lr: 3.0e-06
+    seed: 14
+    steps: 200
+    warmup: 10
+    checkpoints:
+    - 50
+    - 100
+    - 150
+    - 200
+    lam: 1.0
+    margin: 1.0
+    n_target: 8
+    n_retain_per_lang: 2
+    micro_batch: 4
+    grad_clip: 1.0
+    betas:
+    - 0.9
+    - 0.999
+    eps: 1.0e-08
+    min_target_effect: 0.5
+    max_retain_effect: 0.1
+    preferred_target_effect: 1.0
+    condition: matrix
+  val_batch_size: 8
+  baseline_batch_size: 8
+  threads: 4
+  weight_decay: 0.0
+  gates:
+    eval_path_max_abs_ce_doc_diff: 0.0001
+fitting:
+  batch:
+    de: 8
+    nl: 8
+    ret_per_lang: 2
+  budgets:
+    '256':
+      nl:
+      - 1
+      - 128
+      de:
+      - 1
+      - 64
+      ret:
+      - 1
+      - 16
+    '512':
+      nl:
+      - 1
+      - 256
+      de:
+      - 1
+      - 128
+      ret:
+      - 1
+      - 32
+    2K:
+      nl:
+      - 4
+      - 256
+      de:
+      - 2
+      - 256
+      ret:
+      - 1
+      - 128
+  warmup: 10
+  sampler_seed: 0
+  init_seed:
+    fresh: 1
+    fresh_seed2: 2
+  random_seed:
+    random_init: 20261011
+    random_init_seed2: 20261012
+  lrs:
+    strengths:
+    - 0.003
+    - 0.01
+    - 0.03
+    - 0.1
+    donor_init:
+    - 0.0001
+    - 0.0003
+    - 0.001
+    - 0.003
+    donor_init_output:
+    - 0.0001
+    - 0.0003
+    - 0.001
+    - 0.003
+    random_init:
+    - 0.0001
+    - 0.0003
+    - 0.001
+    - 0.003
+    fresh:
+    - 0.0001
+    - 0.0003
+    - 0.001
+    - 0.003
+    fresh_seed2:
+    - 0.0001
+    - 0.0003
+    - 0.001
+    - 0.003
+    random_init_seed2:
+    - 0.0001
+    - 0.0003
+    - 0.001
+    - 0.003
+  fit_path_tol: 1.0e-05
+  cap_tol: 1.0e-06
+  init_tol: 1.0e-06
+  betas:
+  - 0.9
+  - 0.999
+  eps: 1.0e-08
+  weight_decay: 0.0
+  grad_clip: 1.0
+polish:
+  max_iter: 300
+  armijo: 0.0001
+  rel_tol: 1.0e-07
+  patience: 5
+  pg_tol: 0.0001
+  alpha_min: 1.0e-10
+  lam_range: 1000000.0
+  lam0_frac: 0.1
+  floor_stationarity: 0.001
+  norm_floor: 1.0e-12
+  backtrack: 0.5
+block:
+  steps: 600
+  every: 50
+  step_caps:
+  - 50
+  - 100
+  - 200
+  damage_floor: 0.05
+  readout_min: 64
+  profiles:
+    main:
+      budgets:
+      - 2K
+      polish: true
+      families:
+      - strengths
+      - donor_init
+      - donor_init_output
+      - random_init
+      - fresh
+      - fresh_seed2
+      - random_init_seed2
+    nested:
+      budgets:
+      - '256'
+      - '512'
+      polish: false
+      families:
+      - strengths
+      - donor_init
+      - donor_init_output
+      - random_init
+      - fresh
+donor:
+  finetune_seed: 11
+  finetune_lrs: [3.0e-6, 1.0e-5]
+  steps: 200
+  every: 25
+  lrs:
+  - 0.0003
+  - 0.001
+  - 0.003
+  gate_r_nl: 0.8
+  damage_ci_lo: 0.025
+  readout_dates: 128
+evaluation:
+  batch_size: 16
+  parity_tol: 0.001
+  threads: 4
+selection:
+  retain_languages:
+  - en
+  - fr
+  - es
+  - it
+  rho_lo: 0.9
+  rho_hi: 1.1
+  phi_max: 0.05
+  retain_tol: 0.01
+  top_retain: 5
+bootstrap:
+  n_boot: 5000
+  seed: 10610
+  quantiles:
+  - 0.025
+  - 0.975
+analysis:
+  delta: 0.03
+  damage_ci_lo: 0.025
+  cross_block_tol: 1.0e-05
+  equivalence_margin: 0.02
+curve:
+  budgets:
+  - '256'
+  - '512'
+  - 2K
+  step_caps:
+  - 50
+  - 100
+  - 200
+  reference: fresh@2K
+costs:
+  selection_tokens: 57344

@@ -189,7 +189,7 @@ Every method is calibrated on target Europarl validation text. A short search ov
 rise to τ. An edit is *matched* if its validation effect lies within 0.02 nat/token of τ. Only matched edits
 enter a contrast. The effects achieved on the readout dates can differ and are reported with the results.
 
-{{< include ../../results/selective_editing/interventions_table.md >}}
+{{< include ../../results/selective_editing/tables/interventions_table.md >}}
 
 The three draws yield the same six fixed scaled edits, one per target and τ. Three reduce the selected
 contribution without reversing it, and three reverse its sign. All coefficients remain nonzero (@tbl-interventions).
@@ -310,7 +310,7 @@ updates were trained with an explicit English KL term. None of the methods had a
 language. The comparison therefore measures how well the methods spare a related language absent from
 their training objective.
 
-{{< include ../../results/selective_editing/effects_table.md >}}
+{{< include ../../results/selective_editing/tables/effects_table.md >}}
 
 ### The randomized-dictionary control gave no estimate {#sec-null}
 
@@ -466,7 +466,7 @@ reports its direction and whether it lies wholly within ±0.02 nat/token. These 
 which changes the sampled Fisher labels. Selection found the same subcomponents in all nine target–draw
 combinations, and the subcomponent-edit readout matched the main readout within 1.5·10⁻⁶ nat/token.
 
-{{< include ../../results/selective_editing/extended_comparisons_table.md >}}
+{{< include ../../results/selective_editing/tables/extended_comparisons_table.md >}}
 
 All 18 estimable intervals of the all-run family and all 12 of the stable-run family lie below zero, and none
 lies within ±0.02 (@tbl-extended-comparisons). The closest to the band is French and Italian at τ = 0.5
@@ -541,7 +541,7 @@ family has a joint bootstrap over dates (20,000 resamples, seed 20261011) and a 
 @tbl-claims lists the 18 claim contrasts of @fig-contrasts with their intervals. The six randomized-dictionary
 contrasts have no estimate (@sec-null).
 
-{{< include ../../results/selective_editing/claim_table.md >}}
+{{< include ../../results/selective_editing/tables/claim_table.md >}}
 
 ## Alternative subcomponent-selection comparisons {#sec-app-references .appendix}
 
@@ -566,7 +566,7 @@ edit:
 As in the main results, @tbl-references gives each alternative edit's achieved target rise next to its
 contrasts, averaged over the same draws.
 
-{{< include ../../results/selective_editing/references_table.md >}}
+{{< include ../../results/selective_editing/tables/references_table.md >}}
 
 - **Identical edits.** For German, the previously chosen subcomponent is the selected subcomponent with the
   same sign and dose, so its contrast is exactly zero. `omp_lora` also picks `0.attn.o:268` in draws 0 and 1,

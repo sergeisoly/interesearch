@@ -30,11 +30,11 @@ this checkout. Its saved per-date measurements are included in the CPU replay.
 These commands turn saved measurements into comparison tables and figures. They run on the CPU without a model download.
 
 ```bash
-uv run python -m interesearch.selective_editing.confirm data/selective_editing \
+uv run python -m interesearch.selective_editing.analysis.confirm data/selective_editing \
     --out runs/replay/selective_editing
-uv run python -m interesearch.selective_editing.posthoc data/selective_editing \
+uv run python -m interesearch.selective_editing.analysis.posthoc data/selective_editing \
     --out runs/replay/selective_editing
-uv run python -m interesearch.selective_editing.extended_comparisons data/selective_editing \
+uv run python -m interesearch.selective_editing.analysis.extended data/selective_editing \
     --out runs/replay/selective_editing
 uv run python -m interesearch.selective_editing.figures runs/replay/selective_editing \
     --out runs/replay/selective_editing
@@ -44,11 +44,11 @@ Outputs in `runs/replay/selective_editing/`:
 
 | Output | What to look for |
 |---|---|
-| `claim_table.md` | Differences in damage to the related language, alongside the achieved target-effect differences. Negative related-language differences favor the subcomponent edit. |
+| `tables/claim_table.md` | Differences in damage to the related language, alongside the achieved target-effect differences. Negative related-language differences favor the subcomponent edit. |
 | `figures/effects.svg` | The target and related-language effects side by side. |
 | `confirm_result.json` | Verdicts, exclusions and the conditions attached to the headline comparison. |
 | `calibration_trace.json` | Whether the recorded measurements reproduce each calibration decision. The committed data yield 128 agreements out of 128 decisions. |
-| `extended_comparisons_table.md` | Exploratory comparisons with longer-trained updates and alternative rank-one directions. |
+| `tables/extended_comparisons_table.md` | Exploratory comparisons with longer-trained updates and alternative rank-one directions. |
 
 Compare with `results/selective_editing`. Replay tolerances are in the [shared guide](reproduction.md).
 
@@ -66,7 +66,7 @@ The download is about 3.18 GB. The example then runs on the CPU.
 
 ```bash
 uv run python -m interesearch.assets fetch assets
-uv run python -m interesearch.selective_editing.dictionary extract assets
+uv run python -m interesearch.selective_editing.method.dictionary extract assets
 uv run python -m interesearch.selective_editing.quickstart assets
 ```
 
@@ -104,7 +104,7 @@ reference environment. `ci_difference`, one of the comparison methods, uses Good
 commit associated with the published decomposition.
 
 ```bash
-uv run python -m interesearch.selective_editing.fisher assets \
+uv run python -m interesearch.selective_editing.method.fisher assets \
     --retain data/selective_editing/windows/retain_en/en.npy \
     --out runs/selective_editing/fisher_check.json
 git clone https://github.com/goodfire-ai/param-decomp vendor/param-decomp
@@ -119,17 +119,26 @@ needed about 6 GB of RAM.
 them on the published development windows.
 
 ```bash
-uv run python -m interesearch.selective_editing.run prefreeze assets \
+uv run python -m interesearch.selective_editing.stages.main prefreeze assets \
     --out runs/selective_editing --gate runs/selective_editing/fisher_check.json \
     --ci-python vendor/param-decomp/.venv/bin/python
-uv run python -m interesearch.selective_editing.run freeze --out runs/selective_editing \
+uv run python -m interesearch.selective_editing.stages.main freeze --out runs/selective_editing \
     --gate runs/selective_editing/fisher_check.json --note "Development run with published windows"
-uv run python -m interesearch.selective_editing.run readout assets --out runs/selective_editing
+uv run python -m interesearch.selective_editing.stages.main readout assets --out runs/selective_editing
 ```
 
 The default input is `data/selective_editing/windows/`. The `readout` stage writes development measurements
-to `runs/selective_editing/records/` and computes their analysis. Existing outputs are reused only when code,
-settings and inputs match `RUN.json`. Progress is recorded in `status.jsonl`.
+to `runs/selective_editing/records/` and computes their analysis. Existing outputs are reused when scientific
+settings, runtime settings and inputs match `RUN.json`. Each invocation, including resume, records its source
+version in `runs/`; `status.jsonl` links produced and reused outputs to that invocation. Source changes alone do
+not block resume or readout. Frozen artifacts, window bindings, curvature checks and cache validity still apply.
+
+The published settings live in `src/interesearch/selective_editing/recipe.yaml`. Copy that complete file and pass
+`--recipe PATH` to use another profile; extended comparisons use its `extended` section. The resolved recipe is
+saved in `RUN.json` before model loading and in exported protocols. Later stages use the saved snapshot by
+default; an explicit different recipe needs a new run directory. CPU replay uses recorded settings, with fixed
+published defaults only for the recognized original records. Device and evaluation `--bs` remain runtime flags.
+The OMP source adapter is named `lora_24`: LoRA across all matrices for OMP.
 
 For a narrower run, `--cells de:0` selects the German target with its first training-data draw. `--reduced` starts
 a new run at toy sizes for checking the code path. Its readout needs `--standin`, which uses selection data in
@@ -147,13 +156,13 @@ These exploratory comparisons test longer training and alternative rank-one dire
 run's frozen choices and completed development readout, with a separate output directory.
 
 ```bash
-uv run python -m interesearch.selective_editing.extended_comparisons_run prefreeze assets \
+uv run python -m interesearch.selective_editing.stages.extended prefreeze assets \
     --main runs/selective_editing --out runs/selective_editing_extended_comparisons \
     --gate runs/selective_editing/fisher_check.json
-uv run python -m interesearch.selective_editing.extended_comparisons_run freeze \
+uv run python -m interesearch.selective_editing.stages.extended freeze \
     --main runs/selective_editing --out runs/selective_editing_extended_comparisons \
     --gate runs/selective_editing/fisher_check.json --note "Exploratory development comparison"
-uv run python -m interesearch.selective_editing.extended_comparisons_run readout assets \
+uv run python -m interesearch.selective_editing.stages.extended readout assets \
     --main runs/selective_editing --out runs/selective_editing_extended_comparisons
 ```
 

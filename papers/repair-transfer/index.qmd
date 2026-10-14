@@ -189,7 +189,7 @@ interval. Scalar-only fitting falls well short of every family that trains the f
 targets. Including the converged full-batch candidates in selection at 2,048 tokens (hollow marker) does not close
 the gap.](../../results/repair_transfer/figures/recovery.svg){#fig-recovery width="100%" fig-pos="tbp" fig-alt="Two panels show Dutch-damage recovery on primary and replication targets selected from runs of up to 600 steps at three fitting budgets, with 95% date-bootstrap intervals. Families that train the repair factors recover at least 95.6%. Scalar-only fitting remains below 90%, including the expanded full-batch search at 2,048 tokens. Shapes identify methods, and a dashed line and band show the fixed donor repair and its interval."}
 
-{{< include ../../results/repair_transfer/primary_table.md >}}
+{{< include ../../results/repair_transfer/tables/primary_table.md >}}
 
 ### The donor as an initialization {#sec-warm}
 
@@ -213,7 +213,7 @@ data. With a 600-step cap and 2,048 tokens its advantage over fresh is about 1 p
 
 The full-budget contrasts in @tbl-secondary include output-only fitting and the second fresh and random seeds.
 
-{{< include ../../results/repair_transfer/secondary_table.md >}}
+{{< include ../../results/repair_transfer/tables/secondary_table.md >}}
 
 ### What donor initialization saves {#sec-cost}
 
@@ -240,7 +240,7 @@ used for the break-even estimate: donor initialization at 256 tokens and fresh a
 409,600 presentations). Scalar-only cells never reach and are not
 shown.](../../results/repair_transfer/figures/reach.svg){#fig-reach width="100%" fig-alt="Two panels plot paired recovery differences from full-budget fresh fitting against fitting token presentations on a logarithmic cost axis, with 95% date-bootstrap intervals. Donor initialization reaches the reference at lower cost than fresh fitting on both targets. Shapes identify methods, line styles identify token budgets, filled markers meet the reach criterion, and rings mark donor initialization at 256 tokens and fresh at 2,048 tokens, both at a 50-step cap (51,200 and 409,600 presentations). These cells set the break-even estimate. The dotted horizontal threshold is minus 2 percentage points."}
 
-{{< include ../../results/repair_transfer/break_even_table.md >}}
+{{< include ../../results/repair_transfer/tables/break_even_table.md >}}
 
 ## Limits of these conclusions {#sec-limits}
 
@@ -354,7 +354,7 @@ constrained during selection, now evaluated on the readout dates. All satisfy th
 tokens, the chosen scalar-only repair removes 87.0% and 79.2% of the fine-tune's Dutch KL
 from the base model. Every family that trains the factors removes at least 98.4%.
 
-{{< include ../../results/repair_transfer/readout_table.md >}}
+{{< include ../../results/repair_transfer/tables/readout_table.md >}}
 
 The additional full-batch optimization uses coordinates $e_m = c_m \lVert b_m\rVert \lVert a_m\rVert$, in which
 $\lVert E\rVert_F = \lVert e\rVert_2$. The norm cap is therefore a ball, and radial scaling is its exact

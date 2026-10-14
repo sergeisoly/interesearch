@@ -2,7 +2,7 @@ import dataclasses
 import json
 from pathlib import Path
 
-from interesearch.selective_editing.extended_comparisons import analyze, label, load
+from interesearch.selective_editing.analysis.extended import analyze, label, load
 from interesearch.selective_editing.data import load_study
 from replay_check import assert_close
 
@@ -47,3 +47,15 @@ def test_no_stable_run_is_absent_and_changes_both_attributes():
 def test_direction_and_band_are_independent():
     assert label({"lo": -0.015, "hi": -0.005}, 0.02) == {"direction": "below 0", "within_band": True}
     assert label({"lo": -0.03, "hi": 0.01}, 0.02) == {"direction": "includes 0", "within_band": False}
+
+
+def test_both_extended_families_use_the_recorded_bootstrap():
+    add = load(DATA / "extended_comparisons")
+    parameters = {"resamples": 23, "seed": 19, "level": 0.5}
+    low = replay(dataclasses.replace(add, protocol=add.protocol | {"bootstrap": parameters}))
+    high = replay(dataclasses.replace(add, protocol=add.protocol | {"bootstrap": parameters | {"level": 0.95}}))
+    for family in ("all_runs", "stable_runs"):
+        assert low[family]["_critical_value"] < high[family]["_critical_value"]
+        name = next(k for k in low[family] if not k.startswith("_"))
+        assert low[family][name]["estimate"] == high[family][name]["estimate"]
+        assert low[family][name]["se"] == high[family][name]["se"]

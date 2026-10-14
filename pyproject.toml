@@ -1,6 +1,6 @@
 [project]
 name = "interesearch"
-version = "0.1.0"
+version = "0.2.0"
 description = "Interpretability research on how language-model parameter changes affect behavior."
 requires-python = "==3.13.*"
 dependencies = [
@@ -21,6 +21,10 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+"interesearch.selective_editing" = ["recipe.yaml"]
+"interesearch.repair_transfer" = ["recipe.yaml"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

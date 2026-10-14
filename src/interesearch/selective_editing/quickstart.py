@@ -13,7 +13,7 @@ next-token CE, then the mean over windows) and the KL to the original. It checks
 bit-exactly after the edit.
 
     uv run python -m interesearch.assets fetch assets
-    uv run python -m interesearch.selective_editing.dictionary extract assets
+    uv run python -m interesearch.selective_editing.method.dictionary extract assets
     uv run python -m interesearch.selective_editing.quickstart assets
 """
 
@@ -27,12 +27,18 @@ from pathlib import Path
 import torch
 import torch.nn as nn
 
-from ..assets import ASSETS, MODULES, check, load_target
-from ..edits import assert_frozen, capture_base, snapshot_params
-from ..training import disable_tf32
-from .access import Windows, load_windows
-from .dictionary import COMPONENTS, Dictionary, atom_update, load_dictionary, parse_label_key
-from .measure import ce_docs, edit_readout
+from interesearch.assets import ASSETS, MODULES, check, load_target
+from interesearch.edits import assert_frozen, capture_base, snapshot_params
+from interesearch.training import disable_tf32
+from interesearch.selective_editing.stages.access import Windows, load_windows
+from interesearch.selective_editing.method.dictionary import (
+    COMPONENTS,
+    Dictionary,
+    atom_update,
+    load_dictionary,
+    parse_label_key,
+)
+from interesearch.selective_editing.method.measure import ce_docs, edit_readout
 
 DATA = Path("data/quickstart")
 CALIBRATION = Path("data/selective_editing/calibration/de_draw0.json")

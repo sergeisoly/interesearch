@@ -13,16 +13,17 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 from pathlib import Path
 
 import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 
-from .analysis import EQUIV_PAIRS, MAIN_CONTRASTS
-from .costs import CURRENCIES
-from .curve import CURVE_BUDGETS, CURVE_CAPS, curve_name
-from .selection import PHI_MAX, RETAIN_TOL, RHO_HI, RHO_LO
+from .analysis.recovery import EQUIV_PAIRS, MAIN_CONTRASTS, PRIMARY, READING_TEXT
+from .analysis.costs import CURRENCIES
+from .analysis.curve import curve_name
+from ..recipes import load_recipe
 
 TARGETS = {"primary_target": "Primary target", "replication_target": "Replication target"}
 LABEL = {
@@ -82,10 +83,10 @@ def contrast_text(c: dict) -> str:
     return f"{pct(c['diff'], spec)} {interval(c['ci'], spec)}"
 
 
-def cell_short(name: str) -> str:
+def cell_short(name: str, steps: int) -> str:
     """'donor_init@256:le50' -> '256 / ≤50'."""
     b, _, cap = name.split("@")[1].partition(":le")
-    return f"{BUDGET_TEXT[b]} / {'≤' + cap if cap else 600}"
+    return f"{BUDGET_TEXT[b]} / {'≤' + cap if cap else steps}"
 
 
 def _save(fig, path: Path) -> None:
@@ -99,7 +100,7 @@ def _dot(ax, x, y, lo, hi, color, marker, filled=True, ms=4.2):
                 mew=1.0, elinewidth=1.0, capsize=0, zorder=3)
 
 
-def recovery_figure(res: dict, path: Path) -> None:
+def recovery_figure(res: dict, path: Path, recipe: dict) -> None:
     """Recovery of every trained family at each fit budget (600 steps), with the fixed donor repair as a band."""
     fig, axes = plt.subplots(1, 2, figsize=(WIDTH, 2.3), sharey=True)
     offsets = {f: (i - 2.5) * 0.13 for i, f in enumerate((*TRAINED, "strengths_best"))}
@@ -109,12 +110,12 @@ def recovery_figure(res: dict, path: Path) -> None:
         lo, hi = fixed["ci_r_nl"]
         ax.axhspan(100 * lo, 100 * hi, color=COLOR["donor_fixed"], alpha=0.18, lw=0, zorder=1)
         ax.axhline(100 * fixed["point"]["r_nl"], color=COLOR["donor_fixed"], ls="--", lw=0.9, zorder=2)
-        points = [(i, f, f"{f}@{b}") for i, b in enumerate(CURVE_BUDGETS) for f in TRAINED]
+        points = [(i, f, f"{f}@{b}") for i, b in enumerate(recipe["curve"]["budgets"]) for f in TRAINED]
         for i, f, g in points + [(2, "strengths_best", "strengths_best@2K")]:
             c = cells[g]
             _dot(ax, i + offsets[f], 100 * c["point"]["r_nl"], *(100 * v for v in c["ci_r_nl"]), COLOR[f], MARKER[f],
                  filled=f != "strengths_best")
-        ax.set_xticks(range(len(CURVE_BUDGETS)), [BUDGET_TEXT[b] for b in CURVE_BUDGETS])
+        ax.set_xticks(range(len(recipe["curve"]["budgets"])), [BUDGET_TEXT[b] for b in recipe["curve"]["budgets"]])
         ax.set_xlim(-0.55, 2.55)
         ax.set_xlabel("Unique fit tokens of the target")
         ax.set_title(title, loc="left")
@@ -130,17 +131,17 @@ def recovery_figure(res: dict, path: Path) -> None:
     _save(fig, path)
 
 
-def warm_start_figure(res: dict, path: Path) -> None:
+def warm_start_figure(res: dict, path: Path, recipe: dict) -> None:
     """Paired differences at matched cost: the same budget and step cap for both families of a contrast."""
     fig, axes = plt.subplots(2, 3, figsize=(WIDTH, 2.9), sharex=True, sharey=True)
-    steps = [c or 600 for c in CURVE_CAPS]
+    steps = [c or recipe["block"]["steps"] for c in (*recipe["curve"]["step_caps"], None)]
     for row, target in enumerate(TARGETS):
         contrasts = res["targets"][target]["contrasts"]
-        for col, b in enumerate(CURVE_BUDGETS):
+        for col, b in enumerate(recipe["curve"]["budgets"]):
             ax = axes[row, col]
             ax.axhline(0, color="#52514e", lw=0.6, zorder=1)
             for pair, (color, marker, filled) in WARM_START.items():
-                pts = [contrasts[f"{curve_name(pair[0], b, c)} - {curve_name(pair[1], b, c)}"] for c in CURVE_CAPS]
+                pts = [contrasts[f"{curve_name(pair[0], b, c)} - {curve_name(pair[1], b, c)}"] for c in (*recipe["curve"]["step_caps"], None)]
                 ys = [100 * p["diff"] for p in pts]
                 ax.plot(steps, ys, color=color, lw=1.0, zorder=2)
                 for x, y, p in zip(steps, ys, pts):
@@ -161,7 +162,7 @@ def warm_start_figure(res: dict, path: Path) -> None:
     _save(fig, path)
 
 
-def reach_figure(res: dict, path: Path) -> None:
+def reach_figure(res: dict, path: Path, recipe: dict) -> None:
     """Quality-cost curve: each grid cell's paired difference from the reference at its true target-side
     fit-token presentations. Family by colour and marker as in the other figures, fit budget by line style. Filled
     markers reach the reference, and a ring marks the two cells that set K*."""
@@ -174,8 +175,8 @@ def reach_figure(res: dict, path: Path) -> None:
         ax.axhline(0, color="#52514e", lw=0.6, zorder=1)
         ax.axhline(-100 * curve["tolerance"], color="#52514e", lw=0.8, ls=":", zorder=1)
         for f in REACH_FAMILIES:
-            for b in CURVE_BUDGETS:
-                rows = [grid[curve_name(f, b, c)] for c in CURVE_CAPS]
+            for b in recipe["curve"]["budgets"]:
+                rows = [grid[curve_name(f, b, c)] for c in (*recipe["curve"]["step_caps"], None)]
                 xs = [r["cost"]["fit_token_presentations"] for r in rows]
                 ys = [100 * (r["r_nl"] - ref) for r in rows]
                 ax.plot(xs, ys, color=COLOR[f], lw=0.9, ls=budget_style[b], alpha=0.8, zorder=2)
@@ -219,7 +220,46 @@ def contrast_label(key: str) -> str:
     return f"{LABEL[_family(x)]} {MINUS} {LABEL[_family(y)].lower()}"
 
 
-def secondary_table(res: dict) -> str:
+def primary_table(result: dict, recipe: dict) -> str:
+    """Markdown table of one target's primary contrast for the papers. Rounding happens only here, missing values
+    print as —."""
+    res = result["targets"]["primary_target"]
+    pr = res["primary"]
+
+    def fmt(v, spec):  # None: no selection. NaN: ci() of non-finite draws
+        return "—" if v is None or not math.isfinite(v) else format(100 * v, spec)
+
+    def row(label, value, interval, spec):
+        lo, hi = interval or (None, None)
+        ci_text = "—" if interval is None else f"[{fmt(lo, spec)}, {fmt(hi, spec)}]"
+        return f"| {label} | {fmt(value, spec)} | {ci_text} |"
+
+    cx, cy = (res["cells"][g] for g in PRIMARY)
+    if pr["reading"] in READING_TEXT:
+        reading = READING_TEXT[pr["reading"]].format(pp=f"{100 * recipe["analysis"]["delta"]:g}")
+    else:
+        reading = pr["reading"][0].upper() + pr["reading"][1:] + "."
+    if pr["reading"] == "basis limit supported":
+        reading = (
+            f"Donor-initialized fitting exceeds the tested scalar-coefficient search by more than {100 * recipe["analysis"]["delta"]:g} "
+            "percentage points. The scalar search includes 4 learning rates × 600 steps plus two full-batch "
+            "optimizations, with 50 candidates in total.")
+    lines = [
+        "| Repair | Recovery of Dutch damage (%) | 95% CI |",
+        "|:--|--:|:--|",
+        row("Donor initialization (both factors trained)", cx.get("point", {}).get("r_nl"), cx.get("ci_r_nl"), ".1f"),
+        row("Scalar coefficients only + full-batch optimization", cy.get("point", {}).get("r_nl"), cy.get("ci_r_nl"), ".1f"),
+        row("Difference (percentage points)", pr["diff"], pr["ci"], "+.1f"),
+        "",
+        f": {res['target'].replace('_', ' ').capitalize()}, 2,048 fit tokens, {res['n_dates']} readout dates. 95% "
+        f"intervals from a joint bootstrap over dates ({recipe["bootstrap"]["n_boot"]:,} draws). {reading} Selection considers both ordinary "
+        "training checkpoints and converged candidates. {#tbl-primary}",
+        "",
+    ]
+    return "\n".join(lines)
+
+
+def secondary_table(res: dict, recipe: dict) -> str:
     """Secondary contrasts of the 2,048-token cells (up to 600 steps) for both targets."""
     margin = pct(res["equivalence_margin"], "g")
     lines = [f"| Contrast (2,048 fit tokens) | Primary target | Replication target | Inside ±{margin} pp |",
@@ -253,7 +293,7 @@ def _k_star(b: dict) -> str:
     return b["reading"] if "k_star" not in b else f"{b['k_star']:.1f}"
 
 
-def break_even_table(res: dict) -> str:
+def break_even_table(res: dict, recipe: dict) -> str:
     """Per currency and target: the cheapest cells of fresh fitting and donor initialization that reach the
     reference, and the break-even number of targets K*."""
     lines = ["| Currency | Target | Fresh | Fresh cell | Donor init. | Donor init. cell | Break-even K\\* |",
@@ -261,7 +301,7 @@ def break_even_table(res: dict) -> str:
     for c in CURRENCIES:
         for target, title in TARGETS.items():
             curve = res["targets"][target]["curve"]
-            cells = [f"{_amount(c, curve['reach'][f][c]['cost'])} | {cell_short(curve['reach'][f][c]['cell'])}"
+            cells = [f"{_amount(c, curve['reach'][f][c]['cost'])} | {cell_short(curve['reach'][f][c]['cell'], recipe['block']['steps'])}"
                      for f in ("fresh", "donor_init")]
             name = CURRENCY_TEXT[c] if target == "primary_target" else ""
             lines.append(f"| {name} | {title.split()[0]} | {cells[0]} | {cells[1]} | "
@@ -276,7 +316,7 @@ def break_even_table(res: dict) -> str:
     return "\n".join(lines)
 
 
-def readout_table(res: dict) -> str:
+def readout_table(res: dict, recipe: dict) -> str:
     """Readout of every 2,048-token cell and of the fixed donor repair: recovery and the readout constraints."""
     groups = ("strengths", "strengths_best", "donor_init", "donor_init_output", "random_init", "random_init_seed2",
               "fresh", "fresh_seed2")
@@ -295,20 +335,20 @@ def readout_table(res: dict) -> str:
               f"{res['targets']['primary_target']['n_dates']} readout dates. Rows marked '+ full-batch "
               "optimization' also include the two converged candidates. KL recovery (%) is the share of the "
               "fine-tune's Dutch KL from the base model that the repair removes. German effect kept is the ratio of "
-              f"German CE damage with and without the repair (required {RHO_LO}–{RHO_HI}). German drift is the "
+              f"German CE damage with and without the repair (required {recipe["selection"]["rho_lo"]}–{recipe["selection"]["rho_hi"]}). German drift is the "
               "repair's German KL from the fine-tuned model relative to the base model's KL from the fine-tuned "
-              f"model (required at most {PHI_MAX}). Worst retain change is the largest CE change in English, French, "
-              f"Spanish or Italian against the fine-tuned model in nat/token (required at most +{RETAIN_TOL}). "
+              f"model (required at most {recipe["selection"]["phi_max"]}). Worst retain change is the largest CE change in English, French, "
+              f"Spanish or Italian against the fine-tuned model in nat/token (required at most +{recipe["selection"]["retain_tol"]}). "
               '{#tbl-readout tbl-colwidths="[13,25,20,10,10,10,12]"}'), ""]
     return "\n".join(lines)
 
 
 FIGURES = {"recovery.svg": recovery_figure, "warm_start.svg": warm_start_figure, "reach.svg": reach_figure}
-TABLES = {"secondary_table.md": secondary_table, "break_even_table.md": break_even_table,
+TABLES = {"primary_table.md": primary_table, "secondary_table.md": secondary_table, "break_even_table.md": break_even_table,
           "readout_table.md": readout_table}
 
 
-def explainer_data(res: dict, source_bytes: bytes) -> dict:
+def explainer_data(res: dict, source_bytes: bytes, recipe: dict) -> dict:
     """Copy saved recovery cells and paired intervals for the explainer, retaining source precision."""
     targets = []
     for key, label in TARGETS.items():
@@ -324,13 +364,13 @@ def explainer_data(res: dict, source_bytes: bytes) -> dict:
             ("fresh", LABEL["fresh"], "fresh@2K"),
         )]
         grid = []
-        for budget in CURVE_BUDGETS:
-            for cap in CURVE_CAPS:
+        for budget in recipe["curve"]["budgets"]:
+            for cap in (*recipe["curve"]["step_caps"], None):
                 names = {family: curve_name(family, budget, cap) for family in ("strengths", "donor_init", "fresh")}
                 contrast_name = f"{names['donor_init']} - {names['fresh']}"
                 contrast = target["contrasts"][contrast_name]
                 grid.append({
-                    "budget": budget, "step_cap": cap if cap is not None else 600,
+                    "budget": budget, "step_cap": cap if cap is not None else recipe["block"]["steps"],
                     "strengths": cell(names["strengths"]), "donor": cell(names["donor_init"]),
                     "fresh": cell(names["fresh"]),
                     "gap": {"source_contrast": contrast_name, "diff": contrast["diff"], "ci": contrast["ci"],
@@ -353,8 +393,8 @@ def explainer_data(res: dict, source_bytes: bytes) -> dict:
         },
         "equivalence_margin": res["equivalence_margin"],
         "budgets": [{"key": budget, "tokens": {"256": 256, "512": 512, "2K": 2048}[budget]}
-                    for budget in CURVE_BUDGETS],
-        "step_caps": [cap if cap is not None else 600 for cap in CURVE_CAPS],
+                    for budget in recipe["curve"]["budgets"]],
+        "step_caps": [cap if cap is not None else recipe["block"]["steps"] for cap in (*recipe["curve"]["step_caps"], None)],
         "targets": targets,
     }
 
@@ -366,14 +406,18 @@ def main(argv=None) -> int:
     a = ap.parse_args(argv)
     source_bytes = a.analysis.read_bytes()
     res = json.loads(source_bytes)
+    recipe = res.get("resolved_recipe")
+    if recipe is None:
+        recipe = load_recipe("interesearch.repair_transfer")
     matplotlib.use("svg")
     (a.out / "figures").mkdir(parents=True, exist_ok=True)
     with plt.rc_context(STYLE):
         for name, draw in FIGURES.items():
-            draw(res, a.out / "figures" / name)
+            draw(res, a.out / "figures" / name, recipe)
+    (a.out / "tables").mkdir(parents=True, exist_ok=True)
     for name, make in TABLES.items():
-        (a.out / name).write_text(make(res))
-    (a.out / "explainer_data.json").write_text(json.dumps(explainer_data(res, source_bytes), indent=2) + "\n")
+        (a.out / "tables" / name).write_text(make(res, recipe))
+    (a.out / "explainer_data.json").write_text(json.dumps(explainer_data(res, source_bytes, recipe), indent=2) + "\n")
     return 0
 
 

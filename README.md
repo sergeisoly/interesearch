@@ -41,7 +41,7 @@ previously selected edit to four fixed text windows per language. It downloads a
 
 ```bash
 uv run python -m interesearch.assets fetch assets
-uv run python -m interesearch.selective_editing.dictionary extract assets
+uv run python -m interesearch.selective_editing.method.dictionary extract assets
 uv run python -m interesearch.selective_editing.quickstart assets
 ```
 

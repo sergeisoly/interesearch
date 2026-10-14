@@ -15,34 +15,21 @@ from safetensors.torch import save_file
 from interesearch.assets import MODULES
 from interesearch.checksums import sha256_file
 from interesearch.model import LlamaSimpleMLP, LlamaSimpleMLPConfig
-from interesearch.selective_editing import fisher
-from interesearch.selective_editing import readout as RO
-from interesearch.selective_editing import run as R
-from interesearch.selective_editing import selector as S
-from interesearch.selective_editing.access import (
-    Access,
-    AccessError,
-    AlreadyOpened,
-    load_confirm,
-    load_windows,
-    open_confirm,
-    technical_gaps,
-    verify_freeze,
-    window_identity,
-    write_freeze,
-)
-from interesearch.selective_editing.calibration import TECHNICAL
+from interesearch.selective_editing.method import fisher
+from interesearch.selective_editing.stages import readout as RO
+from interesearch.selective_editing.stages import main as R
+from interesearch.selective_editing.stages import support as RS
+from interesearch.selective_editing.method import selector as S
+from interesearch.selective_editing.method import runtime as RT
+from interesearch.selective_editing.stages.access import Access, AccessError, AlreadyOpened, load_confirm, load_windows, open_confirm, technical_gaps, verify_freeze, window_identity, write_freeze
+from interesearch.selective_editing.method.calibration import TECHNICAL
 from interesearch.selective_editing.data import load_dev
-from interesearch.selective_editing.dose import GUARD_MAX
-from interesearch.selective_editing.dictionary import (
-    Dictionary,
-    module_generator,
-    randomized_dictionary,
-    tensor_digest,
-)
-from interesearch.selective_editing.neurons import neuron_ranking
-from interesearch.selective_editing import references
-from interesearch.selective_editing.references import omp_top1
+from interesearch.selective_editing.configuration import resolve
+from interesearch.selective_editing.method.dose import GUARD_MAX
+from interesearch.selective_editing.method.dictionary import Dictionary, module_generator, randomized_dictionary, tensor_digest
+from interesearch.selective_editing.method.neurons import neuron_ranking
+from interesearch.selective_editing.method import references
+from interesearch.selective_editing.method.references import omp_top1
 
 V, C = 64, 5
 
@@ -69,9 +56,11 @@ def toy_dictionary(model, seed=0, modules=MODULES):
 
 
 def gate_record(path, **change):
-    rec = {"passed": True, "failures": [], "code": S.code_identity(), "fisher_k": S.FISHER_K, "n_windows": 8,
+    rec = {"passed": True, "failures": [], "code": RT.code_identity(), "fisher_k": S.FISHER_K, "n_windows": 8,
            "window": 257, "k_big": 32, "dtype": "float64", "device": "cpu",
-           "provenance": S.runtime_identity("cpu")} | change
+           "provenance": RT.runtime_identity("cpu"),
+           "selection_settings": {"fisher_k": S.FISHER_K, "eps_percentile": S.EPS_PERCENTILE,
+                                  "null_seed": S.NULL_SEED[0]}} | change
     path.write_text(json.dumps(rec))
     return path
 
@@ -166,25 +155,42 @@ def test_omp_top1_takes_the_first_module_in_update_order_on_a_tie_and_the_first_
 def test_selection_and_q_refuse_without_a_full_size_passed_check_of_the_current_code(model, tmp_path):
     dic, retain = toy_dictionary(model), tokens(1)
     gate = tmp_path / "check.json"
-    with pytest.raises(S.GateError, match="no curvature-check record"):
+    with pytest.raises(RT.GateError, match="no curvature-check record"):
         S.q_record(tmp_path / "q.pt", model, dic, retain, retain, "cpu", gate)
     for change, why in [({"n_windows": 2, "k_big": 4}, "too small"), ({"k_big": 31}, "too small"),
                         ({"window": 9}, "too small"),
                         ({"dtype": "float32"}, "not float64"), ({"passed": False}, "did not pass"),
-                        ({"code": {**S.code_identity(), "fisher.py": "0" * 64}}, "other code"),
+                        ({"code": {**RT.code_identity(), "fisher.py": "0" * 64}}, "other code"),
                         ({"fisher_k": 2}, "K=2")]:
-        with pytest.raises(S.GateError, match=why):
+        with pytest.raises(RT.GateError, match=why):
             S.q_record(tmp_path / "q.pt", model, dic, retain, retain, "cpu", gate_record(gate, **change))
-        with pytest.raises(S.GateError, match=why):
+        with pytest.raises(RT.GateError, match=why):
             S.select(model, dic, {}, tokens(2), "cpu", gate)
     assert not (tmp_path / "q.pt").exists()
-    S.require_gate(gate_record(gate))
-    other_gpu = S.runtime_identity("cpu") | {"multi_processor_count": 132}  # production guard, not a gate criterion
-    with pytest.raises(S.GateError, match="multi_processor_count"):
+    RT.require_gate(gate_record(gate))
+    other_gpu = RT.runtime_identity("cpu") | {"multi_processor_count": 132}  # production guard, not a gate criterion
+    with pytest.raises(RT.GateError, match="multi_processor_count"):
         S.select(model, dic, {}, tokens(2), "cpu", gate_record(gate, provenance=other_gpu))
 
 
 # --------------------------------------------------------------------------- stored records
+@pytest.mark.parametrize("field,value", [("eps_percentile", 2.0), ("null_seeds", [109, 102, 103])])
+def test_curvature_gate_binds_percentile_and_first_randomized_seed(tmp_path, field, value):
+    gate = gate_record(tmp_path / "check.json")
+    recipe = resolve()
+    recipe["selection"][field] = value
+    with pytest.raises(RT.GateError, match="selection settings"):
+        # No model computation is reached: these checks precede q-cache access and selection.
+        S.q_record(tmp_path / "q.pt", None, None, None, None, "cpu", gate, recipe=recipe)
+    with pytest.raises(RT.GateError, match="selection settings"):
+        S.select(None, None, {}, None, "cpu", gate, recipe=recipe)
+    saved = json.loads(gate.read_text())
+    saved.pop("selection_settings")
+    gate.write_text(json.dumps(saved))
+    with pytest.raises(RT.GateError, match="missing selection settings"):
+        RT.require_gate(gate)
+
+
 def test_stored_records_are_reused_only_under_equal_provenance(model, tmp_path):
     dic, retain, qcheck, target = toy_dictionary(model), tokens(1), tokens(3), tokens(2)
     gate = gate_record(tmp_path / "check.json")
@@ -197,16 +203,16 @@ def test_stored_records_are_reused_only_under_equal_provenance(model, tmp_path):
     for kw in [dict(bs=3), dict(qcheck=tokens(4)), dict(dictionary=toy_dictionary(model, seed=1)),
                dict(dictionary=randomized_dictionary(dic, 101))]:
         args = dict(model=model, dictionary=dic, retain=retain, qcheck=qcheck, device="cpu", gate=gate, bs=2) | kw
-        with pytest.raises(S.CacheMismatch):
+        with pytest.raises(RT.CacheMismatch):
             S.q_record(tmp_path / "q.pt", **args)
     assert (tmp_path / "q.pt").read_bytes() == before
     w = model.get_submodule(MODULES[0]).weight
     w0 = w[0, 0].item()
     with torch.no_grad():
         w[0, 0] += 1.0
-    with pytest.raises(S.CacheMismatch, match="model"):
+    with pytest.raises(RT.CacheMismatch, match="model"):
         S.q_record(tmp_path / "q.pt", model, dic, retain, qcheck, "cpu", gate, bs=2)
-    with pytest.raises(S.CacheMismatch, match="model"):
+    with pytest.raises(RT.CacheMismatch, match="model"):
         S.select(model, dic, q, target, "cpu", gate, bs=2)
     with torch.no_grad():
         w[0, 0] = w0
@@ -221,7 +227,7 @@ def test_stored_records_are_reused_only_under_equal_provenance(model, tmp_path):
     english = tokens(6)
     ranking = neuron_ranking(model, target, english, "cpu", tmp_path / "rates.pt", bs=2)
     assert set(ranking["english_provenance"]["code"]) == {"neurons.py", "model.py"}  # rates come from the forward
-    with pytest.raises(S.CacheMismatch, match="inputs"):
+    with pytest.raises(RT.CacheMismatch, match="inputs"):
         neuron_ranking(model, target, tokens(7), "cpu", tmp_path / "rates.pt", bs=2)
 
     (tmp_path / "q.pt").unlink()  # what the refusal says to do. The summary follows the recomputed record
@@ -237,9 +243,9 @@ def test_q_and_the_target_gradient_are_bound_to_the_code_and_runtime_that_comput
     for field, value in [("device", "cuda:0"), ("torch", "0.0"), ("float32_matmul_precision", "medium"),
                          ("multi_processor_count", 132), ("model_config", "0" * 64)]:
         other = q | {"provenance": q["provenance"] | {field: value}}
-        with pytest.raises(S.CacheMismatch, match=field):
+        with pytest.raises(RT.CacheMismatch, match=field):
             S.select(model, dic, other, target, "cpu", gate, bs=2)
-    with pytest.raises(S.CacheMismatch, match="dictionary"):
+    with pytest.raises(RT.CacheMismatch, match="dictionary"):
         S.select(model, randomized_dictionary(dic, 101), q, target, "cpu", gate, bs=2)
     with pytest.raises(FloatingPointError, match="eps is inf"):
         S.select(model, dic, q | {"eps": math.inf}, target, "cpu", gate, bs=2)
@@ -247,12 +253,12 @@ def test_q_and_the_target_gradient_are_bound_to_the_code_and_runtime_that_comput
     S.select(model, dic, q, target, "cpu", gate, bs=3, n_short=1)  # its own batch size and pools are q's business
     assert torch.backends.cudnn.allow_tf32 is False
 
-    new_code = {f: "0" * 64 for f in S.GATE_FILES}  # the estimator changed. A fresh check of it passed
-    monkeypatch.setattr(S, "code_identity", lambda: new_code)
+    new_code = {f: "0" * 64 for f in RT.GATE_FILES}  # the estimator changed. A fresh check of it passed
+    monkeypatch.setattr(RT, "code_identity", lambda: new_code)
     gate = gate_record(tmp_path / "check2.json")
-    with pytest.raises(S.CacheMismatch, match="code"):
+    with pytest.raises(RT.CacheMismatch, match="code"):
         S.q_record(tmp_path / "q.pt", model, dic, retain, retain, "cpu", gate, bs=2)
-    with pytest.raises(S.CacheMismatch, match="code"):
+    with pytest.raises(RT.CacheMismatch, match="code"):
         S.select(model, dic, q, target, "cpu", gate, bs=2)
     _, info = S.target_gradient(model, list(MODULES), target, "cpu", 2, tmp_path / "G.pt")
     assert info["cache"] == "recomputed: the cached gradient differs in code"
@@ -268,13 +274,13 @@ def test_english_ci_means_are_bound_to_the_imported_param_decomp_sources(model, 
     english, cache = tokens(6), tmp_path / "ci_en.pt"
 
     def english_means():
-        prov = S.provenance(model, "cpu", 2, {"english": english}, references.ci_code(), {"ci_fn": "toy"})
-        return S.stored(cache, prov, lambda: {"mean": {}})
+        prov = RT.provenance(model, "cpu", 2, {"english": english}, references.ci_code(), {"ci_fn": "toy"})
+        return RT.stored(cache, prov, lambda: {"mean": {}})
 
     english_means()
     english_means()
     (pkg / "models" / "component_model.py").write_text("C = 2\n")  # a modified checkout
-    with pytest.raises(S.CacheMismatch, match="code"):
+    with pytest.raises(RT.CacheMismatch, match="code"):
         english_means()
 
 
@@ -337,12 +343,12 @@ def write_selection(root, rows=None):
         write_role(root, role, langs, rows or n, i, dates)
 
 
-def test_runner_items_fail_block_or_skip_and_the_run_folder_keeps_one_code_version(model, tmp_path, monkeypatch):
+def test_runner_items_keep_invocation_provenance_when_sources_change(model, tmp_path, monkeypatch):
     write_selection(tmp_path / "windows", 4)
-    ctx = R.Context(tmp_path / "run", tmp_path / "windows", model, toy_dictionary(model), torch.device("cpu"))
+    ctx = RS.Context(tmp_path / "run", tmp_path / "windows", model, toy_dictionary(model), torch.device("cpu"))
     with pytest.raises(AccessError, match="starts with the pre-freeze stage"):
-        R.Runner(ctx, "readout", None, True)
-    r = R.Runner(ctx, "prefreeze", True)
+        RS.Runner(ctx, "readout", None, True)
+    r = RS.Runner(ctx, "prefreeze", True)
     done = ctx.out / "done.json"
 
     def nonfinite():
@@ -359,24 +365,29 @@ def test_runner_items_fail_block_or_skip_and_the_run_folder_keeps_one_code_versi
         r.item("g", None, lambda: 1 / 0)
     assert r.finish(["test"]) == 3
     rec = json.loads(next((ctx.out / "runs").glob("prefreeze-*.json")).read_text())
-    assert rec["not_ok"] == ["a", "b", "d"] and rec["reduced"] is True and rec["code"] == R.package_identity()
+    assert rec["not_ok"] == ["a", "b", "d"] and rec["reduced"] is True and rec["code"] == RS.package_identity()
     assert [g.split(":")[0] for g in technical_gaps(ctx.out, [])] == ["item a", "item b", "item d"]
     with pytest.raises(AccessError, match="reduced run folder"):
-        R.Runner(ctx, "prefreeze", False)
+        RS.Runner(ctx, "prefreeze", False)
     with pytest.raises(AccessError, match="stand-in"):
-        R.Runner(ctx, "readout", None, False)
-    monkeypatch.setattr(R, "package_identity", lambda: {"other.py": "0" * 64})
-    with pytest.raises(AccessError, match="code changed during the run"):
-        r.item("h", None, lambda: None)
-    with pytest.raises(AccessError, match="other code"):
-        R.Runner(ctx, "prefreeze", True)
+        RS.Runner(ctx, "readout", None, False)
+    monkeypatch.setattr(RS, "package_identity", lambda: {"other.py": "0" * 64})
+    assert r.item("h", None, lambda: None) == "ok"  # sources are sampled once per invocation
+    resumed = RS.Runner(ctx, "prefreeze", True)
+    assert resumed.code == {"other.py": "0" * 64} and r.code != resumed.code
+    assert resumed.item("reuse", done, lambda: 1 / 0) == "ok"
+    assert resumed.finish(["resume"]) == 0
+    resumed_record = json.loads(resumed.invocation.read_text())
+    assert resumed_record["items"][0]["output"] == "done.json"
+    assert resumed_record["items"][0]["reused"] is True
+    assert resumed.invocation != r.invocation
 
 
 def test_an_interrupted_record_write_leaves_no_record_and_the_item_runs_again(model, tmp_path, monkeypatch):
     write_selection(tmp_path / "windows", 4)
-    ctx = R.Context(tmp_path / "run", tmp_path / "windows", model, toy_dictionary(model), torch.device("cpu"))
-    r = R.Runner(ctx, "prefreeze", True)
-    p = R.cell_path(ctx.out, "neurons", "es", 0)
+    ctx = RS.Context(tmp_path / "run", tmp_path / "windows", model, toy_dictionary(model), torch.device("cpu"))
+    r = RS.Runner(ctx, "prefreeze", True)
+    p = RS.cell_path(ctx.out, "neurons", "es", 0)
     write_text = Path.write_text
 
     def interrupted(self, text, *a, **k):  # the process stops after the first byte
@@ -395,19 +406,19 @@ def test_an_interrupted_record_write_leaves_no_record_and_the_item_runs_again(mo
 def test_a_run_folder_and_the_confirm_set_resume_only_on_the_same_windows_and_settings(model, tmp_path):
     w, out = tmp_path / "windows", tmp_path / "run"
     write_selection(w, 4)
-    ctx = R.Context(out, w, model, toy_dictionary(model), torch.device("cpu"))
-    R.Runner(ctx, "prefreeze", True)
-    R.Runner(ctx, "prefreeze", True)  # unchanged windows and settings: accepted
+    ctx = RS.Context(out, w, model, toy_dictionary(model), torch.device("cpu"))
+    RS.Runner(ctx, "prefreeze", True)
+    RS.Runner(ctx, "prefreeze", True)  # unchanged windows and settings: accepted
     with pytest.raises(AccessError, match="was run with"):
-        R.Runner(R.Context(out, w, model, ctx.vpd, torch.device("cpu"), bs=8), "prefreeze", True)
+        RS.Runner(RS.Context(out, w, model, ctx.vpd, torch.device("cpu"), bs=8), "prefreeze", True)
     shutil.rmtree(w / "retain_en")
     write_role(w, "retain_en", ["en"], 4, 99, False)  # another valid export at the same path
     with pytest.raises(AccessError, match=r"windows of \['retain_en'\] differ"):
-        R.Runner(ctx, "prefreeze", True)
+        RS.Runner(ctx, "prefreeze", True)
     confirm = write_role(tmp_path, "confirm", ["es"], 4, 1)
     rec = {"utc": "t", "code": {}, "freeze_sha256": "f", "confirm_windows": window_identity(confirm, "confirm")}
     open_confirm(out / "confirm", rec)
-    open_confirm(out / "confirm", rec | {"utc": "later"}, resume=True)  # the same windows: a resume
+    open_confirm(out / "confirm", rec | {"utc": "later", "code": {"changed.py": "new"}}, resume=True)  # the same windows: a resume
     shutil.rmtree(confirm)
     write_role(tmp_path, "confirm", ["es"], 4, 2)
     with pytest.raises(AlreadyOpened):
@@ -444,19 +455,19 @@ def test_reduced_stages_run_in_order_on_stand_in_sets_and_open_the_confirm_set_o
     model.wte.weight.mul_(10.0)  # sharp enough for the neuron ablation to reach both effect points
     out, cells = tmp_path / "run", [("es", 0), ("es", 1)]
     gate = gate_record(tmp_path / "gate.json")
-    ctx = R.Context(out, w, model, toy_dictionary(model), torch.device("cpu"), gate, 4)
+    ctx = RS.Context(out, w, model, toy_dictionary(model), torch.device("cpu"), gate, 4, recipe=resolve())
     # a draw-0 rate choice recorded earlier: the later draw trains with it
-    R.write_json(R.choice_path(out, "es", "matrix"), {"target": "es", "condition": "matrix", "chosen_lr": 1e-6})
+    R.write_json(RS.choice_path(out, "es", "matrix"), {"target": "es", "condition": "matrix", "chosen_lr": 1e-6})
 
-    r = R.Runner(ctx, "prefreeze", True)
+    r = RS.Runner(ctx, "prefreeze", True)
     R.prefreeze(r, cells)
     assert r.finish(["test"]) == 0
     assert r.state["lr_choice_es_matrix"] == "ok" and r.state["finetune_es_draw1_lora"] == "declared"
-    train1 = json.loads((R.run_dir(out, "es", 1, "matrix", 1e-6) / "train.json").read_text())
+    train1 = json.loads((RS.run_dir(out, "es", 1, "matrix", 1e-6) / "train.json").read_text())
     assert (train1["lr"], train1["draw"]) == (1e-6, 1)
-    assert [R.select_path(out, "es", d, R.null_name(d)).exists() for d in (0, 1)] == [True, True]
-    assert R.null_name(0) == "null101" and R.null_name(1) == "null102"
-    cal = json.loads(R.cell_path(out, "calibration", "es", 1).read_text())["methods"]
+    assert [RS.select_path(out, "es", d, RS.null_name(d)).exists() for d in (0, 1)] == [True, True]
+    assert RS.null_name(0) == "null101" and RS.null_name(1) == "null102"
+    cal = json.loads(RS.cell_path(out, "calibration", "es", 1).read_text())["methods"]
     assert cal["ci_difference"]["technical_failure"] is True  # not run: a technical gap
     assert cal["lora_rank1"]["technical_failure"] is False and not cal["lora_rank1"]["by_tau"]  # declared
     assert cal["finetune_24"]["learned_update"]["learning_rate"] == 1e-6
@@ -465,18 +476,18 @@ def test_reduced_stages_run_in_order_on_stand_in_sets_and_open_the_confirm_set_o
     def ci(target, english, cache, dst):  # a stand-in for the reference env
         dst.write_text(json.dumps({"module": MODULES[0], "index": 0, "sign": 1.0}))
 
-    r = R.Runner(dataclasses.replace(ctx, ci=ci), "prefreeze", True)
+    r = RS.Runner(dataclasses.replace(ctx, ci=ci), "prefreeze", True)
     R.prefreeze(r, [("es", 1)])  # the CI reference added on a rerun: its calibration is made again
     assert r.finish(["test"]) == 0 and r.rows[-1]["item"] == "calibration_es_draw1" and r.rows[-1]["reason"] == ""
-    cal = json.loads(R.cell_path(out, "calibration", "es", 1).read_text())["methods"]
+    cal = json.loads(RS.cell_path(out, "calibration", "es", 1).read_text())["methods"]
     assert "technical_failure" not in cal["ci_difference"] and cal["ci_difference"]["by_tau"]
     with pytest.raises(AccessError, match="1 technical gap"):  # es draw 0 still lacks the CI reference
         write_freeze(out, gate, cells)
     assert write_freeze(out, gate, cells, allow_incomplete=True)["allow_incomplete"] is True
     with pytest.raises(AccessError, match=r"exists\. Selection, training and calibration are closed"):
-        R.prefreeze(R.Runner(ctx, "prefreeze", True), cells)
+        R.prefreeze(RS.Runner(ctx, "prefreeze", True), cells)
 
-    r = R.Runner(ctx, "readout", None, True)
+    r = RS.Runner(ctx, "readout", None, True)
     R.readout(r, cells)
     assert r.finish(["test"]) == 0 and "test" not in r.access.opened
     with pytest.raises(ValueError, match="allow_reduced"):
@@ -485,11 +496,11 @@ def test_reduced_stages_run_in_order_on_stand_in_sets_and_open_the_confirm_set_o
     assert sorted(dev.cells["dev"]) == cells
     assert json.loads((out / "analysis/dev_analysis.json").read_text())["status"] == "incomplete"
 
-    r = R.Runner(ctx, "confirm", None, True)
+    r = RS.Runner(ctx, "confirm", None, True)
     R.confirm_readout(r, cells, None)
     assert r.finish(["test"]) == 0
-    dev_edits = json.loads(R.cell_path(out, "readout", "es", 0).read_text())["edits"]
-    conf = json.loads(R.cell_path(out, "confirm/readout", "es", 0).read_text())
+    dev_edits = json.loads(RS.cell_path(out, "readout", "es", 0).read_text())["edits"]
+    conf = json.loads(RS.cell_path(out, "confirm/readout", "es", 0).read_text())
     assert conf["guards"] == ["confirm_en"] and conf["edits"].keys() == dev_edits.keys()
     assert any(e["status"] == "matched" for e in conf["edits"].values())
     for name, e in conf["edits"].items():
@@ -500,11 +511,11 @@ def test_reduced_stages_run_in_order_on_stand_in_sets_and_open_the_confirm_set_o
         else:
             assert e["status"] == d["status"]
     with pytest.raises(AlreadyOpened):
-        R.confirm_readout(R.Runner(ctx, "confirm", None, True), cells, None)
-    r = R.Runner(ctx, "confirm", None, True)
+        R.confirm_readout(RS.Runner(ctx, "confirm", None, True), cells, None)
+    r = RS.Runner(ctx, "confirm", None, True)
     R.confirm_readout(r, cells, None, resume=True)
     assert r.state["confirm_es_draw0"] == "ok" and (out / "confirm/resume_log.jsonl").exists()
-    R.cell_path(out, "calibration", "es", 0).write_text("{}")
+    RS.cell_path(out, "calibration", "es", 0).write_text("{}")
     with pytest.raises(AccessError, match="changed after the freeze"):
         verify_freeze(out)
 

@@ -28,6 +28,11 @@ uv sync --locked
 
 Run the study-guide commands from that directory.
 
+Each study's `recipe.yaml` under `src/interesearch/` contains its published numerical settings. Model-stage
+commands accept `--recipe PATH` for a complete replacement; explicit command-line settings take precedence.
+Runs save the resolved settings before model computation. Analysis replay uses the settings saved with its
+measurements; recognized older exports use the fixed published profile for missing settings.
+
 Model downloads need `curl`. The Goodfire param-decomp environment also needs `git`.
 
 ## Data and reproduction limits
@@ -55,7 +60,11 @@ saved measurements for analysis replay; a new model run retrains their learned u
 Analysis replay and paper builds were checked on an Apple M4 Mac. The locked Python environment is the reference
 for those checks. The CPU quickstart was also checked on an AMD EPYC 9454 and needed about 3.3 GB of memory.
 
-This code was compared with the implementation used for the published runs, on matched devices and runtimes.
+For software 0.2.0, the six analysis and figure commands reproduced all 23 published result files byte for byte
+on the checked Mac. The test suite also passed with tiny models and without downloaded model assets.
+
+The following model checks were performed for software release `v0.1.0`, before the module reorganization.
+That code was compared with the implementation used for the published runs, on matched devices and runtimes.
 The model and weight-edit operations, repair fitting and selective-editing steps I compared agreed bit for bit on CPU. On NVIDIA A10 with torch 2.8.0+cu128, the repair
 fine-tune, reduced repair blocks and curvature record agreed bit for bit. Curvature records also agreed on L4.
 On L40S, the hardware of the published runs, curvature and the first German selection agreed, including a null
@@ -85,16 +94,20 @@ Paths are relative to `src/interesearch/` in the repository. The study guides gi
 
 | Concept | Module | Paper section |
 |---|---|---|
-| Subcomponent selection and curvature gate | `selective_editing/selector.py`, `fisher.py` | [Selection](../selective-editing/index.qmd#sec-selection) |
-| Effect calibration | `selective_editing/calibration.py` | [Calibration](../selective-editing/index.qmd#sec-calibration) |
-| Learned comparators | `selective_editing/finetune.py` | [Comparators](../selective-editing/index.qmd#sec-comparators) |
-| Intervals and confirmatory verdicts | `selective_editing/analysis.py`, `confirm.py` | [Analysis](../selective-editing/index.qmd#sec-analysis), [contrasts](../selective-editing/index.qmd#sec-contrasts) |
-| Additional comparisons | `selective_editing/extended_comparisons.py` | [Longer training and alternative directions](../selective-editing/index.qmd#sec-extended-comparisons) |
-| Target fine-tuning | `repair_transfer/finetune.py` | [Setup](../repair-transfer/index.qmd#sec-setup) |
-| Repair parameterizations and fitting | `repair_transfer/fitting.py` | [Setup](../repair-transfer/index.qmd#sec-setup) |
-| Feasibility and checkpoint selection | `repair_transfer/selection.py` | [Method details](../repair-transfer/index.qmd#sec-app-methods) |
-| Recovery, intervals and primary reading | `repair_transfer/analysis.py`, `stats.py` | [Primary checks](../repair-transfer/index.qmd#sec-app-checks) |
-| Cost accounting and reach | `repair_transfer/costs.py`, `curve.py` | [Cost accounting](../repair-transfer/index.qmd#sec-app-cost) |
+| Subcomponent selection and curvature gate | `selective_editing/method/selector.py`, `fisher.py`, `runtime.py` | [Selection](../selective-editing/index.qmd#sec-selection) |
+| Effect calibration | `selective_editing/method/calibration.py` | [Calibration](../selective-editing/index.qmd#sec-calibration) |
+| Learned comparators | `selective_editing/method/finetune.py` | [Comparators](../selective-editing/index.qmd#sec-comparators) |
+| Intervals and confirmatory verdicts | `selective_editing/analysis/statistics.py`, `confirm.py` | [Analysis](../selective-editing/index.qmd#sec-analysis), [contrasts](../selective-editing/index.qmd#sec-contrasts) |
+| Additional comparisons | `selective_editing/analysis/extended.py` | [Longer training and alternative directions](../selective-editing/index.qmd#sec-extended-comparisons) |
+| Target fine-tuning | `repair_transfer/method/finetune.py` | [Setup](../repair-transfer/index.qmd#sec-setup) |
+| Repair parameterizations and fitting | `repair_transfer/method/fitting.py` | [Setup](../repair-transfer/index.qmd#sec-setup) |
+| Feasibility and checkpoint selection | `repair_transfer/method/selection.py` | [Method details](../repair-transfer/index.qmd#sec-app-methods) |
+| Recovery, intervals and primary reading | `repair_transfer/analysis/recovery.py`, `stats.py` | [Primary checks](../repair-transfer/index.qmd#sec-app-checks) |
+| Cost accounting and reach | `repair_transfer/analysis/costs.py`, `curve.py` | [Cost accounting](../repair-transfer/index.qmd#sec-app-cost) |
+
+Within each study, `method/` contains the numerical procedures, `analysis/` replays saved measurements,
+and `stages/` coordinates model runs. `figures.py` generates tables, plots and explainer data. Tables are in
+`results/<study>/tables/`, figures in `figures/`, and analysis JSON files remain directly under `results/<study>/`.
 
 ## Check the code
 

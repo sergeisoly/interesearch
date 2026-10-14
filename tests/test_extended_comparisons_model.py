@@ -6,11 +6,12 @@ import pytest
 import torch
 
 from interesearch.model import LlamaSimpleMLP, LlamaSimpleMLPConfig
-from interesearch.selective_editing import extended_comparisons_run as A
-from interesearch.selective_editing import run as R
-from interesearch.selective_editing.access import AccessError, write_freeze
-from interesearch.selective_editing.extended_comparisons import load
-from interesearch.selective_editing.comparators import svd_dictionary, whitened_atom, whitened_dictionary
+from interesearch.selective_editing.stages import extended as A
+from interesearch.selective_editing.stages import main as R
+from interesearch.selective_editing.stages import support as RS
+from interesearch.selective_editing.stages.access import AccessError, write_freeze
+from interesearch.selective_editing.analysis.extended import load
+from interesearch.selective_editing.method.comparators import svd_dictionary, whitened_atom, whitened_dictionary
 from test_selective_model import V, gate_record, tokens, toy_dictionary, write_selection
 
 
@@ -51,13 +52,13 @@ def test_the_whitened_selection_borrows_the_main_norm_ridge_floor_and_grid(tmp_p
                                n_ctx=32, n_key_value_heads=2, flash_attention=False)
     model = LlamaSimpleMLP(cfg).eval().requires_grad_(False)
     main, out = tmp_path / "main", tmp_path / "extended_comparisons"
-    R.write_json(R.select_path(main, "es", 0, "vpd"), {"status": "feasible", "accepted": {"norm": 0.5}})
+    R.write_json(RS.select_path(main, "es", 0, "vpd"), {"status": "feasible", "accepted": {"norm": 0.5}})
     R.write_json(main / "q" / "vpd.json", {"eps": 1e-3})
 
     class Stub:
-        ctx = R.Context(out, tmp_path, model, toy_dictionary(model), torch.device("cpu"),
+        ctx = RS.Context(out, tmp_path, model, toy_dictionary(model), torch.device("cpu"),
                         gate_record(tmp_path / "gate.json"), 4)
-        sizes, state_cache = R.REDUCED, {}
+        sizes, state_cache, recipe = RS.REDUCED, {}, None
 
         def windows(self, role, lang):
             return tokens(1, 8)
@@ -68,7 +69,7 @@ def test_the_whitened_selection_borrows_the_main_norm_ridge_floor_and_grid(tmp_p
     stub = Stub()
     stub.out, stub.main = out, main
     A.selection(stub, "es", 0, "whitened_rank1")
-    rec = json.loads(R.select_path(out, "es", 0, "whitened_rank1").read_text())
+    rec = json.loads(RS.select_path(out, "es", 0, "whitened_rank1").read_text())
     assert (rec["seed_name"], rec["eps"], rec["grid"]) == ("kfac_es_d0", 1e-3, list(A.WHITENED_GRID))
     assert rec["n_candidates"] == 4 and all(math.isclose(w["norm"], 0.5, rel_tol=1e-12) for w in rec["walk"])
     assert (out / "q" / "kfac_es_d0.pt").exists() and (out / "cache" / "kfac_factors.pt").exists()
@@ -85,15 +86,15 @@ def test_reduced_extended_comparisons_stages_run_after_a_reduced_main_run_and_ex
     main, out, cells = tmp_path / "main", tmp_path / "extended_comparisons", [("es", 0), ("es", 1)]
     gate = gate_record(tmp_path / "gate.json")
     dic = toy_dictionary(model)
-    ctx = R.Context(main, w, model, dic, torch.device("cpu"), gate, 4)
-    r = R.Runner(ctx, "prefreeze", True)
+    ctx = RS.Context(main, w, model, dic, torch.device("cpu"), gate, 4)
+    r = RS.Runner(ctx, "prefreeze", True)
     R.prefreeze(r, cells)
     r.finish(["test"])
-    actx = R.Context(out, w, model, dic, torch.device("cpu"), gate, 4)
+    actx = RS.Context(out, w, model, dic, torch.device("cpu"), gate, 4)
     with pytest.raises(AccessError, match="readout roles stay closed"):  # the main study is not frozen yet
         A.prefreeze(A.Runner(actx, main, "prefreeze", True), cells)
     write_freeze(main, gate, cells, allow_incomplete=True)  # without the CI reference
-    r = R.Runner(ctx, "readout", None, True)
+    r = RS.Runner(ctx, "readout", None, True)
     R.readout(r, cells)
     r.finish(["test"])
 
@@ -103,12 +104,12 @@ def test_reduced_extended_comparisons_stages_run_after_a_reduced_main_run_and_ex
     A.prefreeze(r, cells)
     assert r.finish(["test"]) == 0
     for d in (0, 1):  # the main selection found no atom on this model. The check reproduces that
-        sel = json.loads(R.select_path(out, "es", d, "vpd_atom").read_text())
+        sel = json.loads(RS.select_path(out, "es", d, "vpd_atom").read_text())
         assert sel["reproduces_main_strict"] is True and sel["accepted"] is None
-        assert json.loads(R.select_path(out, "es", d, "whitened_rank1").read_text())["status"].startswith("no main")
+        assert json.loads(RS.select_path(out, "es", d, "whitened_rank1").read_text())["status"].startswith("no main")
     train = json.loads((A.run_dir(out, "es", 1, "matrix", 1e-7, 2) / "train.json").read_text())
     assert train["config"]["seed"] == 100 + 1 + 2000 and train["seed_index"] == 2
-    cal = json.loads(R.cell_path(out, "calibration", "es", 1).read_text())["methods"]
+    cal = json.loads(RS.cell_path(out, "calibration", "es", 1).read_text())["methods"]
     assert list(cal) == A.methods_of_cell()
     assert cal["finetune_24_long_s2"]["learned_update"]["training_run"] == "es_draw1_finetune_24_long_lr1e-07_s2"
 
@@ -123,7 +124,7 @@ def test_reduced_extended_comparisons_stages_run_after_a_reduced_main_run_and_ex
     r = A.Runner(actx, main, "readout", None, True)
     A.readout(r, cells)
     assert r.finish(["test"]) == 0
-    read = json.loads(R.cell_path(out, "readout", "es", 0).read_text())
+    read = json.loads(RS.cell_path(out, "readout", "es", 0).read_text())
     assert read["vpd_vs_main_readout_max_abs"] in (0.0, None)
     with pytest.raises(ValueError, match="allow_reduced"):
         load(out / "records")
@@ -137,22 +138,23 @@ def test_reduced_extended_comparisons_stages_run_after_a_reduced_main_run_and_ex
 
 def test_the_extended_comparisons_refuse_another_main_study_and_main_windows_of_other_content(tmp_path):
     gate, out, role = gate_record(tmp_path / "gate.json"), tmp_path / "extended_comparisons", R.SELECTION_ROLES[0]
-    R.write_json(out / R.RUN_FILE, {"windows": {role: "w1"}})
+    R.write_json(out / RS.RUN_FILE, {"windows": {role: "w1"}})
     for name, accepted in (("main_a", 1), ("main_b", 2)):  # two frozen main studies with different selections
-        R.write_json(tmp_path / name / R.RUN_FILE, {"windows": {role: "w1"}})
-        R.write_json(R.select_path(tmp_path / name, "es", 0, "vpd"), {"accepted": accepted})
+        R.write_json(tmp_path / name / RS.RUN_FILE, {"windows": {role: "w1"}})
+        R.write_json(RS.select_path(tmp_path / name, "es", 0, "vpd"), {"accepted": accepted})
         write_freeze(tmp_path / name, gate, [("es", 0)], allow_incomplete=True)
     A.bind_main(out, tmp_path / "main_a")
     A.bind_main(out, tmp_path / "main_a")  # a later stage with the same main study
     with pytest.raises(AccessError, match="not the main study run"):
         A.bind_main(out, tmp_path / "main_b")
-    R.write_json(tmp_path / "main_a" / R.RUN_FILE, {"windows": {role: "w2"}})
+    R.write_json(tmp_path / "main_a" / RS.RUN_FILE, {"windows": {role: "w2"}})
     with pytest.raises(AccessError, match="other windows"):
         A.bind_main(out, tmp_path / "main_a")
 
 
 def test_a_rate_without_a_training_record_is_a_technical_row_not_a_choice(tmp_path, monkeypatch):
     class Stub:
+        recipe = None
         out = tmp_path
         ctx = type("C", (), {"model": None, "device": "cpu", "bs": 4})
 
@@ -161,7 +163,7 @@ def test_a_rate_without_a_training_record_is_a_technical_row_not_a_choice(tmp_pa
 
     monkeypatch.setattr(A, "LEARNING_RATES", {"lora": (1e-3, 3e-3)})
     stub = Stub()
-    stub.sizes = dataclasses.replace(R.REDUCED, n_rates=None)
+    stub.sizes = dataclasses.replace(RS.REDUCED, n_rates=None)
     (A.run_dir(tmp_path, "es", 0, "lora", 3e-3, 0)).mkdir(parents=True)
     (A.run_dir(tmp_path, "es", 0, "lora", 3e-3, 0) / "train.json").write_text("{}")
     monkeypatch.setattr(A, "load_update", lambda d: {})
