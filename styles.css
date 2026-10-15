@@ -13,6 +13,7 @@
 }
 
 :root {
+  font-size: 100%;
   --research-paper: #faf9f5;
   --research-ink: #182d3b;
   --research-muted: #526771;
@@ -23,7 +24,7 @@ body {
   background: var(--research-paper);
   color: var(--research-ink);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  font-size: 17px;
+  font-size: 1rem;
   line-height: 1.65;
 }
 a { color: var(--research-blue); text-underline-offset: .2em; }
@@ -43,7 +44,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .navbar .navbar-title { font: 500 1.35rem Georgia, serif; letter-spacing: -.025em; }
 .navbar .nav-link { font-size: .95rem; }
 h1, h2, h3 { font-family: Georgia, "Times New Roman", serif; font-weight: 500; letter-spacing: -.025em; }
-h1.title { font-size: clamp(2.15rem, 4vw, 3.3rem); line-height: 1.12; }
+h1.title { font-size: clamp(1.9rem, 3vw, 2.7rem); line-height: 1.12; }
 h2 { border-bottom: 0; margin-top: 2.8rem; padding-bottom: 0; line-height: 1.2; }
 h3 { line-height: 1.3; }
 #title-block-header { margin-top: 2.2rem; margin-bottom: 2.5rem; }
@@ -60,7 +61,7 @@ main table { font-size: .9rem; }
 .research-home main { margin: auto; }
 .research-hero { padding: 3rem 0 2.5rem; max-width: 870px; }
 .research-eyebrow { font: 600 .73rem/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; text-transform: uppercase; letter-spacing: .14em; color: var(--research-muted); margin-bottom: 1.1rem; }
-.research-hero h1 { font-size: clamp(2.15rem, 4vw, 3.3rem); line-height: 1.15; margin: 0; }
+.research-hero h1 { font-size: clamp(1.9rem, 3vw, 2.7rem); line-height: 1.15; margin: 0; }
 .research-lead { font-size: 1.35rem; line-height: 1.55; max-width: 780px; }
 .research-intro { color: var(--research-muted); max-width: 720px; }
 .research-hero h1 + .research-intro { margin-top: 1.3rem; }
@@ -68,7 +69,7 @@ main table { font-size: .9rem; }
 .research-ai-note h2 { color: var(--research-ink); font-size: 1.35rem; margin: 0 0 .75rem; }
 .research-ai-note p:last-child { margin-bottom: 0; }
 .research-story { border-top: 1px solid var(--research-rule); padding: 3rem 0; display: grid; grid-template-columns: 1.12fr 1fr; align-items: center; gap: 3rem; }
-.research-story h2 { font-size: clamp(1.9rem, 3vw, 2.45rem); margin: 0 0 1.2rem; }
+.research-story h2 { font-size: clamp(1.7rem, 2.6vw, 2.2rem); margin: 0 0 1.2rem; }
 .research-story-copy>p:not(.research-eyebrow) { max-width: 560px; }
 .research-main-link { display: inline-block; color: var(--research-ink); font-weight: 600; margin-top: .3rem; }
 .research-main-link span { margin-left: .3rem; }
@@ -84,7 +85,7 @@ main table { font-size: .9rem; }
 .research-explainer #title-block-header { max-width: 900px; margin-top: 3.5rem; }
 .research-explainer main p { max-width: 790px; }
 .research-explainer main>section { margin-top: 3rem; }
-.research-explainer h2 { max-width: 800px; font-size: clamp(1.65rem, 3vw, 2.2rem); margin-bottom: 1.25rem; }
+.research-explainer h2 { max-width: 800px; font-size: clamp(1.5rem, 2.4vw, 1.9rem); margin-bottom: 1.25rem; }
 .research-explainer h3 { font-family: inherit; font-size: 1.1rem; font-weight: 600; letter-spacing: 0; }
 .research-explainer .subtitle { max-width: 770px; font-size: 1.2rem; line-height: 1.55; }
 .explainer-links { display: flex; flex-wrap: wrap; gap: 1.3rem; font-size: .9rem; margin: 1.2rem 0 2rem; }
@@ -104,7 +105,6 @@ main table { font-size: .9rem; }
 .research-explainer details table { font-size: .85rem; }
 .research-explainer .visual-note, .research-explainer .explainer-note { color: var(--research-muted); font-size: .92rem; }
 @media (max-width: 700px) {
-  body { font-size: 16px; }
   .research-home #quarto-content, .research-explainer #quarto-content { padding: 0 1.15rem; }
   .research-hero { padding: 3rem 0 2.5rem; }
   .research-lead { font-size: 1.15rem; }
