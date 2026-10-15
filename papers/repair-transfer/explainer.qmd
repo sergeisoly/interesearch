@@ -48,8 +48,9 @@ To learn a repair, I freeze the fine-tuned weights and train an added update to 
 Dutch predictions while preserving the fine-tuned model's predictions in the other languages. I learn the
 donor repair once, then reuse it for both targets.
 
-Each repair adds a **rank-one update**, formed from an input and an output vector, to each of 24 weight
-matrices. I compare **three ways to train the repair**:
+Each repair adds a **rank-one update** $E=ba^\top$ to each of 24 weight matrices. For a matrix input $x$,
+the input vector $a$ reads out one scalar, $a^\top x$. The output vector $b$ sets the direction of the added
+output, $Ex=b(a^\top x)$. I compare **three ways to train the repair**:
 
 1. **Scalar coefficients only:** keep the donor's vectors fixed and learn one scalar coefficient per matrix, separately for each target.
 2. **Donor initialization:** start from the donor's vectors and train both on the new fine-tune.

@@ -663,8 +663,26 @@ def test_checkpoint_rule():
 
     sel = finetune.select_checkpoint({0: v(0, 0, 0), 2: v(1.2, 0.05, 0.1), 4: v(0.8, 0.05, 0.01)}, cfg)
     assert sel["selected_step"] == 4 and sel["usable"]  # 0.2 from the preferred rise either way: lower KL wins
+    sel = finetune.select_checkpoint({4: v(1.0, 0.05, 0.01), 2: v(1.0, 0.05, 0.01)}, cfg)
+    assert sel["selected_step"] == 2  # equal target distance and retain KL: earlier step wins
     sel = finetune.select_checkpoint({2: v(1.0, 0.2, 0.0), 4: v(0.4, 0.0, 0.0)}, cfg)
     assert sel["selected_step"] is None and not sel["usable"]
+
+
+@pytest.mark.parametrize("value", [math.nan, math.inf, -math.inf], ids=["nan", "inf", "negative_inf"])
+@pytest.mark.parametrize("language,metric", [("de", "delta_ce")] + [
+    (language, metric) for language in finetune.RETAIN for metric in ("delta_ce", "kl_base")])
+def test_checkpoint_rule_rejects_nonfinite_metrics(language, metric, value):
+    cfg = ft_config(lr=1e-3, seed=0, steps=4, checkpoints=(2,))
+    by_step = {step: {"de": {"delta_ce": 1.0}, **{
+        lang: {"delta_ce": 0.05, "kl_base": 0.1 if step == 2 else 0.01}
+        for lang in finetune.RETAIN}} for step in (2, 4)}
+    by_step[2][language][metric] = value
+    # A valid alternative must not hide an undetermined selection rule.
+    with pytest.raises(FloatingPointError, match=rf"checkpoint 2.*{language}\.{metric}"):
+        finetune.select_checkpoint(by_step, cfg)
+    with pytest.raises(FloatingPointError, match=rf"checkpoint 2 in run donor.*{language}\.{metric}"):
+        finetune.select_across({"donor": {"config": cfg.to_dict(), "by_step": by_step}})
 
 
 def test_finetune_command_refusals(tmp_path, monkeypatch):

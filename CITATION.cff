@@ -7,6 +7,6 @@ title: "interesearch: language-model weight-editing research software"
 authors:
   - family-names: Solovev
     given-names: Sergei
-version: 0.2.0
+version: 0.2.1
 repository-code: https://github.com/sergeisoly/interesearch
 url: https://sergeisoly.github.io/interesearch/

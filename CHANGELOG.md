@@ -1,5 +1,18 @@
 # Changelog
 
+## Papers 0.1.2 — 2026-10-15
+
+PDF bookmarks and appendix links now land at their headings. The summaries clarify the fixed VPD edit,
+comparator runs and rank-one repair factors. The articles define the decomposition residual and clarify
+checkpoint selection, sampled session dates and unknown pretraining overlap. Numerical results are unchanged.
+
+## 0.2.1 — 2026-10-15
+
+Repair fine-tune checkpoint selection now raises a clear error for non-finite CE or KL values used by its
+rule. Selection for finite inputs is unchanged, and saved results reproduce exactly. Checkpoint bookkeeping
+and measurement names are clearer, KL directions are documented, and the README links directly to the
+selection and fitting procedures. Analysis messages describe declared stopping criteria more precisely.
+
 ## Papers 0.1.1 — 2026-10-15
 
 Both papers have revised abstracts, explanations, discussion and appendices. Their short summaries now

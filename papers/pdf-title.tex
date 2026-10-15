@@ -33,3 +33,14 @@
       afterskip=1ex plus .2ex]{section}%
   \fi
 }
+
+% Keep PDF targets on unnumbered KOMA headings, including References.
+% KOMA's starred-heading path does not use Hyperref's \@ssect patch.
+\makeatletter
+\AtBeginDocument{%
+  \ifdefined\AddtoDoHook
+    \AddtoDoHook{heading/branch/star/section}{\phantomsection\@gobble}%
+    \AddtoDoHook{heading/branch/star/subsection}{\phantomsection\@gobble}%
+  \fi
+}
+\makeatother

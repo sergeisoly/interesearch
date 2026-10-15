@@ -2,7 +2,7 @@
 image: ../social-card.png
 description: "Fixed repair directions, donor initialization and fresh fitting compared on two fine-tunes."
 title: "Transferring Learned Repairs Between Fine-Tunes"
-subtitle: "Version 0.1.1 · 15 October 2026"
+subtitle: "Version 0.1.2 · 15 October 2026"
 author:
   - name: Sergei Solovev
     affiliation: Independent researcher
@@ -25,7 +25,7 @@ citation:
   type: article
   id: solovev2026repair
   issued: 2026-10-15
-  note: "Version 0.1.1"
+  note: "Version 0.1.2"
   pdf-url: https://sergeisoly.github.io/interesearch/repair-transfer/index.pdf
 format:
   html:
@@ -72,8 +72,9 @@ using it as an initialization allows the repair directions to change.
 I test these alternatives by deliberately worsening German next-token prediction, which also raises Dutch
 cross-entropy (CE), a measure of prediction loss. Dutch is excluded from the fine-tuning objective. In this
 controlled test, repair must restore Dutch prediction while preserving the German change. The donor and two
-target fine-tunes are trained independently from one base model, with the same recipe but different seeds and training
-dates from the same Europarl distribution [@koehn2005europarl]. I use Goodfire's model from its adVersarial
+target fine-tunes are trained independently from one base model, with the same recipe but different seeds and
+text sampled from different session dates in the same Europarl distribution [@koehn2005europarl].
+I use Goodfire's model from its adVersarial
 Parameter Decomposition (VPD) study [@bushnaq2026interpreting, sec. 3.1]. Repairs act on its weights without
 using the decomposition. Scalar refitting has the same fixed-direction form as coefficient edits of a
 decomposition (@sec-conclusion).
@@ -283,7 +284,7 @@ peer-review and citation-management workflows used to review organization, claim
 **Fine-tunes.** Adam [@kingma2015adam] learns full-matrix additive updates $D_m$ to each layer's query, key,
 value, output and two MLP matrices (24 total), with embeddings and norms frozen. It runs at learning rate 3e-6
 for 200 steps on the per-window hinge $\max(0, 1 - \Delta\mathrm{CE}_{\text{de}})$ (1-nat margin) plus
-retain-language KL with weight 1. German validation dates determine the checkpoint.
+retain-language KL with weight 1. Checkpoints are selected on German and retain-language validation metrics.
 
 **Repairs.** Ordinary fitting uses Adam. The donor starts fresh (@tbl-families), using 73,728 prediction positions,
 three learning rates and 200 minibatch steps per run. Checkpoints saved every 25 steps undergo selection on donor
@@ -316,8 +317,8 @@ from the donor's.
 Selection and readout use 32 and 92 dates, respectively, with one 257-token window (256 predictions) per language
 from the same turn. Portuguese, the seventh language, is diagnostic only: its selection windows count toward
 token and evaluation costs, but not the loss or selection constraints. Readout dates were ineligible if present
-in recorded project data, pilot or run files, or if their windows duplicated text in use. All passed. Prior model
-exposure remains unresolved.
+in recorded project data, pilot or run files, or if their windows duplicated text in use. All passed. Overlap
+with the base model's pretraining text remains unknown.
 
 **Assessability.** The primary contrast requires a Dutch-damage readout interval with lower bound at least
 0.025 nat/token. Damage is 0.187 nat/token [0.178, 0.196] on the primary target and 0.189 [0.180, 0.198] on
@@ -411,7 +412,7 @@ Code, saved measurements, and instructions for replaying analysis and running th
   title  = {Transferring Learned Repairs Between Fine-Tunes},
   year   = {2026},
   month  = oct,
-  note   = {Version 0.1.1},
+  note   = {Version 0.1.2},
   url    = {https://sergeisoly.github.io/interesearch/repair-transfer/}
 }
 ```

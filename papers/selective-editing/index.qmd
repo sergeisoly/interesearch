@@ -2,7 +2,7 @@
 image: ../social-card.png
 description: "A comparison of parameter-decomposition subcomponents, learned updates and neuron edits in a small language model."
 title: "Selective Language Damage with Parameter-Decomposition Subcomponents"
-subtitle: "Version 0.1.1 · 15 October 2026"
+subtitle: "Version 0.1.2 · 15 October 2026"
 author:
   - name: Sergei Solovev
     affiliation: Independent researcher
@@ -19,14 +19,14 @@ abstract: |
   target's related language (Dutch, Portuguese and Italian) by 0.0003–0.0053 nat/token, compared with
   0.027–0.876 across comparator runs. The learned updates, trained to preserve English, preserved English
   predictions better. In an exploratory check on earlier development dates, an expanded training recipe
-  generally reduced the learned updates' related-language damage, but that damage stayed above the
-  subcomponent edits'. Whether this advantage depends on the VPD dictionary (the decomposition's set of
+  generally reduced the learned updates' related-language damage, but the subcomponent edits still caused
+  less. Whether this advantage depends on the VPD dictionary (the decomposition's set of
   subcomponents) and how the selection rule performs on new tasks remain unresolved.
 citation:
   type: article
   id: solovev2026selective
   issued: 2026-10-15
-  note: "Version 0.1.1"
+  note: "Version 0.1.2"
   pdf-url: https://sergeisoly.github.io/interesearch/selective-editing/index.pdf
 format:
   html:
@@ -123,9 +123,9 @@ across draws. Data sizes and implementation details are in [Appendix A](#sec-app
 ### Subcomponent selection {#sec-selection}
 
 An edit changes one weight matrix by $W_m \leftarrow W_m + \alpha A_c$, leaving the other subcomponents and
-the decomposition residual fixed. The subcomponent is not normalized. In VPD each subcomponent has a scalar
-mask coefficient equal to 1 in the unedited model; the edit changes it to $1 + \alpha$, and the edit norm is
-$|\alpha|\,\lVert A_c\rVert_F$.
+the residual (the original matrix minus the sum of its VPD subcomponents) fixed. The subcomponent is not
+normalized. In VPD each subcomponent has a scalar mask coefficient equal to 1 in the unedited model; the
+edit changes it to $1 + \alpha$, and the edit norm is $|\alpha|\,\lVert A_c\rVert_F$.
 
 The selection rule ranks subcomponents by the target CE gradient relative to English Fisher curvature.
 The score favors target-CE increases with low predicted English KL for small coefficient changes:
@@ -256,7 +256,7 @@ updates to the same τ. Evaluation used the previously evaluated development dat
 
 This expanded recipe reduced related-language damage for full-matrix fine-tuning in all six target and τ
 combinations and for LoRA in five, but the subcomponent edits retained their advantage. Achieved target
-effects differed from the subcomponent edits by at most 0.07 nat/token. Several training settings changed
+effects differed from those of the subcomponent edits by at most 0.07 nat/token. Several training settings changed
 together, so the improvement cannot be attributed to step count alone. The training runs were not shown
 to converge at either budget, so the comparison does not establish the best selectivity these learned
 methods could attain. [Appendix A.1](#sec-app-extended) gives the extended comparison methods.
@@ -450,7 +450,7 @@ therefore do not provide a fresh test. The Pile also contains a European Parliam
   title  = {Selective Language Damage with Parameter-Decomposition Subcomponents},
   year   = {2026},
   month  = oct,
-  note   = {Version 0.1.1},
+  note   = {Version 0.1.2},
   url    = {https://sergeisoly.github.io/interesearch/selective-editing/}
 }
 ```

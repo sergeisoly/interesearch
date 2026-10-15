@@ -20,8 +20,8 @@ Primary contrast r_nl(donor_init@2K) - r_nl(strengths_best@2K), published margin
     basis limit supported      CI lo > delta
     strengths nearly suffice   CI hi < delta
     inconclusive               otherwise
-    not assessable: <reason>   a primary cell is not ok or is outside the readout constraints, or the original run
-                               did not verify that the strengths arm was optimized to convergence
+    not assessable: <reason>   a primary cell is not ok or is outside the readout constraints, or the two
+                               full-batch scalar runs were not both verified to meet the declared stopping criteria
 Secondary contrasts read better (CI lo > 0), worse (CI hi < 0) or inconclusive. The pairs in EQUIV_PAIRS are also
 checked for an interval inside +-0.02. Secondary readings are descriptive, without multiplicity correction. The
 replication target is read with the same rules and is not a second primary. The reading keys are the protocol's.
@@ -73,14 +73,14 @@ READING_TEXT = {
         "candidates in total). It does not show that no assignment of scalar coefficients over the donor "
         "directions can reach donor-initialized fitting."),
     "strengths nearly suffice": (
-        "An advantage of donor-initialized fitting over the scalar-coefficient search including "
-        "optimization to convergence of more than {pp} percentage points is excluded. This is not "
+        "An advantage of more than {pp} percentage points for donor-initialized fitting over "
+        "the scalar-coefficient search, including its two additional full-batch runs, is excluded. This is not "
         "equivalence: no lower margin is set, and the scalar-coefficient search may be better. The reading "
         "is relative to donor-initialized fitting and says nothing about the scalar-coefficient search "
         "against fresh fitting or an absolute repair target."),
     "inconclusive": (
-        "An advantage of donor-initialized fitting over the scalar-coefficient search including "
-        "optimization to convergence of more than {pp} percentage points is neither established nor "
+        "An advantage of more than {pp} percentage points for donor-initialized fitting over "
+        "the scalar-coefficient search, including its two additional full-batch runs, is neither established nor "
         "excluded."),
 }
 
@@ -193,7 +193,7 @@ def primary_reading(cells: dict, contrasts: dict, main_recorded: dict, delta: fl
         elif not cells[g]["constraints_ok"]:
             why.append(f"{g} is outside the readout constraints")
     if not main_recorded["s_adequacy_verified"]:
-        why.append("the strengths arm was not verified to be optimized to convergence (" + ", ".join(
+        why.append("the two full-batch scalar runs were not both verified to meet the declared stopping criteria (" + ", ".join(
             f"polish from {k}: stop {v['stop']}, converged {v['converged']}"
             for k, v in main_recorded["polish"].items()) + ")")
     if c["status"] != "ok" and not why:

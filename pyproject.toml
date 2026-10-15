@@ -1,6 +1,6 @@
 [project]
 name = "interesearch"
-version = "0.2.0"
+version = "0.2.1"
 description = "Interpretability research on how language-model parameter changes affect behavior."
 requires-python = "==3.13.*"
 dependencies = [

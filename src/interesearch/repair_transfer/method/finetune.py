@@ -205,6 +205,14 @@ def validate(model: nn.Module, forward_fn: Callable[[Tensor], Tensor], val: Mapp
 
 
 def _rule_row(step, v: Mapping[str, dict], cfg: FTConfig, run: str | None = None) -> dict:
+    required = {f"{TARGET_LANG}.delta_ce": v[TARGET_LANG]["delta_ce"],
+                **{f"{lang}.{metric}": v[lang][metric] for lang in RETAIN
+                   for metric in ("delta_ce", "kl_base")}}
+    bad = {field: value for field, value in required.items() if not math.isfinite(value)}
+    if bad:
+        context = f" in run {run}" if run is not None else ""
+        raise FloatingPointError(f"technical: non-finite validation at checkpoint {step}{context}: {bad}. "
+                                 "The checkpoint rule is undetermined")
     dt = v[TARGET_LANG]["delta_ce"]
     dr = {lang: v[lang]["delta_ce"] for lang in RETAIN}
     other = {lang: v[lang]["delta_ce"] for lang in v if lang != TARGET_LANG and lang not in RETAIN}
@@ -232,7 +240,10 @@ def rule_text(cfg: FTConfig) -> str:
 
 
 def select_checkpoint(val_by_step: Mapping[int, Mapping[str, dict]], cfg: FTConfig) -> dict:
-    """The checkpoint rule within one run."""
+    """The checkpoint rule within one run.
+
+    A non-finite CE/KL value used by the rule raises ``FloatingPointError``; it does not make a checkpoint ineligible.
+    """
     rows = [_rule_row(s, v, cfg) for s, v in sorted(val_by_step.items(), key=lambda kv: int(kv[0]))
             if int(s) in cfg.checkpoints]
     pick = _pick(rows)

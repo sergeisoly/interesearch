@@ -28,8 +28,8 @@ def train_candidates(a, info, model, base, D, donor, rdonors, cap, budgets, fams
     # ---- training: every budget, family and learning rate
     fit_w = windows(a, info, "fit", FIT_LANGS, "fit", prefixes={B: a.resolved_recipe["fitting"]["budgets"][B] for B in budgets})
     shapes = {m: tuple(base[m].shape) for m in MODULES}
-    meth_S = Method.strengths(donor, cap, a.device)
-    E_start = {m: e.detach().double() for m, e in meth_S.E().items()}
+    strengths_method = Method.strengths(donor, cap, a.device)
+    E_start = {m: e.detach().double() for m, e in strengths_method.E().items()}
     cands, cand_meta, fsets, planned, saved = {}, {}, {}, [], set()
     for B in budgets:
         fs = fit_sets(fit_w.tokens, B, budgets=a.resolved_recipe["fitting"]["budgets"])
@@ -45,37 +45,39 @@ def train_candidates(a, info, model, base, D, donor, rdonors, cap, budgets, fams
                     if not ic["ok"]:
                         flag(fam, f"init check failed: {ic}")
                 t = time.time()
-                ck, lg, st = train(model, base, D, meth, fs, lr, a.device, log, f"{fam}@{B}", a.steps, a.every, settings=a.resolved_recipe["fitting"])
-                st["train_s"] = time.time() - t
-                st["checkpoints_saved"] = sorted(ck)
-                st["c_init"] = meth.c0
+                checkpoints, train_log, train_status = train(
+                    model, base, D, meth, fs, lr, a.device, log, f"{fam}@{B}", a.steps, a.every,
+                    settings=a.resolved_recipe["fitting"])
+                train_status["train_s"] = time.time() - t
+                train_status["checkpoints_saved"] = sorted(checkpoints)
+                train_status["c_init"] = meth.c0
                 run = f"{fam}@{B}:lr={lr:g}"
-                info["runs"][run] = {"status": st, "log": lg}
-                if st.get("finite") is False:
-                    flag(f"{fam}@{B}", f"{run}: non-finite loss/gradient at step {st.get('nonfinite_step')}")
-                bad_log = nonfinite_log(lg)
+                info["runs"][run] = {"status": train_status, "log": train_log}
+                if train_status.get("finite") is False:
+                    flag(f"{fam}@{B}", f"{run}: non-finite loss/gradient at step {train_status.get('nonfinite_step')}")
+                bad_log = nonfinite_log(train_log)
                 if bad_log:
                     flag(f"{fam}@{B}", f"{run}: non-finite logged values {bad_log}")
-                mpc = st.get("max_post_over_cap")
+                mpc = train_status.get("max_post_over_cap")
                 if mpc is not None and not (finite(mpc) and mpc <= 1 + a.resolved_recipe["fitting"]["cap_tol"]):
                     flag(f"{fam}@{B}", f"{run}: ||E|| / cap after projection = {mpc}")
-                for step, s in ck.items():
+                for step, snapshot in checkpoints.items():
                     saved.add(f"{fam}@{B}")
-                    if nonfinite_snapshot(s):  # cannot be applied. Flagged and left out of every evaluation
+                    if nonfinite_snapshot(snapshot):  # cannot be applied. Flagged and left out of every evaluation
                         flag(f"{fam}@{B}", f"{run}: non-finite parameters at checkpoint {step}")
                         continue
-                    n = f"{run}:step={step}"
-                    cands[n] = meth.spec(s, donor)
-                    cand_meta[n] = {"family": f"{fam}@{B}", "budget": B, "lr": lr, "step": step}
+                    candidate_name = f"{run}:step={step}"
+                    cands[candidate_name] = meth.spec(snapshot, donor)
+                    cand_meta[candidate_name] = {"family": f"{fam}@{B}", "budget": B, "lr": lr, "step": step}
     info["planned_families"] = planned
     info["failed_families"] = {f: failed_family_reason(f, info["runs"], a.every) for f in planned if f not in saved}
     for f, why in info["failed_families"].items():
         log(f"FAILED FAMILY {f}: {why}")
     info["nonfinite_runs"] = nonfinite_runs(info["runs"])
 
-    return cands, cand_meta, fsets, meth_S
+    return cands, cand_meta, fsets, strengths_method
 
-def refine_candidates(a, info, model, base, D, donor, cap, budgets, fams, blk, cands, cand_meta, fsets, meth_S, fixed, log, flag):
+def refine_candidates(a, info, model, base, D, donor, cap, budgets, fams, blk, cands, cand_meta, fsets, strengths_method, fixed, log, flag):
     # ---- exact fit loss of every candidate on its own budget's fit set. Polish of strengths (main block)
     t = time.time()
     fit, converged = {}, {}
@@ -96,14 +98,14 @@ def refine_candidates(a, info, model, base, D, donor, cap, budgets, fams, blk, c
         if polished:
             s_names = [n for n in names if cand_meta[n]["family"] == f"strengths@{B}"
                        and all(finite(x) for x in fit[n].values())]
-            starts = {"c0": torch.full((len(MODULES),), meth_S.c0)}
+            starts = {"c0": torch.full((len(MODULES),), strengths_method.c0)}
             if s_names:
                 best = min(s_names, key=lambda n: (fit[n]["total"], s_names.index(n)))
                 starts["best"] = cands[best]["c"]
                 info["polish_best_start"] = best
             ref = None
             for tag, c_start in starts.items():  # c0 first: its start sets the stationarity scale of both
-                rec, snap = polish(fl, meth_S, c_start, cap, a.polish_iters, log, tag, ref, params=a.resolved_recipe["polish"], fit_path_tol=a.resolved_recipe["fitting"]["fit_path_tol"])
+                rec, snap = polish(fl, strengths_method, c_start, cap, a.polish_iters, log, tag, ref, params=a.resolved_recipe["polish"], fit_path_tol=a.resolved_recipe["fitting"]["fit_path_tol"])
                 info["polish"][tag] = rec
                 if tag == "c0" and rec.get("finite"):
                     ref = {"stat": rec.get("stationarity_start"), "lam0": rec.get("lam0")}
@@ -111,7 +113,7 @@ def refine_candidates(a, info, model, base, D, donor, cap, budgets, fams, blk, c
                     flag(f"strengths_best@{B}", f"polish from {tag} not finite ({rec.get('stop')})")
                 if snap is not None:
                     n = f"strengths_converged@{B}:start={tag}"
-                    converged[n] = meth_S.spec(snap, donor)
+                    converged[n] = strengths_method.spec(snap, donor)
                     cand_meta[n] = {"family": f"strengths_converged@{B}", "budget": B, "start": tag}
                     fit[n] = fl.export(converged[n])
         del fl
@@ -261,11 +263,11 @@ def cmd_block(a) -> int:
         info["pre_readout_stop"] = stop
         return finish(out, info, RC_PRE_READOUT_STOP, log, stop)
 
-    cands, cand_meta, fsets, meth_S = train_candidates(
+    cands, cand_meta, fsets, strengths_method = train_candidates(
         a, info, model, base, D, donor, rdonors, cap, budgets, fams, log, flag)
 
     fit, converged, exp_s, exp_n, polished = refine_candidates(
-        a, info, model, base, D, donor, cap, budgets, fams, blk, cands, cand_meta, fsets, meth_S, fixed, log, flag)
+        a, info, model, base, D, donor, cap, budgets, fams, blk, cands, cand_meta, fsets, strengths_method, fixed, log, flag)
 
     vper, selections, meta = select_candidates(
         a, info, model, base, D, Dd, cands, cand_meta, converged, fixed, sel_sets, sidx, budgets, fams, polished, log, flag)

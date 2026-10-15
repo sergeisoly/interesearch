@@ -154,7 +154,7 @@ The second shows the unwanted damage to its relative.
     </tbody></table>
     <p>See the <a href="index.html#sec-effects">paper's figure</a> for all three language pairs and both calibration levels.</p>
   </div>
-  <figcaption id="visual-results-caption">Points show results from three training subsets. Lines span their range, not a confidence interval. The dashed line marks the calibration target.</figcaption>
+  <figcaption id="visual-results-caption">The VPD point represents one fixed edit shared by all three training subsets. Other methods show one point per subset. Lines span their range, not a confidence interval. The dashed line marks the calibration target.</figcaption>
 </figure>
 ```
 
@@ -189,7 +189,7 @@ tokens before and after the edit. Lower KL means the English predictions stayed 
   <div id="visual-english-fallback">
     <p>The VPD edits' English KL is below 0.001 nat/token for every language and calibration level. Both learned methods have lower English KL throughout these comparisons. The <a href="index.html#sec-english">paper's English comparison</a> includes the values for all four methods.</p>
   </div>
-  <figcaption id="visual-english-caption">Points and lines show results from three training subsets. The horizontal scale is logarithmic: each tick is ten times the previous value.</figcaption>
+  <figcaption id="visual-english-caption">The VPD point represents one fixed edit shared by all three training subsets. Other methods show one point per subset. Lines span their range, not a confidence interval. The horizontal scale is logarithmic: each tick is ten times the previous value.</figcaption>
 </figure>
 ```
 

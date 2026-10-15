@@ -21,16 +21,21 @@ def _mean(t: torch.Tensor, idx: torch.Tensor) -> float:
 
 
 def point(per: dict, name: str, idx: torch.Tensor, settings: dict) -> dict:
-    """Point readouts of candidate `name` on rows `idx`, relative to the base model and the fine-tuned model."""
-    X, W0, D = per[name], per["base"], per["finetuned"]
-    d_nl_D = _mean(D["nl"]["ce"] - W0["nl"]["ce"], idx)
-    d_nl = _mean(X["nl"]["ce"] - W0["nl"]["ce"], idx)
-    kb_D = _mean(D["nl"]["kl_base"], idx)
-    kb = _mean(X["nl"]["kl_base"], idx)
-    d_de_D = _mean(D["de"]["ce"] - W0["de"]["ce"], idx)
-    d_de = _mean(X["de"]["ce"] - W0["de"]["ce"], idx)
-    B_de = _mean(W0["de"]["kl_ref"], idx)
-    k_de = _mean(X["de"]["kl_ref"], idx)
+    """Recovery and preservation metrics for candidate ``name`` on windows ``idx``.
+
+    ``per[name][lang]`` holds [n_windows] vectors of token-mean CE,
+    ``kl_base = KL(p_base || p_name)`` and ``kl_ref = KL(p_finetuned || p_name)``.
+    ``B_de`` averages the base record's ``kl_ref`` over the German windows in ``idx``.
+    """
+    candidate, base, finetuned = per[name], per["base"], per["finetuned"]
+    d_nl_D = _mean(finetuned["nl"]["ce"] - base["nl"]["ce"], idx)
+    d_nl = _mean(candidate["nl"]["ce"] - base["nl"]["ce"], idx)
+    kb_D = _mean(finetuned["nl"]["kl_base"], idx)
+    kb = _mean(candidate["nl"]["kl_base"], idx)
+    d_de_D = _mean(finetuned["de"]["ce"] - base["de"]["ce"], idx)
+    d_de = _mean(candidate["de"]["ce"] - base["de"]["ce"], idx)
+    B_de = _mean(base["de"]["kl_ref"], idx)
+    k_de = _mean(candidate["de"]["kl_ref"], idx)
     out = {
         "d_nl": d_nl, "d_nl_D": d_nl_D, "r_nl": (1.0 - d_nl / d_nl_D) if d_nl_D != 0 else math.nan,
         "kb_nl": kb, "kb_nl_D": kb_D, "r_kl": (1.0 - kb / kb_D) if kb_D > 0 else math.nan,
@@ -38,8 +43,8 @@ def point(per: dict, name: str, idx: torch.Tensor, settings: dict) -> dict:
         "kl_de": k_de, "B_de": B_de, "phi_de": k_de / B_de if B_de > 0 else math.nan,
     }
     retain = settings["retain_languages"]
-    if all(g in X for g in retain):
-        out["retain"] = {g: _mean(X[g]["ce"] - D[g]["ce"], idx) for g in retain}
+    if all(g in candidate for g in retain):
+        out["retain"] = {g: _mean(candidate[g]["ce"] - finetuned[g]["ce"], idx) for g in retain}
         out["retain_ok"] = all(v <= settings["retain_tol"] for v in out["retain"].values())
     return out
 

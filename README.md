@@ -52,7 +52,9 @@ change the edit's strength.
 
 ## Work with the research
 
-Each study guide covers its question, analysis outputs and model runs. The
+Start with [subcomponent selection](src/interesearch/selective_editing/method/selector.py) for the selective-editing rule,
+or [repair fitting](src/interesearch/repair_transfer/method/fitting.py) and
+[candidate selection](src/interesearch/repair_transfer/method/selection.py) for repair transfer. The
 [code and data guide](papers/guides/reproduction.md) covers shared data, validated environments, tests and HTML/PDF builds.
 
 Code is MIT licensed. Papers and original research outputs are CC BY 4.0. See
@@ -68,7 +70,7 @@ Cite the relevant paper for its findings. For use of the code, see [CITATION.cff
   title  = {Transferring Learned Repairs Between Fine-Tunes},
   year   = {2026},
   month  = oct,
-  note   = {Version 0.1.1},
+  note   = {Version 0.1.2},
   url    = {https://sergeisoly.github.io/interesearch/repair-transfer/}
 }
 
@@ -77,7 +79,7 @@ Cite the relevant paper for its findings. For use of the code, see [CITATION.cff
   title  = {Selective Language Damage with Parameter-Decomposition Subcomponents},
   year   = {2026},
   month  = oct,
-  note   = {Version 0.1.1},
+  note   = {Version 0.1.2},
   url    = {https://sergeisoly.github.io/interesearch/selective-editing/}
 }
 ```
