@@ -4534,7 +4534,7 @@ W_{\mathrm{edited}} = (W-A) + cA.
 
     <p>See the <a href="index.html#sec-effects">paper&#39;s figure</a> for all three language pairs and both calibration levels.</p>
   </div>
-  <figcaption id="visual-results-caption">Points show results from three training subsets. Lines span their range, not a confidence interval. The dashed line marks the calibration target.</figcaption>
+  <figcaption id="visual-results-caption">The VPD point represents one fixed edit shared by all three training subsets. Other methods show one point per subset. Lines span their range, not a confidence interval. The dashed line marks the calibration target.</figcaption>
 </figure>
 <p>Across all three pairs and both calibration levels, the VPD edits raised related-language loss by <strong>0.0003–0.0053 nat/token</strong>, compared with <strong>0.03–0.88 nat/token</strong> for the other methods. These ranges span individual run results. The comparison tests six fixed edits in one small model. Whether the selection rule works reliably on new tasks remains untested.</p>
 </section>
@@ -4559,7 +4559,7 @@ W_{\mathrm{edited}} = (W-A) + cA.
   <div id="visual-english-fallback">
     <p>The VPD edits&#39; English KL is below 0.001 nat/token for every language and calibration level. Both learned methods have lower English KL throughout these comparisons. The <a href="index.html#sec-english">paper&#39;s English comparison</a> includes the values for all four methods.</p>
   </div>
-  <figcaption id="visual-english-caption">Points and lines show results from three training subsets. The horizontal scale is logarithmic: each tick is ten times the previous value.</figcaption>
+  <figcaption id="visual-english-caption">The VPD point represents one fixed edit shared by all three training subsets. Other methods show one point per subset. Lines span their range, not a confidence interval. The horizontal scale is logarithmic: each tick is ten times the previous value.</figcaption>
 </figure>
 <p>On the evaluated English text, the VPD edits changed next-token probabilities <strong>little on average</strong>: mean KL stayed below <strong>0.001 nat/token</strong> for every language and calibration level. For scale, changing a coin’s probabilities from <strong>50%/50% to 52%/48%</strong> gives KL ≈ <strong>0.00080</strong>, close to the German VPD edit’s 0.00077 at the 1 nat/token level. This illustrates the size of KL, not a measured two-percentage-point change for each token. Individual contexts can change more than the average suggests.</p>
 <p><a href="../selective-editing/index.html#sec-setup">Methods</a> and <a href="../selective-editing/index.html#sec-limits">study limitations</a> in the paper.</p>

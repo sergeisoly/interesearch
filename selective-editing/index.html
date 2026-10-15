@@ -4409,8 +4409,8 @@ On 58 new European Parliament session dates, the subcomponent edits raised cross
 target&amp;amp;#039;s related language (Dutch, Portuguese and Italian) by 0.0003–0.0053 nat/token, compared with
 0.027–0.876 across comparator runs. The learned updates, trained to preserve English, preserved English
 predictions better. In an exploratory check on earlier development dates, an expanded training recipe
-generally reduced the learned updates&#39; related-language damage, but that damage stayed above the
-subcomponent edits&#39;. Whether this advantage depends on the VPD dictionary (the decomposition&#39;s set of
+generally reduced the learned updates&#39; related-language damage, but the subcomponent edits still caused
+less. Whether this advantage depends on the VPD dictionary (the decomposition&#39;s set of
 subcomponents) and how the selection rule performs on new tasks remain unresolved.
 ">
 <meta name="citation_author" content="Sergei Solovev">
@@ -4534,7 +4534,7 @@ subcomponents) and how the selection rule performs on new tasks remain unresolve
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">Selective Language Damage with Parameter-Decomposition Subcomponents</h1>
-<p class="subtitle lead">Version 0.1.1 · 15 October 2026</p>
+<p class="subtitle lead">Version 0.1.2 · 15 October 2026</p>
 </div>
 
 <div>
@@ -4568,7 +4568,7 @@ subcomponents) and how the selection rule performs on new tasks remain unresolve
   <div class="abstract">
     <div class="block-title">Abstract</div>
     <p>Changing one language while sparing a related language tests how selectively a model can be edited. In a four-layer, 67M-parameter model, adVersarial Parameter Decomposition (VPD) approximates weight matrices with sums of rank-one subcomponents. A fixed rule selects one subcomponent per target language using target and English text. The edits change its coefficient while leaving the decomposition residual fixed. I compare six edits for German, Spanish and French with rank-one LoRA, full-matrix fine-tuning and neuron edits. All methods are calibrated to raise target cross-entropy by 0.5 or 1 nat/token on validation text.</p>
-    <p>On 58 new European Parliament session dates, the subcomponent edits raised cross-entropy in each target’s related language (Dutch, Portuguese and Italian) by 0.0003–0.0053 nat/token, compared with 0.027–0.876 across comparator runs. The learned updates, trained to preserve English, preserved English predictions better. In an exploratory check on earlier development dates, an expanded training recipe generally reduced the learned updates’ related-language damage, but that damage stayed above the subcomponent edits’. Whether this advantage depends on the VPD dictionary (the decomposition’s set of subcomponents) and how the selection rule performs on new tasks remain unresolved.</p>
+    <p>On 58 new European Parliament session dates, the subcomponent edits raised cross-entropy in each target’s related language (Dutch, Portuguese and Italian) by 0.0003–0.0053 nat/token, compared with 0.027–0.876 across comparator runs. The learned updates, trained to preserve English, preserved English predictions better. In an exploratory check on earlier development dates, an expanded training recipe generally reduced the learned updates’ related-language damage, but the subcomponent edits still caused less. Whether this advantage depends on the VPD dictionary (the decomposition’s set of subcomponents) and how the selection rule performs on new tasks remain unresolved.</p>
   </div>
 </div>
 
@@ -4596,7 +4596,7 @@ subcomponents) and how the selection rule performs on new tasks remain unresolve
 </section>
 <section id="sec-selection" class="level3" data-number="2.2">
 <h3 data-number="2.2" class="anchored" data-anchor-id="sec-selection"><span class="header-section-number">2.2</span> Subcomponent selection</h3>
-<p>An edit changes one weight matrix by <span class="math inline">\(W_m \leftarrow W_m + \alpha A_c\)</span>, leaving the other subcomponents and the decomposition residual fixed. The subcomponent is not normalized. In VPD each subcomponent has a scalar mask coefficient equal to 1 in the unedited model; the edit changes it to <span class="math inline">\(1 + \alpha\)</span>, and the edit norm is <span class="math inline">\(|\alpha|\,\lVert A_c\rVert_F\)</span>.</p>
+<p>An edit changes one weight matrix by <span class="math inline">\(W_m \leftarrow W_m + \alpha A_c\)</span>, leaving the other subcomponents and the residual (the original matrix minus the sum of its VPD subcomponents) fixed. The subcomponent is not normalized. In VPD each subcomponent has a scalar mask coefficient equal to 1 in the unedited model; the edit changes it to <span class="math inline">\(1 + \alpha\)</span>, and the edit norm is <span class="math inline">\(|\alpha|\,\lVert A_c\rVert_F\)</span>.</p>
 <p>The selection rule ranks subcomponents by the target CE gradient relative to English Fisher curvature. The score favors target-CE increases with low predicted English KL for small coefficient changes: <span class="math display">\[\frac{g_c^2}{q_c + \varepsilon \lVert A_c\rVert_F^2},\]</span> where <span class="math inline">\(g_c\)</span> is the derivative of target CE with respect to the mask coefficient, <span class="math inline">\(q_c\)</span> is the directional Fisher estimate on the English retain pool, and <span class="math inline">\(\varepsilon\)</span> supplies a small curvature floor. Because this score is local, the ranked shortlist is then tested at finite doses on target training text. The rule uses <span class="math inline">\(\alpha = \operatorname{sign}(g_c)\,a\)</span>, increasing the dose <span class="math inline">\(a\)</span> up to 2. It accepts the first subcomponent to reach a target CE rise of 1 nat/token, falling back to the first that reaches 0.5 if none reaches 1. If neither threshold is reached, no edit is selected.</p>
 </section>
 <section id="sec-comparators" class="level3" data-number="2.3">
@@ -4882,7 +4882,7 @@ Table 2: Confirmation effects on 58 dates and development English KL. Each meth
 <section id="sec-extended-comparisons" class="level3" data-number="3.4">
 <h3 data-number="3.4" class="anchored" data-anchor-id="sec-extended-comparisons"><span class="header-section-number">3.4</span> Expanded training comparison</h3>
 <p>The main learned updates used 200 steps. Their selected learning rates lay at the edges of the tested grids (upper for LoRA, lower for full-matrix fine-tuning), so the grids may have missed better settings. To examine sensitivity to this recipe, an exploratory comparison used 2,000 steps, a larger hinge margin, wider learning-rate grids and more seeds, then calibrated the updates to the same τ. Evaluation used the previously evaluated development dates.</p>
-<p>This expanded recipe reduced related-language damage for full-matrix fine-tuning in all six target and τ combinations and for LoRA in five, but the subcomponent edits retained their advantage. Achieved target effects differed from the subcomponent edits by at most 0.07 nat/token. Several training settings changed together, so the improvement cannot be attributed to step count alone. The training runs were not shown to converge at either budget, so the comparison does not establish the best selectivity these learned methods could attain. <a href="#sec-app-extended">Appendix A.1</a> gives the extended comparison methods.</p>
+<p>This expanded recipe reduced related-language damage for full-matrix fine-tuning in all six target and τ combinations and for LoRA in five, but the subcomponent edits retained their advantage. Achieved target effects differed from those of the subcomponent edits by at most 0.07 nat/token. Several training settings changed together, so the improvement cannot be attributed to step count alone. The training runs were not shown to converge at either budget, so the comparison does not establish the best selectivity these learned methods could attain. <a href="#sec-app-extended">Appendix A.1</a> gives the extended comparison methods.</p>
 </section>
 <section id="sec-references" class="level3" data-number="3.5">
 <h3 data-number="3.5" class="anchored" data-anchor-id="sec-references"><span class="header-section-number">3.5</span> Choice within the VPD dictionary</h3>
@@ -5192,7 +5192,7 @@ Cite this article
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">title</span>  = {Selective Language Damage with Parameter-Decomposition Subcomponents},</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">year</span>   = {2026},</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">month</span>  = <span class="st">oct</span>,</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">note</span>   = {Version 0.1.1},</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">note</span>   = {Version 0.1.2},</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">url</span>    = {https://sergeisoly.github.io/interesearch/selective-editing/}</span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
