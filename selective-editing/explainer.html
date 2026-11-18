@@ -4880,7 +4880,7 @@ W_{\mathrm{edited}} = (W-A) + cA.
       <svg viewbox="0 0 134 134" aria-hidden="true"><g id="visual-matrix-cells-2"><rect x="2" y="2" width="130" height="130" rx="4" fill="#e6eeeb" stroke="#78968a" /><text x="67" y="79" text-anchor="middle" font-size="28" fill="#39574a">W − A</text></g></svg>
     </div>
   </div>
-  <p id="visual-matrix-state" class="visual-matrix-state">At zero, the selected subcomponent contributes nothing.</p>
+  <p id="visual-matrix-state" class="visually-hidden">At zero, the selected subcomponent contributes nothing.</p>
   <div id="matrix-output" hidden>
     <div class="matrix-output-controls">
       <label>Input vector <i>x</i>
@@ -4901,7 +4901,7 @@ W_{\mathrm{edited}} = (W-A) + cA.
     <p id="matrix-output-reading" aria-live="polite" aria-atomic="true"></p>
     <p id="matrix-orbit-help">Drag sideways or use the arrow keys on the figure to rotate.</p>
   </div>
-  <figcaption id="visual-matrix-caption">Toy matrices. <span id="visual-matrix-key" hidden>Green denotes positive entries and purple denotes negative entries.</span></figcaption>
+  <figcaption id="visual-matrix-caption">Toy matrices. <span id="visual-matrix-key" hidden>Green = positive, purple = negative.</span></figcaption>
 </figure>
 </section>
 <section id="comparing-ways-to-change-the-weights" class="level2">
@@ -4917,7 +4917,7 @@ W_{\mathrm{edited}} = (W-A) + cA.
 </section>
 <section id="target-and-related-language-damage" class="level2">
 <h2 class="anchored" data-anchor-id="target-and-related-language-damage">Calibration and measured effects</h2>
-<figure class="visual-figure visual-results figure" aria-labelledby="visual-results-caption">
+<figure class="visual-figure visual-results figure" aria-label="Calibration and held-out loss increases">
   <div id="visual-results-interactive" hidden>
     <div class="visual-controls">
       <label for="visual-pair">Language pair
@@ -4984,7 +4984,7 @@ W_{\mathrm{edited}} = (W-A) + cA.
       <div id="visual-target-chart"></div>
       <div id="visual-protected-chart"></div>
     </div>
-    <p id="visual-result-sentence" class="visual-result-sentence" aria-live="polite" aria-atomic="true"></p>
+    <p id="visual-result-sentence" class="visually-hidden" aria-live="polite" aria-atomic="true"></p>
     <details class="visual-uncertainty-table">
       <summary>Read the plotted values</summary>
       <div id="visual-results-table"></div>
@@ -5028,16 +5028,14 @@ W_{\mathrm{edited}} = (W-A) + cA.
 
     <p>See the <a href="index.html#sec-effects">paper&#39;s figure</a> for all three language pairs and both calibration levels.</p>
   </div>
-  <figcaption id="visual-results-caption">VPD selected the same edit across all three training subsets.
-  <span class="plot-key">The held-out charts share a scale. The dashed line marks the validation target.
-  Comparator lines span the three training subsets.</span></figcaption>
+  <figcaption id="visual-results-caption"><span class="plot-key">The dashed line marks the validation target. Each range spans three training subsets. All three gave the same VPD edit.</span></figcaption>
 </figure>
 <p>Related-language loss rose by <strong>0.0003–0.0053 nat/token</strong> across the six fixed VPD edits in this model, versus <strong>0.027–0.876 nat/token</strong> across individual comparator runs. The selection rule’s reliability on new tasks remains open. <a href="../selective-editing/index.html#sec-contrasts">Estimates and confidence intervals</a></p>
 </section>
 <section id="what-changed-in-english" class="level2">
 <h2 class="anchored" data-anchor-id="what-changed-in-english">How much did English predictions change?</h2>
 <p>All edits in the main comparison passed the English loss limit. That loss uses the probability of the observed next token. <strong>KL divergence</strong> compares the full next-token distributions of the original and edited models. LoRA and full-matrix fine-tuning penalized English KL during training. In the post hoc analysis, both had lower English KL than VPD for every language and calibration level on the new dates.</p>
-<figure class="visual-figure figure" aria-labelledby="visual-english-caption">
+<figure class="visual-figure figure" aria-label="English prediction change relative to the original model">
   <div id="visual-english-interactive" hidden>
     <div class="visual-controls">
       <label for="visual-english-pair">Target language
@@ -5057,9 +5055,7 @@ W_{\mathrm{edited}} = (W-A) + cA.
   <div id="visual-english-fallback">
     <p>See the <a href="index.html#sec-english">paper&#39;s English comparison</a> for the measurements for all four methods.</p>
   </div>
-  <figcaption id="visual-english-caption">English KL relative to the original model.
-  <span class="plot-key">The controls also update the charts above. Comparator lines span three training subsets.
-  Each tick is ten times the previous one.</span></figcaption>
+  <figcaption id="visual-english-caption"><span class="plot-key">Lines span the three training subsets. KL is measured from the original model to the edited model.</span></figcaption>
 </figure>
 <p>Mean English KL was below <strong>0.001 nat/token</strong> for every VPD edit. For scale, the KL from a fair coin (<strong>50%/50%</strong>) to a <strong>52%/48%</strong> coin is about <strong>0.00080</strong>. The German VPD edit at the 1 nat/token level had a mean KL of <strong>0.00077</strong>. Individual contexts can have higher KL than the mean.</p>
 <p><a href="../selective-editing/index.html#sec-setup">Methods</a> and <a href="../selective-editing/index.html#sec-limits">study limitations</a> in the paper.</p>

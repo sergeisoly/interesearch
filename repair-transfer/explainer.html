@@ -4805,7 +4805,7 @@ border-radius: 5px;
 }
 </style>
 <figure class="explainer-diagram repair-method figure" aria-labelledby="repair-transfer-diagram-caption">
-  <figcaption id="repair-transfer-diagram-caption">One matrix’s repair in three dimensions. This schematic fixes the input <i>x</i> and keeps <i>a</i> at unit length.</figcaption>
+  <figcaption id="repair-transfer-diagram-caption">In this example, <i>x</i> is fixed and <i>a</i> has unit length.</figcaption>
   <div id="repair-method-live" hidden>
     <div class="explainer-method-controls" role="group" aria-label="Repair fitting method" id="repair-method-controls">
       <button type="button" data-repair-method="strengths" aria-pressed="true">Scalar coefficients only</button>
@@ -4926,9 +4926,9 @@ window.ResearchOrbit = (() => {
   const outputSvg = byId("repair-write-scene");
   const sliders = Object.fromEntries(["coefficient", "read-angle", "write-angle", "length"].map(key => [key, byId("repair-" + key)]));
   const methodCopy = {
-    strengths: "Change the coefficient to rescale or reverse the correction along the donor’s output line. Both donor vectors stay fixed.",
-    donor_init: "Both vectors start at the donor values. Turn the input vector to change the readout, or turn the output vector to send it in a new direction.",
-    fresh: "The initial input vector is random and the output vector starts at zero. Increase the output length to begin writing a correction."
+    strengths: "Both donor vectors stay fixed.",
+    donor_init: "Both vectors start at their donor values.",
+    fresh: "The output starts at zero. Increase its length to set its direction."
   };
   let method = "strengths";
   const scale = (v, factor) => v.map(x => x * factor);
@@ -5055,7 +5055,9 @@ window.ResearchOrbit = (() => {
     for (const button of live.querySelectorAll("[data-repair-method]")) {
       button.setAttribute("aria-pressed", String(button.dataset.repairMethod === method));
     }
-    byId("repair-method-copy").textContent = methodCopy[method];
+    const hint = byId("repair-method-copy");
+    hint.textContent = methodCopy[method];
+    hint.classList.toggle("visually-hidden", method !== "fresh");
     update();
   }
   live.querySelectorAll("[data-repair-method]").forEach(button => button.addEventListener("click", () => select(button.dataset.repairMethod)));
@@ -5072,10 +5074,9 @@ window.ResearchOrbit = (() => {
 <p><strong>Recovery</strong> is the share of extra Dutch prediction loss the repair removes. At 100%, loss is back at the base model’s level. I evaluated the selected repairs on <strong>92 Europarl session dates</strong> separate from fitting and checkpoint selection.</p>
 <p>At each budget, the methods use the same fitting text. <strong>Fit tokens</strong> count distinct prediction positions. A step cap sets the latest checkpoint eligible for selection.</p>
 <figure class="explainer-figure repair-results figure" aria-labelledby="repair-full-caption">
-  <figcaption id="repair-full-caption">Extra Dutch loss (nat/token) and recovery (%) at 2,048 fit tokens.
-  Regular runs have a 600-step cap. The expanded scalar search adds two runs per target.</figcaption>
+  <figcaption id="repair-full-caption">Dutch loss above baseline (nat/token) and recovery (%) at 2,048 fit tokens. Regular runs had a 600-step cap. Scalar fitting had two additional runs.</figcaption>
   <div id="repair-full-chart" hidden>
-    <p class="repair-loss-key">Zero marks the base model. A dashed line marks each unrepaired fine-tune.</p>
+    <p class="repair-loss-key">Zero = base model. Dashed line = unrepaired fine-tune.</p>
     <div class="repair-loss-controls" role="group" aria-label="Inspect a repair on both targets">
       <button type="button" data-repair-inspect="strengths" aria-pressed="false">Expanded scalar search</button>
       <button type="button" data-repair-inspect="donor_init" aria-pressed="true">Donor initialization</button>
@@ -5088,7 +5089,7 @@ window.ResearchOrbit = (() => {
     <summary>Read losses and recovery intervals</summary>
     
 <table class="caption-top table">
-<caption>Extra Dutch loss (nat/token) and recovery (%). Brackets give 95% date-bootstrap intervals for recovery.</caption>
+<caption>Brackets give 95% bootstrap intervals for recovery, resampled by session date.</caption>
 <colgroup>
 <col style="width: 33%">
 <col style="width: 33%">
@@ -5149,8 +5150,7 @@ on replication ([19.0, 21.7]). Both intervals exceeded the study&#39;s 3-point m
 <p>Across the regular search, scalar-only recovery stayed within <strong>86.9–87.4%</strong> on the primary target and <strong>76.3–77.4%</strong> on replication.</p>
 <section class="explainer-interactive repair-budget" id="repair-budget-interactive" aria-label="Donor recovery compared with the first fresh start" hidden>
   <figure class="explainer-figure figure" aria-labelledby="repair-budget-caption">
-    <figcaption id="repair-budget-caption">Donor advantage over the first fresh start (percentage points) in the regular search.
-    Select a cell to compare both targets at that token budget and step cap.</figcaption>
+    <figcaption id="repair-budget-caption">Donor minus first fresh start (percentage points). Columns give the step cap per run.</figcaption>
     <div id="repair-budget-panels" class="repair-panel-pair"></div>
   </figure>
   <p id="repair-budget-selected" class="repair-inspection" aria-live="polite" aria-atomic="true"></p>
@@ -6315,7 +6315,8 @@ on replication ([19.0, 21.7]). Both intervals exceeded the study&#39;s 3-point m
       }
 
       const leads = cells.map((cell, index) => `${data.targets[index].label} ${signed(cell.gap.diff)} pp`);
-      selection.textContent = `${comma(budget.tokens)} fit tokens · ${cap}-step cap · ${leads.join(" · ")}`;
+      selection.textContent = `${comma(budget.tokens)} fit tokens · ${cap}-step cap`;
+      append(selection, "span", "visually-hidden", `. ${leads.join(" · ")}`);
 
       const table = document.createElement("table");
       append(table, "caption", "", "Recovery with 95% date-bootstrap intervals. Donor advantages use paired intervals.");
