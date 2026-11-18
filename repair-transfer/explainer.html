@@ -4151,26 +4151,27 @@ display: block;
 max-width: 100%;
 overflow-x: auto;
 }
-main a {
-overflow-wrap: anywhere;
-}
 }
 :root {
 font-size: 100%;
+--research-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 --research-paper: #faf9f5;
 --research-ink: #182d3b;
 --research-muted: #526771;
---research-rule: #dce2df;
+--research-rule: #d5dad4;
+--research-rule-strong: #b5bcb4;
+--research-panel: #f0eee5;
+--research-control: #7d8e95;
 --research-blue: #2364a5;
 }
 body {
 background: var(--research-paper);
 color: var(--research-ink);
-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+font-family: var(--research-sans);
 font-size: 1rem;
 line-height: 1.65;
 }
-a { color: var(--research-blue); text-underline-offset: .2em; }
+a { color: var(--research-blue); text-underline-offset: .18em; text-decoration-thickness: .07em; }
 a:hover { color: #143e68; }
 a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible {
 outline: 3px solid #a46c17;
@@ -4187,46 +4188,234 @@ padding-bottom: .85rem;
 .navbar .navbar-title { font: 500 1.35rem Georgia, serif; letter-spacing: -.025em; }
 .navbar .nav-link { font-size: .95rem; }
 h1, h2, h3 { font-family: Georgia, "Times New Roman", serif; font-weight: 500; letter-spacing: -.025em; }
-h1.title { font-size: clamp(1.9rem, 3vw, 2.7rem); line-height: 1.12; }
+h1.title { font-size: clamp(2rem, 4vw, 3.25rem); line-height: 1.11; text-wrap: balance; }
 h2 { border-bottom: 0; margin-top: 2.8rem; padding-bottom: 0; line-height: 1.2; }
 h3 { line-height: 1.3; }
 #title-block-header { margin-top: 2.2rem; margin-bottom: 2.5rem; }
 .quarto-title .subtitle { color: var(--research-muted); font-size: 1.05rem; }
-#TOC { font-size: .82rem; line-height: 1.55; }
-#TOC a, .sidebar nav[role=doc-toc] ul>li>a.active { color: var(--research-muted); }
+#TOC { font-size: .87rem; line-height: 1.5; }
+#TOC a { color: var(--research-muted); }
+.sidebar nav[role=doc-toc] ul>li>a.active {
+color: var(--research-blue) !important;
+border-color: var(--research-blue);
+}
+
+body:not(.research-home, .research-explainer) main :is(p, ul, ol) {
+max-width: 72ch;
+}
+body:not(.research-home, .research-explainer) main {
+font: 1.08rem/1.74 Georgia, "Times New Roman", serif;
+}
+body:not(.research-home, .research-explainer) main :is(#title-block-header, .study-resources, .table, .quarto-float-caption) {
+font-family: var(--research-sans);
+}
+#title-block-header .abstract p { font: 1rem/1.7 Georgia, "Times New Roman", serif; }
+body:not(.research-home, .research-explainer) main h2 { font-size: clamp(1.5rem, 2.5vw, 2rem); }
+body:not(.research-home, .research-explainer) main h3 { font-size: clamp(1.25rem, 2vw, 1.55rem); }
+.quarto-title-meta-heading { color: var(--research-muted); }
+#title-block-header .abstract {
+max-width: 46rem;
+margin-top: 1.4rem;
+padding: .95rem 0 .05rem;
+border-top: 1px solid var(--research-rule);
+}
+#title-block-header .abstract-title {
+color: var(--research-ink);
+font-size: .9rem;
+font-weight: 650;
+}
+main .quarto-float-caption, main table caption {
+color: var(--research-muted);
+font-size: .9rem;
+line-height: 1.55;
+}
+main .table { font-variant-numeric: tabular-nums; }
+main [id] { scroll-margin-top: .85rem; }
+main a { overflow-wrap: anywhere; }
 main p, main li { overflow-wrap: break-word; }
 main code { font-size: .85em; }
 main pre { font-size: .84rem; }
 main img { max-width: 100%; height: auto; }
+main .quarto-float-tbl > div:has(> table) {
+max-width: 100%;
+overflow-x: auto;
+}
+main .quarto-float-tbl > div > table { display: table; }
+main .quarto-float-tbl > div[data-scroll-overflow]::before,
+main .quarto-float-fig > div[data-scroll-overflow]::before {
+position: sticky;
+left: 0;
+display: block;
+margin-bottom: .5rem;
+color: var(--research-muted);
+font: .85rem/1.35 var(--research-sans);
+text-align: left;
+}
+main .quarto-float-tbl > div[data-scroll-overflow]::before {
+content: "Scroll sideways to see all columns.";
+}
+main [data-scroll-overflow]:focus-visible {
+outline: 3px solid #a46c17;
+outline-offset: 3px;
+}
+
+@media (max-width: 56rem) {
+main .quarto-float-fig > div:has(> img) {
+max-width: 100%;
+overflow-x: auto;
+text-align: left;
+}
+main .quarto-float-fig > div[data-scroll-overflow]::before {
+content: "Scroll sideways to read the full figure.";
+}
+main .quarto-float-fig > div > img { min-width: 44rem; }
+}
 main table { font-size: .9rem; }
 .research-home #title-block-header { display: none; }
-.research-home #quarto-content { display: block; max-width: 1160px; margin: auto; padding: 0 2rem; }
+.research-home #quarto-content {
+display: block;
+max-width: 1170px;
+margin: auto;
+padding: 0 clamp(1rem, 4vw, 3rem);
+}
 .research-home main { margin: auto; }
-.research-hero { padding: 3rem 0 2.5rem; max-width: 870px; }
-.research-eyebrow { font: 600 .73rem/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; text-transform: uppercase; letter-spacing: .14em; color: var(--research-muted); margin-bottom: 1.1rem; }
-.research-hero h1 { font-size: clamp(1.9rem, 3vw, 2.7rem); line-height: 1.15; margin: 0; }
-.research-lead { font-size: 1.35rem; line-height: 1.55; max-width: 780px; }
-.research-intro { color: var(--research-muted); max-width: 720px; }
-.research-hero h1 + .research-intro { margin-top: 1.3rem; }
-.research-ai-note { max-width: 720px; margin-top: 1.75rem; color: var(--research-muted); }
-.research-ai-note h2 { color: var(--research-ink); font-size: 1.35rem; margin: 0 0 .75rem; }
-.research-ai-note p:last-child { margin-bottom: 0; }
-.research-story { border-top: 1px solid var(--research-rule); padding: 3rem 0; display: grid; grid-template-columns: 1.12fr 1fr; align-items: center; gap: 3rem; }
-.research-story h2 { font-size: clamp(1.7rem, 2.6vw, 2.2rem); margin: 0 0 1.2rem; }
-.research-story-copy>p:not(.research-eyebrow) { max-width: 560px; }
-.research-main-link { display: inline-block; color: var(--research-ink); font-weight: 600; margin-top: .3rem; }
-.research-main-link span { margin-left: .3rem; }
-.research-secondary-links { display: flex; flex-wrap: wrap; gap: 1.4rem; font-size: .86rem; }
-.research-secondary-links a { color: var(--research-muted); }
-.research-story-visual svg { width: 100%; height: auto; overflow: visible; }
-.preview-main { font: 500 17px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: var(--research-ink); }
-.preview-note { font: 13px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: var(--research-muted); }
-.research-footnote { border-top: 1px solid var(--research-rule); padding: 2rem 0 4rem; color: var(--research-muted); font-size: .9rem; }
-.research-footnote p { max-width: 790px; }
-.research-explainer #quarto-content { display: block; max-width: 1100px; padding: 0 2rem; margin: auto; }
+.research-hero {
+padding: clamp(2rem, 5.5vw, 4.25rem) 0 clamp(1.8rem, 3.6vw, 2.75rem);
+}
+.research-hero h1 {
+max-width: 21ch;
+margin: 0;
+font-size: clamp(2.25rem, 6vw, 4.85rem);
+line-height: 1.04;
+letter-spacing: -.042em;
+text-wrap: balance;
+}
+.research-hero p {
+max-width: 54ch;
+margin: 1.35rem 0 0;
+font-size: clamp(1.05rem, 1.9vw, 1.3rem);
+line-height: 1.58;
+}
+.research-story {
+display: grid;
+grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr);
+align-items: start;
+gap: clamp(2rem, 5vw, 4rem);
+padding: clamp(1.65rem, 4vw, 3.25rem) 0;
+border-top: 1px solid var(--research-rule);
+}
+.research-story h2 {
+margin: 0 0 .75rem;
+font-size: clamp(1.8rem, 3.2vw, 2.65rem);
+line-height: 1.12;
+text-wrap: balance;
+}
+.research-story-copy p { max-width: 57ch; margin-bottom: .85rem; }
+.research-study-links {
+display: flex;
+flex-wrap: wrap;
+align-items: center;
+gap: .2rem clamp(.75rem, 1.7vw, 1.25rem);
+font-size: .9rem;
+}
+.research-study-links a {
+display: inline-flex;
+align-items: center;
+min-height: 44px;
+white-space: nowrap;
+}
+.research-study-links .research-main-link {
+gap: .5em;
+font-weight: 700;
+}
+.research-result {
+min-width: 0;
+margin: 0;
+padding: clamp(.9rem, 2.4vw, 1.5rem);
+background: var(--research-panel);
+border-top: 2px solid var(--research-ink);
+font-size: .9rem;
+}
+.research-result-title {
+margin: 0 0 .8rem;
+font: 500 clamp(1.15rem, 2.2vw, 1.45rem)/1.25 Georgia, serif;
+}
+.research-result figcaption {
+margin: .9rem 0 0;
+color: var(--research-muted);
+font-size: .84rem;
+line-height: 1.55;
+}
+.research-interval-row {
+display: grid;
+grid-template-columns: 1fr auto;
+align-items: baseline;
+gap: .35rem .65rem;
+margin-bottom: .6rem;
+}
+.research-interval-row strong, .research-interval-axis, .research-result-table td {
+font-variant-numeric: tabular-nums;
+}
+.research-interval-track {
+grid-column: 1 / -1;
+position: relative;
+height: .8rem;
+border-inline: 1px solid var(--research-rule-strong);
+background: repeating-linear-gradient(to right, transparent 0 calc(25% - 1px), var(--research-rule-strong) calc(25% - 1px) 25%);
+}
+.research-interval-track span {
+position: absolute;
+inset: .19rem calc(100% - var(--end)) .19rem var(--start);
+border-radius: .5rem;
+background: var(--research-blue);
+}
+.research-interval-comparator span { background: var(--research-muted); }
+.research-interval-axis {
+display: grid;
+grid-template-columns: repeat(4, minmax(0, 1fr)) 0;
+color: var(--research-muted);
+font-size: .8rem;
+}
+.research-interval-axis span { justify-self: start; transform: translateX(-50%); }
+.research-interval-axis span:is(:first-child, :last-child) { transform: none; }
+.research-interval-axis span:last-child { justify-self: end; }
+.research-home #quarto-document-content .research-result-table {
+display: table;
+width: 100%;
+margin: 0;
+border-collapse: collapse;
+font-size: inherit;
+text-align: left;
+}
+.research-result-table th, .research-result-table td {
+border-bottom: 1px solid var(--research-rule-strong);
+padding: .45rem .45rem .45rem 0;
+}
+.research-result-table col:first-child { width: 52% !important; }
+.research-result-table col:not(:first-child) { width: 24% !important; }
+.research-result-table thead th { color: var(--research-muted); font-size: .83rem; line-height: 1.3; }
+.research-result-table tbody th { font-weight: 500; line-height: 1.35; }
+.research-result-table tbody td { font-weight: 600; }
+.research-result-table .research-result-emphasis td { color: var(--research-blue); }
+.research-notes {
+display: grid;
+grid-template-columns: repeat(2, minmax(0, 1fr));
+gap: .6rem clamp(2rem, 5vw, 4rem);
+border-top: 1px solid var(--research-rule);
+padding: 2rem 0 3rem;
+color: var(--research-muted);
+font-size: .95rem;
+}
+.research-notes h2 {
+margin: 0 0 .75rem;
+color: var(--research-ink);
+font-size: 1.4rem;
+}
+.research-notes p { max-width: 65ch; }
+.research-explainer #quarto-content { display: block; max-width: 1040px; padding: 0 clamp(1rem, 4vw, 3rem); margin: auto; }
 .research-explainer main { margin: auto; }
-.research-explainer #title-block-header { max-width: 900px; margin-top: 3.5rem; }
-.research-explainer main p { max-width: 790px; }
+.research-explainer #title-block-header { max-width: 900px; margin-top: 3.5rem; margin-bottom: 1.5rem; }
+.research-explainer main :is(p, ul, ol) { max-width: 74ch; }
 .research-explainer main>section { margin-top: 3rem; }
 .research-explainer h2 { max-width: 800px; font-size: clamp(1.5rem, 2.4vw, 1.9rem); margin-bottom: 1.25rem; }
 .research-explainer h3 { font-family: inherit; font-size: 1.1rem; font-weight: 600; letter-spacing: 0; }
@@ -4235,11 +4424,11 @@ main table { font-size: .9rem; }
 .visual-panel, .explainer-visual { margin: 2rem 0; border-top: 1px solid var(--research-rule); border-bottom: 1px solid var(--research-rule); padding: 1.75rem 0; }
 .visual-controls, .explainer-controls { display: flex; flex-wrap: wrap; align-items: end; gap: 1rem 1.6rem; margin-bottom: 1.5rem; }
 .visual-controls label, .explainer-controls label { display: flex; flex-direction: column; gap: .4rem; font-size: .85rem; font-weight: 600; }
-.research-explainer button, .research-explainer select { font: inherit; font-size: .9rem; border: 1px solid #aebfc1; background: transparent; color: var(--research-ink); min-height: 42px; border-radius: 4px; padding: .45rem .8rem; }
-.research-explainer button { cursor: pointer; }
-.research-explainer button[aria-pressed=true] { background: var(--research-ink); border-color: var(--research-ink); color: #fff; }
-.research-explainer button:hover:not([aria-pressed=true]) { background: #edf0eb; }
-.research-explainer input[type=range] { accent-color: #2a78d6; max-width: 100%; }
+.research-explainer main :is(button, select) { font: inherit; font-size: .9rem; border: 1px solid var(--research-control); background: transparent; color: var(--research-ink); min-height: 44px; border-radius: 4px; padding: .45rem .8rem; }
+.research-explainer main button { cursor: pointer; }
+.research-explainer main button[aria-pressed=true] { background: var(--research-ink); border-color: var(--research-ink); color: #fff; }
+.research-explainer main button:hover:not([aria-pressed=true]) { background: #edf0eb; }
+.research-explainer main input[type=range] { accent-color: #2a78d6; max-width: 100%; }
 .research-explainer svg { display: block; width: 100%; height: auto; }
 .research-explainer svg text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
 .research-explainer figcaption, .visual-caption, .explainer-caption { color: var(--research-muted); font-size: .85rem; line-height: 1.6; margin-top: .75rem; max-width: 840px; }
@@ -4247,12 +4436,10 @@ main table { font-size: .9rem; }
 .research-explainer summary { cursor: pointer; font-weight: 600; }
 .research-explainer details table { font-size: .85rem; }
 .research-explainer .visual-note, .research-explainer .explainer-note { color: var(--research-muted); font-size: .92rem; }
-@media (max-width: 700px) {
-.research-home #quarto-content, .research-explainer #quarto-content { padding: 0 1.15rem; }
-.research-hero { padding: 3rem 0 2.5rem; }
-.research-lead { font-size: 1.15rem; }
-.research-story { grid-template-columns: 1fr; gap: 1rem; padding: 2.5rem 0; }
-.research-story-visual { max-width: 470px; }
+@media (max-width: 820px) {
+.research-story, .research-notes { grid-template-columns: minmax(0, 1fr); }
+.research-story { gap: .9rem; }
+.research-result { max-width: 36rem; }
 .research-explainer #title-block-header { margin-top: 2.5rem; }
 .visual-controls, .explainer-controls { gap: .8rem; }
 .research-explainer select { max-width: 100%; }
@@ -4275,9 +4462,13 @@ main table { font-size: .9rem; }
 .visual-matrix-state { text-align: center; margin: 1.5rem auto 0; font-size: .95rem; }
 .visual-dose { border: 0; margin: 0; padding: 0; }
 .visual-dose legend { float: none; width: auto; font-size: .85rem; font-weight: 600; margin-bottom: .4rem; }
-.visual-chart-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+.visual-chart-pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1.5rem; }
 .visual-result-sentence, .explainer-finding { border-left: 3px solid #2a78d6; padding-left: 1.1rem; margin-top: 1.6rem; }
-.visual-uncertainty-table { overflow-x: auto; }
+.visual-uncertainty-table, .explainer-data-table { max-width: 100%; overflow-x: auto; }
+.research-explainer :is(.visual-uncertainty-table, .explainer-data-table) table {
+display: table;
+width: 100%;
+}
 .visual-uncertainty-table table, .explainer-data-table table { width: 100%; margin-top: 1rem; border-collapse: collapse; }
 .visual-uncertainty-table th, .visual-uncertainty-table td, .explainer-data-table th, .explainer-data-table td { padding: .6rem .7rem; border-bottom: 1px solid var(--research-rule); text-align: left; }
 .visual-next { border-top: 1px solid var(--research-rule); margin-top: 2rem; padding: 1.5rem 0; }
@@ -4293,11 +4484,123 @@ main table { font-size: .9rem; }
 .explainer-method-copy p { font-size: .95rem; }
 .explainer-step-control { max-width: 560px; margin: 1.7rem 0; }
 .explainer-reading { font-size: .95rem; }
-.research-paper-title { font-size: .86rem; color: var(--research-muted); }
+.explainer-repair .repair-panel-pair {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(min(100%, 330px), 1fr));
+gap: 1.2rem 1.5rem;
+align-items: start;
+}
+.repair-results .repair-loss-controls {
+display: flex;
+flex-wrap: wrap;
+gap: .5rem;
+margin-bottom: 1rem;
+}
+.repair-results .repair-loss-key {
+margin: .45rem 0 .75rem;
+color: var(--research-muted);
+font-size: .85rem;
+}
+.repair-results .repair-loss-panel {
+max-width: 34rem;
+padding: .9rem .85rem .6rem;
+border: 1px solid var(--research-rule);
+}
+.repair-results .repair-loss-panel h3 { margin: 0 .45rem .45rem; }
+.repair-results :is(.repair-loss-label, .repair-loss-before) {
+display: flex;
+justify-content: space-between;
+align-items: baseline;
+gap: .35rem;
+margin: 0;
+line-height: 1.35;
+font-size: .85rem;
+}
+.repair-results .repair-loss-before {
+margin: 0 .45rem .55rem;
+color: var(--research-muted);
+}
+.repair-results .repair-loss-number { white-space: nowrap; font-variant-numeric: tabular-nums; }
+.repair-results .repair-loss-row { padding: .4rem .45rem; border-radius: 4px; }
+.repair-results .repair-loss-row[data-selected] { background: #e5edf4; font-weight: 600; }
+.repair-results .repair-loss-track {
+position: relative;
+height: 14px;
+margin-top: .35rem;
+border-right: 1px solid var(--research-rule);
+background:
+linear-gradient(to right, var(--research-rule) 1px, transparent 1px) 0 0 / 25% 100%,
+linear-gradient(var(--research-rule-strong), var(--research-rule-strong)) center / 100% 1px no-repeat;
+}
+.repair-results .repair-loss-baseline,
+.repair-results .repair-loss-dot {
+position: absolute;
+top: 50%;
+transform: translate(-50%, -50%);
+}
+.repair-results .repair-loss-baseline { height: 14px; border-left: 2px dashed var(--research-muted); }
+.repair-results .repair-loss-dot {
+width: 9px;
+height: 9px;
+border-radius: 50%;
+background: var(--repair-method-color);
+}
+.repair-results .repair-loss-row[data-selected] .repair-loss-dot {
+outline: 1px solid var(--repair-method-color);
+outline-offset: 2px;
+}
+.repair-results .repair-loss-axis {
+position: relative;
+height: 1.1rem;
+margin: .15rem .45rem 0;
+font-size: .72rem;
+line-height: 1.25;
+color: var(--research-muted);
+}
+.repair-results .repair-loss-axis span { position: absolute; transform: translateX(-50%); }
+.explainer-repair .repair-inspection {
+margin: .75rem 0 0;
+color: var(--research-muted);
+font-size: .9rem;
+}
+.repair-budget .explainer-figure { margin: 0; }
+.repair-budget figcaption { margin: 0 0 .75rem; }
+.repair-budget .repair-budget-grid { display: table; width: 100%; table-layout: fixed; }
+.repair-budget .repair-budget-grid caption {
+caption-side: top;
+padding: 0 0 .3rem;
+color: var(--research-ink);
+font-size: 1rem;
+font-weight: 650;
+}
+.repair-budget .repair-budget-grid :is(th, td) {
+padding: .16rem;
+text-align: center;
+font-size: .8rem;
+font-variant-numeric: tabular-nums;
+}
+.repair-budget .repair-budget-grid th:first-child { width: 22%; text-align: left; }
+.research-explainer .repair-budget .repair-budget-grid button {
+width: 100%;
+padding: .2rem;
+background: rgb(35 100 165 / var(--repair-cell-opacity));
+border-color: transparent;
+font-variant-numeric: tabular-nums;
+}
+.research-explainer .repair-budget .repair-budget-grid button:hover {
+border-color: var(--research-blue);
+}
+.research-explainer .repair-budget .repair-budget-grid button[aria-pressed=true] {
+background: var(--research-blue);
+color: #fff;
+}
+.repair-budget .repair-budget-grid button:focus-visible { outline-offset: 0; }
+.repair-budget #repair-budget-detail table { margin-top: .35rem; font-size: .8rem; }
+.repair-budget #repair-budget-detail :is(th, td) { padding: .4rem; }
+.repair-budget #repair-budget-detail caption { caption-side: bottom; font-size: .8rem; }
 @media (max-width: 800px) {
 .visual-chart-pair { grid-template-columns: 1fr; gap: 1.4rem; }
 .explainer-concept-layout { grid-template-columns: 1fr; gap: .4rem; }
-#repair-method-illustration { max-width: 470px; }
 }
 @media (max-width: 480px) {
 .visual-matrix-equation { gap: .3rem; grid-template-columns: 1fr 17px 1fr 17px 1fr; }
@@ -4305,7 +4608,7 @@ main table { font-size: .9rem; }
 .visual-matrix-operator { font-size: 1.35rem; }
 .explainer-transfer-path { gap: .8rem; }
 .explainer-transfer-path strong { font-size: .85rem; }
-.explainer-kicker { font-size: .72rem; }
+.explainer-kicker { font-size: .8rem; }
 }
 .navbar .navbar-nav .nav-link.active, .navbar .navbar-nav .nav-link.show { color: var(--research-ink) !important; }
 .navbar #quarto-search .aa-DetachedSearchButton { color: var(--research-ink); }
@@ -4313,10 +4616,11 @@ main table { font-size: .9rem; }
 .navbar #quarto-search .aa-SubmitIcon, .navbar #quarto-search .aa-SubmitIcon path { color: var(--research-ink); fill: var(--research-ink); }
 
 .study-breadcrumb { color: var(--research-muted); font-size: .85rem; margin-bottom: 1.4rem; }
-.research-eyebrow a { color: inherit; }
 .nav-footer a { color: var(--research-muted); }
-.study-resources { border-top: 1px solid var(--research-rule); border-bottom: 1px solid var(--research-rule); padding: .65rem 0; margin: 1rem 0 1.5rem; font-size: .9rem; }
+.study-resources { border-top: 1px solid var(--research-rule); border-bottom: 1px solid var(--research-rule); margin: 1rem 0 1.5rem; font-size: .9rem; }
 .study-resources p { margin: 0; }
+.study-resources a { display: inline-flex; align-items: center; min-height: 44px; padding-inline: .3rem; }
+.study-resources a:first-child { padding-left: 0; }
 .navbar .nav-link:focus-visible { outline: 3px solid #a46c17; outline-offset: 2px; box-shadow: none; }
 .nav-footer { background: var(--research-paper); }
 
@@ -4329,6 +4633,32 @@ main table > :not(caption) > * > * { background-color: transparent; }
 
 .guide-task-options table { display: table; width: 100%; table-layout: fixed; }
 .guide-task-options th:first-child, .guide-task-options td:first-child { width: 28%; }
+
+#visual-results-interactive[hidden] ~ figcaption .plot-key,
+#visual-english-interactive[hidden] ~ figcaption .plot-key { display: none; }
+.matrix-view-switch { border: 0; padding: 0; margin: 0 0 1.2rem; }
+.matrix-view-switch legend { font-weight: 600; font-size: 1rem; margin-bottom: .35rem; }
+.matrix-view-switch label { display: inline-flex; gap: .4rem; align-items: center; margin-right: 1rem; min-height: 2.75rem; }
+.visual-matrix-equation[hidden] { display: none; }
+#matrix-output { max-width: 650px; margin: auto; }
+.matrix-output-controls, .matrix-output-legend { display: flex; align-items: center; flex-wrap: wrap; gap: .4rem 1rem; }
+.matrix-output-controls label { font-size: .94rem; }
+.matrix-output-controls :is(button, select) { min-height: 2.75rem; }
+#matrix-output-space { display: block; width: 100%; touch-action: pan-y pinch-zoom; cursor: grab; user-select: none; }
+#matrix-output-space:active { cursor: grabbing; }
+#matrix-output-space:focus-visible { outline: 2px solid var(--research-blue); outline-offset: 1px; }
+.matrix-output-legend { font-size: .88rem; padding: 0; list-style: none; }
+.matrix-output-legend li { display: inline-flex; gap: .3rem; align-items: baseline; }
+.matrix-output-legend span { display: inline-block; width: .7rem; height: .7rem; margin-right: .1rem; }
+.matrix-now-symbol { border-radius: 50%; background: #246c81; }
+.matrix-zero-symbol { border: 2px solid #616567; }
+.matrix-one-symbol { border: 2px solid #985a29; transform: rotate(45deg); }
+#matrix-output-reading { font-variant-numeric: tabular-nums; margin: .75rem 0 .25rem; }
+#matrix-orbit-help { color: var(--research-muted); font-size: .85rem; }
+.research-hero .research-dates, .research-explainer .quarto-title .subtitle {
+font-size: .92rem;
+color: var(--research-muted);
+}
 </style>
 <meta property="og:title" content="Repair transfer – interesearch">
 <meta property="og:description" content="Reusing learned repairs across fine-tunes trained on data from the same distribution.">
@@ -4366,6 +4696,10 @@ main table > :not(caption) > * > * { background-color: transparent; }
 <span class="menu-text">Research</span></a>
   </li>  
   <li class="nav-item">
+    <a class="nav-link" href="https://sergeisoly.github.io/projects.html"> 
+<span class="menu-text">Projects</span></a>
+  </li>  
+  <li class="nav-item">
     <a class="nav-link" href="https://sergeisoly.github.io/posts.html"> 
 <span class="menu-text">Posts</span></a>
   </li>  
@@ -4391,6 +4725,7 @@ main table > :not(caption) > * > * { background-color: transparent; }
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">Repair transfer</h1>
+<p class="subtitle lead">First published 14 October 2026 · Updated 18 November 2026</p>
 </div>
 
 <div>
@@ -4416,110 +4751,423 @@ main table > :not(caption) > * > * { background-color: transparent; }
 <p><a href="../repair-transfer/index.html">Paper</a> · <a href="index.pdf">PDF</a> · <a href="https://github.com/sergeisoly/interesearch/blob/main/papers/guides/repair-transfer.md">GitHub</a></p>
 </div>
 <div class="visual-explainer explainer-repair">
-<p>I test whether a correction learned for one fine-tuned model can help repair another. As in <a href="../selective-editing/explainer.html">Selective editing</a>, I deliberately worsen predictions in one language and measure the side effects on another.</p>
-<p>Here I fine-tune <a href="https://www.goodfire.com/research/interpreting-lm-parameters">Goodfire’s four-layer, 67-million-parameter language model</a> by training updates to its 24 attention and feed-forward weight matrices. The training objective pushes <strong>German prediction loss up</strong> while penalizing changes to English, French, Spanish and Italian predictions, leaving Dutch unprotected during fine-tuning.</p>
-<p>The model shares weights across languages, so the German edit can also affect Dutch. In these runs, Dutch prediction loss increases relative to the base model. This increase is the <strong>Dutch damage</strong> to be repaired. A <strong>repair</strong> is an additional weight change trained to restore Dutch prediction quality while keeping the intended German change.</p>
-<p>On two new fine-tunes, fitting only scalar coefficients over the earlier repair’s fixed directions left some Dutch damage, while training those directions removed almost all of it. The earlier repair was most useful <strong>as a starting point when fitting data and steps were limited</strong>. With the most fitting data and steps tested, a new repair learned from scratch nearly caught up.</p>
+<p>When a fine-tuning recipe causes the same side effect more than once, a correction learned for one model might help correct the next. I test two ways to reuse an earlier repair on two new fine-tunes.</p>
+<p>As in <a href="../selective-editing/explainer.html">Selective editing</a>, I deliberately worsen predictions in one language and measure the side effects on another. I fine-tune <a href="https://www.goodfire.com/research/interpreting-lm-parameters">Goodfire’s four-layer, 67-million-parameter language model</a> to raise German prediction loss while penalizing changes to English, French, Spanish and Italian predictions. Dutch is left out of that objective, and its prediction loss also rises. A <strong>repair</strong> is an additional weight update that aims to undo the Dutch damage while keeping the intended German change.</p>
+<p>Rescaling the earlier repair’s fixed directions left some Dutch damage on both fine-tunes. Training those directions removed almost all of it. Starting from the earlier repair helped most with short runs on small amounts of fitting text. At the largest tested budget, a fresh repair nearly caught up.</p>
 <section id="the-same-starting-repair-two-ways-to-reuse-it" class="level2">
 <h2 class="anchored" data-anchor-id="the-same-starting-repair-two-ways-to-reuse-it">Training the repair</h2>
-<p>The earlier fine-tune is the <strong>donor</strong> and its correction is the <strong>donor repair</strong>. The <strong>primary target</strong> is the first new fine-tuned model I repair. I repeat the comparison on a second model, the <strong>replication target</strong>. All three models are fine-tuned separately from the same base model, using the same recipe with different seeds and samples from the same distribution of European Parliament text (Europarl).</p>
-<p>To learn a repair, I freeze the fine-tuned weights and train an added update to restore the base model’s Dutch predictions while preserving the fine-tuned model’s predictions in the other languages. I learn the donor repair once, then reuse it for both targets.</p>
-<p>Each repair adds a <strong>rank-one update</strong> <span class="math inline">\(E=ba^\top\)</span> to each of 24 weight matrices. For a matrix input <span class="math inline">\(x\)</span>, the input vector <span class="math inline">\(a\)</span> reads out one scalar, <span class="math inline">\(a^\top x\)</span>. The output vector <span class="math inline">\(b\)</span> sets the direction of the added output, <span class="math inline">\(Ex=b(a^\top x)\)</span>. I compare <strong>three ways to train the repair</strong>:</p>
+<p>The earlier fine-tune is the <strong>donor</strong>. The <strong>primary target</strong> and <strong>replication target</strong> are two more fine-tunes trained independently from the same base model with the same recipe, different seeds and text sampled from the same distribution (Europarl, a corpus of European Parliament proceedings). I learn one donor repair and reuse it for both targets.</p>
+<p>Each repair freezes the fine-tuned weights and adds a <strong>rank-one update</strong> <span class="math inline">\(E=ba^\top\)</span> to each of 24 weight matrices. On an input <span class="math inline">\(x\)</span>, the input vector <span class="math inline">\(a\)</span> reads out a scalar <span class="math inline">\(a^\top x\)</span> and the output vector <span class="math inline">\(b\)</span> sets the direction of the added output <span class="math inline">\(Ex=b(a^\top x)\)</span>. Training rewards matching the base model’s Dutch predictions and keeping the fine-tuned model’s predictions in the other five languages.</p>
+<p>I compare three ways to fit the repair.</p>
 <ol type="1">
-<li><strong>Scalar coefficients only:</strong> keep the donor’s vectors fixed and learn one scalar coefficient per matrix, separately for each target.</li>
-<li><strong>Donor initialization:</strong> start from the donor’s vectors and train both on the new fine-tune.</li>
-<li><strong>Fresh initialization:</strong> learn both vectors from scratch, without using the donor repair.</li>
+<li><strong>Scalar-only fitting</strong> learns one multiplier per matrix. It can amplify, weaken or reverse the donor’s correction along the same direction.</li>
+<li><strong>Donor initialization</strong> trains both vectors from their donor values. It can change what the correction reads from the input and where it sends the result.</li>
+<li><strong>Fresh initialization</strong> starts with a zero update and trains both vectors using the target. This provides a baseline for how much the donor helps when both vectors can change.</li>
 </ol>
-<p>The fresh start tests whether the donor provides a useful head start over learning a new correction.</p>
-<figure class="explainer-diagram figure" aria-label="Schematic repair directions for one weight matrix" aria-describedby="repair-transfer-diagram-caption">
-  <div class="explainer-transfer-path">
-    <div><span class="explainer-kicker">Earlier fine-tune</span><strong>Learn a donor repair</strong></div>
-    <span class="explainer-transfer-arrow" aria-hidden="true">→</span>
-    <div><span class="explainer-kicker">New fine-tune</span><strong>Repair the new damage</strong></div>
-  </div>
-  <p id="repair-method-label"><strong>Repair training method</strong></p>
-  <div class="explainer-method-controls" role="group" aria-labelledby="repair-method-label">
-    <button type="button" data-repair-method="strengths" aria-pressed="true" aria-controls="repair-method-illustration repair-method-copy">Scalar coefficients only</button>
-    <button type="button" data-repair-method="donor_init" aria-pressed="false" aria-controls="repair-method-illustration repair-method-copy">Donor initialization</button>
-    <button type="button" data-repair-method="fresh" aria-pressed="false" aria-controls="repair-method-illustration repair-method-copy">Fresh initialization</button>
-  </div>
-  <div class="explainer-concept-layout">
-    <svg id="repair-method-illustration" viewbox="0 0 430 210" role="img" aria-labelledby="repair-method-title repair-method-description">
-      <title id="repair-method-title">Fit scalar coefficients over fixed donor directions</title>
-      <desc id="repair-method-description">The new arrow stays on the donor repair&#39;s line, but its scale can change.</desc>
-      <path d="M38 177 H404 M58 197 V12" fill="none" stroke="#dedfdc" stroke-width="1" />
-      <path id="repair-learned-arrow" d="M58 177 L326 27 M315 28 L326 27 L321 37" fill="none" stroke="#52514e" stroke-width="4" />
-      <path id="repair-donor-arrow" d="M58 177 L236.6667 77 M225.6667 78 L236.6667 77 L231.6667 87" fill="none" stroke="#8b9599" stroke-width="3" stroke-dasharray="6 5" />
-      <circle id="repair-donor-endpoint" cx="236.6667" cy="77" r="6" fill="#faf9f5" stroke="#526771" stroke-width="2"></circle>
-      <circle id="repair-zero-start" cx="58" cy="177" r="6" fill="#c85224" visibility="hidden"></circle>
-      <text id="repair-arrow-label" x="332" y="25" fill="#52514e" font-size="15">New update</text>
-      <text id="repair-donor-label" x="137" y="81" fill="#526771" font-size="14">Donor repair</text>
-    </svg>
-    <div id="repair-method-copy" class="explainer-method-copy" aria-live="polite" aria-atomic="true">
-      <h3 class="anchored">Same directions, new coefficients</h3>
-      <p>Keep the donor repair&#39;s input and output directions fixed. Learn one scalar coefficient per matrix, 24 numbers in all.</p>
+<style type="text/css">.repair-method [hidden] { display: none !important; }
+.repair-method figcaption { margin: 0 0 1rem; text-align: left; }
+.repair-method figcaption strong { font-size: 1.15rem; color: var(--research-ink); }
+.repair-method #repair-method-copy { margin: .25rem 0 1rem; }
+.repair-method-sliders {
+display: flex;
+flex-wrap: wrap;
+gap: .75rem 1.4rem;
+margin: 0 0 1rem;
+}
+.repair-method-sliders label { flex: 1 1 155px; max-width: 355px; font-size: .86rem; font-weight: 600; }
+.repair-method-sliders input { display: block; width: 100%; accent-color: #247467; min-height: 28px; }
+.repair-method-sliders output { float: right; font-variant-numeric: tabular-nums; color: var(--research-muted); }
+.repair-method-scenes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.repair-method-scenes section {
+min-width: 0;
+padding: .8rem .8rem .65rem;
+border: 1px solid var(--research-rule-strong);
+border-radius: 5px;
+}
+.repair-method-scenes h3 { margin: 0; font-size: 1rem; font-weight: 600; }
+.repair-method .repair-scene { display: block; width: 100%; max-height: 235px; touch-action: pan-y; cursor: grab; }
+.repair-method .repair-scene:active { cursor: grabbing; }
+.repair-method .repair-scene:focus-visible { outline: 2px solid #2b64a0; outline-offset: -2px; }
+.repair-method-scenes p { margin: .25rem 0; }
+.repair-method-key { font-size: .76rem; color: var(--research-muted); }
+.repair-method-key span { white-space: nowrap; }
+.repair-method-key span::before { content: ''; display: inline-block; vertical-align: .19em; width: .9rem; border-top: 2px solid; margin-right: .26rem; }
+.repair-method-key .repair-key-a::before { border-color: #9c4a23; }
+.repair-method-key .repair-key-x::before { border-color: #285a9b; }
+.repair-method-key .repair-key-e::before { border-color: #187163; }
+.repair-method-key .repair-key-b::before { border-color: #9c4a23; border-top-style: dashed; }
+.repair-value { font-size: .89rem; font-variant-numeric: tabular-nums; }
+.repair-view-help { display: flex; align-items: center; flex-wrap: wrap; gap: .4rem 1rem; margin-top: .75rem; color: var(--research-muted); font-size: .78rem; }
+.repair-view-help button { min-height: 36px; }
+@media (max-width: 620px) {
+.repair-method-scenes { gap: .65rem; grid-template-columns: minmax(0, 1fr); }
+.repair-method .repair-scene { max-height: 182px; }
+}
+@media print {
+.repair-method #repair-method-live { display: none !important; }
+.repair-method #repair-method-fallback { display: block !important; }
+}
+</style>
+<figure class="explainer-diagram repair-method figure" aria-labelledby="repair-transfer-diagram-caption">
+  <figcaption id="repair-transfer-diagram-caption"><strong>How one matrix reads and writes a correction</strong><br>Schematic vectors in three dimensions. The input <i>x</i> stays fixed and the read vector <i>a</i> has unit length.</figcaption>
+  <div id="repair-method-live" hidden>
+    <div class="explainer-method-controls" role="group" aria-label="Repair fitting method" id="repair-method-controls">
+      <button type="button" data-repair-method="strengths" aria-pressed="true">Scalar coefficients only</button>
+      <button type="button" data-repair-method="donor_init" aria-pressed="false">Donor initialization</button>
+      <button type="button" data-repair-method="fresh" aria-pressed="false">Fresh initialization</button>
     </div>
+    <p id="repair-method-copy" aria-live="polite"></p>
+    <div class="repair-method-sliders">
+      <label id="repair-coefficient-label">Coefficient <i>c</i> <output for="repair-coefficient"></output>
+        <input type="range" id="repair-coefficient" min="-1.5" max="1.5" step=".05" value="1"></label>
+      <label id="repair-read-angle-label" hidden>Turn input vector <i>a</i> <output for="repair-read-angle"></output>
+        <input type="range" id="repair-read-angle" min="-90" max="90" step="5" value="0"></label>
+      <label id="repair-write-angle-label" hidden>Turn output vector <i>b</i> <output for="repair-write-angle"></output>
+        <input type="range" id="repair-write-angle" min="-90" max="90" step="5" value="0"></label>
+      <label id="repair-length-label" hidden>Output length |<i>b</i>| <output for="repair-length"></output>
+        <input type="range" id="repair-length" min="0" max="1.5" step=".05" value="1"></label>
+    </div>
+    <div class="repair-method-scenes" id="repair-method-illustration">
+      <section aria-label="Input space">
+        <h3 class="anchored">Read from the input</h3>
+        <svg class="repair-scene" role="group" tabindex="0" id="repair-read-scene" viewbox="0 0 320 216" aria-label="Rotatable input space"></svg>
+        <p class="repair-method-key"><span class="repair-key-x">Input <i>x</i></span> · <span class="repair-key-a">Read direction <i>a</i></span></p>
+        <p class="repair-value">Projection <i>a</i><sup>⊤</sup><i>x</i> = <output id="repair-scalar-value">0.80</output></p>
+      </section>
+      <section aria-label="Output space">
+        <h3 class="anchored">Write to the output</h3>
+        <svg class="repair-scene" role="group" tabindex="0" id="repair-write-scene" viewbox="0 0 320 216" aria-label="Rotatable output space"></svg>
+        <p class="repair-method-key"><span class="repair-key-b">Output vector <i>b</i></span> · <span class="repair-key-e">Correction <i>Ex</i></span></p>
+        <p class="repair-value">Correction <i>Ex</i> = <output id="repair-vector-value">(0.64, 0, 0.48)</output></p>
+      </section>
+    </div>
+    <div class="repair-view-help"><span>Drag either view to rotate both. Use arrow keys when focused.</span><button type="button" id="repair-view-reset">Reset view</button></div>
   </div>
-  <figcaption id="repair-transfer-diagram-caption">Schematic for one weight matrix. The dashed arrow shows the donor repair and the solid arrow shows the new repair.</figcaption>
+  <div id="repair-method-fallback">
+    <p>Take <i>x</i> = (0.8, −0.5, 0.8), <i>a</i> = (1, 0, 0) and <i>b</i> = (0.8, 0, 0.6). The readout is 0.8. At coefficient 1 the added output is 0.8<i>b</i> = (0.64, 0, 0.48). At −1 it points the other way along the same line. Training <i>a</i> and <i>b</i> can change both the readout and the line. A fresh repair starts with <i>b</i> = 0 and adds nothing.</p>
+  </div>
 </figure>
+<script>// Orthographic views for small diagrams of vectors, with z up in model space.
+window.ResearchOrbit = (() => {
+  function project([x, y, z], { yaw, pitch }) {
+    const right = x * Math.cos(yaw) - y * Math.sin(yaw);
+    const depth = x * Math.sin(yaw) + y * Math.cos(yaw);
+    return [right, depth * Math.sin(pitch) - z * Math.cos(pitch)];
+  }
+
+  function bind(surfaces, draw, initial = { yaw: 0.6, pitch: 0.35 }) {
+    let camera = { ...initial };
+    let drag = null;
+    function redraw() {
+      draw(camera);
+    }
+    function rotate(yaw, pitch) {
+      camera = {
+        yaw: (camera.yaw + yaw) % (2 * Math.PI),
+        pitch: Math.min(1.35, Math.max(-1.35, camera.pitch + pitch)),
+      };
+      redraw();
+    }
+    function reset() {
+      camera = { ...initial };
+      redraw();
+    }
+
+    for (const surface of surfaces) {
+      surface.addEventListener("pointerdown", event => {
+        if (drag || !event.isPrimary || event.button !== 0) return;
+        drag = { id: event.pointerId, x: event.clientX, y: event.clientY };
+        surface.setPointerCapture(event.pointerId);
+      });
+      surface.addEventListener("pointermove", event => {
+        if (drag?.id !== event.pointerId) return;
+        const dx = event.clientX - drag.x;
+        const dy = event.clientY - drag.y;
+        drag.x = event.clientX;
+        drag.y = event.clientY;
+        rotate(dx * 0.012, dy * 0.012);
+      });
+      const endDrag = event => {
+        if (drag?.id === event.pointerId) drag = null;
+      };
+      for (const type of ["pointerup", "pointercancel", "lostpointercapture"]) {
+        surface.addEventListener(type, endDrag);
+      }
+      surface.addEventListener("keydown", event => {
+        const step = Math.PI / 18;
+        switch (event.key) {
+          case "ArrowLeft": rotate(-step, 0); break;
+          case "ArrowRight": rotate(step, 0); break;
+          case "ArrowUp": rotate(0, step); break;
+          case "ArrowDown": rotate(0, -step); break;
+          case "Home": reset(); break;
+          default: return;
+        }
+        event.preventDefault();
+      });
+    }
+    return { redraw, reset, rotate };
+  }
+  return { bind, project };
+})();
+</script>
+<script>/* A 3D schematic for one matrix. All readouts come from the vectors drawn here. */
+(() => {
+  "use strict";
+  const byId = id => document.getElementById(id);
+  const live = byId("repair-method-live");
+  if (!live || !window.ResearchOrbit) return;
+
+  const input = [0.8, -0.5, 0.8];
+  const donorRead = [1, 0, 0];
+  const donorWrite = [0.8, 0, 0.6];
+  // A fixed example of a nonzero initial input vector. Unit read vectors make
+  // aᵀx equal to the signed projection length in this schematic.
+  const freshRead = [-0.36, 0.8, 0.48].map(v => v / Math.hypot(-0.36, 0.8, 0.48));
+  const origin = [0, 0, 0];
+  const colors = { input: "#285a9b", direction: "#9c4a23", output: "#187163", guide: "#627078" };
+  const inputSvg = byId("repair-read-scene");
+  const outputSvg = byId("repair-write-scene");
+  const sliders = Object.fromEntries(["coefficient", "read-angle", "write-angle", "length"].map(key => [key, byId("repair-" + key)]));
+  const methodCopy = {
+    strengths: "Change the coefficient to rescale or reverse the correction along the donor’s output line. Both donor vectors stay fixed.",
+    donor_init: "Both vectors start at the donor values. Turn the input vector to change the readout, or turn the output vector to send it in a new direction.",
+    fresh: "The initial input vector is random and the output vector starts at zero. Increase the output length to begin writing a correction."
+  };
+  let method = "strengths";
+  const scale = (v, factor) => v.map(x => x * factor);
+  const dot = (a, b) => a.reduce((sum, value, i) => sum + value * b[i], 0);
+  const degrees = value => Number(value) * Math.PI / 180;
+  const number = value => (Math.abs(value) < .005 ? "0" : value.toFixed(2)).replace("-", "−");
+  const tuple = vector => "(" + vector.map(number).join(", ") + ")";
+
+  function geometry() {
+    const scalarOnly = method === "strengths";
+    const theta = scalarOnly ? 0 : degrees(sliders["read-angle"].value);
+    const phi = scalarOnly ? 0 : degrees(sliders["write-angle"].value);
+    const [ax, ay, az] = method === "fresh" ? freshRead : donorRead;
+    const a = [ax * Math.cos(theta) - ay * Math.sin(theta), ax * Math.sin(theta) + ay * Math.cos(theta), az];
+    const [bx, by, bz] = method === "fresh" ? [0, 0.8, 0.6] : donorWrite;
+    // The write direction rotates about a second axis. When its length is zero,
+    // a fresh repair has no direction, and the output panel draws no line.
+    const direction = [bx * Math.cos(phi) + bz * Math.sin(phi), by, bz * Math.cos(phi) - bx * Math.sin(phi)];
+    const b = scale(direction, scalarOnly ? 1 : Number(sliders.length.value));
+    const readout = dot(a, input);
+    const coefficient = scalarOnly ? Number(sliders.coefficient.value) : 1;
+    return { a, b, direction, readout, correction: scale(b, readout * coefficient) };
+  }
+
+  function draw(camera) {
+    const { a, b, direction, readout, correction } = geometry();
+    // Keep both panels on one scale. Allow space for endpoint labels when an
+    // unusually large correction or a steep camera angle approaches the edge.
+    const extent = [input, a, b, correction, scale(a, 1.35), scale(a, -1.35),
+      scale(direction, 1.6), scale(direction, -1.6), [0, 0, 1.15],
+      [-1, -1, 0], [-1, 1, 0], [1, -1, 0], [1, 1, 0]];
+    const views = extent.map(v => ResearchOrbit.project(v, camera));
+    const size = Math.min(100, 136 / Math.max(...views.map(([x]) => Math.abs(x))),
+      91 / Math.max(...views.map(([, y]) => Math.abs(y))));
+    const point = vector => {
+      const [x, y] = ResearchOrbit.project(vector, camera);
+      return [160 + size * x, 108 + size * y];
+    };
+    const projected = vector => point(vector).join(",");
+    function element(svg, tag, attrs, text) {
+      const el = document.createElementNS("http://www.w3.org/2000/svg", tag);
+      for (const [key, value] of Object.entries(attrs)) el.setAttribute(key, value);
+      if (text !== undefined) el.textContent = text;
+      svg.append(el);
+      return el;
+    }
+    function line(svg, start, end, color, width, dash) {
+      const attrs = { points: projected(start) + " " + projected(end), fill: "none", stroke: color, "stroke-width": width };
+      if (dash) attrs["stroke-dasharray"] = dash;
+      element(svg, "polyline", attrs);
+    }
+    function circle(svg, v, r, color, fill) {
+      const [cx, cy] = point(v);
+      element(svg, "circle", { cx, cy, r, stroke: color, fill, "stroke-width": 1.8 });
+    }
+    function arrow(svg, v, color) {
+      const [sx, sy] = point(origin);
+      const [x, y] = point(v);
+      const length = Math.hypot(x - sx, y - sy);
+      if (length < 2.5) { circle(svg, origin, 3.6, color, color); return; }
+      const dx = (x - sx) / length, dy = (y - sy) / length;
+      const head = Math.min(10, length * .6);
+      const hx = x - head * dx, hy = y - head * dy;
+      element(svg, "line", { x1: sx, y1: sy, x2: hx, y2: hy, stroke: color, "stroke-width": 3.3 });
+      element(svg, "polygon", { points: [[x,y], [hx - .42 * head * dy, hy + .42 * head * dx], [hx + .42 * head * dy, hy - .42 * head * dx]].map(p => p.join(",")).join(" "), fill: color });
+    }
+    function label(svg, v, word, dx, dy, color) {
+      const [x, y] = point(v);
+      element(svg, "text", { x: x + dx, y: y + dy, fill: color, "font-size": 14,
+        "font-weight": 600, "font-style": "italic", "text-anchor": dx < 0 ? "end" : "start",
+        stroke: "var(--research-paper, #faf9f5)", "stroke-width": 3.5, "paint-order": "stroke" }, word);
+    }
+    function frame(svg) {
+      svg.replaceChildren();
+      for (const offset of [-1, -.5, 0, .5, 1]) {
+        const color = offset === 0 ? "#a4ada9" : "#d7ddda";
+        line(svg, [offset, -1, 0], [offset, 1, 0], color, 1);
+        line(svg, [-1, offset, 0], [1, offset, 0], color, 1);
+      }
+      line(svg, origin, [0, 0, 1.15], "#a4ada9", 1);
+      circle(svg, origin, 2.6, colors.guide, colors.guide);
+    }
+    frame(inputSvg);
+    line(inputSvg, scale(a, -1.35), scale(a, 1.35), colors.direction, 1.6, "4 4");
+    line(inputSvg, input, scale(a, readout), colors.guide, 1.7, "3 3");
+    arrow(inputSvg, a, colors.direction);
+    arrow(inputSvg, input, colors.input);
+    const [px, py] = point(scale(a, readout));
+    element(inputSvg, "rect", { x: px - 3.5, y: py - 3.5, width: 7, height: 7, stroke: colors.guide, fill: "#fff", "stroke-width": 1.5 });
+    label(inputSvg, input, "x", 6, -6, colors.input);
+    label(inputSvg, a, "a", 6, 15, colors.direction);
+    frame(outputSvg);
+    if (Math.hypot(...b) > 0) {
+      line(outputSvg, scale(direction, -1.6), scale(direction, 1.6), colors.direction, 1.8, "5 4");
+      circle(outputSvg, b, 5, colors.direction, "#fff");
+    }
+    arrow(outputSvg, correction, colors.output);
+    if (Math.hypot(...b) > 0) label(outputSvg, b, "b", 7, 13, colors.direction);
+    label(outputSvg, correction, "Ex", -7, -6, colors.output);
+    byId("repair-scalar-value").textContent = number(readout);
+    byId("repair-vector-value").textContent = tuple(correction);
+    inputSvg.setAttribute("aria-label", "Input space. Input x " + tuple(input) + ", read vector a " + tuple(a) + ", signed projection " + number(readout) + ". Arrow keys rotate both views.");
+    outputSvg.setAttribute("aria-label", "Output space. Write vector b " + tuple(b) + ", added output " + tuple(correction) + ". Arrow keys rotate both views.");
+  }
+
+  const orbit = ResearchOrbit.bind([inputSvg, outputSvg], draw, { yaw: .6, pitch: .35 });
+  function update() {
+    for (const [key, slider] of Object.entries(sliders)) {
+      const isAngle = key.endsWith("angle");
+      const description = isAngle ? slider.value + "°" : number(Number(slider.value));
+      slider.parentElement.querySelector("output").value = description;
+      slider.setAttribute("aria-valuetext", description);
+    }
+    sliders["write-angle"].disabled = method !== "strengths" && Number(sliders.length.value) === 0;
+    orbit.redraw();
+  }
+  function select(next) {
+    method = next;
+    const scalarOnly = method === "strengths";
+    for (const [key, slider] of Object.entries(sliders)) {
+      slider.parentElement.hidden = scalarOnly !== (key === "coefficient");
+      slider.value = key === "coefficient" || (key === "length" && method !== "fresh") ? "1" : "0";
+    }
+    for (const button of live.querySelectorAll("[data-repair-method]")) {
+      button.setAttribute("aria-pressed", String(button.dataset.repairMethod === method));
+    }
+    byId("repair-method-copy").textContent = methodCopy[method];
+    update();
+  }
+  live.querySelectorAll("[data-repair-method]").forEach(button => button.addEventListener("click", () => select(button.dataset.repairMethod)));
+  Object.values(sliders).forEach(slider => slider.addEventListener("input", update));
+  byId("repair-view-reset").addEventListener("click", () => orbit.reset());
+  select(method);
+  live.hidden = false;
+  byId("repair-method-fallback").hidden = true;
+})();
+</script>
 </section>
 <section id="keeping-the-directions-leaves-damage-behind" class="level2">
 <h2 class="anchored" data-anchor-id="keeping-the-directions-leaves-damage-behind">Changing the directions repairs more damage</h2>
-<p>Here <strong>recovery</strong> is the share of the fine-tune’s extra Dutch prediction loss removed: 100% restores the base model’s Dutch loss.</p>
-<p>I choose each repair on separate selection text, then evaluate it on other Europarl text from 92 session dates.</p>
-<p>At the full fitting budget, scalar coefficients recover about <strong>87%</strong> on the primary target and <strong>78%</strong> on the replication target. Donor initialization recovers about <strong>98–99%</strong>. All full-budget repairs shown preserved the German effect and met the constraints on the other languages.</p>
-<figure class="explainer-figure figure" aria-labelledby="repair-full-caption">
-  <div id="repair-full-chart" class="explainer-chart"></div>
-  <figcaption id="repair-full-caption">Largest tested budget: 2,048 fit tokens and up to 600 steps for regular runs,
-  with extra optimization for scalar-only fits. Whiskers show 95% confidence intervals across the evaluation dates.</figcaption>
+<p><strong>Recovery</strong> is the share of the fine-tune’s extra Dutch prediction loss removed by the repair. At 100%, Dutch loss matches the base model’s. I select each repair on text separate from fitting and evaluate it on text from <strong>92 other Europarl session dates</strong>.</p>
+<p>At the largest tested fitting budget, donor initialization recovered <strong>98.2%</strong> on the primary target and <strong>98.8%</strong> on replication. The scalar-only fits reached <strong>86.9%</strong> and <strong>78.4%</strong> after a search that included two additional optimization runs per target. The selected repairs preserved the German effect and met the evaluation constraints on Dutch and the other languages. <a href="../repair-transfer/index.html#sec-app-checks">Expanded scalar search</a></p>
+<figure class="explainer-figure repair-results figure" aria-labelledby="repair-full-caption">
+  <figcaption id="repair-full-caption">Dutch prediction loss above the base model (nat/token) and the share of damage recovered (%).
+  The fits use 2,048 fit tokens and a 600-step cap for regular runs. The scalar search includes two extra runs per target.</figcaption>
+  <div id="repair-full-chart" hidden>
+    <p class="repair-loss-key">Zero marks the base model. A dashed line marks each unrepaired fine-tune.</p>
+    <div class="repair-loss-controls" role="group" aria-label="Inspect a repair on both targets">
+      <button type="button" data-repair-inspect="strengths" aria-pressed="false">Expanded scalar search</button>
+      <button type="button" data-repair-inspect="donor_init" aria-pressed="true">Donor initialization</button>
+      <button type="button" data-repair-inspect="fresh" aria-pressed="false">First fresh start</button>
+    </div>
+    <div id="repair-loss-panels" class="repair-panel-pair"></div>
+    <p id="repair-loss-detail" class="repair-inspection" aria-live="polite" aria-atomic="true"></p>
+  </div>
+  <details id="repair-full-data" class="explainer-data-table" open>
+    <summary>Read losses and recovery intervals</summary>
+    
+<table class="caption-top table">
+<caption>Extra Dutch loss (nat/token) and recovery (%). Brackets give 95% date-bootstrap intervals for recovery.</caption>
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" scope="col">Model</th>
+<th data-quarto-table-cell-role="th" scope="col">Primary target</th>
+<th data-quarto-table-cell-role="th" scope="col">Replication target</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th" scope="row">Base model</th>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th" scope="row">Unrepaired fine-tune</th>
+<td>0.1867</td>
+<td>0.1891</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th" scope="row">Expanded scalar search</th>
+<td>0.0245<br>
+86.9% [85.5, 88.3]</td>
+<td>0.0409<br>
+78.4% [76.7, 80.0]</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th" scope="row">Donor initialization</th>
+<td>0.0033<br>
+98.2% [97.6, 98.9]</td>
+<td>0.0024<br>
+98.8% [98.1, 99.4]</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th" scope="row">First fresh start</th>
+<td>0.0053<br>
+97.2% [96.5, 97.8]</td>
+<td>0.0050<br>
+97.4% [96.7, 98.0]</td>
+</tr>
+</tbody>
+</table>
+
+  </details>
 </figure>
-<p id="repair-primary-result" class="explainer-finding">Donor initialization exceeds the scalar-coefficient fit by 11.3 percentage
-points on the primary target and 20.4 points on the replication target.</p>
-<p>The <a href="../repair-transfer/index.html#sec-app-checks">expanded scalar search</a> still leaves a recovery gap in these tests. Other coefficient choices remain untested.</p>
+<p id="repair-full-primary" class="explainer-finding">Donor initialization improved recovery over the expanded scalar
+search by 11.3 percentage points on the primary target (95% paired interval [10.0, 12.7]) and 20.4 points
+on replication ([19.0, 21.7]). Both intervals exceeded the study&#39;s 3-point margin.</p>
+<p>These comparisons cover two targets trained from the same base with the same recipe. The extra scalar runs left a gap on both targets. Other choices of the 24 coefficients could still recover more Dutch performance under the same limit on repair size.</p>
 </section>
 <section id="the-donor-helps-most-when-fitting-is-constrained" class="level2">
 <h2 class="anchored" data-anchor-id="the-donor-helps-most-when-fitting-is-constrained">The donor helps most when fitting is constrained</h2>
-<p>To find out when the earlier repair is useful, I compare all three training methods at different amounts of fitting data and training steps.</p>
-<p>The fitting budget counts <em>fit tokens</em>: distinct prediction positions. All methods use the same fitting text.</p>
-<p>With <strong>256 fit tokens and up to 50 steps</strong>, starting from the donor recovers about <strong>4 percentage points</strong> more Dutch damage than fresh initialization. With <strong>2,048 tokens and up to 600 steps</strong>, fresh fitting nearly catches up: the donor’s lead is <strong>1.1–1.4 points</strong>. Only one fresh starting point was tested at the small budget.</p>
-<p>In the regular search, scalar-only recovery changes little across these budgets: <strong>86.9–87.4%</strong> on the primary target and <strong>76.3–77.4%</strong> on the replication target. Use the controls below to compare the two fine-tunes and fitting budgets.</p>
-<section class="explainer-interactive" aria-label="Explore recovery at different fitting budgets">
-  <div class="explainer-controls">
-    <label for="repair-target">Model to repair
-      <select id="repair-target">
-        <option value="primary_target">Primary target</option>
-        <option value="replication_target">Replication target</option>
-      </select>
-    </label>
-    <label for="repair-budget">Unique fit tokens
-      <select id="repair-budget">
-        <option value="256">256 tokens</option>
-        <option value="512">512 tokens</option>
-        <option value="2K">2,048 tokens</option>
-      </select>
-    </label>
-  </div>
-  <figure class="explainer-figure figure" aria-labelledby="repair-curve-caption">
-    <div id="repair-curve-chart" class="explainer-chart"></div>
-    <figcaption id="repair-curve-caption">Whiskers show 95% confidence intervals. Step spacing is logarithmic.
-    These curves use the regular fitting search. The full-budget comparison above also includes extra optimization for scalar-only fits.</figcaption>
+<p>A fitting budget counts <strong>unique fit tokens</strong>, the distinct prediction positions used to train the repair. Each method uses the same text at a given budget. A step cap sets the latest checkpoint eligible for selection, so the chosen repair may come from an earlier step.</p>
+<p>With <strong>256 fit tokens and a cap of 50 steps</strong>, donor initialization recovered <strong>4.4 percentage points</strong> more than the first fresh start on the primary target and <strong>4.1 points</strong> more on replication. With <strong>2,048 tokens and a cap of 600 steps</strong>, those leads fell to <strong>1.1</strong> and <strong>1.4 points</strong>. Only one fresh start was tested at the small budget.</p>
+<p>In the regular search, scalar-only recovery changed little across budgets and step caps. It ranged from <strong>86.9–87.4%</strong> on the primary target and <strong>76.3–77.4%</strong> on replication.</p>
+<section class="explainer-interactive repair-budget" id="repair-budget-interactive" aria-label="Donor recovery compared with the first fresh start" hidden>
+  <figure class="explainer-figure figure" aria-labelledby="repair-budget-caption">
+    <figcaption id="repair-budget-caption">Donor recovery minus the first fresh start, in percentage points.
+    Columns give step caps per run. Select a cell to inspect both targets at that budget.
+    Every cell uses the regular fitting search.</figcaption>
+    <div id="repair-budget-panels" class="repair-panel-pair"></div>
   </figure>
-  <div class="explainer-step-control">
-    <label for="repair-step">Step cap per run: <output id="repair-step-value" for="repair-step">50 steps</output></label>
-    <input id="repair-step" type="range" min="0" max="3" step="1" value="0" aria-valuetext="50 steps per run">
-    <div class="explainer-step-labels" aria-hidden="true"><span>50</span><span>100</span><span>200</span><span>600</span></div>
-  </div>
-  <p id="repair-curve-result" class="explainer-finding" aria-live="polite" aria-atomic="true"></p>
-  <p id="repair-curve-interpretation" class="explainer-reading"></p>
-  <details class="explainer-data-table">
-    <summary>Read the plotted values</summary>
-    <div id="repair-curve-table"></div>
-  </details>
+  <p id="repair-budget-selected" class="repair-inspection" aria-live="polite" aria-atomic="true"></p>
+  <div id="repair-budget-detail" class="explainer-data-table"></div>
 </section>
-<noscript><p>The interactive view needs JavaScript. At 256 tokens and 50 steps, recovery with donor initialization is 97.0%
-versus 92.6% for fresh on the primary target, and 96.7% versus 92.6% on the replication target.
-Scalar-only fitting recovers 87.2% on the primary target and 76.3% on the replication target.
-The <a href="index.html#sec-warm">paper&#39;s static figures</a> show every measured budget.</p></noscript>
+<div id="repair-budget-fallback">
+  <p>At 256 fit tokens and a cap of 50 steps, donor initialization recovered 97.0% on the primary target
+  and 96.7% on replication, versus 92.6% for fresh initialization on each target. Scalar-only fits
+  recovered 87.2% on the primary target and 76.3% on replication.
+  The <a href="index.html#sec-warm">paper&#39;s static figures</a> compare the first fresh start across every tested budget.</p>
+</div>
 <p><a href="../repair-transfer/index.html#sec-setup">Methods</a> and <a href="../repair-transfer/index.html#sec-limits">study limitations</a> in the paper.</p>
 <script id="repair-explainer-data" type="application/json">
 {
@@ -4530,7 +5178,7 @@ The <a href="index.html#sec-warm">paper&#39;s static figures</a> show every meas
     "study": "repair_transfer",
     "uncertainty": "95% percentile bootstrap over evaluation dates, with paired intervals for differences",
     "n_boot": 5000,
-    "units": "recovery and difference as fractions, rendered as percent and percentage points"
+    "units": "Dutch excess loss in nat/token, recovery and German effect kept as fractions, differences as fractions rendered in percentage points"
   },
   "equivalence_margin": 0.02,
   "budgets": [
@@ -4558,13 +5206,15 @@ The <a href="index.html#sec-warm">paper&#39;s static figures</a> show every meas
       "key": "primary_target",
       "label": "Primary target",
       "n_dates": 92,
+      "unrepaired_dutch_excess_loss": 0.1867260271753907,
       "primary": {
         "source_contrast": "donor_init@2K - strengths_best@2K",
         "diff": 0.11332993845915385,
         "ci": [
           0.10010145787993609,
           0.1267858561620735
-        ]
+        ],
+        "margin": 0.03
       },
       "full": [
         {
@@ -4575,7 +5225,9 @@ The <a href="index.html#sec-warm">paper&#39;s static figures</a> show every meas
           "ci": [
             0.8550212398734218,
             0.882728907453907
-          ]
+          ],
+          "dutch_excess_loss": 0.024464901087131764,
+          "german_effect_kept": 1.0054474932792856
         },
         {
           "family": "donor_init",
@@ -4585,7 +5237,9 @@ The <a href="index.html#sec-warm">paper&#39;s static figures</a> show every meas
           "ci": [
             0.9758173696715949,
             0.9886915711542695
-          ]
+          ],
+          "dutch_excess_loss": 0.0033032519186224434,
+          "german_effect_kept": 0.9964202311585921
         },
         {
           "family": "fresh",
@@ -4595,7 +5249,9 @@ The <a href="index.html#sec-warm">paper&#39;s static figures</a> show every meas
           "ci": [
             0.9650355584554247,
             0.9781979032819649
-          ]
+          ],
+          "dutch_excess_loss": 0.005285939533963425,
+          "german_effect_kept": 0.9895043436802918
         }
       ],
       "grid": [
@@ -5049,13 +5705,15 @@ The <a href="index.html#sec-warm">paper&#39;s static figures</a> show every meas
       "key": "replication_target",
       "label": "Replication target",
       "n_dates": 92,
+      "unrepaired_dutch_excess_loss": 0.18911752060040934,
       "primary": {
         "source_contrast": "donor_init@2K - strengths_best@2K",
         "diff": 0.2037190706299815,
         "ci": [
           0.18961029054142725,
           0.2174488077894659
-        ]
+        ],
+        "margin": 0.03
       },
       "full": [
         {
@@ -5066,7 +5724,9 @@ The <a href="index.html#sec-warm">paper&#39;s static figures</a> show every meas
           "ci": [
             0.7674908197950039,
             0.8004146118544782
-          ]
+          ],
+          "dutch_excess_loss": 0.0408856458111017,
+          "german_effect_kept": 1.0074691738173804
         },
         {
           "family": "donor_init",
@@ -5076,7 +5736,9 @@ The <a href="index.html#sec-warm">paper&#39;s static figures</a> show every meas
           "ci": [
             0.981338756861975,
             0.9937838383164341
-          ]
+          ],
+          "dutch_excess_loss": 0.0023588002745399263,
+          "german_effect_kept": 1.0008594606619539
         },
         {
           "family": "fresh",
@@ -5086,7 +5748,9 @@ The <a href="index.html#sec-warm">paper&#39;s static figures</a> show every meas
           "ci": [
             0.966798462188918,
             0.980385818149618
-          ]
+          ],
+          "dutch_excess_loss": 0.005010061521518418,
+          "german_effect_kept": 0.993731371453861
         }
       ],
       "grid": [
@@ -5540,288 +6204,205 @@ The <a href="index.html#sec-warm">paper&#39;s static figures</a> show every meas
 }
 
 </script>
-<script>/* Presentation only: all estimates and paired intervals come from the saved analysis. */
+<script>/* All estimates and intervals come from the saved analysis. */
 (() => {
   "use strict";
-  const NS = "http://www.w3.org/2000/svg";
-  const COLORS = { strengths: "#52514e", donor_init: "#2a78d6", fresh: "#c85224" };
-  const INK = "#182d3b";
-  const MUTED = "#526771";
-  const GRID = "#dedfdc";
+  const METHODS = {
+    strengths: { label: "Expanded scalar search", color: "#52514e" },
+    donor_init: { label: "Donor initialization", color: "#2364a5" },
+    fresh: { label: "First fresh start", color: "#a54520" }
+  };
+  const LOSS_AXIS_MAX = 0.20;
   const pct = value => (value * 100).toFixed(1);
-  const signed = value => `${value >= 0 ? "+" : "−"}${Math.abs(value * 100).toFixed(1)}`;
-  const interval = ci => `${pct(ci[0])}–${pct(ci[1])}`;
+  const signed = value => `${value < 0 ? "−" : "+"}${pct(Math.abs(value))}`;
+  const interval = (bounds, format = pct) => `[${format(bounds[0])}, ${format(bounds[1])}]`;
   const comma = value => value.toLocaleString("en-US");
-  const familyLabel = family => ({ strengths: "Scalar coefficients only", donor_init: "Donor initialization", fresh: "Fresh initialization" })[family];
+  const axisPosition = loss => `${100 * loss / LOSS_AXIS_MAX}%`;
 
-  function svgNode(tag, attrs = {}, content) {
-    const el = document.createElementNS(NS, tag);
-    Object.entries(attrs).forEach(([key, value]) => el.setAttribute(key, String(value)));
-    if (content !== undefined) el.textContent = content;
-    return el;
+  function append(parent, tag, className, text) {
+    const node = document.createElement(tag);
+    if (className) node.className = className;
+    if (text !== undefined) node.textContent = text;
+    parent.append(node);
+    return node;
   }
 
-  function add(parent, tag, attrs, content) {
-    const el = svgNode(tag, attrs, content);
-    parent.append(el);
-    return el;
+  function column(row, label) {
+    const cell = append(row, "th", "", label);
+    cell.scope = "col";
   }
 
-  function text(parent, x, y, content, attrs = {}) {
-    return add(parent, "text", { x, y, fill: INK, "font-size": 14, ...attrs }, content);
+  function rowLabel(row, label) {
+    const cell = append(row, "th", "", label);
+    cell.scope = "row";
   }
 
-  function chart(container, width, height, title, description) {
-    const svg = svgNode("svg", {
-      viewBox: `0 0 ${width} ${height}`, width: "100%", role: "img",
-      "aria-labelledby": `${container.id}-title ${container.id}-description`,
-      "font-family": "system-ui, -apple-system, sans-serif"
-    });
-    add(svg, "title", { id: `${container.id}-title` }, title);
-    add(svg, "desc", { id: `${container.id}-description` }, description);
-    container.replaceChildren(svg);
-    return svg;
+  function initLossChart(data) {
+    const chart = document.getElementById("repair-full-chart");
+    const panels = document.getElementById("repair-loss-panels");
+    const detail = document.getElementById("repair-loss-detail");
+    const choices = [...chart.querySelectorAll("[data-repair-inspect]")];
+    const tracks = [];
+    for (const target of data.targets) {
+      const panel = append(panels, "section", "repair-loss-panel");
+      append(panel, "h3", "", target.label);
+      const unrepaired = append(panel, "p", "repair-loss-before", "Unrepaired fine-tune");
+      append(unrepaired, "strong", "", target.unrepaired_dutch_excess_loss.toFixed(4));
+      for (const cell of target.full) {
+        const method = METHODS[cell.family];
+        const row = append(panel, "div", "repair-loss-row");
+        const labels = append(row, "div", "repair-loss-label");
+        append(labels, "span", "", method.label);
+        append(labels, "span", "repair-loss-number", `${cell.dutch_excess_loss.toFixed(4)} (${pct(cell.recovery)}%)`);
+
+        const track = append(row, "div", "repair-loss-track");
+        track.setAttribute("aria-hidden", "true");
+        track.style.setProperty("--repair-method-color", method.color);
+        const baseline = append(track, "span", "repair-loss-baseline");
+        baseline.style.left = axisPosition(target.unrepaired_dutch_excess_loss);
+        const dot = append(track, "span", "repair-loss-dot");
+        dot.style.left = axisPosition(cell.dutch_excess_loss);
+        tracks.push({ row, family: cell.family });
+      }
+
+      const axis = append(panel, "div", "repair-loss-axis");
+      axis.setAttribute("aria-hidden", "true");
+      for (const value of [0, 0.05, 0.10, 0.15, LOSS_AXIS_MAX]) {
+        const tick = append(axis, "span", "", value === 0 ? "0" : value.toFixed(2));
+        tick.style.left = axisPosition(value);
+      }
+    }
+
+    function inspect(family) {
+      for (const button of choices) {
+        button.setAttribute("aria-pressed", String(button.dataset.repairInspect === family));
+      }
+      for (const track of tracks) track.row.toggleAttribute("data-selected", track.family === family);
+      const kept = data.targets.map(target => {
+        const cell = target.full.find(candidate => candidate.family === family);
+        return `${target.label} ${pct(cell.german_effect_kept)}%`;
+      });
+      detail.textContent = `German effect kept · ${kept.join(" · ")}`;
+    }
+
+    for (const button of choices) {
+      button.addEventListener("click", () => inspect(button.dataset.repairInspect));
+    }
+    const [primary, replication] = data.targets.map(target => target.primary);
+    document.getElementById("repair-full-primary").textContent =
+      `Donor initialization improved recovery over the expanded scalar search by ${pct(primary.diff)} percentage ` +
+      `points on the primary target (95% paired interval ${interval(primary.ci)}) and ${pct(replication.diff)} points ` +
+      `on replication (${interval(replication.ci)}). Both intervals exceeded the study's ${primary.margin * 100}-point margin.`;
+    inspect("donor_init");
+    chart.hidden = false;
+    document.getElementById("repair-full-data").open = false;
   }
 
-  function whisker(svg, x1, x2, y, color) {
-    add(svg, "line", { x1, x2, y1: y, y2: y, stroke: color, "stroke-width": 2 });
-    [x1, x2].forEach(x => add(svg, "line", {
-      x1: x, x2: x, y1: y - 5, y2: y + 5, stroke: color, "stroke-width": 1.5
-    }));
-  }
+  function initBudgetGrid(data) {
+    const interactive = document.getElementById("repair-budget-interactive");
+    const panels = document.getElementById("repair-budget-panels");
+    const selection = document.getElementById("repair-budget-selected");
+    const results = document.getElementById("repair-budget-detail");
+    const buttons = [];
+    const largestGap = Math.max(...data.targets.flatMap(target => target.grid.map(cell => Math.abs(cell.gap.diff))));
+    const arrowMoves = { ArrowUp: [-1, 0], ArrowDown: [1, 0], ArrowLeft: [0, -1], ArrowRight: [0, 1] };
 
-  function marker(svg, family, cx, cy) {
-    if (family === "strengths") return add(svg, "path", {
-      d: `M${cx},${cy + 5}l5,-9h-10Z`, fill: COLORS[family]
-    });
-    if (family === "fresh") return add(svg, "path", {
-      d: `M${cx},${cy - 5}l5,9h-10Z`, fill: COLORS[family]
-    });
-    return add(svg, "circle", { cx, cy, r: 4.5, fill: COLORS[family] });
+    function select(budgetIndex, capIndex) {
+      const budget = data.budgets[budgetIndex];
+      const cap = data.step_caps[capIndex];
+      const cells = data.targets.map(target =>
+        target.grid.find(cell => cell.budget === budget.key && cell.step_cap === cap));
+      for (const panelButtons of buttons) {
+        for (const [row, rowButtons] of panelButtons.entries()) {
+          for (const [col, button] of rowButtons.entries()) {
+            const selected = row === budgetIndex && col === capIndex;
+            button.setAttribute("aria-pressed", String(selected));
+            button.tabIndex = selected ? 0 : -1;
+          }
+        }
+      }
+
+      const leads = cells.map((cell, index) => `${data.targets[index].label} ${signed(cell.gap.diff)} pp`);
+      selection.textContent = `${comma(budget.tokens)} fit tokens · ${cap}-step cap · ${leads.join(" · ")}`;
+
+      const table = document.createElement("table");
+      append(table, "caption", "", "Recovery with 95% date-bootstrap intervals. Donor advantages use paired intervals.");
+      const head = table.createTHead().insertRow();
+      column(head, "Measure");
+      for (const target of data.targets) column(head, target.label);
+      const body = table.createTBody();
+      for (const [key, name] of [
+        ["strengths", "Scalar-only recovery"],
+        ["donor", "Donor recovery"],
+        ["fresh", "First fresh recovery"],
+        ["gap", "Donor advantage"]
+      ]) {
+        const row = body.insertRow();
+        rowLabel(row, name);
+        for (const cell of cells) {
+          const value = key === "gap"
+            ? `${signed(cell.gap.diff)} pp ${interval(cell.gap.ci, signed)}`
+            : `${pct(cell[key].recovery)}% ${interval(cell[key].ci)}`;
+          row.insertCell().textContent = value;
+        }
+      }
+      results.replaceChildren(table);
+    }
+
+    for (const target of data.targets) {
+      const table = append(panels, "table", "repair-budget-grid");
+      append(table, "caption", "", target.label);
+      const head = table.createTHead().insertRow();
+      column(head, "Fit tokens");
+      for (const cap of data.step_caps) column(head, String(cap));
+      const body = table.createTBody();
+      const panelButtons = [];
+      buttons.push(panelButtons);
+      for (const [budgetIndex, budget] of data.budgets.entries()) {
+        const row = body.insertRow();
+        rowLabel(row, comma(budget.tokens));
+        const rowButtons = [];
+        panelButtons.push(rowButtons);
+        for (const [capIndex, cap] of data.step_caps.entries()) {
+          const cell = target.grid.find(cell => cell.budget === budget.key && cell.step_cap === cap);
+          const value = signed(cell.gap.diff);
+          const button = append(row.insertCell(), "button", "", value);
+          button.type = "button";
+          button.setAttribute("aria-label",
+            `${target.label}, ${comma(budget.tokens)} fit tokens, ${cap}-step cap, ${value} percentage points`);
+          button.style.setProperty("--repair-cell-opacity", 0.06 + 0.23 * Math.abs(cell.gap.diff) / (largestGap || 1));
+          rowButtons.push(button);
+          button.addEventListener("click", () => select(budgetIndex, capIndex));
+          button.addEventListener("keydown", event => {
+            const move = arrowMoves[event.key];
+            if (!move) return;
+            event.preventDefault();
+            const nextRow = budgetIndex + move[0];
+            const nextCol = capIndex + move[1];
+            const next = panelButtons[nextRow]?.[nextCol];
+            if (next) {
+              select(nextRow, nextCol);
+              next.focus();
+            }
+          });
+        }
+      }
+    }
+    select(0, 0);
+    interactive.hidden = false;
+    document.getElementById("repair-budget-fallback").hidden = true;
   }
 
   function init() {
-    const embedded = document.getElementById("repair-explainer-data");
-    if (!embedded) return;
-    let data;
     try {
-      data = JSON.parse(embedded.textContent);
-    } catch (_) {
-      document.getElementById("repair-curve-result").textContent =
-        "The interactive figure could not load. The paper contains the same results as static figures.";
-      return;
-    }
-    const full = document.getElementById("repair-full-chart");
-    const curve = document.getElementById("repair-curve-chart");
-    const targetSelect = document.getElementById("repair-target");
-    const budgetSelect = document.getElementById("repair-budget");
-    const stepInput = document.getElementById("repair-step");
-    const methodCopy = {
-      strengths: {
-        title: "Same directions, new coefficients",
-        text: "Keep the donor repair's input and output directions fixed. Learn one scalar coefficient per matrix, 24 numbers in all.",
-        description: "The new arrow stays on the donor repair's line, but its scale can change.",
-        path: "M58 177 L326 27 M315 28 L326 27 L321 37", label: [332, 25]
-      },
-      donor_init: {
-        title: "Start from the donor, then adapt it",
-        text: "Use the earlier repair as a starting point. Train both its input and output vectors on the new fine-tune, allowing its directions and size to change.",
-        description: "The new arrow can turn away from the donor's direction as the repair is fitted.",
-        path: "M58 177 L348 124 M338 120 L348 124 L341 132", label: [275, 105]
-      },
-      fresh: {
-        title: "Learn a new repair",
-        text: "Start from a zero update and learn both vectors without using the donor repair.",
-        description: "The donor arrow disappears. A new direction is learned from a zero-update start.",
-        path: "M58 177 L333 89 M322 88 L333 89 L326 98", label: [278, 71]
-      }
-    };
-    document.querySelectorAll("[data-repair-method]").forEach(button => button.addEventListener("click", () => {
-      const method = button.dataset.repairMethod;
-      const copy = methodCopy[method];
-      document.querySelectorAll("[data-repair-method]").forEach(b => b.setAttribute("aria-pressed", String(b === button)));
-      document.getElementById("repair-method-title").textContent = copy.title;
-      document.getElementById("repair-method-description").textContent = copy.description;
-      const arrow = document.getElementById("repair-learned-arrow");
-      arrow.setAttribute("d", copy.path);
-      arrow.setAttribute("stroke", COLORS[method]);
-      const label = document.getElementById("repair-arrow-label");
-      label.setAttribute("x", copy.label[0]);
-      label.setAttribute("y", copy.label[1]);
-      label.setAttribute("fill", INK);
-      ["repair-donor-arrow", "repair-donor-endpoint", "repair-donor-label"].forEach(id =>
-        document.getElementById(id).setAttribute("visibility", method === "fresh" ? "hidden" : "visible"));
-      document.getElementById("repair-zero-start").setAttribute("visibility", method === "fresh" ? "visible" : "hidden");
-      const heading = document.createElement("h3");
-      const paragraph = document.createElement("p");
-      heading.textContent = copy.title;
-      paragraph.textContent = copy.text;
-      document.getElementById("repair-method-copy").replaceChildren(heading, paragraph);
-      document.getElementById("repair-transfer-diagram-caption").textContent = method === "fresh"
-        ? "Schematic for one weight matrix. The new repair starts from zero, marked by the orange dot. The solid arrow shows the learned repair."
-        : "Schematic for one weight matrix. The dashed arrow shows the donor repair and the solid arrow shows the new repair.";
-    }));
-
-    function drawFull() {
-      const width = Math.max(310, full.clientWidth || 760);
-      const stacked = width < 650;
-      const panelWidth = stacked ? width : (width - 36) / 2;
-      const panelHeight = 322;
-      const description = data.targets.map(t => `${t.label}: ${t.full.map(c =>
-        `${familyLabel(c.family)}, ${pct(c.recovery)}% recovery, 95% interval ${interval(c.ci)}%`).join(". ")}`).join(". ");
-      const svg = chart(full, width, stacked ? 2 * panelHeight : panelHeight,
-        "Full-budget recovery on the two new fine-tunes", description);
-      data.targets.forEach((target, index) => {
-        const x0 = stacked ? 0 : index * (panelWidth + 36);
-        const y0 = stacked ? index * panelHeight : 0;
-        const left = x0 + 4;
-        const right = x0 + panelWidth - 8;
-        const scale = value => left + value * (right - left);
-        text(svg, left, y0 + 22, target.label, { "font-size": 17, "font-weight": 650 });
-        target.full.forEach((cell, row) => {
-          const y = y0 + 65 + row * 72;
-          text(svg, left, y, familyLabel(cell.family), { "font-size": 14 });
-          if (cell.family === "strengths") text(svg, left, y + 18, "24 learned coefficients", { "font-size": 12, fill: MUTED });
-          const barY = y + (cell.family === "strengths" ? 25 : 12);
-          text(svg, right, y, `${pct(cell.recovery)}%`, { "text-anchor": "end", "font-weight": 650 });
-          add(svg, "rect", { x: left, y: barY, width: right - left, height: 14, fill: "#eaece9", rx: 2 });
-          add(svg, "rect", {
-            x: left, y: barY, width: scale(cell.recovery) - left, height: 14,
-            fill: COLORS[cell.family], rx: 2
-          });
-          whisker(svg, scale(cell.ci[0]), scale(cell.ci[1]), barY + 7, INK);
-        });
-        [0, 0.5, 1].forEach(value => text(svg, scale(value), y0 + 284, `${value * 100}%`, {
-          fill: MUTED, "font-size": 12, "text-anchor": value === 0 ? "start" : value === 1 ? "end" : "middle"
-        }));
-        text(svg, left, y0 + 310, "Share of Dutch damage recovered", { fill: MUTED, "font-size": 12 });
-      });
-      const primaryText = data.targets.map((target, i) =>
-        `${pct(target.primary.diff)} percentage points on the ${i ? "replication" : "primary"} target`).join(" and ");
-      document.getElementById("repair-primary-result").textContent =
-        `Compared with scalar coefficients only, donor initialization increases Dutch recovery by ${primaryText}.`;
-    }
-
-    function drawCurve() {
-      const target = data.targets.find(t => t.key === targetSelect.value);
-      const budget = data.budgets.find(b => b.key === budgetSelect.value);
-      const step = data.step_caps[Number(stepInput.value)];
-      const points = target.grid.filter(cell => cell.budget === budget.key);
-      const current = points.find(cell => cell.step_cap === step);
-      const width = Math.max(310, curve.clientWidth || 760);
-      const stackedLegend = width < 650;
-      const height = stackedLegend ? 410 : 375;
-      const left = 44, right = width - 19, top = stackedLegend ? 92 : 53, bottom = height - 45;
-      const x = cap => left + Math.log(cap / 50) / Math.log(600 / 50) * (right - left);
-      const y = recovery => bottom - (recovery - 0.70) / 0.32 * (bottom - top);
-      const svg = chart(curve, width, height,
-        `${target.label}, ${comma(budget.tokens)} fit tokens: recovery by step cap`,
-        points.map(p => `With a step cap of ${p.step_cap}, scalar coefficients only ${pct(p.strengths.recovery)}%, donor initialization ${pct(p.donor.recovery)}%, fresh ${pct(p.fresh.recovery)}%.`).join(" ") +
-        " Whiskers are 95% date-bootstrap intervals. The vertical scale begins at 70%.");
-      ["strengths", "donor_init", "fresh"].forEach((family, index) => {
-        const xp = stackedLegend ? left : left + index * (right - left) / 3;
-        const yp = stackedLegend ? 17 + index * 23 : 17;
-        add(svg, "line", { x1: xp, x2: xp + 13, y1: yp, y2: yp, stroke: COLORS[family], "stroke-width": 3 });
-        marker(svg, family, xp + 6.5, yp);
-        text(svg, xp + 19, yp + 4, familyLabel(family), { "font-size": 13 });
-      });
-      for (const value of [0.70, 0.80, 0.90, 1]) {
-        add(svg, "line", { x1: left, x2: right, y1: y(value), y2: y(value), stroke: GRID, "stroke-width": 1 });
-        text(svg, left - 9, y(value) + 4, `${Math.round(value * 100)}%`, {
-          "text-anchor": "end", "font-size": 12, fill: MUTED
-        });
-      }
-      add(svg, "line", {
-        x1: x(step), x2: x(step), y1: top, y2: bottom, stroke: MUTED, "stroke-dasharray": "3 5", opacity: 0.65
-      });
-      data.step_caps.forEach(cap => text(svg, x(cap), bottom + 24, String(cap), {
-        "text-anchor": "middle", "font-size": 12, fill: cap === step ? INK : MUTED,
-        "font-weight": cap === step ? 700 : 400
-      }));
-      [["strengths", "strengths"], ["donor", "donor_init"], ["fresh", "fresh"]].forEach(([key, family]) => {
-        add(svg, "path", {
-          d: points.map((p, i) => `${i ? "L" : "M"}${x(p.step_cap)},${y(p[key].recovery)}`).join(" "),
-          fill: "none", stroke: COLORS[family], "stroke-width": 2.5, "stroke-linejoin": "round"
-        });
-        points.forEach(p => {
-          const cx = x(p.step_cap), cy = y(p[key].recovery);
-          add(svg, "line", {
-            x1: cx, x2: cx, y1: y(p[key].ci[0]), y2: y(p[key].ci[1]),
-            stroke: COLORS[family], "stroke-width": 1.5
-          });
-          for (const limit of p[key].ci) add(svg, "line", {
-            x1: cx - 4, x2: cx + 4, y1: y(limit), y2: y(limit), stroke: COLORS[family], "stroke-width": 1.5
-          });
-          if (p.step_cap === step) add(svg, "circle", {
-            cx, cy, r: 8, fill: "#faf9f5", stroke: COLORS[family], "stroke-width": 1.5
-          });
-          const point = marker(svg, family, cx, cy);
-          add(point, "title", {}, `${familyLabel(family)}, step cap ${p.step_cap}: ${pct(p[key].recovery)}%, 95% CI ${interval(p[key].ci)}%.`);
-        });
-      });
-      text(svg, (left + right) / 2, height - 2, "Step cap per run", {
-        "text-anchor": "middle", "font-size": 12, fill: MUTED
-      });
-      document.getElementById("repair-step-value").textContent = `${step} steps`;
-      stepInput.setAttribute("aria-valuetext", `${step} steps per run`);
-      document.getElementById("repair-curve-result").textContent =
-        `With ${comma(budget.tokens)} fit tokens and up to ${step} steps, Dutch recovery is ${pct(current.strengths.recovery)}% with scalar coefficients only, ${pct(current.donor.recovery)}% with donor initialization and ${pct(current.fresh.recovery)}% with fresh initialization. The donor's advantage over fresh initialization is ${signed(current.gap.diff)} percentage points.`;
-      const fullBudget = budget.key === "2K" && step === 600;
-      document.getElementById("repair-curve-interpretation").textContent = fullBudget
-        ? "At this budget, learning a repair from scratch nearly catches up."
-        : "";
-      drawTable(points, target.label, budget.tokens);
-    }
-
-    function drawTable(points, targetLabel, tokens) {
-      const table = document.createElement("table");
-      const caption = document.createElement("caption");
-      caption.textContent = `${targetLabel}, ${comma(tokens)} unique fit tokens. Values in brackets are 95% confidence intervals.`;
-      table.append(caption);
-      const head = table.createTHead().insertRow();
-      ["Step cap", "Scalar coefficients only (%)", "Donor initialization (%)", "Fresh initialization (%)"].forEach(label => {
-        const th = document.createElement("th");
-        th.scope = "col";
-        th.textContent = label;
-        head.append(th);
-      });
-      const body = table.createTBody();
-      points.forEach(p => {
-        const row = body.insertRow();
-        const label = document.createElement("th");
-        label.scope = "row";
-        label.textContent = String(p.step_cap);
-        row.append(label);
-        [`${pct(p.strengths.recovery)} [${interval(p.strengths.ci)}]`,
-          `${pct(p.donor.recovery)} [${interval(p.donor.ci)}]`,
-          `${pct(p.fresh.recovery)} [${interval(p.fresh.ci)}]`].forEach(value => {
-          row.insertCell().textContent = value;
-        });
-      });
-      document.getElementById("repair-curve-table").replaceChildren(table);
-    }
-
-    [targetSelect, budgetSelect].forEach(control => control.addEventListener("change", drawCurve));
-    stepInput.addEventListener("input", drawCurve);
-    drawFull();
-    drawCurve();
-    let frame;
-    const redraw = () => {
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(() => { drawFull(); drawCurve(); });
-    };
-    if (typeof ResizeObserver !== "undefined") {
-      let lastWidth = full.clientWidth;
-      new ResizeObserver(() => {
-        if (full.clientWidth !== lastWidth) {
-          lastWidth = full.clientWidth;
-          redraw();
-        }
-      }).observe(full);
-    } else {
-      window.addEventListener("resize", redraw);
+      const data = JSON.parse(document.getElementById("repair-explainer-data").textContent);
+      initLossChart(data);
+      initBudgetGrid(data);
+    } catch (error) {
+      console.warn("Repair-transfer figures could not initialize.", error);
     }
   }
+
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init, { once: true });
   else init();
 })();
@@ -6236,7 +6817,13 @@ The <a href="index.html#sec-warm">paper&#39;s static figures</a> show every meas
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-       
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item">
+    <a class="nav-link" href="../index.html">
+<p>Study overview</p>
+</a>
+  </li>  
+</ul>
     </div>   
     <div class="nav-footer-center">
        
@@ -6252,6 +6839,28 @@ The <a href="index.html#sec-warm">paper&#39;s static figures</a> show every meas
     </div>
   </div>
 </footer>
+<script>
+  (() => {
+    const panes = document.querySelectorAll(
+      "main .quarto-float-fig > div:has(> img), main .quarto-float-tbl > div:has(> table)"
+    );
+    if (!panes.length) return;
+    const updateTabStops = () => {
+      for (const pane of panes) {
+        const overflows = pane.scrollWidth > pane.clientWidth;
+        pane.toggleAttribute("data-scroll-overflow", overflows);
+        if (overflows) pane.setAttribute("tabindex", "0");
+        else pane.removeAttribute("tabindex");
+      }
+    };
+    const resizeObserver = new ResizeObserver(updateTabStops);
+    for (const pane of panes) {
+      resizeObserver.observe(pane);
+      resizeObserver.observe(pane.firstElementChild);
+    }
+    updateTabStops();
+  })();
+</script>
 
 
 

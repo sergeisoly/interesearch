@@ -4151,26 +4151,27 @@ display: block;
 max-width: 100%;
 overflow-x: auto;
 }
-main a {
-overflow-wrap: anywhere;
-}
 }
 :root {
 font-size: 100%;
+--research-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 --research-paper: #faf9f5;
 --research-ink: #182d3b;
 --research-muted: #526771;
---research-rule: #dce2df;
+--research-rule: #d5dad4;
+--research-rule-strong: #b5bcb4;
+--research-panel: #f0eee5;
+--research-control: #7d8e95;
 --research-blue: #2364a5;
 }
 body {
 background: var(--research-paper);
 color: var(--research-ink);
-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+font-family: var(--research-sans);
 font-size: 1rem;
 line-height: 1.65;
 }
-a { color: var(--research-blue); text-underline-offset: .2em; }
+a { color: var(--research-blue); text-underline-offset: .18em; text-decoration-thickness: .07em; }
 a:hover { color: #143e68; }
 a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible {
 outline: 3px solid #a46c17;
@@ -4187,46 +4188,234 @@ padding-bottom: .85rem;
 .navbar .navbar-title { font: 500 1.35rem Georgia, serif; letter-spacing: -.025em; }
 .navbar .nav-link { font-size: .95rem; }
 h1, h2, h3 { font-family: Georgia, "Times New Roman", serif; font-weight: 500; letter-spacing: -.025em; }
-h1.title { font-size: clamp(1.9rem, 3vw, 2.7rem); line-height: 1.12; }
+h1.title { font-size: clamp(2rem, 4vw, 3.25rem); line-height: 1.11; text-wrap: balance; }
 h2 { border-bottom: 0; margin-top: 2.8rem; padding-bottom: 0; line-height: 1.2; }
 h3 { line-height: 1.3; }
 #title-block-header { margin-top: 2.2rem; margin-bottom: 2.5rem; }
 .quarto-title .subtitle { color: var(--research-muted); font-size: 1.05rem; }
-#TOC { font-size: .82rem; line-height: 1.55; }
-#TOC a, .sidebar nav[role=doc-toc] ul>li>a.active { color: var(--research-muted); }
+#TOC { font-size: .87rem; line-height: 1.5; }
+#TOC a { color: var(--research-muted); }
+.sidebar nav[role=doc-toc] ul>li>a.active {
+color: var(--research-blue) !important;
+border-color: var(--research-blue);
+}
+
+body:not(.research-home, .research-explainer) main :is(p, ul, ol) {
+max-width: 72ch;
+}
+body:not(.research-home, .research-explainer) main {
+font: 1.08rem/1.74 Georgia, "Times New Roman", serif;
+}
+body:not(.research-home, .research-explainer) main :is(#title-block-header, .study-resources, .table, .quarto-float-caption) {
+font-family: var(--research-sans);
+}
+#title-block-header .abstract p { font: 1rem/1.7 Georgia, "Times New Roman", serif; }
+body:not(.research-home, .research-explainer) main h2 { font-size: clamp(1.5rem, 2.5vw, 2rem); }
+body:not(.research-home, .research-explainer) main h3 { font-size: clamp(1.25rem, 2vw, 1.55rem); }
+.quarto-title-meta-heading { color: var(--research-muted); }
+#title-block-header .abstract {
+max-width: 46rem;
+margin-top: 1.4rem;
+padding: .95rem 0 .05rem;
+border-top: 1px solid var(--research-rule);
+}
+#title-block-header .abstract-title {
+color: var(--research-ink);
+font-size: .9rem;
+font-weight: 650;
+}
+main .quarto-float-caption, main table caption {
+color: var(--research-muted);
+font-size: .9rem;
+line-height: 1.55;
+}
+main .table { font-variant-numeric: tabular-nums; }
+main [id] { scroll-margin-top: .85rem; }
+main a { overflow-wrap: anywhere; }
 main p, main li { overflow-wrap: break-word; }
 main code { font-size: .85em; }
 main pre { font-size: .84rem; }
 main img { max-width: 100%; height: auto; }
+main .quarto-float-tbl > div:has(> table) {
+max-width: 100%;
+overflow-x: auto;
+}
+main .quarto-float-tbl > div > table { display: table; }
+main .quarto-float-tbl > div[data-scroll-overflow]::before,
+main .quarto-float-fig > div[data-scroll-overflow]::before {
+position: sticky;
+left: 0;
+display: block;
+margin-bottom: .5rem;
+color: var(--research-muted);
+font: .85rem/1.35 var(--research-sans);
+text-align: left;
+}
+main .quarto-float-tbl > div[data-scroll-overflow]::before {
+content: "Scroll sideways to see all columns.";
+}
+main [data-scroll-overflow]:focus-visible {
+outline: 3px solid #a46c17;
+outline-offset: 3px;
+}
+
+@media (max-width: 56rem) {
+main .quarto-float-fig > div:has(> img) {
+max-width: 100%;
+overflow-x: auto;
+text-align: left;
+}
+main .quarto-float-fig > div[data-scroll-overflow]::before {
+content: "Scroll sideways to read the full figure.";
+}
+main .quarto-float-fig > div > img { min-width: 44rem; }
+}
 main table { font-size: .9rem; }
 .research-home #title-block-header { display: none; }
-.research-home #quarto-content { display: block; max-width: 1160px; margin: auto; padding: 0 2rem; }
+.research-home #quarto-content {
+display: block;
+max-width: 1170px;
+margin: auto;
+padding: 0 clamp(1rem, 4vw, 3rem);
+}
 .research-home main { margin: auto; }
-.research-hero { padding: 3rem 0 2.5rem; max-width: 870px; }
-.research-eyebrow { font: 600 .73rem/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; text-transform: uppercase; letter-spacing: .14em; color: var(--research-muted); margin-bottom: 1.1rem; }
-.research-hero h1 { font-size: clamp(1.9rem, 3vw, 2.7rem); line-height: 1.15; margin: 0; }
-.research-lead { font-size: 1.35rem; line-height: 1.55; max-width: 780px; }
-.research-intro { color: var(--research-muted); max-width: 720px; }
-.research-hero h1 + .research-intro { margin-top: 1.3rem; }
-.research-ai-note { max-width: 720px; margin-top: 1.75rem; color: var(--research-muted); }
-.research-ai-note h2 { color: var(--research-ink); font-size: 1.35rem; margin: 0 0 .75rem; }
-.research-ai-note p:last-child { margin-bottom: 0; }
-.research-story { border-top: 1px solid var(--research-rule); padding: 3rem 0; display: grid; grid-template-columns: 1.12fr 1fr; align-items: center; gap: 3rem; }
-.research-story h2 { font-size: clamp(1.7rem, 2.6vw, 2.2rem); margin: 0 0 1.2rem; }
-.research-story-copy>p:not(.research-eyebrow) { max-width: 560px; }
-.research-main-link { display: inline-block; color: var(--research-ink); font-weight: 600; margin-top: .3rem; }
-.research-main-link span { margin-left: .3rem; }
-.research-secondary-links { display: flex; flex-wrap: wrap; gap: 1.4rem; font-size: .86rem; }
-.research-secondary-links a { color: var(--research-muted); }
-.research-story-visual svg { width: 100%; height: auto; overflow: visible; }
-.preview-main { font: 500 17px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: var(--research-ink); }
-.preview-note { font: 13px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: var(--research-muted); }
-.research-footnote { border-top: 1px solid var(--research-rule); padding: 2rem 0 4rem; color: var(--research-muted); font-size: .9rem; }
-.research-footnote p { max-width: 790px; }
-.research-explainer #quarto-content { display: block; max-width: 1100px; padding: 0 2rem; margin: auto; }
+.research-hero {
+padding: clamp(2rem, 5.5vw, 4.25rem) 0 clamp(1.8rem, 3.6vw, 2.75rem);
+}
+.research-hero h1 {
+max-width: 21ch;
+margin: 0;
+font-size: clamp(2.25rem, 6vw, 4.85rem);
+line-height: 1.04;
+letter-spacing: -.042em;
+text-wrap: balance;
+}
+.research-hero p {
+max-width: 54ch;
+margin: 1.35rem 0 0;
+font-size: clamp(1.05rem, 1.9vw, 1.3rem);
+line-height: 1.58;
+}
+.research-story {
+display: grid;
+grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr);
+align-items: start;
+gap: clamp(2rem, 5vw, 4rem);
+padding: clamp(1.65rem, 4vw, 3.25rem) 0;
+border-top: 1px solid var(--research-rule);
+}
+.research-story h2 {
+margin: 0 0 .75rem;
+font-size: clamp(1.8rem, 3.2vw, 2.65rem);
+line-height: 1.12;
+text-wrap: balance;
+}
+.research-story-copy p { max-width: 57ch; margin-bottom: .85rem; }
+.research-study-links {
+display: flex;
+flex-wrap: wrap;
+align-items: center;
+gap: .2rem clamp(.75rem, 1.7vw, 1.25rem);
+font-size: .9rem;
+}
+.research-study-links a {
+display: inline-flex;
+align-items: center;
+min-height: 44px;
+white-space: nowrap;
+}
+.research-study-links .research-main-link {
+gap: .5em;
+font-weight: 700;
+}
+.research-result {
+min-width: 0;
+margin: 0;
+padding: clamp(.9rem, 2.4vw, 1.5rem);
+background: var(--research-panel);
+border-top: 2px solid var(--research-ink);
+font-size: .9rem;
+}
+.research-result-title {
+margin: 0 0 .8rem;
+font: 500 clamp(1.15rem, 2.2vw, 1.45rem)/1.25 Georgia, serif;
+}
+.research-result figcaption {
+margin: .9rem 0 0;
+color: var(--research-muted);
+font-size: .84rem;
+line-height: 1.55;
+}
+.research-interval-row {
+display: grid;
+grid-template-columns: 1fr auto;
+align-items: baseline;
+gap: .35rem .65rem;
+margin-bottom: .6rem;
+}
+.research-interval-row strong, .research-interval-axis, .research-result-table td {
+font-variant-numeric: tabular-nums;
+}
+.research-interval-track {
+grid-column: 1 / -1;
+position: relative;
+height: .8rem;
+border-inline: 1px solid var(--research-rule-strong);
+background: repeating-linear-gradient(to right, transparent 0 calc(25% - 1px), var(--research-rule-strong) calc(25% - 1px) 25%);
+}
+.research-interval-track span {
+position: absolute;
+inset: .19rem calc(100% - var(--end)) .19rem var(--start);
+border-radius: .5rem;
+background: var(--research-blue);
+}
+.research-interval-comparator span { background: var(--research-muted); }
+.research-interval-axis {
+display: grid;
+grid-template-columns: repeat(4, minmax(0, 1fr)) 0;
+color: var(--research-muted);
+font-size: .8rem;
+}
+.research-interval-axis span { justify-self: start; transform: translateX(-50%); }
+.research-interval-axis span:is(:first-child, :last-child) { transform: none; }
+.research-interval-axis span:last-child { justify-self: end; }
+.research-home #quarto-document-content .research-result-table {
+display: table;
+width: 100%;
+margin: 0;
+border-collapse: collapse;
+font-size: inherit;
+text-align: left;
+}
+.research-result-table th, .research-result-table td {
+border-bottom: 1px solid var(--research-rule-strong);
+padding: .45rem .45rem .45rem 0;
+}
+.research-result-table col:first-child { width: 52% !important; }
+.research-result-table col:not(:first-child) { width: 24% !important; }
+.research-result-table thead th { color: var(--research-muted); font-size: .83rem; line-height: 1.3; }
+.research-result-table tbody th { font-weight: 500; line-height: 1.35; }
+.research-result-table tbody td { font-weight: 600; }
+.research-result-table .research-result-emphasis td { color: var(--research-blue); }
+.research-notes {
+display: grid;
+grid-template-columns: repeat(2, minmax(0, 1fr));
+gap: .6rem clamp(2rem, 5vw, 4rem);
+border-top: 1px solid var(--research-rule);
+padding: 2rem 0 3rem;
+color: var(--research-muted);
+font-size: .95rem;
+}
+.research-notes h2 {
+margin: 0 0 .75rem;
+color: var(--research-ink);
+font-size: 1.4rem;
+}
+.research-notes p { max-width: 65ch; }
+.research-explainer #quarto-content { display: block; max-width: 1040px; padding: 0 clamp(1rem, 4vw, 3rem); margin: auto; }
 .research-explainer main { margin: auto; }
-.research-explainer #title-block-header { max-width: 900px; margin-top: 3.5rem; }
-.research-explainer main p { max-width: 790px; }
+.research-explainer #title-block-header { max-width: 900px; margin-top: 3.5rem; margin-bottom: 1.5rem; }
+.research-explainer main :is(p, ul, ol) { max-width: 74ch; }
 .research-explainer main>section { margin-top: 3rem; }
 .research-explainer h2 { max-width: 800px; font-size: clamp(1.5rem, 2.4vw, 1.9rem); margin-bottom: 1.25rem; }
 .research-explainer h3 { font-family: inherit; font-size: 1.1rem; font-weight: 600; letter-spacing: 0; }
@@ -4235,11 +4424,11 @@ main table { font-size: .9rem; }
 .visual-panel, .explainer-visual { margin: 2rem 0; border-top: 1px solid var(--research-rule); border-bottom: 1px solid var(--research-rule); padding: 1.75rem 0; }
 .visual-controls, .explainer-controls { display: flex; flex-wrap: wrap; align-items: end; gap: 1rem 1.6rem; margin-bottom: 1.5rem; }
 .visual-controls label, .explainer-controls label { display: flex; flex-direction: column; gap: .4rem; font-size: .85rem; font-weight: 600; }
-.research-explainer button, .research-explainer select { font: inherit; font-size: .9rem; border: 1px solid #aebfc1; background: transparent; color: var(--research-ink); min-height: 42px; border-radius: 4px; padding: .45rem .8rem; }
-.research-explainer button { cursor: pointer; }
-.research-explainer button[aria-pressed=true] { background: var(--research-ink); border-color: var(--research-ink); color: #fff; }
-.research-explainer button:hover:not([aria-pressed=true]) { background: #edf0eb; }
-.research-explainer input[type=range] { accent-color: #2a78d6; max-width: 100%; }
+.research-explainer main :is(button, select) { font: inherit; font-size: .9rem; border: 1px solid var(--research-control); background: transparent; color: var(--research-ink); min-height: 44px; border-radius: 4px; padding: .45rem .8rem; }
+.research-explainer main button { cursor: pointer; }
+.research-explainer main button[aria-pressed=true] { background: var(--research-ink); border-color: var(--research-ink); color: #fff; }
+.research-explainer main button:hover:not([aria-pressed=true]) { background: #edf0eb; }
+.research-explainer main input[type=range] { accent-color: #2a78d6; max-width: 100%; }
 .research-explainer svg { display: block; width: 100%; height: auto; }
 .research-explainer svg text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
 .research-explainer figcaption, .visual-caption, .explainer-caption { color: var(--research-muted); font-size: .85rem; line-height: 1.6; margin-top: .75rem; max-width: 840px; }
@@ -4247,12 +4436,10 @@ main table { font-size: .9rem; }
 .research-explainer summary { cursor: pointer; font-weight: 600; }
 .research-explainer details table { font-size: .85rem; }
 .research-explainer .visual-note, .research-explainer .explainer-note { color: var(--research-muted); font-size: .92rem; }
-@media (max-width: 700px) {
-.research-home #quarto-content, .research-explainer #quarto-content { padding: 0 1.15rem; }
-.research-hero { padding: 3rem 0 2.5rem; }
-.research-lead { font-size: 1.15rem; }
-.research-story { grid-template-columns: 1fr; gap: 1rem; padding: 2.5rem 0; }
-.research-story-visual { max-width: 470px; }
+@media (max-width: 820px) {
+.research-story, .research-notes { grid-template-columns: minmax(0, 1fr); }
+.research-story { gap: .9rem; }
+.research-result { max-width: 36rem; }
 .research-explainer #title-block-header { margin-top: 2.5rem; }
 .visual-controls, .explainer-controls { gap: .8rem; }
 .research-explainer select { max-width: 100%; }
@@ -4275,9 +4462,13 @@ main table { font-size: .9rem; }
 .visual-matrix-state { text-align: center; margin: 1.5rem auto 0; font-size: .95rem; }
 .visual-dose { border: 0; margin: 0; padding: 0; }
 .visual-dose legend { float: none; width: auto; font-size: .85rem; font-weight: 600; margin-bottom: .4rem; }
-.visual-chart-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+.visual-chart-pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1.5rem; }
 .visual-result-sentence, .explainer-finding { border-left: 3px solid #2a78d6; padding-left: 1.1rem; margin-top: 1.6rem; }
-.visual-uncertainty-table { overflow-x: auto; }
+.visual-uncertainty-table, .explainer-data-table { max-width: 100%; overflow-x: auto; }
+.research-explainer :is(.visual-uncertainty-table, .explainer-data-table) table {
+display: table;
+width: 100%;
+}
 .visual-uncertainty-table table, .explainer-data-table table { width: 100%; margin-top: 1rem; border-collapse: collapse; }
 .visual-uncertainty-table th, .visual-uncertainty-table td, .explainer-data-table th, .explainer-data-table td { padding: .6rem .7rem; border-bottom: 1px solid var(--research-rule); text-align: left; }
 .visual-next { border-top: 1px solid var(--research-rule); margin-top: 2rem; padding: 1.5rem 0; }
@@ -4293,11 +4484,123 @@ main table { font-size: .9rem; }
 .explainer-method-copy p { font-size: .95rem; }
 .explainer-step-control { max-width: 560px; margin: 1.7rem 0; }
 .explainer-reading { font-size: .95rem; }
-.research-paper-title { font-size: .86rem; color: var(--research-muted); }
+.explainer-repair .repair-panel-pair {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(min(100%, 330px), 1fr));
+gap: 1.2rem 1.5rem;
+align-items: start;
+}
+.repair-results .repair-loss-controls {
+display: flex;
+flex-wrap: wrap;
+gap: .5rem;
+margin-bottom: 1rem;
+}
+.repair-results .repair-loss-key {
+margin: .45rem 0 .75rem;
+color: var(--research-muted);
+font-size: .85rem;
+}
+.repair-results .repair-loss-panel {
+max-width: 34rem;
+padding: .9rem .85rem .6rem;
+border: 1px solid var(--research-rule);
+}
+.repair-results .repair-loss-panel h3 { margin: 0 .45rem .45rem; }
+.repair-results :is(.repair-loss-label, .repair-loss-before) {
+display: flex;
+justify-content: space-between;
+align-items: baseline;
+gap: .35rem;
+margin: 0;
+line-height: 1.35;
+font-size: .85rem;
+}
+.repair-results .repair-loss-before {
+margin: 0 .45rem .55rem;
+color: var(--research-muted);
+}
+.repair-results .repair-loss-number { white-space: nowrap; font-variant-numeric: tabular-nums; }
+.repair-results .repair-loss-row { padding: .4rem .45rem; border-radius: 4px; }
+.repair-results .repair-loss-row[data-selected] { background: #e5edf4; font-weight: 600; }
+.repair-results .repair-loss-track {
+position: relative;
+height: 14px;
+margin-top: .35rem;
+border-right: 1px solid var(--research-rule);
+background:
+linear-gradient(to right, var(--research-rule) 1px, transparent 1px) 0 0 / 25% 100%,
+linear-gradient(var(--research-rule-strong), var(--research-rule-strong)) center / 100% 1px no-repeat;
+}
+.repair-results .repair-loss-baseline,
+.repair-results .repair-loss-dot {
+position: absolute;
+top: 50%;
+transform: translate(-50%, -50%);
+}
+.repair-results .repair-loss-baseline { height: 14px; border-left: 2px dashed var(--research-muted); }
+.repair-results .repair-loss-dot {
+width: 9px;
+height: 9px;
+border-radius: 50%;
+background: var(--repair-method-color);
+}
+.repair-results .repair-loss-row[data-selected] .repair-loss-dot {
+outline: 1px solid var(--repair-method-color);
+outline-offset: 2px;
+}
+.repair-results .repair-loss-axis {
+position: relative;
+height: 1.1rem;
+margin: .15rem .45rem 0;
+font-size: .72rem;
+line-height: 1.25;
+color: var(--research-muted);
+}
+.repair-results .repair-loss-axis span { position: absolute; transform: translateX(-50%); }
+.explainer-repair .repair-inspection {
+margin: .75rem 0 0;
+color: var(--research-muted);
+font-size: .9rem;
+}
+.repair-budget .explainer-figure { margin: 0; }
+.repair-budget figcaption { margin: 0 0 .75rem; }
+.repair-budget .repair-budget-grid { display: table; width: 100%; table-layout: fixed; }
+.repair-budget .repair-budget-grid caption {
+caption-side: top;
+padding: 0 0 .3rem;
+color: var(--research-ink);
+font-size: 1rem;
+font-weight: 650;
+}
+.repair-budget .repair-budget-grid :is(th, td) {
+padding: .16rem;
+text-align: center;
+font-size: .8rem;
+font-variant-numeric: tabular-nums;
+}
+.repair-budget .repair-budget-grid th:first-child { width: 22%; text-align: left; }
+.research-explainer .repair-budget .repair-budget-grid button {
+width: 100%;
+padding: .2rem;
+background: rgb(35 100 165 / var(--repair-cell-opacity));
+border-color: transparent;
+font-variant-numeric: tabular-nums;
+}
+.research-explainer .repair-budget .repair-budget-grid button:hover {
+border-color: var(--research-blue);
+}
+.research-explainer .repair-budget .repair-budget-grid button[aria-pressed=true] {
+background: var(--research-blue);
+color: #fff;
+}
+.repair-budget .repair-budget-grid button:focus-visible { outline-offset: 0; }
+.repair-budget #repair-budget-detail table { margin-top: .35rem; font-size: .8rem; }
+.repair-budget #repair-budget-detail :is(th, td) { padding: .4rem; }
+.repair-budget #repair-budget-detail caption { caption-side: bottom; font-size: .8rem; }
 @media (max-width: 800px) {
 .visual-chart-pair { grid-template-columns: 1fr; gap: 1.4rem; }
 .explainer-concept-layout { grid-template-columns: 1fr; gap: .4rem; }
-#repair-method-illustration { max-width: 470px; }
 }
 @media (max-width: 480px) {
 .visual-matrix-equation { gap: .3rem; grid-template-columns: 1fr 17px 1fr 17px 1fr; }
@@ -4305,7 +4608,7 @@ main table { font-size: .9rem; }
 .visual-matrix-operator { font-size: 1.35rem; }
 .explainer-transfer-path { gap: .8rem; }
 .explainer-transfer-path strong { font-size: .85rem; }
-.explainer-kicker { font-size: .72rem; }
+.explainer-kicker { font-size: .8rem; }
 }
 .navbar .navbar-nav .nav-link.active, .navbar .navbar-nav .nav-link.show { color: var(--research-ink) !important; }
 .navbar #quarto-search .aa-DetachedSearchButton { color: var(--research-ink); }
@@ -4313,10 +4616,11 @@ main table { font-size: .9rem; }
 .navbar #quarto-search .aa-SubmitIcon, .navbar #quarto-search .aa-SubmitIcon path { color: var(--research-ink); fill: var(--research-ink); }
 
 .study-breadcrumb { color: var(--research-muted); font-size: .85rem; margin-bottom: 1.4rem; }
-.research-eyebrow a { color: inherit; }
 .nav-footer a { color: var(--research-muted); }
-.study-resources { border-top: 1px solid var(--research-rule); border-bottom: 1px solid var(--research-rule); padding: .65rem 0; margin: 1rem 0 1.5rem; font-size: .9rem; }
+.study-resources { border-top: 1px solid var(--research-rule); border-bottom: 1px solid var(--research-rule); margin: 1rem 0 1.5rem; font-size: .9rem; }
 .study-resources p { margin: 0; }
+.study-resources a { display: inline-flex; align-items: center; min-height: 44px; padding-inline: .3rem; }
+.study-resources a:first-child { padding-left: 0; }
 .navbar .nav-link:focus-visible { outline: 3px solid #a46c17; outline-offset: 2px; box-shadow: none; }
 .nav-footer { background: var(--research-paper); }
 
@@ -4329,6 +4633,123 @@ main table > :not(caption) > * > * { background-color: transparent; }
 
 .guide-task-options table { display: table; width: 100%; table-layout: fixed; }
 .guide-task-options th:first-child, .guide-task-options td:first-child { width: 28%; }
+
+#visual-results-interactive[hidden] ~ figcaption .plot-key,
+#visual-english-interactive[hidden] ~ figcaption .plot-key { display: none; }
+.matrix-view-switch { border: 0; padding: 0; margin: 0 0 1.2rem; }
+.matrix-view-switch legend { font-weight: 600; font-size: 1rem; margin-bottom: .35rem; }
+.matrix-view-switch label { display: inline-flex; gap: .4rem; align-items: center; margin-right: 1rem; min-height: 2.75rem; }
+.visual-matrix-equation[hidden] { display: none; }
+#matrix-output { max-width: 650px; margin: auto; }
+.matrix-output-controls, .matrix-output-legend { display: flex; align-items: center; flex-wrap: wrap; gap: .4rem 1rem; }
+.matrix-output-controls label { font-size: .94rem; }
+.matrix-output-controls :is(button, select) { min-height: 2.75rem; }
+#matrix-output-space { display: block; width: 100%; touch-action: pan-y pinch-zoom; cursor: grab; user-select: none; }
+#matrix-output-space:active { cursor: grabbing; }
+#matrix-output-space:focus-visible { outline: 2px solid var(--research-blue); outline-offset: 1px; }
+.matrix-output-legend { font-size: .88rem; padding: 0; list-style: none; }
+.matrix-output-legend li { display: inline-flex; gap: .3rem; align-items: baseline; }
+.matrix-output-legend span { display: inline-block; width: .7rem; height: .7rem; margin-right: .1rem; }
+.matrix-now-symbol { border-radius: 50%; background: #246c81; }
+.matrix-zero-symbol { border: 2px solid #616567; }
+.matrix-one-symbol { border: 2px solid #985a29; transform: rotate(45deg); }
+#matrix-output-reading { font-variant-numeric: tabular-nums; margin: .75rem 0 .25rem; }
+#matrix-orbit-help { color: var(--research-muted); font-size: .85rem; }
+.research-hero .research-dates, .research-explainer .quarto-title .subtitle {
+font-size: .92rem;
+color: var(--research-muted);
+}
+</style>
+<style type="text/css">.selective-calibration {
+display: grid;
+grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+align-items: start;
+gap: 1.5rem;
+margin-block: 1.4rem 2rem;
+}
+.selective-calibration h3 {
+margin: 0 0 .5rem;
+}
+.selective-edit-readout {
+border: 1px solid var(--research-rule);
+padding: 1rem 1.2rem;
+}
+.selective-chosen-coefficient {
+margin: 0;
+color: var(--research-blue);
+font-size: 1.5rem;
+font-variant-numeric: tabular-nums;
+}
+.selective-calibration-key {
+display: flex;
+flex-wrap: wrap;
+column-gap: 1rem;
+margin: .5rem 0 .8rem;
+color: var(--research-muted);
+font-size: .85rem;
+}
+.selective-calibration-key i {
+display: inline-block;
+width: .55rem;
+height: .55rem;
+margin-inline-end: .2rem;
+border-radius: 50%;
+background: var(--research-muted);
+}
+.selective-calibration-key span:nth-child(2) i {
+border: 2px solid var(--research-blue);
+background: transparent;
+}
+.selective-calibration-key span:nth-child(3) i {
+width: .8rem;
+height: .2rem;
+border-radius: 0;
+background: var(--research-blue);
+}
+.selective-edit-readout table {
+width: 100%;
+font-variant-numeric: tabular-nums;
+}
+.selective-edit-readout .visual-note {
+margin-bottom: .8rem;
+}
+.selective-edit-readout caption {
+position: absolute;
+width: 1px;
+height: 1px;
+padding: 0;
+overflow: hidden;
+clip-path: inset(50%);
+white-space: nowrap;
+}
+.selective-edit-readout th,
+.selective-edit-readout td {
+padding: .28rem 0;
+}
+.selective-edit-readout th[scope="row"] {
+font-weight: 400;
+}
+.selective-edit-readout td {
+padding-left: .7rem;
+font-weight: 600;
+text-align: right;
+white-space: nowrap;
+}
+.selective-edit-readout th[colspan] {
+padding-top: .65rem;
+border-top: 1px solid var(--research-rule);
+}
+.selective-comparison-heading {
+margin-top: 2rem;
+}
+@media (max-width: 800px) {
+.selective-calibration {
+grid-template-columns: minmax(0, 1fr);
+}
+.selective-edit-readout table {
+display: table;
+}
+}
 </style>
 <meta property="og:title" content="Selective language editing – interesearch">
 <meta property="og:description" content="Comparing the effects of language-model weight edits on a target language and its close relative.">
@@ -4366,6 +4787,10 @@ main table > :not(caption) > * > * { background-color: transparent; }
 <span class="menu-text">Research</span></a>
   </li>  
   <li class="nav-item">
+    <a class="nav-link" href="https://sergeisoly.github.io/projects.html"> 
+<span class="menu-text">Projects</span></a>
+  </li>  
+  <li class="nav-item">
     <a class="nav-link" href="https://sergeisoly.github.io/posts.html"> 
 <span class="menu-text">Posts</span></a>
   </li>  
@@ -4391,6 +4816,7 @@ main table > :not(caption) > * > * { background-color: transparent; }
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">Selective language editing</h1>
+<p class="subtitle lead">First published 14 October 2026 · Updated 18 November 2026</p>
 </div>
 
 <div>
@@ -4416,38 +4842,43 @@ main table > :not(caption) > * > * { background-color: transparent; }
 <p><a href="../selective-editing/index.html">Paper</a> · <a href="index.pdf">PDF</a> · <a href="https://github.com/sergeisoly/interesearch/blob/main/papers/guides/selective-editing.md">GitHub</a></p>
 </div>
 <div class="visual-intro">
-<p>I deliberately worsen next-token prediction in a <strong>target language</strong> to test whether that change can largely spare a close relative. For German → Dutch, German is the target and Dutch is the language I want to spare. I make this change by modifying the model’s learned weights: a <strong>weight edit</strong>.</p>
-<p>Lucius Bushnaq’s <a href="https://www.lesswrong.com/posts/ieoWstubDQWLrMnhH/exploration-fine-tuning-with-parameter-decomposition">Exploration: Fine-Tuning with Parameter Decomposition</a> showed that changing one subcomponent’s coefficient in <a href="https://www.goodfire.com/research/interpreting-lm-parameters">Goodfire’s four-layer, 67-million-parameter language model</a> could weaken German predictions while largely sparing French and Spanish. I use the same model and decomposition to test three pairs of close relatives: German/Dutch, Spanish/Portuguese and French/Italian.</p>
-<p>Across all three pairs, single-subcomponent edits caused much less damage to the related language than the other methods I tested. LoRA and full-matrix fine-tuning preserved English predictions better.</p>
+<p>A language model uses the same weights across languages. I deliberately worsen its next-token predictions in one language to see how much of that damage spills over to a close relative. In the German–Dutch comparison, I edit the model to make its German predictions worse and measure what happens to Dutch.</p>
+<p>Earlier work by Lucius Bushnaq showed that changing one subcomponent of a weight matrix in <a href="https://www.goodfire.com/research/interpreting-lm-parameters">Goodfire’s four-layer, 67-million-parameter language model</a> weakened German predictions and largely spared French and Spanish, although Italian predictions worsened. I use the same model and decomposition to test three close pairs (German–Dutch, Spanish–Portuguese and French–Italian). <a href="https://www.lesswrong.com/posts/ieoWstubDQWLrMnhH/exploration-fine-tuning-with-parameter-decomposition">Earlier fine-tuning exploration</a></p>
+<p>On the new evaluation dates, the subcomponent edits caused less related-language damage than the three comparison methods. LoRA and full-matrix fine-tuning kept English predictions closer to those of the original model.</p>
 </div>
 <section id="edit-one-rank-one-subcomponent" class="level2">
 <h2 class="anchored" data-anchor-id="edit-one-rank-one-subcomponent">Edit one rank-one subcomponent</h2>
-<p>To make a targeted weight change, I select one subcomponent from <a href="https://www.goodfire.com/research/interpreting-lm-parameters">Goodfire’s adVersarial Parameter Decomposition (VPD)</a> and adjust its contribution. VPD writes a weight matrix <span class="math inline">\(W\)</span> as a sum of <strong>rank-one subcomponents</strong> plus a residual. The decomposition is trained so that few subcomponents are needed on any input. Each subcomponent <span class="math inline">\(A\)</span> is the outer product of an output vector <span class="math inline">\(u_{\mathrm{out}}\)</span> and an input vector <span class="math inline">\(v_{\mathrm{in}}\)</span>:</p>
+<p>Goodfire’s adVersarial Parameter Decomposition (VPD) breaks a weight matrix <span class="math inline">\(W\)</span> into a sum of <strong>rank-one subcomponents</strong> and a residual. The decomposition is trained so that a small number of subcomponents can approximate the model’s computation for a given input. Each subcomponent <span class="math inline">\(A\)</span> is the outer product of an output vector <span class="math inline">\(u_{\mathrm{out}}\)</span> and an input vector <span class="math inline">\(v_{\mathrm{in}}\)</span>.</p>
 <p><span class="math display">\[
 A = u_{\mathrm{out}}v_{\mathrm{in}}^\top.
 \]</span></p>
-<p>For an input <span class="math inline">\(x\)</span>, the input vector reads out one number, <span class="math inline">\(v_{\mathrm{in}}^\top x\)</span>. The output vector determines the direction in which that number contributes to the matrix’s output:</p>
+<p>For an input <span class="math inline">\(x\)</span>, the input vector reads out one number, <span class="math inline">\(v_{\mathrm{in}}^\top x\)</span>. The output vector determines the direction of the resulting contribution to the output.</p>
 <p><span class="math display">\[
 Ax = u_{\mathrm{out}}\bigl(v_{\mathrm{in}}^\top x\bigr).
 \]</span></p>
-<p>A fixed rule uses target-language and English text to favor subcomponents expected to weaken the target language while changing English predictions little.</p>
-<p>The edit changes a single number, the selected subcomponent’s coefficient <span class="math inline">\(c\)</span>:</p>
+<p>I rank subcomponents by how much changing their coefficients is expected to raise target-language loss relative to its effect on English predictions. I then test the highest-ranked candidates on target training text to find one that can cause enough damage.</p>
+<p>The edit changes one number, the selected subcomponent’s coefficient <span class="math inline">\(c\)</span>.</p>
 <p><span class="math display">\[
 W_{\mathrm{edited}} = (W-A) + cA.
 \]</span></p>
-<p>Changing this coefficient changes many entries of the weight matrix. The subcomponent’s two vectors stay fixed, as do all other subcomponents and the residual. At <span class="math inline">\(c=1\)</span> the matrix is unchanged. Setting <span class="math inline">\(c=0\)</span> removes the selected contribution, and <span class="math inline">\(c&lt;0\)</span> reverses its sign. The slider below illustrates this operation on a toy matrix.</p>
+<p>The coefficient scales the same rank-one matrix, changing many weights at once. At <span class="math inline">\(c=1\)</span>, the edit reconstructs the original matrix. At <span class="math inline">\(c=0\)</span>, it removes the selected contribution, and at <span class="math inline">\(c&lt;0\)</span>, it reverses its sign.</p>
 <figure class="visual-figure visual-concept figure" aria-label="Schematic weight edit" aria-describedby="visual-matrix-caption">
+  <fieldset id="matrix-view-switch" class="matrix-view-switch" hidden>
+    <legend>View the toy edit</legend>
+    <label><input type="radio" name="matrix-view" value="entries" checked> Matrix entries</label>
+    <label><input type="radio" name="matrix-view" value="output"> 3D output</label>
+  </fieldset>
   <div class="visual-coefficient-control" id="visual-coefficient-control" hidden>
-    <label for="visual-coefficient">Selected subcomponent&#39;s coefficient c <output id="visual-coefficient-value" for="visual-coefficient">0</output></label>
-    <input id="visual-coefficient" type="range" min="-1" max="1" step="0.05" value="0" aria-describedby="visual-matrix-state">
-    <div class="visual-range-labels"><span>−1 · reversed</span><span>0 · removed</span><span>1 · original</span></div>
+    <label for="visual-coefficient"><span>Subcomponent coefficient <i>c</i></span> <output id="visual-coefficient-value" for="visual-coefficient">0</output></label>
+    <input id="visual-coefficient" type="range" min="-1" max="1" step="0.1" value="0" aria-describedby="visual-matrix-state">
+    <div class="visual-range-labels" aria-hidden="true"><span>−1 · reversed</span><span>0 · removed</span><span>1 · original</span></div>
   </div>
-  <div class="visual-matrix-equation" role="group" aria-label="The remaining components and residual plus the scaled selected subcomponent equal the edited matrix">
-    <div class="visual-matrix-term"><p>Rest of the matrix</p>
+  <div class="visual-matrix-equation" role="img" aria-label="The rest of the matrix plus the scaled subcomponent equals the edited matrix. At coefficient zero the edit removes the subcomponent.">
+    <div class="visual-matrix-term"><p>Rest of matrix</p>
       <svg viewbox="0 0 134 134" aria-hidden="true"><g id="visual-matrix-cells-0"><rect x="2" y="2" width="130" height="130" rx="4" fill="#e6eeeb" stroke="#78968a" /><text x="67" y="79" text-anchor="middle" font-size="28" fill="#39574a">W − A</text></g></svg>
     </div>
     <span class="visual-matrix-operator" aria-hidden="true">+</span>
-    <div class="visual-matrix-term"><p>Selected subcomponent</p>
+    <div class="visual-matrix-term"><p>Scaled subcomponent</p>
       <svg viewbox="0 0 134 134" aria-hidden="true"><g id="visual-matrix-cells-1"><rect x="2" y="2" width="130" height="130" rx="4" fill="#f4f4ef" stroke="#a8afa9" /><text x="67" y="79" text-anchor="middle" font-size="28" fill="#52605a">0 × A</text></g></svg>
     </div>
     <span class="visual-matrix-operator" aria-hidden="true">=</span>
@@ -4455,31 +4886,47 @@ W_{\mathrm{edited}} = (W-A) + cA.
       <svg viewbox="0 0 134 134" aria-hidden="true"><g id="visual-matrix-cells-2"><rect x="2" y="2" width="130" height="130" rx="4" fill="#e6eeeb" stroke="#78968a" /><text x="67" y="79" text-anchor="middle" font-size="28" fill="#39574a">W − A</text></g></svg>
     </div>
   </div>
-  <p id="visual-matrix-state" class="visual-matrix-state" aria-live="polite">The selected subcomponent is removed.</p>
-  <figcaption id="visual-matrix-caption">Toy illustration of changing one subcomponent&#39;s contribution.</figcaption>
+  <p id="visual-matrix-state" class="visual-matrix-state">At zero, the selected subcomponent contributes nothing.</p>
+  <div id="matrix-output" hidden>
+    <div class="matrix-output-controls">
+      <label>Input vector <i>x</i>
+        <select id="matrix-input">
+          <option value="0">(1, 0, 0)</option>
+          <option value="1">(0, 1, 0)</option>
+          <option value="2">(1, 2, 0)</option>
+        </select>
+      </label>
+      <button type="button" id="matrix-reset">Reset view</button>
+    </div>
+    <svg id="matrix-output-space" tabindex="0" role="img" aria-label="Toy model output in three dimensions" aria-describedby="matrix-output-reading matrix-orbit-help"></svg>
+    <ul class="matrix-output-legend" aria-label="Output markers">
+      <li><span class="matrix-zero-symbol" aria-hidden="true"></span>Component removed (<i>c</i> = 0)</li>
+      <li><span class="matrix-one-symbol" aria-hidden="true"></span>Original (<i>c</i> = 1)</li>
+      <li><span class="matrix-now-symbol" aria-hidden="true"></span>Current output</li>
+    </ul>
+    <p id="matrix-output-reading" aria-live="polite" aria-atomic="true"></p>
+    <p id="matrix-orbit-help">Drag sideways or use the arrow keys on the figure to rotate.</p>
+  </div>
+  <figcaption id="visual-matrix-caption">Toy matrices. <span id="visual-matrix-key" hidden>Green denotes positive entries and purple denotes negative entries.</span></figcaption>
 </figure>
 </section>
 <section id="comparing-ways-to-change-the-weights" class="level2">
 <h2 class="anchored" data-anchor-id="comparing-ways-to-change-the-weights">Comparing ways to change the weights</h2>
-<p>I compare the VPD edit with three other ways to change the weights, all aimed at worsening target-language prediction while preserving English predictions.</p>
-<p><strong>Rank-one LoRA</strong> learns its own output and input vectors in the same weight matrix:</p>
-<p><span class="math display">\[
-\Delta W_{\mathrm{LoRA}} = a_{\mathrm{out}}b_{\mathrm{in}}^\top.
-\]</span></p>
-<p>This lets LoRA choose a different direction while keeping the update’s rank and the edited matrix fixed.</p>
-<p><strong>Full-matrix fine-tuning</strong> gives the learned update more freedom: it can change every entry in the model’s 24 attention and feed-forward weight matrices.</p>
-<p>The <strong>neuron edit</strong> selects neurons by how much more often they activate on target text than on English text, then scales their output weights.</p>
-<p>LoRA and full-matrix fine-tuning penalize changes to the original model’s English predictions during training. These selection and training steps use no Dutch, Portuguese or Italian text. Those languages test whether the methods also spare a close relative that they were not explicitly trained to preserve.</p>
+<p>I compare the VPD edit with three other weight edits aimed at worsening target-language predictions while preserving English.</p>
+<ul>
+<li><strong>Rank-one LoRA</strong> learns its own input and output vectors. Its update has the same rank as the VPD subcomponent and acts on the same weight matrix.</li>
+<li><strong>Full-matrix fine-tuning</strong> can change every entry of the model’s 24 attention and feed-forward weight matrices.</li>
+<li><strong>Neuron edits</strong> scale the output weights of neurons selected because they activate more frequently on the target language than on English.</li>
+</ul>
+<p>LoRA and full-matrix fine-tuning explicitly penalize changes to English predictions during training.</p>
 </section>
 <section id="matching-the-intended-damage" class="level2">
 <h2 class="anchored" data-anchor-id="matching-the-intended-damage">Matching the intended damage</h2>
-<p>To compare side effects fairly, I first make each method worsen the target language by a similar amount. Otherwise, a method might spare Dutch simply because it barely changed German.</p>
-<p>I <strong>calibrate</strong> each edit by adjusting its strength on target-language validation text. I use two calibration levels: an increase of <strong>0.5 or 1 nat/token</strong> in average prediction loss (cross-entropy) relative to the original model.</p>
-<p>I use <strong>Europarl v7</strong>, a corpus of European Parliament proceedings. After calibration, I measure the damage to both languages on separate text from <strong>58 session dates</strong>.</p>
+<p>An edit might spare Dutch simply by barely affecting German. To compare side effects at similar target damage, I adjust each edit’s strength on target-language validation text. The two calibration levels are increases of <strong>0.5 or 1 nat/token</strong> in average next-token prediction loss (cross-entropy) relative to the original model. The loss averages the negative log probability assigned to each observed next token.</p>
+<p>Using Europarl v7, a corpus of European Parliament proceedings, I then measure the effects of the fixed edits on text from <strong>58 further session dates</strong>. Dutch, Portuguese and Italian were excluded from selection and training in this study. Earlier experiments had used development text in these languages and identified the same German subcomponent with Dutch in view. <a href="../selective-editing/index.html#sec-access">Data and prior access</a></p>
 </section>
 <section id="target-and-related-language-damage" class="level2">
-<h2 class="anchored" data-anchor-id="target-and-related-language-damage">Target and related-language damage</h2>
-<p>Choose a language pair and calibration level. The first chart shows the measured damage to the target language. The second shows the unwanted damage to its relative.</p>
+<h2 class="anchored" data-anchor-id="target-and-related-language-damage">Calibration and measured effects</h2>
 <figure class="visual-figure visual-results figure" aria-labelledby="visual-results-caption">
   <div id="visual-results-interactive" hidden>
     <div class="visual-controls">
@@ -4491,17 +4938,73 @@ W_{\mathrm{edited}} = (W-A) + cA.
         <button type="button" data-visual-tau="1" aria-pressed="true">1 nat/token</button>
       </fieldset>
     </div>
+    <div class="selective-calibration">
+      <div>
+        <h3 id="selective-validation-heading" class="anchored">Validation measurements</h3>
+        <div id="selective-validation-plot"></div>
+        <p class="selective-calibration-key">
+          <span><i aria-hidden="true"></i> Tested coefficient</span>
+          <span><i aria-hidden="true"></i> Chosen coefficient</span>
+          <span><i aria-hidden="true"></i> <span id="selective-validation-band"></span></span>
+        </p>
+        <details class="visual-uncertainty-table">
+          <summary>Read the validation measurements</summary>
+          <div id="selective-validation-table"></div>
+        </details>
+      </div>
+      <div class="selective-edit-readout">
+        <h3 class="anchored">Chosen VPD edit</h3>
+        <p class="selective-chosen-coefficient" id="selective-chosen-coefficient"></p>
+        <p class="visual-note" id="selective-coefficient-description"></p>
+        
+<table class="caption-top table">
+<caption>Measured effects of the chosen coefficient</caption>
+<tbody>
+<tr class="odd">
+<th colspan="2" data-quarto-table-cell-role="th" scope="rowgroup">Validation</th>
+</tr>
+<tr class="even">
+<th id="selective-validation-language" data-quarto-table-cell-role="th" scope="row"></th>
+<td id="selective-validation-rise"></td>
+</tr>
+</tbody>
+<tbody>
+<tr class="odd">
+<th colspan="2" id="selective-held-out-heading" data-quarto-table-cell-role="th" scope="rowgroup"></th>
+</tr>
+<tr class="even">
+<th id="selective-target-language" data-quarto-table-cell-role="th" scope="row"></th>
+<td id="selective-target-rise"></td>
+</tr>
+<tr class="odd">
+<th id="selective-related-language" data-quarto-table-cell-role="th" scope="row"></th>
+<td id="selective-related-rise"></td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th" scope="row"><a href="#what-changed-in-english">English KL</a></th>
+<td id="selective-english-kl"></td>
+</tr>
+</tbody>
+</table>
+
+      </div>
+    </div>
+    <h3 class="selective-comparison-heading anchored">Held-out comparison</h3>
     <div class="visual-chart-pair">
       <div id="visual-target-chart"></div>
       <div id="visual-protected-chart"></div>
     </div>
     <p id="visual-result-sentence" class="visual-result-sentence" aria-live="polite" aria-atomic="true"></p>
+    <details class="visual-uncertainty-table">
+      <summary>Read the plotted values</summary>
+      <div id="visual-results-table"></div>
+    </details>
   </div>
   <div id="visual-results-fallback">
-    <p><strong>German → Dutch, target loss increase of 1 nat/token on validation text.</strong> Changing one VPD subcomponent&#39;s coefficient worsened German next-token prediction while leaving average prediction loss on Dutch text almost unchanged. The table shows the loss increases on evaluation text. Ranges span the results from three training subsets.</p>
+    <p><strong>German → Dutch at the 1 nat/token calibration level.</strong> Setting the VPD coefficient to 0.055 raised German validation loss by 1.019 nat/token.</p>
     
 <table class="caption-top table">
-<caption>Target and related-language damage, in nat/token</caption>
+<caption>Loss increases on 58 held-out dates, in nat/token. Ranges span three training subsets.</caption>
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th" scope="col">Edit</th>
@@ -4535,13 +5038,17 @@ W_{\mathrm{edited}} = (W-A) + cA.
 
     <p>See the <a href="index.html#sec-effects">paper&#39;s figure</a> for all three language pairs and both calibration levels.</p>
   </div>
-  <figcaption id="visual-results-caption">The VPD point represents one fixed edit shared by all three training subsets. Other methods show one point per subset. Lines span their range, not a confidence interval. The dashed line marks the calibration target.</figcaption>
+  <figcaption id="visual-results-caption">VPD selected the same edit across all three training subsets.
+  <span class="plot-key">The validation plot shows where the coefficient was tested. Held-out results are available for the chosen coefficient.
+  The two held-out charts share the same scale. The dashed line marks the validation target.
+  Comparator lines span the three training subsets. Equal estimates overlap.
+  The paper reports confidence intervals from resampling evaluation dates.</span></figcaption>
 </figure>
-<p>Across all three pairs and both calibration levels, the VPD edits raised related-language loss by <strong>0.0003–0.0053 nat/token</strong>, compared with <strong>0.03–0.88 nat/token</strong> for the other methods. These ranges span individual run results. The comparison tests six fixed edits in one small model. Whether the selection rule works reliably on new tasks remains untested.</p>
+<p>The six VPD edits raised related-language loss by <strong>0.0003–0.0053 nat/token</strong>. Across individual runs, the other edits raised it by <strong>0.027–0.876 nat/token</strong>. The result covers these six fixed edits in one model. The selection rule’s reliability on new tasks remains open.</p>
 </section>
 <section id="what-changed-in-english" class="level2">
-<h2 class="anchored" data-anchor-id="what-changed-in-english">English, innit?</h2>
-<p>In a post hoc comparison, <strong>rank-one LoRA and full-matrix fine-tuning preserved the original model’s English predictions more closely</strong> than the VPD edits did. Prediction loss scores only the probability of the actual next token, so this comparison uses KL divergence, which compares probabilities over all possible next tokens before and after the edit. Lower KL means the English predictions stayed closer to the original model.</p>
+<h2 class="anchored" data-anchor-id="what-changed-in-english">How much did English predictions change?</h2>
+<p>All edits in the main comparison passed the English loss limit. Cross-entropy uses the probability assigned to the token that actually occurred. <strong>KL divergence</strong> also captures changes in the probabilities of the other possible next tokens. Lower KL means the full distribution stayed closer to the original model’s predictions. In this post hoc comparison on the new dates, both LoRA and full-matrix fine-tuning had lower English KL than the VPD edits for every language and calibration level.</p>
 <figure class="visual-figure figure" aria-labelledby="visual-english-caption">
   <div id="visual-english-interactive" hidden>
     <div class="visual-controls">
@@ -4553,16 +5060,18 @@ W_{\mathrm{edited}} = (W-A) + cA.
         <button type="button" data-visual-tau="1" aria-pressed="true">1 nat/token</button>
       </fieldset>
     </div>
-    <div class="visual-chart-pair">
-      <div id="visual-english-chart"></div>
-    </div>
+    <div id="visual-english-chart"></div>
+    <details class="visual-uncertainty-table">
+      <summary>Read the plotted values</summary>
+      <div id="visual-english-table"></div>
+    </details>
   </div>
   <div id="visual-english-fallback">
-    <p>The VPD edits&#39; English KL is below 0.001 nat/token for every language and calibration level. Both learned methods have lower English KL throughout these comparisons. The <a href="index.html#sec-english">paper&#39;s English comparison</a> includes the values for all four methods.</p>
+    <p>See the <a href="index.html#sec-english">paper&#39;s English comparison</a> for the measurements for all four methods.</p>
   </div>
-  <figcaption id="visual-english-caption">The VPD point represents one fixed edit shared by all three training subsets. Other methods show one point per subset. Lines span their range, not a confidence interval. The horizontal scale is logarithmic: each tick is ten times the previous value.</figcaption>
+  <figcaption id="visual-english-caption">English KL is measured from the base model. <span class="plot-key">Both figures share the language and calibration settings. Lines show the observed minimum and maximum across three training subsets. Each tick is ten times the previous one.</span></figcaption>
 </figure>
-<p>On the evaluated English text, the VPD edits changed next-token probabilities <strong>little on average</strong>: mean KL stayed below <strong>0.001 nat/token</strong> for every language and calibration level. For scale, changing a coin’s probabilities from <strong>50%/50% to 52%/48%</strong> gives KL ≈ <strong>0.00080</strong>, close to the German VPD edit’s 0.00077 at the 1 nat/token level. This illustrates the size of KL, not a measured two-percentage-point change for each token. Individual contexts can change more than the average suggests.</p>
+<p>Each VPD edit’s mean English KL was below <strong>0.001 nat/token</strong>. For scale, the KL from a fair coin (<strong>50%/50%</strong>) to a slightly biased one (<strong>52%/48%</strong>) is about <strong>0.00080</strong>, close to the German VPD edit’s mean of <strong>0.00077</strong> at the 1 nat/token calibration level. The two-percentage-point shift belongs to the coin example. In the model, KL averages over many contexts, and individual predictions can change more.</p>
 <p><a href="../selective-editing/index.html#sec-setup">Methods</a> and <a href="../selective-editing/index.html#sec-limits">study limitations</a> in the paper.</p>
 <script type="application/json" id="visual-selective-data">
 {
@@ -5517,183 +6026,1031 @@ W_{\mathrm{edited}} = (W-A) + cA.
 }
 
 </script>
-<script>/* Presentation only. Measurements and intervals come from the paper's saved results. */
+<script type="application/json" id="visual-selective-calibration">
+{
+  "sources": [
+    "data/selective_editing/calibration",
+    "results/selective_editing/posthoc.json#edits"
+  ],
+  "tolerance": 0.02,
+  "calibrations": [
+    {
+      "target": "de",
+      "tau": 0.5,
+      "atom": "0.attn.o:268",
+      "coefficient": 0.3187815664617708,
+      "validation_rise": 0.49590012431144714,
+      "points": [
+        [
+          -1.0,
+          3.439419239759445
+        ],
+        [
+          -0.41421356237309515,
+          2.1193823516368866
+        ],
+        [
+          0.0,
+          1.1438147574663162
+        ],
+        [
+          0.2928932188134524,
+          0.5396196618676186
+        ],
+        [
+          0.3187815664617708,
+          0.49590012431144714
+        ],
+        [
+          0.3446699141100893,
+          0.4542279317975044
+        ],
+        [
+          0.39644660940672627,
+          0.3771787956357002
+        ],
+        [
+          0.5,
+          0.24830228835344315
+        ],
+        [
+          0.6464466094067263,
+          0.11921682953834534
+        ],
+        [
+          0.75,
+          0.05981910973787308
+        ],
+        [
+          0.8232233047033631,
+          0.03113289177417755
+        ],
+        [
+          0.875,
+          0.01676756888628006
+        ],
+        [
+          0.9116116523516815,
+          0.009344860911369324
+        ],
+        [
+          0.9375,
+          0.005389831960201263
+        ],
+        [
+          1.0,
+          0.0
+        ]
+      ]
+    },
+    {
+      "target": "de",
+      "tau": 1.0,
+      "atom": "0.attn.o:268",
+      "coefficient": 0.05491747852752238,
+      "validation_rise": 1.0193970873951912,
+      "points": [
+        [
+          -1.0,
+          3.439419239759445
+        ],
+        [
+          -0.41421356237309515,
+          2.1193823516368866
+        ],
+        [
+          0.0,
+          1.1438147574663162
+        ],
+        [
+          0.03661165235168151,
+          1.06050556153059
+        ],
+        [
+          0.05491747852752238,
+          1.0193970873951912
+        ],
+        [
+          0.07322330470336313,
+          0.9787077531218529
+        ],
+        [
+          0.14644660940672627,
+          0.821021281182766
+        ],
+        [
+          0.2928932188134524,
+          0.5396196618676186
+        ],
+        [
+          0.5,
+          0.24830228835344315
+        ],
+        [
+          0.6464466094067263,
+          0.11921682953834534
+        ],
+        [
+          0.75,
+          0.05981910973787308
+        ],
+        [
+          0.8232233047033631,
+          0.03113289177417755
+        ],
+        [
+          0.875,
+          0.01676756888628006
+        ],
+        [
+          0.9116116523516815,
+          0.009344860911369324
+        ],
+        [
+          0.9375,
+          0.005389831960201263
+        ],
+        [
+          1.0,
+          0.0
+        ]
+      ]
+    },
+    {
+      "target": "es",
+      "tau": 0.5,
+      "atom": "0.attn.o:676",
+      "coefficient": -0.025888347648318488,
+      "validation_rise": 0.5029110386967659,
+      "points": [
+        [
+          -1.0,
+          2.0152927711606026
+        ],
+        [
+          -0.41421356237309515,
+          1.0497441291809082
+        ],
+        [
+          -0.20710678118654746,
+          0.7385646477341652
+        ],
+        [
+          -0.10355339059327373,
+          0.5987338274717331
+        ],
+        [
+          -0.051776695296636976,
+          0.5339147746562958
+        ],
+        [
+          -0.025888347648318488,
+          0.5029110386967659
+        ],
+        [
+          0.0,
+          0.4728880077600479
+        ],
+        [
+          0.2928932188134524,
+          0.2063271626830101
+        ],
+        [
+          0.5,
+          0.0945349633693695
+        ],
+        [
+          0.6464466094067263,
+          0.04586006700992584
+        ],
+        [
+          0.75,
+          0.023344524204730988
+        ],
+        [
+          0.8232233047033631,
+          0.012372493743896484
+        ],
+        [
+          0.875,
+          0.006803274154663086
+        ],
+        [
+          0.9116116523516815,
+          0.003875941038131714
+        ],
+        [
+          0.9375,
+          0.0022855177521705627
+        ],
+        [
+          1.0,
+          0.0
+        ]
+      ]
+    },
+    {
+      "target": "es",
+      "tau": 1.0,
+      "atom": "0.attn.o:676",
+      "coefficient": -0.38832521472477666,
+      "validation_rise": 1.009085588157177,
+      "points": [
+        [
+          -1.0,
+          2.0152927711606026
+        ],
+        [
+          -0.41421356237309515,
+          1.0497441291809082
+        ],
+        [
+          -0.38832521472477666,
+          1.009085588157177
+        ],
+        [
+          -0.3624368670764584,
+          0.9688487723469734
+        ],
+        [
+          -0.3106601717798214,
+          0.8897992894053459
+        ],
+        [
+          -0.20710678118654746,
+          0.7385646477341652
+        ],
+        [
+          0.0,
+          0.4728880077600479
+        ],
+        [
+          0.2928932188134524,
+          0.2063271626830101
+        ],
+        [
+          0.5,
+          0.0945349633693695
+        ],
+        [
+          0.6464466094067263,
+          0.04586006700992584
+        ],
+        [
+          0.75,
+          0.023344524204730988
+        ],
+        [
+          0.8232233047033631,
+          0.012372493743896484
+        ],
+        [
+          0.875,
+          0.006803274154663086
+        ],
+        [
+          0.9116116523516815,
+          0.003875941038131714
+        ],
+        [
+          0.9375,
+          0.0022855177521705627
+        ],
+        [
+          1.0,
+          0.0
+        ]
+      ]
+    },
+    {
+      "target": "fr",
+      "tau": 0.5,
+      "atom": "0.attn.o:640",
+      "coefficient": 0.23797574028593005,
+      "validation_rise": 0.4922006204724312,
+      "points": [
+        [
+          -1.0,
+          3.0500669479370117
+        ],
+        [
+          -0.41421356237309515,
+          1.7861450091004372
+        ],
+        [
+          0.0,
+          0.9166409969329834
+        ],
+        [
+          0.14644660940672627,
+          0.6417168080806732
+        ],
+        [
+          0.2196699141100893,
+          0.5204660445451736
+        ],
+        [
+          0.23797574028593005,
+          0.4922006204724312
+        ],
+        [
+          0.2562815664617708,
+          0.46480096876621246
+        ],
+        [
+          0.2928932188134524,
+          0.4126671701669693
+        ],
+        [
+          0.5,
+          0.1861191689968109
+        ],
+        [
+          0.6464466094067263,
+          0.08886923640966415
+        ],
+        [
+          0.75,
+          0.044533587992191315
+        ],
+        [
+          0.8232233047033631,
+          0.0231560617685318
+        ],
+        [
+          0.875,
+          0.01244565099477768
+        ],
+        [
+          0.9116116523516815,
+          0.006908491253852844
+        ],
+        [
+          0.9375,
+          0.003961846232414246
+        ],
+        [
+          1.0,
+          0.0
+        ]
+      ]
+    },
+    {
+      "target": "fr",
+      "tau": 1.0,
+      "atom": "0.attn.o:640",
+      "coefficient": -0.03883252147247784,
+      "validation_rise": 0.9947722479701042,
+      "points": [
+        [
+          -1.0,
+          3.0500669479370117
+        ],
+        [
+          -0.41421356237309515,
+          1.7861450091004372
+        ],
+        [
+          -0.20710678118654746,
+          1.3459041863679886
+        ],
+        [
+          -0.10355339059327373,
+          1.1280228421092033
+        ],
+        [
+          -0.051776695296636976,
+          1.0211542770266533
+        ],
+        [
+          -0.03883252147247784,
+          0.9947722479701042
+        ],
+        [
+          -0.025888347648318488,
+          0.9685501754283905
+        ],
+        [
+          0.0,
+          0.9166409969329834
+        ],
+        [
+          0.2928932188134524,
+          0.4126671701669693
+        ],
+        [
+          0.5,
+          0.1861191689968109
+        ],
+        [
+          0.6464466094067263,
+          0.08886923640966415
+        ],
+        [
+          0.75,
+          0.044533587992191315
+        ],
+        [
+          0.8232233047033631,
+          0.0231560617685318
+        ],
+        [
+          0.875,
+          0.01244565099477768
+        ],
+        [
+          0.9116116523516815,
+          0.006908491253852844
+        ],
+        [
+          0.9375,
+          0.003961846232414246
+        ],
+        [
+          1.0,
+          0.0
+        ]
+      ]
+    }
+  ]
+}
+
+</script>
+<script>// Orthographic views for small diagrams of vectors, with z up in model space.
+window.ResearchOrbit = (() => {
+  function project([x, y, z], { yaw, pitch }) {
+    const right = x * Math.cos(yaw) - y * Math.sin(yaw);
+    const depth = x * Math.sin(yaw) + y * Math.cos(yaw);
+    return [right, depth * Math.sin(pitch) - z * Math.cos(pitch)];
+  }
+
+  function bind(surfaces, draw, initial = { yaw: 0.6, pitch: 0.35 }) {
+    let camera = { ...initial };
+    let drag = null;
+    function redraw() {
+      draw(camera);
+    }
+    function rotate(yaw, pitch) {
+      camera = {
+        yaw: (camera.yaw + yaw) % (2 * Math.PI),
+        pitch: Math.min(1.35, Math.max(-1.35, camera.pitch + pitch)),
+      };
+      redraw();
+    }
+    function reset() {
+      camera = { ...initial };
+      redraw();
+    }
+
+    for (const surface of surfaces) {
+      surface.addEventListener("pointerdown", event => {
+        if (drag || !event.isPrimary || event.button !== 0) return;
+        drag = { id: event.pointerId, x: event.clientX, y: event.clientY };
+        surface.setPointerCapture(event.pointerId);
+      });
+      surface.addEventListener("pointermove", event => {
+        if (drag?.id !== event.pointerId) return;
+        const dx = event.clientX - drag.x;
+        const dy = event.clientY - drag.y;
+        drag.x = event.clientX;
+        drag.y = event.clientY;
+        rotate(dx * 0.012, dy * 0.012);
+      });
+      const endDrag = event => {
+        if (drag?.id === event.pointerId) drag = null;
+      };
+      for (const type of ["pointerup", "pointercancel", "lostpointercapture"]) {
+        surface.addEventListener(type, endDrag);
+      }
+      surface.addEventListener("keydown", event => {
+        const step = Math.PI / 18;
+        switch (event.key) {
+          case "ArrowLeft": rotate(-step, 0); break;
+          case "ArrowRight": rotate(step, 0); break;
+          case "ArrowUp": rotate(0, step); break;
+          case "ArrowDown": rotate(0, -step); break;
+          case "Home": reset(); break;
+          default: return;
+        }
+        event.preventDefault();
+      });
+    }
+    return { redraw, reset, rotate };
+  }
+  return { bind, project };
+})();
+</script>
+<script>// Apply the same toy matrices as the cell view to three example inputs.
+window.initMatrixOutput = function (coefficient, toy) {
+  const panel = document.getElementById("matrix-output");
+  const svg = document.getElementById("matrix-output-space");
+  const reading = document.getElementById("matrix-output-reading");
+  const select = document.getElementById("matrix-input");
+  const switcher = document.getElementById("matrix-view-switch");
+  const inputs = [[1, 0, 0], [0, 1, 0], [1, 2, 0]];
+  const dot = (a, b) => a.reduce((sum, v, i) => sum + v * b[i], 0);
+  const fmt = x => String(Number(x.toFixed(1))).replace("-", "−");
+
+  function draw(camera) {
+    if (panel.hidden) return;
+    const x = inputs[select.selectedIndex];
+    const read = dot(toy.v, x);
+    const rest = toy.remainder.map(row => dot(row, x));
+    const at = c => rest.map((v, i) => v + c * toy.u[i] * read);
+    const current = at(Number(coefficient.value));
+    const width = svg.clientWidth || 400;
+    const height = Math.max(210, Math.min(305, width * 0.56));
+    svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+    const axes = [[4, 0, 0], [0, 4, 0], [0, 0, 4]];
+    const project = v => window.ResearchOrbit.project(v, camera);
+    const bounds = [at(-1), at(1), ...axes, [-2,-2,0], [-2,4,0], [4,-2,0], [4,4,0]].map(project);
+    const xs = bounds.map(p => p[0]), ys = bounds.map(p => p[1]);
+    const left = Math.min(...xs), right = Math.max(...xs);
+    const top = Math.min(...ys), bottom = Math.max(...ys);
+    const scale = Math.min((width - 54) / (right - left), (height - 44) / (bottom - top));
+    function screen(v) {
+      const [x, y] = project(v);
+      return [width / 2 + scale * (x - (left + right) / 2), height / 2 + scale * (y - (top + bottom) / 2)];
+    }
+    const fragment = document.createDocumentFragment();
+    function add(name, attrs, label) {
+      const el = document.createElementNS("http://www.w3.org/2000/svg", name);
+      for (const [key,value] of Object.entries(attrs)) el.setAttribute(key,value);
+      if (label) el.textContent = label;
+      fragment.append(el);
+    }
+    function line(a, b, color, thickness, dash) {
+      const [x1,y1] = screen(a), [x2,y2] = screen(b);
+      add("line", { x1, y1, x2, y2, stroke: color, "stroke-width": thickness, "stroke-dasharray": dash || "none" });
+    }
+    for (let k = -2; k <= 4; k += 2) {
+      line([k,-2,0], [k,4,0], "#dedbd3", 1);
+      line([-2,k,0], [4,k,0], "#dedbd3", 1);
+    }
+    const origin = [0,0,0];
+    axes.forEach((axis, i) => {
+      line(origin, axis, "#8e928c", 1.3);
+      const [x,y] = screen(axis);
+      add("text", {x: x + 5, y: y - 5, fill: "#545e60", "font-size": 14}, ["y₁","y₂","y₃"][i]);
+    });
+    line(origin, rest, "#9a9c99", 1.3);
+    line(at(-1), at(1), "#9e7559", 2, "5 4");
+    line([current[0], current[1], 0], current, "#9a9c99", 1, "2 3");
+    line(origin, current, "#246c81", 2.5);
+    const [zx,zy] = screen(rest), [ox,oy] = screen(at(1)), [cx,cy] = screen(current);
+    add("rect", {x:zx-7, y:zy-7, width:14, height:14, fill:"none", stroke:"#616567", "stroke-width":2});
+    add("path", {d:`M ${ox} ${oy-11} l 11 11 -11 11 -11 -11 z`, fill:"none", stroke:"#985a29", "stroke-width":2});
+    add("circle", {cx, cy, r:4.8, fill:"#246c81", stroke:"#fff", "stroke-width":1.4});
+    svg.replaceChildren(fragment);
+    const explanation = read === 0
+      ? "This input is perpendicular to the read vector, so every coefficient gives the same output."
+      : "Changing the coefficient moves the output along the dashed line.";
+    const text = `Input read vᵀx = ${fmt(read)}. Output = (${current.map(fmt).join(", ")}). ${explanation}`;
+    if (reading.textContent !== text) reading.textContent = text;
+  }
+
+  const orbit = window.ResearchOrbit.bind([svg], draw, {yaw: 0.64, pitch: 0.4});
+  const entries = document.querySelector(".visual-matrix-equation");
+  const matrixState = document.getElementById("visual-matrix-state");
+  switcher.addEventListener("change", () => {
+    const showOutput = switcher.querySelector(":checked").value === "output";
+    panel.hidden = !showOutput;
+    entries.hidden = showOutput;
+    matrixState.hidden = showOutput;
+    document.getElementById("visual-matrix-key").hidden = showOutput;
+    coefficient.setAttribute("aria-describedby", showOutput ? reading.id : matrixState.id);
+    orbit.redraw();
+  });
+  document.getElementById("matrix-reset").addEventListener("click", orbit.reset);
+  select.addEventListener("change", orbit.redraw);
+  coefficient.addEventListener("input", orbit.redraw);
+  if (window.ResizeObserver) new ResizeObserver(orbit.redraw).observe(panel);
+  else window.addEventListener("resize", orbit.redraw);
+  switcher.hidden = false;
+};
+</script>
+<script>/* Presentation only. Measurements come from the study's saved results. */
 (() => {
   "use strict";
-  const source = document.getElementById("visual-selective-data");
-  if (!source) return;
-  let data;
-  try { data = JSON.parse(source.textContent); } catch (_) { return; }
+
   const NS = "http://www.w3.org/2000/svg";
   const methods = [
-    {id: "vpd_atom", label: "One VPD subcomponent", color: "#2a78d6", shape: "circle"},
-    {id: "lora_rank1", label: "Rank-one LoRA", color: "#c85224", shape: "square"},
-    {id: "finetune_24", label: "Full-matrix fine-tuning", color: "#4a3aa7", shape: "triangle"},
-    {id: "neurons", label: "Neuron edit", color: "#12865f", shape: "diamond"},
+    { id: "vpd_atom", label: "One VPD subcomponent", color: "#2364a5", shape: "circle" },
+    { id: "lora_rank1", label: "Rank-one LoRA", color: "#a54520", shape: "square" },
+    { id: "finetune_24", label: "Full-matrix fine-tuning", color: "#5341a4", shape: "triangle" },
+    { id: "neurons", label: "Neuron edit", color: "#267154", shape: "diamond" },
   ];
-  const pairs = {de: ["German", "Dutch"], es: ["Spanish", "Portuguese"], fr: ["French", "Italian"]};
-  const state = {target: "de", tau: 1};
-  const el = (tag, attrs = {}, text) => {
-    const node = document.createElementNS(NS, tag);
-    for (const [key, value] of Object.entries(attrs)) node.setAttribute(key, value);
-    if (text !== undefined) node.textContent = text;
-    return node;
+  const pairs = {
+    de: ["German", "Dutch"],
+    es: ["Spanish", "Portuguese"],
+    fr: ["French", "Italian"],
   };
-  // Roughly two significant figures. Small nonzero effects never become zero.
-  const number = value => {
+  const state = { target: "de", tau: 1 };
+  const byId = id => document.getElementById(id);
+
+  function svgNode(tag, attributes, content) {
+    const node = document.createElementNS(NS, tag);
+    for (const [name, value] of Object.entries(attributes)) node.setAttribute(name, value);
+    if (content !== undefined) node.textContent = content;
+    return node;
+  }
+
+  function number(value) {
     if (value === 0) return "0";
     const a = Math.abs(value);
-    const digits = a >= 0.1 ? 2 : a >= 0.01 ? 3 : a >= 0.001 ? 4 : Math.max(0, 1 - Math.floor(Math.log10(a)));
+    const digits = a >= 0.1 ? 2 : a >= 0.01 ? 3 : Math.max(0, 1 - Math.floor(Math.log10(a)));
     return value.toFixed(digits).replace("-", "−");
-  };
-  const range = values => {
-    const lo = number(Math.min(...values)), hi = number(Math.max(...values));
+  }
+
+  function range(values) {
+    const lo = number(Math.min(...values));
+    const hi = number(Math.max(...values));
     return lo === hi ? lo : `${lo}–${hi}`;
-  };
-  const mark = (svg, method, x, y, title) => {
+  }
+
+  function mark(svg, method, x, y, title) {
+    const attrs = { fill: method.color, stroke: "var(--research-paper, white)", "stroke-width": 1 };
     let point;
-    const attrs = {fill: method.color, stroke: "white", "stroke-width": 1};
-    if (method.shape === "square") point = el("rect", {...attrs, x: x - 4.5, y: y - 4.5, width: 9, height: 9});
-    else if (method.shape === "triangle") point = el("path", {...attrs, d: `M ${x} ${y-6} l 5.5 10 h -11 z`});
-    else if (method.shape === "diamond") point = el("path", {...attrs, d: `M ${x} ${y-6} l 6 6 -6 6 -6 -6 z`});
-    else point = el("circle", {...attrs, cx: x, cy: y, r: 5});
-    point.append(el("title", {}, title));
-    svg.append(point);
-  };
-  function plot(field, language, targetPanel, edits) {
-    const container = document.getElementById(targetPanel ? "visual-target-chart" : "visual-protected-chart");
-    const width = Math.max(280, container.clientWidth || 470);
-    const compact = width < 430;
-    const height = compact ? 386 : 324;
-    const svg = el("svg", {viewBox: `0 0 ${width} ${height}`, role: "img", "aria-label": `${language}: ${targetPanel ? "target effect" : "related-language damage"}, cross-entropy rise in nat per token`});
-    svg.append(el("text", {x: 16, y: 28, fill: "#243c3d", "font-size": 20, "font-weight": 600}, language));
-    svg.append(el("text", {x: 16, y: 50, fill: "#53625d", "font-size": 14}, targetPanel ? "Target language · measured damage" : "Related language · less is better"));
-    const left = compact ? 16 : 188, right = width - 19;
-    const x = value => left + value / 1.2 * (right - left);
-    const top = compact ? 108 : 76, bottom = compact ? 322 : 270;
-    [0, 0.5, 1].forEach(tick => {
-      svg.append(el("line", {x1: x(tick), x2: x(tick), y1: top, y2: bottom, stroke: "#dce3df", "stroke-width": 1}));
-      svg.append(el("text", {x: x(tick), y: compact ? 351 : 293, "text-anchor": "middle", fill: "#53625d", "font-size": 13}, tick.toString()));
-    });
-    if (targetPanel) {
-      svg.append(el("line", {x1: x(state.tau), x2: x(state.tau), y1: top, y2: bottom, stroke: "#70817b", "stroke-dasharray": "4 4", "stroke-width": 1.3}));
-    }
-    methods.forEach((method, index) => {
-      const rows = edits.filter(e => e.method === method.id);
-      const values = rows.map(e => e[field]);
-      const y = compact ? 120 + index * 65 : 102 + index * 49;
-      if (compact) svg.append(el("rect", {x: 0, y: y - 38, width, height: 25, fill: "#faf9f5"}));
-      svg.append(el("text", {x: 16, y: compact ? y - 21 : y - 4, fill: "#344946", "font-size": 14}, method.label));
-      svg.append(el("text", {x: compact ? right : 16, y: compact ? y - 21 : y + 15, "text-anchor": compact ? "end" : "start", fill: "#344946", "font-size": 14, "font-weight": 600}, range(values)));
-      svg.append(el("line", {x1: x(Math.min(...values)), x2: x(Math.max(...values)), y1: y, y2: y, stroke: method.color, "stroke-width": 2}));
-      const visibleRows = method.id === "vpd_atom" ? rows.slice(0, 1) : rows;
-      visibleRows.forEach(row => mark(svg, method, x(row[field]), y, `${method.label}${method.id === "vpd_atom" ? "" : `, training subset ${row.draw + 1}`}: ${number(row[field])} nat/token`));
-    });
-    svg.append(el("text", {x: right, y: height - 5, "text-anchor": "end", fill: "#53625d", "font-size": 13}, "Prediction loss increase · nat/token"));
-    const accessibleValues = methods.map(method => `${method.label}: ${range(edits.filter(e => e.method === method.id).map(e => e[field]))} nat per token`).join(". ");
-    svg.setAttribute("aria-label", `${language}, ${targetPanel ? "target effect" : "related-language damage"}. Cross-entropy rise relative to the unedited model. ${accessibleValues}. Both panels use the same zero to 1.2 nat per token scale.`);
-    return svg;
-  }
-  function englishPlot(edits) {
-    const container = document.getElementById("visual-english-chart");
-    const width = Math.max(280, container.clientWidth || 470);
-    const compact = width < 430;
-    const height = compact ? 386 : 324;
-    const svg = el("svg", {viewBox: `0 0 ${width} ${height}`, role: "img"});
-    svg.append(el("text", {x: 16, y: 28, fill: "#243c3d", "font-size": 20, "font-weight": 600}, "Change in English predictions"));
-    svg.append(el("text", {x: 16, y: 51, fill: "#53625d", "font-size": 14}, `${pairs[state.target][0]} edit · ${state.tau} nat/token target · lower is better`));
-    const left = compact ? 30 : 188, right = width - 30;
-    const x = value => left + (Math.log10(value) + 5) / 4 * (right - left);
-    const top = compact ? 108 : 78, bottom = compact ? 321 : 273;
-    [0.00001, 0.0001, 0.001, 0.01, 0.1].forEach(tick => {
-      svg.append(el("line", {x1: x(tick), x2: x(tick), y1: top, y2: bottom, stroke: "#dce3df", "stroke-width": 1}));
-      svg.append(el("text", {x: x(tick), y: compact ? 347 : 296, "text-anchor": "middle", fill: "#53625d", "font-size": compact ? 11 : 13}, tick.toString()));
-    });
-    methods.forEach((method, index) => {
-      const rows = edits.filter(row => row.method === method.id);
-      const values = rows.map(row => row.english_kl);
-      if (values.some(value => !Number.isFinite(value) || value < 0.00001 || value > 0.1)) throw new Error("English KL outside plotted scale");
-      const y = compact ? 120 + index * 65 : 104 + index * 49;
-      if (compact) svg.append(el("rect", {x: 0, y: y - 38, width, height: 25, fill: "#faf9f5"}));
-      svg.append(el("text", {x: 16, y: compact ? y - 21 : y - 4, fill: "#344946", "font-size": 14}, method.label));
-      svg.append(el("text", {x: compact ? width - 16 : 16, y: compact ? y - 21 : y + 15, "text-anchor": compact ? "end" : "start", fill: "#344946", "font-size": 14, "font-weight": 600}, range(values)));
-      svg.append(el("line", {x1: x(Math.min(...values)), x2: x(Math.max(...values)), y1: y, y2: y, stroke: method.color, "stroke-width": 2}));
-      const visibleRows = method.id === "vpd_atom" ? rows.slice(0, 1) : rows;
-      visibleRows.forEach(row => mark(svg, method, x(row.english_kl), y, `${method.label}${method.id === "vpd_atom" ? "" : `, training subset ${row.draw + 1}`}: English KL ${number(row.english_kl)} nat/token`));
-    });
-    svg.append(el("text", {x: right, y: height - 5, "text-anchor": "end", fill: "#53625d", "font-size": 13}, "KL divergence · nat/token · log scale"));
-    const values = methods.map(method => `${method.label}: ${range(edits.filter(row => row.method === method.id).map(row => row.english_kl))} nat per token`).join(". ");
-    svg.setAttribute("aria-label", `English predictions after the ${pairs[state.target][0]} edit at a ${state.tau} nat per token calibration target. KL divergence from the original distribution to the edited one, averaged over English text on ${data.n_dates} evaluation dates. Lower is closer to the original model. ${values}. Logarithmic scale from 0.00001 to 0.1, with the same scale for every language and calibration level.`);
-    return svg;
-  }
-  function render() {
-    const edits = data.edits.filter(e => e.target === state.target && e.tau === state.tau);
-    if (edits.length !== 12) throw new Error("Incomplete presentation data");
-    const [target, protectedLanguage] = pairs[state.target];
-    document.getElementById("visual-target-chart").replaceChildren(plot("target_rise", target, true, edits));
-    document.getElementById("visual-protected-chart").replaceChildren(plot("protected_rise", protectedLanguage, false, edits));
-    document.getElementById("visual-english-chart").replaceChildren(englishPlot(edits));
-    const atom = edits.find(e => e.method === "vpd_atom");
-    document.getElementById("visual-result-sentence").textContent = `Changing one VPD subcomponent's coefficient worsened ${target} next-token prediction while leaving average prediction loss on ${protectedLanguage} text almost unchanged. On the evaluation text, loss rose by ${number(atom.target_rise)} nat/token for ${target} but only ${number(atom.protected_rise)} nat/token for ${protectedLanguage}.`;
-    document.querySelectorAll("[data-visual-tau]").forEach(button => button.setAttribute("aria-pressed", String(Number(button.dataset.visualTau) === state.tau)));
-    ["visual-pair", "visual-english-pair"].forEach(id => { document.getElementById(id).value = state.target; });
-  }
-  // The matrix toy is deliberately independent of every measured result above.
-  function matrixIllustration(coefficient) {
-    const remainder = [[0.3, -0.2, 0.5], [0.1, 0.6, -0.3], [-0.3, 0.1, 0.4]];
-    const u = [0.7, -0.5, 0.3], v = [0.8, -0.6, 0.4];
-    const atom = u.map(a => v.map(b => a * b));
-    const values = [remainder, atom.map(row => row.map(value => coefficient * value)), remainder.map((row, i) => row.map((value, j) => value + coefficient * atom[i][j]))];
-    values.forEach((matrix, index) => {
-      const group = document.getElementById(`visual-matrix-cells-${index}`);
-      group.replaceChildren();
-      const left = 4;
-      matrix.forEach((row, i) => row.forEach((value, j) => {
-        const rect = el("rect", {x: left + j * 43, y: 4 + i * 43, width: 40, height: 40, rx: 2, fill: value < 0 ? "#826aab" : "#327e70", "fill-opacity": Math.max(0.035, Math.abs(value))});
-        group.append(rect);
-      }));
-      group.append(el("rect", {x: left - 2, y: 2, width: 130, height: 130, rx: 3, fill: "none", stroke: "#bac6bf"}));
-    });
-    const phrase = coefficient === 1 ? "The original coefficient: no edit." : coefficient === 0 ? "The selected subcomponent is removed." : coefficient < 0 ? "The selected subcomponent contributes with its sign reversed." : "The selected subcomponent contributes less than before.";
-    document.getElementById("visual-matrix-state").textContent = phrase;
-    document.getElementById("visual-coefficient-value").value = number(coefficient);
-  }
-  try {
-    document.getElementById("visual-results-interactive").hidden = false;
-    document.getElementById("visual-english-interactive").hidden = false;
-    render();
-    matrixIllustration(0);
-    document.getElementById("visual-results-fallback").hidden = true;
-    document.getElementById("visual-english-fallback").hidden = true;
-    document.getElementById("visual-coefficient-control").hidden = false;
-    ["visual-pair", "visual-english-pair"].forEach(id => document.getElementById(id).addEventListener("change", event => { state.target = event.target.value; render(); }));
-    document.querySelectorAll("[data-visual-tau]").forEach(button => button.addEventListener("click", () => { state.tau = Number(button.dataset.visualTau); render(); }));
-    document.getElementById("visual-coefficient").addEventListener("input", event => matrixIllustration(Number(event.target.value)));
-    let frame;
-    const redraw = () => {
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(render);
-    };
-    const charts = document.querySelector(".visual-chart-pair");
-    if (typeof ResizeObserver !== "undefined") {
-      let lastWidth = charts.clientWidth;
-      new ResizeObserver(() => {
-        if (charts.clientWidth !== lastWidth) {
-          lastWidth = charts.clientWidth;
-          redraw();
-        }
-      }).observe(charts);
+    if (method.shape === "square") {
+      point = svgNode("rect", { ...attrs, x: x - 4.5, y: y - 4.5, width: 9, height: 9 });
+    } else if (method.shape === "triangle") {
+      point = svgNode("path", { ...attrs, d: `M ${x} ${y - 6} l 5.5 10 h -11 z` });
+    } else if (method.shape === "diamond") {
+      point = svgNode("path", { ...attrs, d: `M ${x} ${y - 6} l 6 6 -6 6 -6 -6 z` });
     } else {
-      window.addEventListener("resize", redraw);
+      point = svgNode("circle", { ...attrs, cx: x, cy: y, r: 5 });
     }
-  } catch (error) {
-    document.getElementById("visual-results-interactive").hidden = true;
-    document.getElementById("visual-results-fallback").hidden = false;
-    document.getElementById("visual-english-interactive").hidden = true;
-    document.getElementById("visual-english-fallback").hidden = false;
-    // Keep the complete static example available when a build has missing data.
-    console.warn("Selective-editing visual could not initialize.", error);
+    point.append(svgNode("title", {}, title));
+    svg.append(point);
   }
+
+  function plot(container, groups, { title, subtitle, field, ticks, minimum, maximum, axis, reference }) {
+    const isEnglish = field === "english_kl";
+    const width = Math.max(240, container.clientWidth || 470);
+    const compact = width < 450;
+    const height = compact ? 380 : 306;
+    const svg = svgNode("svg", { viewBox: `0 0 ${width} ${height}`, role: "img" });
+    const ink = "var(--research-ink, #182d3b)";
+    const muted = "var(--research-muted, #526771)";
+    const text = (x, y, content, attrs = {}) => svg.append(svgNode("text", {
+      x, y, fill: ink, "font-size": 14, ...attrs,
+    }, content));
+
+    text(16, 24, title, { "font-size": 20, "font-weight": 600 });
+    text(16, 46, subtitle, { fill: muted, "font-size": 13 });
+
+    const left = compact ? (isEnglish ? 29 : 16) : 188;
+    const right = width - (isEnglish ? 27 : 16);
+    const scale = isEnglish ? Math.log10 : value => value;
+    const x = value => left + (scale(value) - scale(minimum)) / (scale(maximum) - scale(minimum)) * (right - left);
+    const top = compact ? 92 : 69;
+    const bottom = height - 54;
+    ticks.forEach(tick => {
+      svg.append(svgNode("line", {
+        x1: x(tick), x2: x(tick), y1: top, y2: bottom,
+        stroke: "var(--research-rule, #dce2df)", "stroke-width": 1,
+      }));
+      text(x(tick), bottom + 20, String(tick), {
+        "text-anchor": "middle", fill: muted, "font-size": isEnglish && compact ? 10 : 12,
+      });
+    });
+    if (reference !== undefined) {
+      svg.append(svgNode("line", {
+        x1: x(reference), x2: x(reference), y1: top, y2: bottom,
+        stroke: muted, "stroke-dasharray": "4 4", "stroke-width": 1.3,
+      }));
+    }
+
+    groups.forEach(({ method, rows }, index) => {
+      const values = rows.map(row => row[field]);
+      const y = compact ? 105 + index * 66 : 89 + index * 46;
+      if (compact) {
+        svg.append(svgNode("rect", {
+          x: 0, y: y - 41, width, height: 28, fill: "var(--research-paper, white)",
+        }));
+      }
+      text(16, compact ? y - 22 : y - 4, method.label, { "font-size": compact ? 12 : 14 });
+      text(compact ? width - 16 : 16, compact ? y - 22 : y + 15, range(values), {
+        "text-anchor": compact ? "end" : "start", "font-weight": 600, "font-size": compact ? 12 : 14,
+      });
+      svg.append(svgNode("line", {
+        x1: x(Math.min(...values)), x2: x(Math.max(...values)), y1: y, y2: y,
+        stroke: method.color, "stroke-width": 2,
+      }));
+      rows.forEach(row => {
+        const subset = method.id === "vpd_atom" ? "" : `, training subset ${row.draw + 1}`;
+        mark(svg, method, x(row[field]), y, `${method.label}${subset}: ${number(row[field])} nat/token`);
+      });
+    });
+    text(width / 2, height - 5, axis, { "text-anchor": "middle", fill: muted, "font-size": 12 });
+
+    const values = groups.map(({ method, rows }) =>
+      `${method.label}: ${range(rows.map(row => row[field]))} nat per token`).join(". ");
+    const scaleDescription = isEnglish
+      ? "Logarithmic axis from 0.00001 to 0.1."
+      : "Both loss charts use an axis from zero to 1.2.";
+    svg.setAttribute("aria-label", `${title}. ${subtitle}. ${values}. ${scaleDescription}`);
+    container.replaceChildren(svg);
+  }
+
+  function drawTable(container, groups, captionTitle, fields) {
+    const table = document.createElement("table");
+    table.createCaption().textContent = captionTitle;
+    const heading = table.createTHead().insertRow();
+    ["Edit", ...fields.map(field => field.label)].forEach(label => {
+      const cell = document.createElement("th");
+      cell.scope = "col";
+      cell.textContent = label;
+      heading.append(cell);
+    });
+    const body = table.createTBody();
+    groups.forEach(({ method, rows }) => rows.forEach(edit => {
+      const row = body.insertRow();
+      const name = document.createElement("th");
+      name.scope = "row";
+      name.textContent = method.id === "vpd_atom" ? method.label : `${method.label}, subset ${edit.draw + 1}`;
+      row.append(name);
+      fields.forEach(({ key }) => {
+        row.insertCell().textContent = number(edit[key]);
+      });
+    }));
+    container.replaceChildren(table);
+  }
+
+  function decimal(value) {
+    return value.toFixed(3).replace("-", "−");
+  }
+
+  function plotCalibration(calibration, target, tolerance) {
+    const { coefficient, points, tau, validation_rise: validationRise } = calibration;
+    const container = byId("selective-validation-plot");
+    const width = Math.max(240, container.clientWidth);
+    const height = 254;
+    const left = 49;
+    const right = width - 14;
+    const top = 15;
+    const bottom = height - 48;
+    const ink = "var(--research-ink, #182d3b)";
+    const muted = "var(--research-muted, #526771)";
+    const rule = "var(--research-rule, #dce2df)";
+    const accent = methods[0].color;
+    const x = value => left + (value + 1) / 2 * (right - left);
+    const y = value => bottom - value / 3.6 * (bottom - top);
+    const svg = svgNode("svg", {
+      viewBox: `0 0 ${width} ${height}`,
+      role: "img",
+      "aria-label": `${target} validation loss increase by tested subcomponent coefficient. ` +
+        `The chosen coefficient ${decimal(coefficient)} raised loss by ${decimal(validationRise)} nat per token. ` +
+        `The calibration target was ${tau} nat per token, with a tolerance of ${tolerance}.`,
+    });
+    const text = (x, y, content, attrs = {}) => svg.append(svgNode("text", {
+      x, y, fill: muted, "font-size": 12, "text-anchor": "middle", ...attrs,
+    }, content));
+
+    for (const tick of [0, 1, 2, 3]) {
+      svg.append(svgNode("line", { x1: left, x2: right, y1: y(tick), y2: y(tick), stroke: rule }));
+      text(left - 8, y(tick) + 4, String(tick), { "text-anchor": "end" });
+    }
+    for (const tick of [-1, -0.5, 0, 0.5, 1]) {
+      svg.append(svgNode("line", { x1: x(tick), x2: x(tick), y1: top, y2: bottom, stroke: rule }));
+      text(x(tick), bottom + 20, String(tick).replace("-", "−"));
+    }
+    svg.append(
+      svgNode("rect", {
+        x: left, y: y(tau + tolerance), width: right - left,
+        height: y(tau - tolerance) - y(tau + tolerance), fill: accent, "fill-opacity": 0.2,
+      }),
+      svgNode("line", {
+        x1: left, x2: right, y1: y(tau), y2: y(tau), stroke: accent,
+        "stroke-dasharray": "4 4", "stroke-opacity": 0.8,
+      }),
+    );
+    for (const [tested, rise] of points) {
+      const dot = svgNode("circle", { cx: x(tested), cy: y(rise), r: 3.2, fill: muted });
+      dot.append(svgNode("title", {}, `Coefficient ${decimal(tested)}: ${decimal(rise)} nat/token`));
+      svg.append(dot);
+    }
+    const chosen = svgNode("circle", {
+      cx: x(coefficient), cy: y(validationRise), r: 6, fill: "var(--research-paper, white)",
+      stroke: accent, "stroke-width": 2, "data-chosen": "",
+    });
+    chosen.append(svgNode("title", {}, `Chosen coefficient ${decimal(coefficient)}: ${decimal(validationRise)} nat/token`));
+    svg.append(chosen);
+    text((left + right) / 2, height - 5, "Subcomponent coefficient c", { fill: ink });
+    const axisMiddle = (top + bottom) / 2;
+    text(13, axisMiddle, "Validation loss increase (nat/token)", { fill: ink, transform: `rotate(-90 13 ${axisMiddle})` });
+    container.replaceChildren(svg);
+  }
+
+  function showCalibration(calibration, atom, target, related, data) {
+    const coefficient = decimal(calibration.coefficient);
+    const validationRise = decimal(calibration.validation_rise);
+    const targetRise = decimal(atom.target_rise);
+    const relatedRise = number(atom.protected_rise);
+    byId("selective-validation-heading").textContent = `${target} validation measurements`;
+    byId("selective-validation-band").textContent = `Calibration target ±${data.tolerance}`;
+    byId("selective-chosen-coefficient").textContent = `c = ${coefficient}`;
+    byId("selective-coefficient-description").textContent = calibration.coefficient < 0
+      ? "Reversed contribution" : "Reduced contribution";
+    byId("selective-validation-language").textContent = `${target} loss rise`;
+    byId("selective-validation-rise").textContent = `${validationRise} nat/token`;
+    byId("selective-held-out-heading").textContent = `Held out · ${data.n_dates} dates`;
+    byId("selective-target-language").textContent = `${target} loss rise`;
+    byId("selective-target-rise").textContent = `${targetRise} nat/token`;
+    byId("selective-related-language").textContent = `${related} loss rise`;
+    byId("selective-related-rise").textContent = `${relatedRise} nat/token`;
+    byId("selective-english-kl").textContent = `${number(atom.english_kl)} nat/token`;
+    const table = document.createElement("table");
+    table.createCaption().textContent = `Saved ${target} measurements at the ${calibration.tau} nat/token calibration level.`;
+    const heading = table.createTHead().insertRow();
+    for (const label of ["Coefficient", "Validation loss increase (nat/token)"]) {
+      const cell = document.createElement("th");
+      cell.scope = "col";
+      cell.textContent = label;
+      heading.append(cell);
+    }
+    const body = table.createTBody();
+    for (const [tested, rise] of calibration.points) {
+      const row = body.insertRow();
+      const name = document.createElement("th");
+      name.scope = "row";
+      name.textContent = decimal(tested) + (tested === calibration.coefficient ? " (chosen)" : "");
+      row.append(name);
+      row.insertCell().textContent = decimal(rise);
+    }
+    byId("selective-validation-table").replaceChildren(table);
+  }
+
+  function render(data, updateText) {
+    const edits = data.edits.filter(edit => edit.target === state.target && edit.tau === state.tau);
+    if (edits.length !== 12) throw new Error("Incomplete presentation data");
+    const groups = methods.map(method => {
+      const rows = edits.filter(edit => edit.method === method.id);
+      return { method, rows: method.id === "vpd_atom" ? rows.slice(0, 1) : rows };
+    });
+    const [target, related] = pairs[state.target];
+    const calibration = data.calibrations.find(row => row.target === state.target && row.tau === state.tau);
+    if (!calibration) throw new Error("Missing validation calibration");
+    plotCalibration(calibration, target, data.tolerance);
+    const lossScale = {
+      ticks: [0, 0.5, 1],
+      minimum: 0,
+      maximum: 1.2,
+      axis: "Prediction loss increase (nat/token)",
+    };
+    plot(byId("visual-target-chart"), groups, {
+      ...lossScale,
+      title: target,
+      subtitle: "Target language",
+      field: "target_rise",
+      reference: state.tau,
+    });
+    plot(byId("visual-protected-chart"), groups, {
+      ...lossScale,
+      title: related,
+      subtitle: "Related language",
+      field: "protected_rise",
+    });
+    plot(byId("visual-english-chart"), groups, {
+      title: "English predictions",
+      subtitle: `${target} edit · calibration ${state.tau} nat/token`,
+      field: "english_kl",
+      ticks: [0.00001, 0.0001, 0.001, 0.01, 0.1],
+      minimum: 0.00001,
+      maximum: 0.1,
+      axis: "Mean KL divergence (nat/token, log scale)",
+    });
+    if (!updateText) return;
+
+    const atom = groups[0].rows[0];
+    showCalibration(calibration, atom, target, related, data);
+    const comparators = groups.slice(1).flatMap(({ rows }) => rows);
+    const targetRange = range(comparators.map(row => row.target_rise));
+    const relatedRange = range(comparators.map(row => row.protected_rise));
+    byId("visual-result-sentence").textContent =
+      `On evaluation text, the VPD edit raised ${target} loss by ${number(atom.target_rise)} nat/token and ${related} loss by ${number(atom.protected_rise)} nat/token. ` +
+      `The other edits raised ${target} loss by ${targetRange} nat/token and ${related} loss by ${relatedRange} nat/token.`;
+    drawTable(byId("visual-results-table"), groups,
+      `${target} and ${related} loss increases on evaluation text (nat/token). Calibration level: ${state.tau} nat/token.`, [
+        { label: target, key: "target_rise" },
+        { label: related, key: "protected_rise" },
+      ]);
+    drawTable(byId("visual-english-table"), groups,
+      `Mean English KL on evaluation text for the ${target} edit at the ${state.tau} nat/token calibration level.`, [
+        { label: "KL (nat/token)", key: "english_kl" },
+      ]);
+    document.querySelectorAll("[data-visual-tau]").forEach(button => {
+      button.setAttribute("aria-pressed", String(Number(button.dataset.visualTau) === state.tau));
+    });
+    ["visual-pair", "visual-english-pair"].forEach(id => { byId(id).value = state.target; });
+  }
+
+  const toy = {
+    remainder: [[2, -1, 3], [1, 3, -2], [-2, 1, 2]],
+    u: [2, -1, 1],
+    v: [2, -1, 1],
+  };
+
+  function matrixIllustration(slider) {
+    const coefficient = Number(slider.value);
+    const { remainder, u, v } = toy;
+    const scaled = u.map(a => v.map(b => coefficient * a * b));
+    const edited = remainder.map((row, i) => row.map((value, j) => value + scaled[i][j]));
+    const integerOrTenth = value => String(Number(value.toFixed(1))).replace("-", "−");
+
+    [remainder, scaled, edited].forEach((matrix, index) => {
+      const group = byId(`visual-matrix-cells-${index}`);
+      group.replaceChildren();
+      matrix.forEach((row, i) => row.forEach((value, j) => {
+        const x = 3 + j * 43;
+        const y = 3 + i * 43;
+        group.append(
+          svgNode("rect", {
+            x, y, width: 40, height: 40, rx: 2,
+            fill: value < 0 ? "#826aab" : "#327e70",
+            "fill-opacity": value === 0 ? 0.04 : 0.13 + Math.abs(value) * 0.055,
+            stroke: "var(--research-rule, #dce2df)",
+          }),
+          svgNode("text", {
+            x: x + 20, y: y + 21, fill: "var(--research-ink, #182d3b)",
+            "font-size": 14, "font-weight": 600, "text-anchor": "middle", "dominant-baseline": "middle",
+          }, integerOrTenth(value)),
+        );
+      }));
+    });
+
+    let summary = "Reduced contribution";
+    if (coefficient === 1) summary = "Original matrix reconstructed";
+    if (coefficient === 0) summary = "Subcomponent removed";
+    if (coefficient < 0) summary = "Subcomponent sign reversed";
+    const operation = [remainder, scaled, edited].map(matrix => integerOrTenth(matrix[0][0]));
+    byId("visual-coefficient-value").value = integerOrTenth(coefficient);
+    slider.setAttribute("aria-valuetext", `${coefficient}. ${summary}.`);
+    byId("visual-matrix-state").textContent =
+      `${summary}. Top-left entry: ${operation[0]}\u00a0+\u00a0(${operation[1]})\u00a0=\u00a0${operation[2]}.`;
+    document.querySelector(".visual-matrix-equation").setAttribute("aria-label",
+      `Toy matrix equation. The rest of the matrix plus the scaled subcomponent equals the edited matrix. ${summary}.`);
+  }
+
+  function init() {
+    const slider = byId("visual-coefficient");
+    matrixIllustration(slider);
+    slider.addEventListener("input", () => matrixIllustration(slider));
+    byId("visual-coefficient-control").hidden = false;
+    byId("visual-matrix-key").hidden = false;
+    if (window.ResearchOrbit && window.initMatrixOutput) window.initMatrixOutput(slider, toy);
+
+    const interactive = [byId("visual-results-interactive"), byId("visual-english-interactive")];
+    const fallback = [byId("visual-results-fallback"), byId("visual-english-fallback")];
+    try {
+      const data = {
+        ...JSON.parse(byId("visual-selective-data").textContent),
+        ...JSON.parse(byId("visual-selective-calibration").textContent),
+      };
+      interactive.forEach(container => { container.hidden = false; });
+      render(data, true);
+      fallback.forEach(container => { container.hidden = true; });
+
+      ["visual-pair", "visual-english-pair"].forEach(id => byId(id).addEventListener("change", event => {
+        state.target = event.target.value;
+        render(data, true);
+      }));
+      document.querySelectorAll("[data-visual-tau]").forEach(button => button.addEventListener("click", () => {
+        state.tau = Number(button.dataset.visualTau);
+        render(data, true);
+      }));
+
+      let frame;
+      const redraw = () => {
+        cancelAnimationFrame(frame);
+        frame = requestAnimationFrame(() => render(data, false));
+      };
+      const widths = new Map();
+      const containers = [
+        "selective-validation-plot", "visual-target-chart", "visual-protected-chart", "visual-english-chart",
+      ].map(byId);
+      if (typeof ResizeObserver !== "undefined") {
+        const observer = new ResizeObserver(entries => {
+          for (const { target, contentRect } of entries) {
+            if (widths.get(target) !== contentRect.width) {
+              widths.set(target, contentRect.width);
+              redraw();
+            }
+          }
+        });
+        containers.forEach(container => observer.observe(container));
+      } else {
+        window.addEventListener("resize", redraw);
+      }
+    } catch (error) {
+      interactive.forEach(container => { container.hidden = true; });
+      fallback.forEach(container => { container.hidden = false; });
+      console.warn("Selective-editing visual could not initialize.", error);
+    }
+  }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init, { once: true });
+  else init();
 })();
 </script>
 
@@ -6105,7 +7462,13 @@ W_{\mathrm{edited}} = (W-A) + cA.
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-       
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item">
+    <a class="nav-link" href="../index.html">
+<p>Study overview</p>
+</a>
+  </li>  
+</ul>
     </div>   
     <div class="nav-footer-center">
        
@@ -6121,6 +7484,28 @@ W_{\mathrm{edited}} = (W-A) + cA.
     </div>
   </div>
 </footer>
+<script>
+  (() => {
+    const panes = document.querySelectorAll(
+      "main .quarto-float-fig > div:has(> img), main .quarto-float-tbl > div:has(> table)"
+    );
+    if (!panes.length) return;
+    const updateTabStops = () => {
+      for (const pane of panes) {
+        const overflows = pane.scrollWidth > pane.clientWidth;
+        pane.toggleAttribute("data-scroll-overflow", overflows);
+        if (overflows) pane.setAttribute("tabindex", "0");
+        else pane.removeAttribute("tabindex");
+      }
+    };
+    const resizeObserver = new ResizeObserver(updateTabStops);
+    for (const pane of panes) {
+      resizeObserver.observe(pane);
+      resizeObserver.observe(pane.firstElementChild);
+    }
+    updateTabStops();
+  })();
+</script>
 
 
 
