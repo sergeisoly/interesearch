@@ -183,7 +183,7 @@ ul.task-list li input[type="checkbox"] {
     </nav>
   </div>
   <figure class="research-result figure" aria-labelledby="selective-result-title">
-    <p class="research-result-title" id="selective-result-title">Extra prediction loss in related languages</p>
+    <p class="research-result-title" id="selective-result-title">Extra prediction loss in related languages (nats/token)</p>
     <!-- Each decade from 0.0001 to 1 occupies one quarter of the axis. Source: selective article, Results. -->
     <div class="research-interval-row">
       <span>Subcomponent edits</span><strong>0.0003–0.0053</strong>
@@ -194,7 +194,6 @@ ul.task-list li input[type="checkbox"] {
       <div class="research-interval-track research-interval-comparator" aria-hidden="true"><span style="--start: 60.78%; --end: 98.56%"></span></div>
     </div>
     <div class="research-interval-axis" aria-hidden="true"><span>0.0001</span><span>0.001</span><span>0.01</span><span>0.1</span><span>1</span></div>
-    <figcaption>German–Dutch, Spanish–Portuguese and French–Italian. Ranges span the held-out results in nats per token on a log scale. The comparison includes rank-one LoRA, full-matrix fine-tuning and neuron edits.</figcaption>
   </figure>
 </section>
 
@@ -247,19 +246,18 @@ fine-tune</th>
 </tbody>
 </table>
 
-    <figcaption>At 2,048 fit tokens with a 600-step cap for regular runs. Rescaling includes two additional optimization runs. The last row shows the first fresh start.</figcaption>
   </figure>
 </section>
 
 <div class="research-notes">
   <section aria-labelledby="about-these-studies">
     <h2 id="about-these-studies" class="anchored">About these studies</h2>
-    <p>I learn best by trying a method myself. These studies grew out of a wish to understand earlier work on interpretability and model editing, then see what else those methods could reveal.</p>
-    <p>The studies take the form of research papers, though I still hesitate to call them rigorous scientific work. My hope is that someone else who wants to try these methods will find the experiments useful.</p>
+    <p>The work presented here is my attempt to understand interpretability and model editing methods more deeply. By building on recent advances and trying to find something new, I also learn what others have done before me. For me, the best way to learn is through practice.</p>
+    <p>Although these studies are written in the form of research papers, I’m not yet confident that I can call them rigorous scientific work. I’m sharing them in the hope that they may be useful to someone besides me.</p>
   </section>
   <section class="research-ai-note" aria-labelledby="ai-assistance">
     <h2 id="ai-assistance" class="anchored">AI assistance</h2>
-    <p>Codex (GPT-6 Astra and GPT-6.1 Sol) and Claude Code (Opus 5.5) helped extensively throughout the project. I supervised the experiments and decided what to try next as the results came in.</p>
+    <p>I made extensive use of Codex with GPT-6 Astra and GPT-6.1 Sol, as well as Claude Code with Opus 5.5, throughout this work. I personally supervised the experiments and guided their direction based on the results and the questions I wanted to explore.</p>
     <p>Most of the text was also written with AI assistance and went through several rounds of careful editing. I hope attentive readers will forgive me for that.</p>
   </section>
 </div>
