@@ -7,4 +7,4 @@
 | fr → it | 0.attn.o:640 | 0.5 | 0.762 | 0.238 | 0.31 | 0.53 | 0.50 | 0.0008 |
 |  |  | 1 | 1.039 | −0.039 | 0.42 | 1.06 | 1.01 | 0.0017 |
 
-: Selected subcomponent edits, shared across training draws. Coefficient: 1 − a; edit norm: |α| · ‖A‖. CE rises are in nat/token. C: confirmation; D: development. {#tbl-interventions tbl-colwidths="[9,13,5,9,12,9,13,14,16]"}
+: VPD edits by target → protected language and validation target τ. The coefficient is 1 − a and edit norm is the Frobenius norm. Cross-entropy rises are in nat/token on development (D) and confirmation (C) dates. {#tbl-interventions tbl-colwidths="[9,13,5,9,12,9,13,14,16]"}

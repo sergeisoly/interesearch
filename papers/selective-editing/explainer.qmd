@@ -2,9 +2,11 @@
 image: ../social-card.png
 description: "Comparing the effects of language-model weight edits on a target language and its close relative."
 title: "Selective language editing"
+subtitle: "First published 14 October 2026 · Updated 18 November 2026"
 format:
   html:
     embed-resources: true
+    css: calibration.css
 toc: false
 page-layout: full
 body-classes: research-explainer
@@ -15,65 +17,57 @@ body-classes: research-explainer
 :::
 
 ::: {.visual-intro}
-I deliberately worsen next-token prediction in a **target language** to test whether that change can
-largely spare a close relative. For German → Dutch, German is the target and Dutch is the language I want
-to spare. I make this change by modifying the model's learned weights: a **weight edit**.
+A language model uses the same weights across languages. If an edit makes the model worse at predicting
+the next token in German, how much of that damage carries over to Dutch?
 
-Lucius Bushnaq's [Exploration: Fine-Tuning with Parameter Decomposition](https://www.lesswrong.com/posts/ieoWstubDQWLrMnhH/exploration-fine-tuning-with-parameter-decomposition)
-showed that changing one subcomponent's coefficient in [Goodfire's four-layer, 67-million-parameter language model](https://www.goodfire.com/research/interpreting-lm-parameters)
-could weaken German predictions while largely sparing French and Spanish. I use the same model and
-decomposition to test three pairs of close relatives: German/Dutch, Spanish/Portuguese and French/Italian.
+Lucius Bushnaq weakened German predictions by editing one subcomponent in
+[Goodfire's four-layer, 67-million-parameter model](https://www.goodfire.com/research/interpreting-lm-parameters).
+I used the same model and decomposition to test German–Dutch, Spanish–Portuguese and French–Italian.
+[Bushnaq's experiment](https://www.lesswrong.com/posts/ieoWstubDQWLrMnhH/exploration-fine-tuning-with-parameter-decomposition)
 
-Across all three pairs, single-subcomponent edits caused much less damage to the related language than
-the other methods I tested. LoRA and full-matrix fine-tuning preserved English predictions better.
+On new text, the subcomponent edits did less damage to the related languages than the three comparators.
+LoRA and full-matrix fine-tuning kept English predictions closer to the original model's.
 :::
 
 ## Edit one rank-one subcomponent
 
-To make a targeted weight change, I select one subcomponent from
-[Goodfire's adVersarial Parameter Decomposition (VPD)](https://www.goodfire.com/research/interpreting-lm-parameters)
-and adjust its contribution. VPD writes a weight matrix $W$ as a sum of **rank-one subcomponents** plus a
-residual. The decomposition is trained so that few subcomponents are needed on any input. Each subcomponent $A$ is the outer
-product of an output vector $u_{\mathrm{out}}$ and an input vector $v_{\mathrm{in}}$:
+Goodfire's adVersarial Parameter Decomposition (VPD) expresses a weight matrix $W$ as a sum of
+**rank-one subcomponents** and a residual. The training objective favors using few subcomponents to
+approximate the computation for each input.
 
-$$
-A = u_{\mathrm{out}}v_{\mathrm{in}}^\top.
-$$
-
-For an input $x$, the input vector reads out one number, $v_{\mathrm{in}}^\top x$. The output vector determines
-the direction in which that number contributes to the matrix's output:
+A subcomponent $A=u_{\mathrm{out}}v_{\mathrm{in}}^\top$ reads one number from the input $x$ with
+$v_{\mathrm{in}}^\top x$. That number scales the output vector $u_{\mathrm{out}}$.
 
 $$
 Ax = u_{\mathrm{out}}\bigl(v_{\mathrm{in}}^\top x\bigr).
 $$
 
-A fixed rule uses target-language and English text to favor subcomponents expected to weaken the target
-language while changing English predictions little.
-
-The edit changes a single number, the selected subcomponent's coefficient $c$:
+The edit scales $A$ by a single coefficient $c$, changing many weights at once.
 
 $$
 W_{\mathrm{edited}} = (W-A) + cA.
 $$
 
-Changing this coefficient changes many entries of the weight matrix. The subcomponent's two vectors stay
-fixed, as do all other subcomponents and the residual. At $c=1$ the matrix is unchanged.
-Setting $c=0$ removes the selected contribution, and $c<0$ reverses its sign. The slider below illustrates this operation
-on a toy matrix.
+At $c=1$ the matrix is unchanged, at $c=0$ the contribution is removed, and at $c<0$ its sign reverses.
 
 ```{=html}
 <figure class="visual-figure visual-concept" aria-label="Schematic weight edit" aria-describedby="visual-matrix-caption">
+  <fieldset id="matrix-view-switch" class="matrix-view-switch" hidden>
+    <legend>View the toy edit</legend>
+    <label><input type="radio" name="matrix-view" value="entries" checked> Matrix entries</label>
+    <label><input type="radio" name="matrix-view" value="output"> 3D output</label>
+  </fieldset>
   <div class="visual-coefficient-control" id="visual-coefficient-control" hidden>
-    <label for="visual-coefficient">Selected subcomponent's coefficient c <output id="visual-coefficient-value" for="visual-coefficient">0</output></label>
-    <input id="visual-coefficient" type="range" min="-1" max="1" step="0.05" value="0" aria-describedby="visual-matrix-state">
-    <div class="visual-range-labels"><span>−1 · reversed</span><span>0 · removed</span><span>1 · original</span></div>
+    <label for="visual-coefficient"><span>Subcomponent coefficient <i>c</i></span> <output id="visual-coefficient-value" for="visual-coefficient">0</output></label>
+    <input id="visual-coefficient" type="range" min="-1" max="1" step="0.1" value="0" aria-describedby="visual-matrix-state">
+    <div class="visual-range-labels" aria-hidden="true"><span>−1 · reversed</span><span>0 · removed</span><span>1 · original</span></div>
   </div>
-  <div class="visual-matrix-equation" role="group" aria-label="The remaining components and residual plus the scaled selected subcomponent equal the edited matrix">
-    <div class="visual-matrix-term"><p>Rest of the matrix</p>
+  <div class="visual-matrix-equation" role="img" aria-label="The rest of the matrix plus the scaled subcomponent equals the edited matrix. At coefficient zero the edit removes the subcomponent.">
+    <div class="visual-matrix-term"><p>Rest of matrix</p>
       <svg viewBox="0 0 134 134" aria-hidden="true"><g id="visual-matrix-cells-0"><rect x="2" y="2" width="130" height="130" rx="4" fill="#e6eeeb" stroke="#78968a"/><text x="67" y="79" text-anchor="middle" font-size="28" fill="#39574a">W − A</text></g></svg>
     </div>
     <span class="visual-matrix-operator" aria-hidden="true">+</span>
-    <div class="visual-matrix-term"><p>Selected subcomponent</p>
+    <div class="visual-matrix-term"><p>Scaled subcomponent</p>
       <svg viewBox="0 0 134 134" aria-hidden="true"><g id="visual-matrix-cells-1"><rect x="2" y="2" width="130" height="130" rx="4" fill="#f4f4ef" stroke="#a8afa9"/><text x="67" y="79" text-anchor="middle" font-size="28" fill="#52605a">0 × A</text></g></svg>
     </div>
     <span class="visual-matrix-operator" aria-hidden="true">=</span>
@@ -81,53 +75,54 @@ on a toy matrix.
       <svg viewBox="0 0 134 134" aria-hidden="true"><g id="visual-matrix-cells-2"><rect x="2" y="2" width="130" height="130" rx="4" fill="#e6eeeb" stroke="#78968a"/><text x="67" y="79" text-anchor="middle" font-size="28" fill="#39574a">W − A</text></g></svg>
     </div>
   </div>
-  <p id="visual-matrix-state" class="visual-matrix-state" aria-live="polite">The selected subcomponent is removed.</p>
-  <figcaption id="visual-matrix-caption">Toy illustration of changing one subcomponent's contribution.</figcaption>
+  <p id="visual-matrix-state" class="visually-hidden">At zero, the selected subcomponent contributes nothing.</p>
+  <div id="matrix-output" hidden>
+    <div class="matrix-output-controls">
+      <label>Input vector <i>x</i>
+        <select id="matrix-input">
+          <option value="0">(1, 0, 0)</option>
+          <option value="1">(0, 1, 0)</option>
+          <option value="2">(1, 2, 0)</option>
+        </select>
+      </label>
+      <button type="button" id="matrix-reset">Reset view</button>
+    </div>
+    <svg id="matrix-output-space" tabindex="0" role="img" aria-label="Toy model output in three dimensions" aria-describedby="matrix-output-reading matrix-orbit-help"></svg>
+    <ul class="matrix-output-legend" aria-label="Output markers">
+      <li><span class="matrix-zero-symbol" aria-hidden="true"></span>Component removed (<i>c</i> = 0)</li>
+      <li><span class="matrix-one-symbol" aria-hidden="true"></span>Original (<i>c</i> = 1)</li>
+      <li><span class="matrix-now-symbol" aria-hidden="true"></span>Current output</li>
+    </ul>
+    <p id="matrix-output-reading" aria-live="polite" aria-atomic="true"></p>
+    <p id="matrix-orbit-help">Drag sideways or use the arrow keys on the figure to rotate.</p>
+  </div>
+  <figcaption id="visual-matrix-caption">Toy matrices. <span id="visual-matrix-key" hidden>Green = positive, purple = negative.</span></figcaption>
 </figure>
 ```
 
-## Comparing ways to change the weights
+## Compare edits at similar target damage {#comparing-ways-to-change-the-weights}
 
-I compare the VPD edit with three other ways to change the weights, all aimed at worsening target-language
-prediction while preserving English predictions.
+The selector ranks subcomponents by how much a small coefficient change is predicted to raise target
+loss for a given change in English predictions. It tests leading candidates on target training text.
+The comparison included three other ways to worsen target predictions while preserving English.
 
-**Rank-one LoRA** learns its own output and input vectors in the same weight matrix:
+- **Rank-one LoRA** learns a new pair of input and output vectors for the same matrix as the VPD edit.
+- **Full-matrix fine-tuning** can change every entry in the 24 attention and feed-forward weight matrices.
+- **Neuron edits** reduce output weights for neurons that activate more often on target text than on English.
 
-$$
-\Delta W_{\mathrm{LoRA}} = a_{\mathrm{out}}b_{\mathrm{in}}^\top.
-$$
+<span id="matching-the-intended-damage"></span>An edit could spare Dutch by barely affecting German. Calibration sets the strength of each edit to
+raise mean next-token prediction loss (cross-entropy) by **0.5 or 1 nat/token** on target-language
+validation text.
 
-This lets LoRA choose a different direction while keeping the update's rank and the edited matrix fixed.
+The final comparison used the fixed edits on text from **58 held-out European Parliament session dates**.
+The related languages were absent from selection and training for these runs. In earlier work I used
+development text from those languages and took Dutch performance into account when choosing the German subcomponent.
+[Data and prior access](index.qmd#sec-access)
 
-**Full-matrix fine-tuning** gives the learned update more freedom: it can change every entry in the model's
-24 attention and feed-forward weight matrices.
-
-The **neuron edit** selects neurons by how much more often they activate on target text than on English
-text, then scales their output weights.
-
-LoRA and full-matrix fine-tuning penalize changes to the original model's
-English predictions during training.
-These selection and training steps use no Dutch, Portuguese or Italian text. Those languages test whether
-the methods also spare a close relative that they were not explicitly trained to preserve.
-
-## Matching the intended damage
-
-To compare side effects fairly, I first make each method worsen the target language by a similar amount.
-Otherwise, a method might spare Dutch simply because it barely changed German.
-
-I **calibrate** each edit by adjusting its strength on target-language validation text. I use two calibration levels:
-an increase of **0.5 or 1 nat/token** in average prediction loss (cross-entropy) relative to the original model.
-
-I use **Europarl v7**, a corpus of European Parliament proceedings. After calibration, I measure the damage
-to both languages on separate text from **58 session dates**.
-
-## Target and related-language damage
-
-Choose a language pair and calibration level. The first chart shows the measured damage to the target language.
-The second shows the unwanted damage to its relative.
+## Calibration and measured effects {#target-and-related-language-damage}
 
 ```{=html}
-<figure class="visual-figure visual-results" aria-labelledby="visual-results-caption">
+<figure class="visual-figure visual-results" aria-label="Calibration and held-out loss increases">
   <div id="visual-results-interactive" hidden>
     <div class="visual-controls">
       <label for="visual-pair">Language pair
@@ -138,15 +133,53 @@ The second shows the unwanted damage to its relative.
         <button type="button" data-visual-tau="1" aria-pressed="true">1 nat/token</button>
       </fieldset>
     </div>
+    <div class="selective-calibration">
+      <div>
+        <h3 id="selective-validation-heading">Validation measurements</h3>
+        <div id="selective-validation-plot"></div>
+        <p class="selective-calibration-key">
+          <span><i aria-hidden="true"></i> Tested coefficient</span>
+          <span><i aria-hidden="true"></i> Chosen coefficient</span>
+          <span><i aria-hidden="true"></i> <span id="selective-validation-band"></span></span>
+        </p>
+        <details class="visual-uncertainty-table">
+          <summary>Read the validation measurements</summary>
+          <div id="selective-validation-table"></div>
+        </details>
+      </div>
+      <div class="selective-edit-readout">
+        <h3>Chosen VPD edit</h3>
+        <p class="selective-chosen-coefficient" id="selective-chosen-coefficient"></p>
+        <p class="visual-note" id="selective-coefficient-description"></p>
+        <table>
+          <caption>Measured effects of the chosen coefficient</caption>
+          <tbody>
+            <tr><th scope="rowgroup" colspan="2">Validation</th></tr>
+            <tr><th scope="row" id="selective-validation-language"></th><td id="selective-validation-rise"></td></tr>
+          </tbody>
+          <tbody>
+            <tr><th scope="rowgroup" colspan="2" id="selective-held-out-heading"></th></tr>
+            <tr><th scope="row" id="selective-target-language"></th><td id="selective-target-rise"></td></tr>
+            <tr><th scope="row" id="selective-related-language"></th><td id="selective-related-rise"></td></tr>
+            <tr><th scope="row"><a href="#what-changed-in-english">English KL</a></th><td id="selective-english-kl"></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <h3 class="selective-comparison-heading">Held-out comparison</h3>
     <div class="visual-chart-pair">
       <div id="visual-target-chart"></div>
       <div id="visual-protected-chart"></div>
     </div>
-    <p id="visual-result-sentence" class="visual-result-sentence" aria-live="polite" aria-atomic="true"></p>
+    <p id="visual-result-sentence" class="visually-hidden" aria-live="polite" aria-atomic="true"></p>
+    <details class="visual-uncertainty-table">
+      <summary>Read the plotted values</summary>
+      <div id="visual-results-table"></div>
+    </details>
   </div>
   <div id="visual-results-fallback">
-    <p><strong>German → Dutch, target loss increase of 1 nat/token on validation text.</strong> Changing one VPD subcomponent's coefficient worsened German next-token prediction while leaving average prediction loss on Dutch text almost unchanged. The table shows the loss increases on evaluation text. Ranges span the results from three training subsets.</p>
-    <table><caption>Target and related-language damage, in nat/token</caption><thead><tr><th scope="col">Edit</th><th scope="col">German</th><th scope="col">Dutch</th></tr></thead><tbody>
+    <p><strong>German → Dutch at the 1 nat/token calibration level.</strong> Setting the VPD coefficient to 0.055 raised German validation loss by 1.019 nat/token.</p>
+    <table><caption>Loss increases on 58 held-out dates, in nat/token. Ranges span three training subsets.</caption><thead><tr><th scope="col">Edit</th><th scope="col">German</th><th scope="col">Dutch</th></tr></thead><tbody>
       <tr><th scope="row">One VPD subcomponent</th><td>0.98</td><td>0.0053</td></tr>
       <tr><th scope="row">Rank-one LoRA</th><td>0.92–0.93</td><td>0.078–0.11</td></tr>
       <tr><th scope="row">Full-matrix fine-tuning</th><td>0.95–0.97</td><td>0.23–0.24</td></tr>
@@ -154,27 +187,26 @@ The second shows the unwanted damage to its relative.
     </tbody></table>
     <p>See the <a href="index.html#sec-effects">paper's figure</a> for all three language pairs and both calibration levels.</p>
   </div>
-  <figcaption id="visual-results-caption">The VPD point represents one fixed edit shared by all three training subsets. Other methods show one point per subset. Lines span their range, not a confidence interval. The dashed line marks the calibration target.</figcaption>
+  <figcaption id="visual-results-caption"><span class="plot-key">The dashed line marks the validation target. Each range spans three training subsets. All three gave the same VPD edit.</span></figcaption>
 </figure>
 ```
 
-Across all three pairs and both calibration levels, the VPD edits raised related-language loss by
-**0.0003–0.0053 nat/token**, compared with **0.03–0.88 nat/token** for the other methods.
-These ranges span individual run results. The comparison tests six fixed edits in one small model.
-Whether the selection rule works reliably on new tasks remains untested.
+Related-language loss rose by **0.0003–0.0053 nat/token** across the six fixed VPD edits in this model,
+versus **0.027–0.876 nat/token** across individual comparator runs. The selection rule's reliability
+on new tasks remains open. [Estimates and confidence intervals](index.qmd#sec-contrasts)
 
-## English, innit? {#what-changed-in-english}
+## How much did English predictions change? {#what-changed-in-english}
 
-In a post hoc comparison, **rank-one LoRA and full-matrix fine-tuning preserved the original model's English
-predictions more closely** than the VPD edits did. Prediction loss scores only the probability of the actual
-next token, so this comparison uses KL divergence, which compares probabilities over all possible next
-tokens before and after the edit. Lower KL means the English predictions stayed closer to the original model.
+All edits in the main comparison passed the English loss limit. That loss uses the probability of the
+observed next token. **KL divergence** compares the full next-token distributions of the original and
+edited models. LoRA and full-matrix fine-tuning penalized English KL during training. In the post hoc
+analysis, both had lower English KL than VPD for every language and calibration level on the new dates.
 
 ```{=html}
-<figure class="visual-figure" aria-labelledby="visual-english-caption">
+<figure class="visual-figure" aria-label="English prediction change relative to the original model">
   <div id="visual-english-interactive" hidden>
     <div class="visual-controls">
-      <label for="visual-english-pair">Language being changed
+      <label for="visual-english-pair">Target language
         <select id="visual-english-pair"><option value="de">German</option><option value="es">Spanish</option><option value="fr">French</option></select>
       </label>
       <fieldset class="visual-dose"><legend>Target loss increase on validation text</legend>
@@ -182,22 +214,22 @@ tokens before and after the edit. Lower KL means the English predictions stayed 
         <button type="button" data-visual-tau="1" aria-pressed="true">1 nat/token</button>
       </fieldset>
     </div>
-    <div class="visual-chart-pair">
-      <div id="visual-english-chart"></div>
-    </div>
+    <div id="visual-english-chart"></div>
+    <details class="visual-uncertainty-table">
+      <summary>Read the plotted values</summary>
+      <div id="visual-english-table"></div>
+    </details>
   </div>
   <div id="visual-english-fallback">
-    <p>The VPD edits' English KL is below 0.001 nat/token for every language and calibration level. Both learned methods have lower English KL throughout these comparisons. The <a href="index.html#sec-english">paper's English comparison</a> includes the values for all four methods.</p>
+    <p>See the <a href="index.html#sec-english">paper's English comparison</a> for the measurements for all four methods.</p>
   </div>
-  <figcaption id="visual-english-caption">The VPD point represents one fixed edit shared by all three training subsets. Other methods show one point per subset. Lines span their range, not a confidence interval. The horizontal scale is logarithmic: each tick is ten times the previous value.</figcaption>
+  <figcaption id="visual-english-caption"><span class="plot-key">Lines span the three training subsets. KL is measured from the original model to the edited model.</span></figcaption>
 </figure>
 ```
 
-On the evaluated English text, the VPD edits changed next-token probabilities **little on average**:
-mean KL stayed below **0.001 nat/token** for every language and calibration level. For scale, changing
-a coin's probabilities from **50%/50% to 52%/48%** gives KL ≈ **0.00080**, close to the German VPD
-edit's 0.00077 at the 1 nat/token level. This illustrates the size of KL, not a measured two-percentage-point
-change for each token. Individual contexts can change more than the average suggests.
+Mean English KL was below **0.001 nat/token** for every VPD edit. For scale, the KL from a fair coin
+(**50%/50%**) to a **52%/48%** coin is about **0.00080**. The German VPD edit at the 1 nat/token
+level had a mean KL of **0.00077**. Individual contexts can have higher KL than the mean.
 
 [Methods](index.qmd#sec-setup) and [study limitations](index.qmd#sec-limits) in the paper.
 
@@ -205,5 +237,10 @@ change for each token. Individual contexts can change more than the average sugg
 <script type="application/json" id="visual-selective-data">
 {{< include ../../results/selective_editing/explainer_data.json >}}
 </script>
+<script type="application/json" id="visual-selective-calibration">
+{{< include ../../results/selective_editing/explainer_calibration.json >}}
+</script>
+<script src="../figure-orbit.js"></script>
+<script src="matrix-output.js"></script>
 <script src="explainer.js"></script>
 ```

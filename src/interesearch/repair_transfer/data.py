@@ -14,6 +14,7 @@ shape [dates, 257] per language, and ``SHA256SUMS`` over all of them. Row i of e
 
 from __future__ import annotations
 
+import hashlib
 import io
 import json
 import zipfile
@@ -28,6 +29,7 @@ from ..checksums import sha256_file, verify_checksums
 BLOCK_FILES = ("block.json", "readout.npz", "selection.npz")
 RUN_RECORD = "run.json"
 DONOR_FILES = ("donor_repair.pt", "fit_record.json")
+DONOR_REPAIR_SHA256 = "603b62c776856654c925fecd37b7bb43d8dc98994334e5582bb5838c5a9371d7"
 WINDOWS_FILE = "windows.json"
 WINDOW_TOKENS = 257  # 256 predictions per window
 # Roles a reduced run may never open (papers/repair-transfer/index.qmd#sec-app-methods): this study's readout
@@ -41,6 +43,7 @@ class Block:
     info: dict
     selection: dict
     readout: dict
+    donor_repair_sha256: str | None = None
 
 
 def _measurements(path: Path, names: list[str], rows: int) -> dict:
@@ -60,19 +63,30 @@ def load_block(block_dir: str | Path, allow_reduced: bool = False) -> Block:
     """A block for analysis. Refused: a directory whose run record (``run.json``, written by ``run.py``) reports an
     unsuccessful run, and a block of a reduced verification run unless ``allow_reduced`` (code-path checks only)."""
     block_dir = Path(block_dir)
-    if (block_dir / RUN_RECORD).exists():
-        status = json.loads((block_dir / RUN_RECORD).read_text())["status"]
-        if status != "ok":
-            raise ValueError(f"{block_dir}: the run that wrote it ended with status {status!r}. Not an analysis block")
+    run_path = block_dir / RUN_RECORD
+    run_bytes = run_path.read_bytes() if run_path.exists() else None
+    run = json.loads(run_bytes) if run_bytes is not None else None
+    if run is not None and run["status"] != "ok":
+        raise ValueError(f"{block_dir}: the run that wrote it ended with status {run['status']!r}. Not an analysis block")
     verify_checksums(block_dir, BLOCK_FILES)
     info = json.loads((block_dir / "block.json").read_text())
     if info.get("run", {}).get("reduced") and not allow_reduced:
         raise ValueError(f"{block_dir}: a reduced verification run ({info['run']['deviations']}), not an analysis "
                          f"block")
+    donor_sha256 = info["recorded"].get("donor_repair_sha256")
+    source = info.get("source", {})
+    if run_bytes is not None and source.get("run_record_sha256"):
+        if hashlib.sha256(run_bytes).hexdigest() != source["run_record_sha256"]:
+            raise ValueError(f"{run_path}: sha256 differs from the block's source record")
+        if donor_sha256 is None:
+            donor_sha256 = run.get("inputs", {}).get("donor_repair", {}).get("sha256")
+    if donor_sha256 is None and info.get("format") == 1 and "run" not in info and "measurements_sha256" in source:
+        donor_sha256 = DONOR_REPAIR_SHA256  # Archived paper blocks used the published donor.
     return Block(
         info=info,
         selection=_measurements(block_dir / "selection.npz", info["selection"]["names"], info["selection"]["rows"]),
         readout=_measurements(block_dir / "readout.npz", info["readout"]["names"], len(info["readout"]["dates"])),
+        donor_repair_sha256=donor_sha256,
     )
 
 

@@ -6,7 +6,7 @@
     "study": "repair_transfer",
     "uncertainty": "95% percentile bootstrap over evaluation dates, with paired intervals for differences",
     "n_boot": 5000,
-    "units": "recovery and difference as fractions, rendered as percent and percentage points"
+    "units": "Dutch excess loss in nat/token, recovery and German effect kept as fractions, differences as fractions rendered in percentage points"
   },
   "equivalence_margin": 0.02,
   "budgets": [
@@ -34,13 +34,15 @@
       "key": "primary_target",
       "label": "Primary target",
       "n_dates": 92,
+      "unrepaired_dutch_excess_loss": 0.1867260271753907,
       "primary": {
         "source_contrast": "donor_init@2K - strengths_best@2K",
         "diff": 0.11332993845915385,
         "ci": [
           0.10010145787993609,
           0.1267858561620735
-        ]
+        ],
+        "margin": 0.03
       },
       "full": [
         {
@@ -51,7 +53,9 @@
           "ci": [
             0.8550212398734218,
             0.882728907453907
-          ]
+          ],
+          "dutch_excess_loss": 0.024464901087131764,
+          "german_effect_kept": 1.0054474932792856
         },
         {
           "family": "donor_init",
@@ -61,7 +65,9 @@
           "ci": [
             0.9758173696715949,
             0.9886915711542695
-          ]
+          ],
+          "dutch_excess_loss": 0.0033032519186224434,
+          "german_effect_kept": 0.9964202311585921
         },
         {
           "family": "fresh",
@@ -71,7 +77,9 @@
           "ci": [
             0.9650355584554247,
             0.9781979032819649
-          ]
+          ],
+          "dutch_excess_loss": 0.005285939533963425,
+          "german_effect_kept": 0.9895043436802918
         }
       ],
       "grid": [
@@ -525,13 +533,15 @@
       "key": "replication_target",
       "label": "Replication target",
       "n_dates": 92,
+      "unrepaired_dutch_excess_loss": 0.18911752060040934,
       "primary": {
         "source_contrast": "donor_init@2K - strengths_best@2K",
         "diff": 0.2037190706299815,
         "ci": [
           0.18961029054142725,
           0.2174488077894659
-        ]
+        ],
+        "margin": 0.03
       },
       "full": [
         {
@@ -542,7 +552,9 @@
           "ci": [
             0.7674908197950039,
             0.8004146118544782
-          ]
+          ],
+          "dutch_excess_loss": 0.0408856458111017,
+          "german_effect_kept": 1.0074691738173804
         },
         {
           "family": "donor_init",
@@ -552,7 +564,9 @@
           "ci": [
             0.981338756861975,
             0.9937838383164341
-          ]
+          ],
+          "dutch_excess_loss": 0.0023588002745399263,
+          "german_effect_kept": 1.0008594606619539
         },
         {
           "family": "fresh",
@@ -562,7 +576,9 @@
           "ci": [
             0.966798462188918,
             0.980385818149618
-          ]
+          ],
+          "dutch_excess_loss": 0.005010061521518418,
+          "german_effect_kept": 0.993731371453861
         }
       ],
       "grid": [

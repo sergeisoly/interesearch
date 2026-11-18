@@ -2,16 +2,19 @@ from copy import deepcopy
 import json
 import math
 from pathlib import Path
+from shutil import copytree
 
 import pytest
 import torch
 import yaml
 
-from interesearch.checksums import verify_checksums
+from interesearch.checksums import sha256_file, verify_checksums
 from interesearch.recipes import load_recipe
+from interesearch.repair_transfer.analysis.posthoc import analyze as analyze_posthoc
 from interesearch.repair_transfer.analysis.recovery import analyze, analyze_target, replay_recipe
 from interesearch.repair_transfer.analysis.costs import donor_cost
-from interesearch.repair_transfer.data import load_block, load_donor
+from interesearch.repair_transfer.data import BLOCK_FILES, DONOR_FILES, load_block, load_donor
+from interesearch.repair_transfer.figures import primary_table
 from interesearch.repair_transfer.method.finetune import FTConfig, select_checkpoint
 from interesearch.repair_transfer.method.selection import select
 from replay_check import assert_close
@@ -28,6 +31,71 @@ def recipe():
 def test_replay_reproduces_committed_results(recipe):
     committed = json.loads((ROOT / "results/repair_transfer/analysis.json").read_text())
     assert_close(json.loads(json.dumps(analyze(DATA, recipe))), committed)
+
+
+def test_posthoc_replay_matches_saved_diagnostics_and_original_reach():
+    results = ROOT / "results" / "repair_transfer"
+    replay = analyze_posthoc(DATA)
+    assert_close(replay, json.loads((results / "posthoc.json").read_text()))
+    original = json.loads((results / "analysis.json").read_text())
+    for target, result in replay["targets"].items():
+        first = result["reach"]["fresh@2K"]["by_margin_pp"]["2"]
+        for family, minima in first.items():
+            for unit, minimum in minima.items():
+                assert minimum == original["targets"][target]["curve"]["reach"][family][unit]
+        second = result["reach"]["fresh_seed2@2K"]["by_margin_pp"]["2"]
+        assert second["donor_init"]["unique_tokens"] == {"cost": 57600, "cell": "donor_init@256"}
+        assert second["fresh"]["unique_tokens"] == {"cost": 59392, "cell": "fresh@2K"}
+
+
+def test_primary_table_displays_failed_assessability_with_numeric_estimates(recipe):
+    result = json.loads((ROOT / "results/repair_transfer/analysis.json").read_text())
+    replication = result["targets"]["replication_target"]["primary"]
+    replication["reading"] = "not assessable: donor_init@2K is outside the readout constraints"
+
+    table = primary_table(result, recipe)
+
+    assert "| Paired difference (pp) | +11.3 [+10.0, +12.7] | +20.4 [+19.0, +21.7] |" in table
+    assert "| Assessability | Assessable | Not assessable: donor_init@2K is outside the readout constraints |" in table
+
+
+def test_replay_rejects_a_donor_other_than_the_one_used_for_the_blocks(recipe, tmp_path):
+    for target in ("primary_target", "replication_target"):
+        (tmp_path / target).symlink_to(DATA / target, target_is_directory=True)
+    donor = copytree(DATA / "donor", tmp_path / "donor")
+    weights = donor / "donor_repair.pt"
+    repair = torch.load(weights, weights_only=True)
+    module = next(iter(repair["factors"]))
+    left, right = repair["factors"][module]
+    repair["factors"][module] = (2 * left, right)
+    torch.save(repair, weights)
+    fit_path = donor / "fit_record.json"
+    fit = json.loads(fit_path.read_text())
+    fit["total_s"] *= 2
+    fit_path.write_text(json.dumps(fit))
+    (donor / "SHA256SUMS").write_text("".join(f"{sha256_file(donor / name)}  {name}\n" for name in DONOR_FILES))
+    verify_checksums(donor, DONOR_FILES)
+
+    with pytest.raises(ValueError, match=r"primary_target/main:.*different donor repair"):
+        analyze(tmp_path, recipe)
+
+
+def test_older_block_recovers_the_donor_identity_from_its_run_record(tmp_path):
+    directory = copytree(DATA / "primary_target" / "main", tmp_path / "main")
+    run_path = directory / "run.json"
+    digest = "a" * 64
+    run_path.write_text(json.dumps({"status": "ok", "inputs": {"donor_repair": {"sha256": digest}}}))
+    block_path = directory / "block.json"
+    block = json.loads(block_path.read_text())
+    block["run"] = {"reduced": False}
+    block["source"] = {"run_record_sha256": sha256_file(run_path)}
+    block_path.write_text(json.dumps(block))
+    (directory / "SHA256SUMS").write_text("".join(f"{sha256_file(directory / name)}  {name}\n" for name in BLOCK_FILES))
+
+    assert load_block(directory).donor_repair_sha256 == digest
+    run_path.write_text(json.dumps({"status": "ok", "inputs": {"donor_repair": {"sha256": "b" * 64}}}))
+    with pytest.raises(ValueError, match=r"run\.json: sha256 differs from the block's source record"):
+        load_block(directory)
 
 
 def test_nonfinite_readout_makes_the_cell_and_primary_not_assessable(recipe):

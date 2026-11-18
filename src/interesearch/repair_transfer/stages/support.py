@@ -13,7 +13,7 @@ from ...assets import MODULES
 from ...checksums import sha256_file
 from ...edits import capture_base
 from ...training import disable_tf32
-from ..data import READOUT_ROLES, load_windows, refused_roles, window_role
+from ..data import DONOR_REPAIR_SHA256, READOUT_ROLES, load_windows, refused_roles, window_role
 from ..method.finetune import TRAIN_ROLE, VAL_ROLE, target_model_identity, load_update
 from ..method.fitting import RETAIN, finite
 from ..method.selection import point
@@ -41,9 +41,6 @@ POLISH_KEYS = ("finite", "converged", "stop", "iters", "evals", "L_start", "L_en
 DIRECTION_PAIRS = (("donor_init", "fresh"), ("donor_init_output", "fresh"), ("donor_init", "donor_init_output"),
                    ("random_init", "fresh"), ("donor_init", "random_init"), ("fresh_seed2", "fresh"),
                    ("donor_init", "strengths_best"))
-
-DONOR_REPAIR_SHA256 = "603b62c776856654c925fecd37b7bb43d8dc98994334e5582bb5838c5a9371d7"
-
 
 FT_BINDING = {"primary_target": {"seed": 14, "rows": [0, 64]}, "replication_target": {"seed": 15, "rows": [64, 128]}}
 

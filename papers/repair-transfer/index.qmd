@@ -1,31 +1,25 @@
 ---
 image: ../social-card.png
-description: "Fixed repair directions, donor initialization and fresh fitting compared on two fine-tunes."
+description: "An experiment on when to rescale a previous repair, use it as an initialization, or fit a new one."
 title: "Transferring Learned Repairs Between Fine-Tunes"
-subtitle: "Version 0.1.2 · 15 October 2026"
+subtitle: "Version 0.2.0 · First published 14 October 2026 · Updated 18 November 2026"
 author:
   - name: Sergei Solovev
     affiliation: Independent researcher
 abstract: |
-  A repair is an extra weight update that aims to reduce a fine-tune's collateral damage while preserving
-  its intended effect. I compare two ways to reuse a repair learned for an earlier fine-tune (the donor):
-  rescale its fixed directions or train from it as an initialization. In a 67M-parameter model, German-degrading
-  fine-tunes also damage Dutch; repairs aim to restore Dutch while retaining the German change. On two
-  independent target fine-tunes at 2,048 fit tokens, donor initialization recovers 98.2% and 98.8% of Dutch
-  damage within a 600-step cap. Rescaling fixed directions recovers 86.9% and 78.4%, even with two additional
-  optimization runs per target that met the declared stopping criteria. Both paired 95% intervals for this
-  advantage lie above the prespecified 3 percentage point (pp) margin. Donor initialization's advantage over
-  fresh fitting is small, meets the prespecified ±2 pp equivalence criterion and is comparable to fresh-seed
-  differences. It is larger in the tested short runs with little data. Among settings meeting the study's
-  preservation constraints and prespecified recovery tolerance, the cheapest donor-initialized setting on the
-  tested grid uses one eighth of the cheapest fresh setting's token presentations. The two families have the
-  same minimum unique fit-token budget. In this setting, the donor repair is more useful as a starting point than as fixed
-  directions.
+  When a fine-tuning recipe repeatedly harms a second capability, how much of an earlier repair can be reused?
+  A fine-tune that deliberately worsened German next-token prediction also harmed Dutch. I transferred
+  a repair learned on that fine-tune to two new runs of the same recipe on the same 67M-parameter model.
+  At 2,048 fit tokens, training both vectors of each rank-one update recovered 11.3 and 20.4 percentage
+  points more of the excess Dutch loss than an expanded search over coefficients for the donor's fixed directions. Both approaches preserved
+  the German change, and both paired 95% intervals exceeded the prespecified 3-point margin.
+  With up to 600 training steps at that token budget, fresh fitting came within 2 points of donor initialization.
+  The donor start was more valuable when training was brief and fitting data were scarce.
 citation:
   type: article
   id: solovev2026repair
-  issued: 2026-10-15
-  note: "Version 0.1.2"
+  issued: 2026-11-18
+  note: "Version 0.2.0"
   pdf-url: https://sergeisoly.github.io/interesearch/repair-transfer/index.pdf
 format:
   html:
@@ -39,13 +33,14 @@ format:
     mainfont: STIX Two Text
     mathfont: STIX Two Math
     colorlinks: true
-    fig-pos: "H"
+    fig-pos: "!htbp"
     tbl-cap-location: top
     include-in-header:
       - file: ../pdf-title.tex
       # STIX Two Text has no ≤, → or ≈. Take them from the math font
       - text: |
           \usepackage{newunicodechar}
+          \usepackage{needspace}
           \newunicodechar{≤}{\ensuremath{\leq}}
           \newunicodechar{→}{\ensuremath{\rightarrow}}
           \newunicodechar{≈}{\ensuremath{\approx}}
@@ -58,216 +53,67 @@ crossref:
 
 ::: {.content-visible when-format="html"}
 ::: {.study-resources}
-[Short summary](explainer.qmd) · [PDF](index.pdf) · [GitHub](https://github.com/sergeisoly/interesearch/blob/main/papers/guides/repair-transfer.md)
+[Short summary](explainer.qmd) · [PDF](index.pdf) · [Study guide](https://github.com/sergeisoly/interesearch/blob/v0.3.0/papers/guides/repair-transfer.md)
 :::
 :::
 
 ## Introduction {#sec-question}
 
-A *repair* is an additional weight update trained to reduce fine-tuning's collateral damage while preserving
-its intended effect. When a recipe is repeated on new samples, a repair learned for an earlier fine-tune, the
-*donor*, may help repair the next one. Reusing its fixed directions trains only 24 coefficients per target;
-using it as an initialization allows the repair directions to change.
+A repair is an extra weight update that restores a capability damaged by fine-tuning while preserving the intended change. If the same recipe causes similar damage on a second run, an earlier repair could save work in two ways. Its directions might already be right, so that only their strengths need fitting. Or the directions might give training a head start, even if they eventually need to change. Fitting a new repair from scratch tests how much that head start is worth.
 
-I test these alternatives by deliberately worsening German next-token prediction, which also raises Dutch
-cross-entropy (CE), a measure of prediction loss. Dutch is excluded from the fine-tuning objective. In this
-controlled test, repair must restore Dutch prediction while preserving the German change. The donor and two
-target fine-tunes are trained independently from one base model, with the same recipe but different seeds and
-text sampled from different session dates in the same Europarl distribution [@koehn2005europarl].
-I use Goodfire's model from its adVersarial
-Parameter Decomposition (VPD) study [@bushnaq2026interpreting, sec. 3.1]. Repairs act on its weights without
-using the decomposition. Scalar refitting has the same fixed-direction form as coefficient edits of a
-decomposition (@sec-conclusion).
+Scaled weight updates have been used in task arithmetic [@ilharco2023editing] and safety repair [@bhardwaj2024resta; @wang2026safegene]. Transferring a fitted initialization has a precedent in soft prompts [@vu2022spot]. Here the same learned donor repair supplies both comparisons, and the outcome is recovery of next-token prediction loss.
 
-Task arithmetic adds or subtracts a weight difference with a single scale [@ilharco2023editing]. RESTA reuses
-a safety vector with a fixed global scale in its main experiments [@bhardwaj2024resta], while SafeGene learns
-a scalar per selected layer for frozen distilled safety adapters [@wang2026safegene, secs. 3.5 and 4.4]. SPoT
-instead uses learned source-task soft prompts to initialize target-task training [@vu2022spot]. Here I compare
-fixed-direction reuse and donor initialization at matched rank on the same targets. Fresh and random starts
-test the value of donor initialization, and @sec-cost compares fitting costs.
+## Experimental design {#sec-setup}
 
-## Setup {#sec-setup}
+Three independent fine-tunes began from Goodfire's four-layer, 67M-parameter language model [@bushnaq2026interpreting, sec. 3.1]. They used the same objective and selected learning rate, with different seeds and samples of Europarl debates [@koehn2005europarl]. Each deliberately raised German cross-entropy (CE, the mean next-token prediction loss). Dutch was outside the objective, so an increase in Dutch CE measures collateral damage. One fine-tune, the *donor*, supplied a repair learned on 73,728 prediction positions. The other two were targets for transfer.
 
-**Model and fine-tunes.** The base is a four-layer, 67M-parameter decoder-only model pretrained on a subset of
-the Pile [@gao2020pile]. Each fine-tune adds $D$ to the 24 attention and MLP matrices. A hinge term raises
-German CE while KL keeps English, French, Spanish and Italian, the *retain* languages, close to the base
-model. Both targets raise Dutch CE by about 0.19 nat/token on held-out evaluation text ([method details](#sec-app-methods)).
+<span id="what-the-repair-changes"></span>The repair adds one learned update to each of 24 attention and MLP weight matrices. Each update has the LoRA form $E_m=b_m a_m^\top$ with rank at most one [@hu2022lora]. Applied to an input $x$, the repair reads one scalar $a_m^\top x$ and adds $b_m(a_m^\top x)$ to the output. A coefficient can strengthen, weaken or reverse this change. Training the vectors can also change which inputs produce a response and where the response goes.
 
-**Repair objective and recovery.** Each repair adds a rank-one update $E_m=b_m a_m^{\top}$ to each of the
-24 matrices, with input factor $a_m$ and output factor $b_m$. All repairs obey the same *norm cap*,
-$\lVert E\rVert_F\le\lVert D\rVert_F$, where the norms cover all 24 matrices. The loss sums three equally
-weighted mean KL divergences $D_{\mathrm{KL}}(p_{\text{teacher}}\,\|\,p_{\text{repair}})$: to the base
-model on Dutch positions, rewarding restoration of Dutch predictions, and to the fine-tuned model on German
-and retain positions, penalizing reversal of the German effect or changes to retain predictions.
-Recovery measures the share of Dutch CE damage removed by repair $X$:
-$$r_{\text{nl}}(X) = 1 - \frac{\mathrm{CE}_{\text{nl}}(X) - \mathrm{CE}_{\text{nl}}(\text{base})}{\mathrm{CE}_{\text{nl}}(\text{fine-tuned}) - \mathrm{CE}_{\text{nl}}(\text{base})}.$$
-Recovery differences are in percentage points (pp).
+<span id="tbl-families"></span>Every target repair had to fit within the Frobenius norm of the target's fine-tuning update, computed across all 24 matrices. Methods that reused the donor started from the same repair, scaled down uniformly if needed to satisfy that cap. **Scalar fitting** learned one coefficient per matrix (24 parameters). **Donor initialization** trained both vectors (55,296 parameters). **Fresh fitting** trained both vectors from a zero update, with random input vectors and zero output vectors. One control trained only the donor's output vectors. Another trained both vectors from random directions matched to the donor vectors' lengths.
 
-**Families.** One donor repair, learned from fresh initialization on 73,728 prediction positions, serves both
-targets. Scalar-only fitting learns coefficients in $E_m=c_m b_m a_m^{\top}$ over its fixed factors. Other
-families train one or both factors (@tbl-families). Applying the capped donor repair without target fitting
-gives the *fixed donor repair* reference.
+<span id="how-the-repairs-are-fit-and-compared"></span>Fitting minimized three equally weighted KL divergences between next-token distributions. The teacher was the base model for Dutch, and the fine-tuned model for German and a pool of four languages the fine-tune sought to preserve (English, French, Spanish and Italian). **Dutch CE recovery** measures the fraction of the fine-tune's excess Dutch loss that the repair removed. A repair with 0% recovery leaves all the extra loss in place. At 100% recovery, Dutch CE returns to the base-model value.
 
-| Family | Start | Trained (parameters) | What the comparison tests |
-|:--|:--|:--|:--|
-| Scalar coefficients only | capped donor repair | coefficients $c_m$ (24) | recovery by rescaling fixed directions |
-| Donor initialization | capped donor repair | both factors (55,296) | gains from training directions and using the donor start |
-| Donor initialization, output only | capped donor repair | output vectors $b_m$ (27,648) | recovery with donor input vectors fixed |
-| Random initialization | random directions, donor-start norm | both factors (55,296) | benefit of donor directions beyond starting norm |
-| Fresh | $b_m=0$, $a_m\sim\mathcal{N}(0,1/d_{\text{in}})$ | both factors (55,296) | benefit of donor training over fitting anew |
-
-: Families share rank one per matrix, but train different numbers of parameters. Donor starts are scaled down
-if needed to meet the cap. Fresh follows LoRA's initialization [@hu2022lora]. {#tbl-families tbl-colwidths="[17,26,20,37]"}
-
-The first fresh seed uses the random input vectors from which the donor repair was trained. Its comparison
-with donor initialization assesses donor training as a whole, without isolating directions, norm or checkpoint
-selection. The second fresh seed uses an independent draw. Second seeds of fresh and random initialization
-were tested only at 2,048 fit tokens with a 600-step cap.
-
-**Budgets and step caps.** A fit budget counts the unique prediction positions (*fit tokens*) used for fitting:
-256, 512 or 2,048, nested so that larger budgets add text to smaller ones. They exclude a shared selection and
-diagnostic pool of 57,344 positions. All families and both targets share fitting, selection and evaluation
-windows. Ordinary fitting runs full-batch Adam at four learning rates per family, with a 10-step warm-up and
-then a constant rate, saving a checkpoint every 50 steps. A step cap of 50, 100, 200 or 600 limits selection
-to checkpoints saved up to that step, so the chosen checkpoint can precede the cap ([fitting details](#sec-app-methods)).
-The *full budget* is 2,048 fit tokens with a 600-step cap for ordinary runs.
-
-**Selection and readout.** Evaluation text is grouped by Europarl session date, with one 256-prediction
-window per language per date. For each family, budget and cap, selection on 32 dates separate from fitting
-favors Dutch recovery among candidates preserving the German effect and reducing Dutch KL from the base,
-with a guard on retain-language CE ([full rule](#sec-app-methods)). Selected repairs are evaluated once on
-92 other validation-period dates, the *readout*, separate from earlier project windows. The *readout constraints*
-recheck German-effect preservation, positive Dutch KL recovery and retain-language CE drift there
-(thresholds in @tbl-readout). Within each fixed target, one joint date bootstrap [@efron1979bootstrap]
-gives paired 95% percentile intervals.
-
-**Primary comparison.** Donor initialization is compared with scalar-only fitting at the full budget.
-To check whether the 600-step cap stops scalar fitting too early, the *expanded scalar search* adds two
-projected-gradient runs on the same loss from two starts, so optimization budgets are unequal. Selection
-pools their final candidates with the 48 ordinary checkpoints ([details](#sec-app-checks)).
-
-An advantage above 3 pp is established when the whole paired interval exceeds 3 pp, excluded when wholly
-below, and undecided otherwise. Interpretation requires measurable Dutch damage, both selected repairs meeting
-the readout constraints, and both additional scalar runs meeting the declared stopping criteria (@tbl-readout;
-[checks](#sec-app-checks)). Other contrasts are descriptive, without multiplicity correction. Their intervals
-determine whether the sign is positive, negative or undecided. Five contrasts in @tbl-secondary also assess
-equivalence within ±2 pp. The protocol fixed both margins without a stated derivation.
+The targets had disjoint fine-tuning dates. They shared the repair-fitting windows, the checkpoint-selection windows and the final evaluation windows. Repair fitting used nested sets of 256, 512 or 2,048 prediction positions. At each step cap (50, 100, 200 or 600), checkpoints from four learning-rate runs were eligible for selection. Checkpoint selection used 32 separate Europarl session dates to rank candidates by Dutch CE recovery subject to limits on German and retain-language changes. The final evaluation measured recovery and rechecked those limits on 92 further dates. Paired 95% bootstrap intervals resample those dates jointly across repairs within each target. They describe uncertainty over evaluation text for the fitted repairs.
 
 ## Results {#sec-results}
 
-### Fixed directions fall short {#sec-fixed}
+### How much can fixed directions recover? {#sec-fixed}
 
-Without target fitting, the capped donor repair recovers 86.3% and 58.6% of Dutch damage on the primary and
-replication targets. At 2,048 fit tokens, the expanded scalar search raises recovery to 86.9% and 78.4%, while
-training both factors from the donor start reaches 98.2% and 98.8% (@fig-recovery).
-
-Both additional scalar runs on each target met the declared stopping criteria (@tbl-polish). They left
-selection unchanged on the primary target and raised replication recovery from 77.3% to 78.4% (@tbl-readout).
-
-Both targets meet the conditions for interpreting the primary contrast (@tbl-readout and @tbl-polish).
-Donor initialization exceeds the expanded scalar search by 11.3 pp [+10.0, +12.7] on the primary target
-(@tbl-primary) and 20.4 pp [+19.0, +21.7] on the replication target. Both intervals lie entirely above the prespecified 3 pp
-margin.
-
-The scalar shortfall is already present on the fitting data, so it is not confined to new text. At the full
-budget, the selected scalar repairs remove 87.0% and 79.2% of the fine-tune's Dutch KL from the base model,
-against at least 98.4% for every factor-training family. This measures KL recovery, whereas readout uses CE.
-The bounded search cannot distinguish limitations of the fixed directions under the norm cap from remaining
-optimization error.
-
-At the full budget, training only the output vectors from the donor start closes most of the gap: output-only
-fitting recovers 10.2 and 19.1 pp more than the expanded scalar search on the primary and replication targets,
-and training both factors adds 1.1 and 1.3 pp (@tbl-secondary). Without a frozen-random-input control, the
-benefit of the donor's learned input vectors remains unresolved.
-
-![Dutch-damage recovery with a 600-step cap for ordinary runs. Factor-training families recover at least 95.6%
-across all three fit budgets. Whiskers and the capped fixed-donor band show 95% bootstrap intervals over 92 dates.
-At 2,048 tokens, hollow markers show selection after adding two additional candidates that met the
-declared stopping criteria. No additional scalar runs were made at 256 or 512 tokens.](../../results/repair_transfer/figures/recovery.svg){#fig-recovery width="100%" fig-pos="H" fig-alt="Two panels show Dutch-damage recovery on primary and replication targets selected from ordinary runs with a 600-step cap at three fitting budgets, with 95% date-bootstrap intervals. At this step cap, families that train the repair factors recover at least 95.6%. Scalar-only fitting remains below 90%, including the expanded scalar search at 2,048 tokens. Shapes identify methods, and a dashed line and band show the capped fixed donor repair and its interval."}
+The two fine-tunes raised Dutch CE by 0.187 and 0.189 nat/token. Applying the donor repair without further fitting removed 86.3% of this damage on the first target and 58.6% on the second. <span id="the-primary-test-of-fixed-directions"></span>The primary test compared donor initialization with an expanded scalar search at the full budget of 2,048 fit tokens and a 600-step cap for ordinary training. The scalar search included 48 ordinary checkpoints and two further projected-gradient runs, giving it the larger search budget. Both extra runs met their stopping criteria on each target, and both selected repairs on each target passed the evaluation constraints.
 
 {{< include ../../results/repair_transfer/tables/primary_table.md >}}
 
-### The donor as an initialization {#sec-warm}
+Both paired intervals lie entirely above the prespecified margin of 3 percentage points (pp) (@tbl-primary). The extra scalar search kept the ordinary checkpoint on the first target and raised recovery from 77.3% to 78.4% on the second. The gap was already visible on the fitting text. There the selected scalar repairs removed 87.0% and 79.2% of Dutch KL divergence from the base model, while every method that trained a vector removed at least 98.4%. Other coefficient choices or a larger norm cap could give different results.
 
-Fresh and norm-matched random starts test how much the donor contributes as an initialization.
-At the full budget, its advantages over the first fresh seed are +1.1 and +1.4 pp on the primary and replication
-targets. Both intervals are positive and inside the prespecified ±2 pp equivalence band (@tbl-secondary).
-Differences between fresh seeds are similar in size. Against the independent second fresh seed, the advantages
-shrink to +0.04 and +0.7 pp, and the primary-target interval includes zero.
+Across the three token budgets, with a 600-step cap, ordinary scalar fitting stayed below 90% recovery on both targets, while donor initialization and fresh fitting exceeded 95% (@fig-recovery).
 
-Against the norm-matched random start, the advantage is +0.6 pp on the primary target and +0.01 pp
-[−0.26, +0.28] on the replication target. The latter's sign is undecided. Equivalence was not assessed for this
-contrast.
+Training only the donor's output vectors recovered 97.1% and 97.4% at full budget. Most of the improvement over rescaling was therefore attainable while the input directions stayed fixed.
 
-With 256 fit tokens and a 50-step cap, donor initialization leads fresh fitting by +4.4 and +4.1 pp and the
-random start by +4.9 and +4.5 pp (@fig-warm-start). This larger advantage is limited to the tested starts and
-fitting windows: one seed per control, with shared fitting windows across targets.
+### When does the donor start help? {#sec-warm}
 
-![Paired recovery differences at matched fit budgets (columns) and step caps (logarithmic axis), with 95%
-bootstrap intervals over 92 dates per target. Primary and replication targets occupy the top and bottom rows.
-The tested donor start generally helps most with little data and few steps.](../../results/repair_transfer/figures/warm_start.svg){#fig-warm-start width="100%" fig-alt="Six panels show paired recovery differences at matched fitting budgets and step caps, with 95% date-bootstrap intervals. Columns show 256, 512 and 2,048 tokens. Rows show primary and replication targets. Step caps use logarithmic spacing. For the tested starts and fitting windows, donor initialization generally helps most in short runs with little data, without a monotonic decline at every checkpoint. Marker shapes distinguish the three contrasts."}
+At 256 fit tokens and 50 steps, donor initialization recovered 4.4 and 4.1 pp more than fresh fitting on the two targets. It also led the norm-matched random start by 4.9 and 4.5 pp. At this setting there was one seed per control and one shared set of fitting positions.
 
-{{< include ../../results/repair_transfer/tables/secondary_table.md >}}
+![Differences in the share of excess Dutch loss recovered, in percentage points. Fresh and random starts use their first seed. Whiskers give paired 95% bootstrap intervals over 92 evaluation dates.](../../results/repair_transfer/figures/warm_start.svg){#fig-warm-start width="100%" fig-alt="Each row shows one target and each column a token budget. The donor's advantage over the fresh and random starts is larger at 256 tokens and 50 steps than at 2,048 tokens and 600 steps. Intermediate differences vary with the step cap."}
 
-### What donor initialization saves {#sec-cost}
+With 2,048 tokens and up to 600 steps, the first fresh start recovered 97.2% and 97.4%. The donor's paired leads were 1.1 pp [0.8, 1.3] and 1.4 pp [1.1, 1.7]. Both intervals fit inside the prespecified ±2 pp equivalence band. A second fresh seed recovered 98.2% and 98.0%. Against the first norm-matched random start at full budget, the donor led by 0.6 pp [0.3, 0.9] on the primary target and 0.01 pp [−0.26, 0.28] on replication. The first fresh seed reused the random input vectors from which the donor had originally been trained, so its comparison with the donor measures the value of the whole fitted start.
 
-Each combination of family, fit budget and step cap is a *cell*. The reference is the first fresh seed at the
-full budget. A cell *reaches* it if the selected repair satisfies the readout constraints and the lower bound
-of its paired 95% interval for recovery minus reference recovery is strictly above −2 pp. Presentations count
-fit tokens × optimizer steps over all four learning-rate runs. The cheapest reaching donor and fresh cells
-use 256 and 2,048 tokens, respectively, with 50-step caps: 51,200 versus 409,600 presentations, one eighth as
-many. Fresh fitting also reaches with 256 tokens at a 600-step cap, so both families have the same minimum
-of 256 unique fit tokens, or 57,600 with the shared 57,344 selection positions. This saves presentations
-without reducing the unique-token requirement.
+### What does reuse save? {#sec-cost}
 
-Training the donor repair took 3,686,400 presentations, so this per-target difference would repay its cost from
-the eleventh target, a projection from two tested targets. The estimated GPU-time saving is much smaller
-(@tbl-break-even), moving break-even to about 151 and 106 targets for the primary and replication targets,
-without establishing an end-to-end time saving. Checkpoints are selected before readout, but the cheapest
-reaching cells were chosen afterward, and the intervals describe cells, not the cost ratio. These estimates
-depend on the reference seed, the one-sided reach threshold and the tested grid ([cost accounting](#sec-app-cost)).
+The first fresh fit at full budget served as the quality reference. A setting qualified if its selected repair passed the evaluation constraints and the lower bound of its paired recovery difference from the reference exceeded −2 pp. After evaluation I chose the cheapest qualifying setting separately for each method and cost measure.
 
-![Recovery difference from the first fresh seed at 2,048 tokens and a 600-step cap versus fit-token presentations,
-with paired 95% bootstrap intervals over 92 dates per fixed target. Lines join step caps 50, 100, 200 and 600.
-Filled markers satisfy readout constraints and have interval lower bounds strictly above −2 pp. Rings mark the
-cheapest reaching settings: donor initialization at 256 tokens and fresh at 2,048, both with a 50-step cap.
-Scalar-only cells never reach and are omitted.](../../results/repair_transfer/figures/reach.svg){#fig-reach width="100%" fig-alt="Two panels plot recovery differences from the first fresh seed at 2,048 tokens and a 600-step cap against fit-token presentations, with 95% date-bootstrap intervals. Shapes distinguish methods and line styles token budgets. Filled markers satisfy readout constraints and have lower interval bounds above minus 2 percentage points. Rings mark the cheapest reaching settings: donor initialization at 256 tokens and fresh at 2,048, both at a 50-step cap."}
+On each target, the fewest **fit-token presentations** needed by donor initialization were 51,200 (256 positions × 50 steps × four learning rates). Fresh fitting needed 409,600 (2,048 × 50 × four). Allowing 600 steps let both methods qualify with just 256 distinct fitting positions. On this grid, donor initialization needed one eighth as many presentations as fresh fitting to reach the reference. The minimum amount of distinct text was the same.
 
-{{< include ../../results/repair_transfer/tables/break_even_table.md >}}
+Training the donor repair had itself cost 3,686,400 presentations. If each new target saved the observed 358,400 presentations and the donor fine-tune already existed, reuse would pay back this cost on the eleventh target. Changing the reference to the second fresh seed in a post hoc analysis moved payback to the fifth target. The experiment did not measure an end-to-end time saving. [Cost accounting](#sec-app-cost)
 
-## Discussion {#sec-conclusion}
+## Discussion {#sec-limits}
 
-Rescaling the donor's fixed directions recovered 86.9% and 78.4% of Dutch damage after target fitting.
-Training the rank-one factors recovered at least 95.6% across the tested starts and fit budgets with a 600-step
-cap. The donor start added little over fresh fitting at the full budget, but helped more in the tested short
-runs: its cheapest reaching cell used one eighth of fresh fitting's token presentations. The two families had
-the same minimum unique fit-token budget. In this setting, the donor repair was more useful as a starting
-point than as a set of fixed directions.
+<span id="sec-conclusion"></span>The output-only fits inherited the donor's input directions and its trained output vectors. How much did the input directions themselves contribute? Two output-only fits starting from zero outputs, one with donor inputs and one with norm-matched random inputs, would test that question from identical initial updates.
 
-The scalar shortfall is already visible on the scalar fits' own fitting data. Coefficient edits of a parameter
-decomposition such as VPD [@bushnaq2026interpreting] also rescale fixed rank-one components. As an interpretation
-not tested here, fitting such coefficients on the edit's own data could flag a shortfall before evaluation on
-new text, although it would not distinguish limitations of the components from optimization error under a
-given search and norm cap.
+Bushnaq scaled a German-related component from a decomposition of this same model's base weights [@bushnaq2026interpreting; @bushnaq2026exploration]. Here the directions came from fitting a repair to Dutch text. A corresponding test for a decomposition-derived component would compare its attainable training loss with that of a trainable update under a common rank and norm budget.
 
-## Limits of these conclusions {#sec-limits}
+The evidence comes from one donor that had already passed a recovery check, two independently trained targets, one recipe and one base model. Additional donors, training windows and seeds would be needed to estimate how often the early advantage recurs. The measured outcome is prediction loss on these languages. The experiment leaves the internal mechanism of repair and transfer to other capabilities open.
 
-These results concern one donor, one recipe and one model, with two targets analysed separately. Date-bootstrap
-intervals cover variation across readout dates for fixed repairs, not across fine-tunes, donors, recipes or
-fitting windows. Second seeds were tested only at the full budget, leaving short-run results conditional on the
-tested starts and shared fitting windows. I do not analyse what the repair directions represent or how they
-restore Dutch prediction. Without an output-only control with frozen random input vectors, the donor input
-vectors' contribution is also unresolved; @zhu2024asymmetry studied such frozen random inputs.
-The study does not test new-skill transfer or safety alignment, including the safety settings of RESTA and SafeGene.
-
-**AI assistance.** I used OpenAI Codex and Anthropic Claude for research planning, code development, data analysis and manuscript preparation.
-Scientific Agent Skills [@kassis2026scientific] supplied the scientific-writing, scientific-critical-thinking,
-peer-review and citation-management workflows used to review organization, claims and references.
-
-```{=latex}
-% Compact the bibliography's entry gaps while keeping the 10 pt text.
-\apptocmd{\CSLReferences}{\setlength{\itemsep}{0.25\baselineskip}}{}{}
-```
+**AI assistance.** I used OpenAI Codex and Anthropic Claude for planning, coding, analysis and writing, and Scientific Agent Skills [@kassis2026scientific] for manuscript review.
 
 ## References {.unnumbered}
 
@@ -276,143 +122,48 @@ peer-review and citation-management workflows used to review organization, claim
 
 ```{=latex}
 \compactappendix
-\setlength{\parskip}{3pt plus 1pt minus 1pt}
 ```
 
-## Appendix A — Method details {#sec-app-methods .unnumbered}
+## Appendix — Selection, checks and reproduction {#sec-app-methods .unnumbered}
 
-**Fine-tunes.** Adam [@kingma2015adam] learns full-matrix additive updates $D_m$ to each layer's query, key,
-value, output and two MLP matrices (24 total), with embeddings and norms frozen. It runs at learning rate 3e-6
-for 200 steps on the per-window hinge $\max(0, 1 - \Delta\mathrm{CE}_{\text{de}})$ (1-nat margin) plus
-retain-language KL with weight 1. Checkpoints are selected on German and retain-language validation metrics.
+<span id="sec-reproduction"></span>The [study guide](https://github.com/sergeisoly/interesearch/blob/v0.3.0/papers/guides/repair-transfer.md) links the recipe, token windows, donor repair and saved measurements, with commands for replay and retraining.
 
-**Repairs.** Ordinary fitting uses Adam. The donor starts fresh (@tbl-families), using 73,728 prediction positions,
-three learning rates and 200 minibatch steps per run. Checkpoints saved every 25 steps undergo selection on donor
-validation windows by the rule below. Targets save checkpoints every 50 steps at four learning rates (@tbl-lrs):
-48 candidates per family at the 600-step cap. Donor starts are capped as
-$\min(1, \lVert D\rVert_F / \lVert E_{\text{donor}}\rVert_F)\, E_{\text{donor}}$.
+### Checkpoint selection {.unnumbered}
 
-| Family | Learning rates |
-|:--|:--|
-| Scalar coefficients only | 3e-3, 1e-2, 3e-2, 1e-1 |
-| Donor initialization, donor initialization output only, random initialization and fresh | 1e-4, 3e-4, 1e-3, 3e-3 |
+The fine-tunes trained full-matrix updates for 200 steps, penalizing a German CE increase below 1 nat/token and drift from the base model on the four retain languages. The donor repair passed an 80% Dutch CE recovery threshold on 112 dates. The target fine-tunes used disjoint sets of 64 dates each drawn from the pool originally set aside for donor evaluation. Target repair fitting, selection and final evaluation used dates outside the donor sets.
 
-: Learning-rate grids of the repair families. {#tbl-lrs tbl-colwidths="[60,40]"}
+Half the target repair's fit tokens came from Dutch and a quarter each from German and the pooled retain languages. Full-batch Adam [@kingma2015adam] supplied checkpoints every 50 steps. On selection text a candidate had to preserve 90–110% of the German CE increase and reduce Dutch KL from the base. Its German KL from the fine-tune, $D_{\mathrm{KL}}(p_{\text{fine-tuned}}\|p_{\text{repair}})$, had to be at most 5% of the corresponding KL with the base model in place of the repair. Qualifying checkpoints were ranked by Dutch CE recovery, with ties broken by smaller norm and then listing order. The first of the top five with a CE increase of at most 0.01 nat/token above the fine-tuned model on every retain language advanced to evaluation.
 
-The 50-step cap uses the same grid. Several output-only cells and donor-initialized replication at 512 tokens
-select the first checkpoint at the lowest rate, which can explain repeated values across caps. Advantages over fresh
-and random starts are nonmonotonic in budget and cap.
+### Primary comparison and uncertainty {#sec-app-checks .unnumbered}
 
-**Selection.** Feasibility requires a German-damage ratio (with repair / without repair) of 0.9–1.1, German KL drift
-from the fine-tune at most 0.05 times the base model's KL from it, and Dutch movement toward the base. Feasible candidates
-rank by Dutch recovery, then smaller norm, then listing order. Of the top five, selection takes the first raising
-no retain language's CE by more than 0.01 nat/token.
+For the primary comparison to count, the lower 95% bound on the target's Dutch CE increase had to reach 0.025 nat/token. It reached 0.178 and 0.180 on the two targets. The selected repairs had to pass the selection constraints again on evaluation text. Each of the two additional scalar runs, starting from the donor coefficients and the best ordinary checkpoint by fit loss, had to satisfy the prespecified numerical checks. The runs stopped on relative loss decrease in three cases and at the line-search floor with sufficiently small projected gradient in the fourth. These local checks apply within the tested norm cap. [Evaluation constraints and results](https://github.com/sergeisoly/interesearch/blob/v0.3.0/results/repair_transfer/tables/readout_table.md){#tbl-readout} · [Optimizer settings](https://github.com/sergeisoly/interesearch/blob/v0.3.0/src/interesearch/repair_transfer/recipe.yaml){#tbl-lrs} · [Optimizer results](https://github.com/sergeisoly/interesearch/blob/v0.3.0/results/repair_transfer/analysis.json){#tbl-polish}
 
-**Data.** Fit budgets exclude each window's initial context token and split predictions 2:1:1 across Dutch,
-German and retain text. At 256 tokens, one Dutch window contributes 128 predictions, one German 64, and four
-retain windows 16 each. At 512 tokens these counts double. At 2,048, four Dutch and two German windows contribute
-256 each, and one per retain language contributes 128. Target fit windows and selection dates are separate
-from the donor's.
+Each of 5,000 bootstrap replicates computed recovery from mean losses over resampled dates [@efron1979bootstrap]. Five specified secondary comparisons had a ±2 pp equivalence margin. The protocol set this margin and the 3 pp primary margin without a separate empirical justification. Secondary intervals are descriptive and unadjusted for multiple comparisons. My dated records place these rules before target fine-tuning and evaluation. They lack independent timestamps. [Secondary contrasts](https://github.com/sergeisoly/interesearch/blob/v0.3.0/results/repair_transfer/tables/secondary_table.md){#tbl-secondary}
 
-Selection and readout use 32 and 92 dates, respectively, with one 257-token window (256 predictions) per language
-from the same turn. Portuguese, the seventh language, is diagnostic only: its selection windows count toward
-token and evaluation costs, but not the loss or selection constraints. Readout dates were ineligible if present
-in recorded project data, pilot or run files, or if their windows duplicated text in use. All passed. Overlap
-with the base model's pretraining text remains unknown.
+### Cost accounting {#sec-app-cost .unnumbered}
 
-**Assessability.** The primary contrast requires a Dutch-damage readout interval with lower bound at least
-0.025 nat/token. Damage is 0.187 nat/token [0.178, 0.196] on the primary target and 0.189 [0.180, 0.198] on
-replication. Both selected repairs must satisfy the readout constraints (@tbl-readout), and both additional scalar runs must
-meet the [stopping criteria](#sec-app-checks).
+The minimum of 256 distinct fit positions for fresh fitting depended on the reference. Its lower bounds cleared the −2 pp cutoff by just 0.015 and 0.043 pp. Using the second fresh seed as the reference raised the minimum to 2,048 for fresh fitting while donor initialization still qualified at 256. Unique-token costs also include 57,344 shared selection positions. Presentations count training across the four learning rates and exclude selection forward passes. Estimated GPU seconds include training and selection but exclude final target evaluation, the initial damage check and exploration of other settings. On the two targets, estimated times at the cheapest qualifying settings were 14.5 and 13.9 seconds from the donor, versus 16.8 and 17.1 from scratch. The estimated one-time donor cost was 336 GPU seconds. [Complete cost comparison](https://github.com/sergeisoly/interesearch/blob/v0.3.0/results/repair_transfer/tables/break_even_table.md){#tbl-break-even} · [Recovery against training cost](https://github.com/sergeisoly/interesearch/blob/v0.3.0/results/repair_transfer/figures/reach.svg){#fig-reach}
 
-**Study record.** My records place a dated protocol fixing rules, margins and families before readout-data
-construction and target fine-tuning. An author-dated amendment fixed readout data and clarified the primary
-interpretation before any target fine-tune or readout, without changing decision rules. The unpublished protocol,
-amendment and log lack independent timestamps. This is not verifiable preregistration.
+### Portuguese (post hoc) {#sec-portuguese .unnumbered}
 
-**Uncertainty.** Within each target, 5,000 joint date resamples cover all budgets and caps, computing recovery
-ratios from mean damages. Readout constraints use point estimates over all dates. Equivalence is assessed only for the
-five contrasts marked in @tbl-secondary. It remains unestablished between donor and random initialization at
-every budget and cap.
+Portuguese took no part in fitting or checkpoint selection. On the same 92 evaluation dates, the full-budget scalar repairs raised Portuguese CE over the respective fine-tunes by 0.00115 and 0.00114 nat/token. Donor initialization lowered it by 0.00064 and 0.00069, and the first fresh fits lowered it by 0.00135 and 0.00142. The six pointwise 95% intervals exclude zero. [Paired intervals and cost sensitivity results](https://github.com/sergeisoly/interesearch/blob/v0.3.0/results/repair_transfer/posthoc.json)
 
-```{=latex}
-\vspace{-\baselineskip}
-```
+### Recovery across fitting budgets {.unnumbered}
 
-## Appendix B — Checks behind the primary reading {#sec-app-checks .unnumbered}
-
-All 2,048-token cells and the fixed donor repair satisfy the readout constraints (@tbl-readout).
-
-{{< include ../../results/repair_transfer/tables/readout_table.md >}}
-
-The additional scalar search uses $e_m = c_m \lVert b_m\rVert \lVert a_m\rVert$, so
-$\lVert E\rVert_F = \lVert e\rVert_2$ and radial scaling projects exactly onto the norm cap. It combines
-the spectral step of @barzilai1988two, the projected-gradient scheme of @birgin2000nonmonotone and monotone Armijo line search,
-with at most 300 iterations from each of two starts: initial coefficients and the lowest-fit-loss checkpoint.
-
-The declared stopping criteria require finite values for all losses and gradients, including line-search trials, initial training/export loss
-agreement within 1e-5 nat/token, and at least one stopping condition: projected-gradient norm at most 1e-4 of its
-reference; relative fit-loss decrease below 1e-7 for five iterations; or the line-search floor with stationarity
-at most 1e-3 of that reference. Both starts use the initial coefficients' projected-gradient reference.
-Final-loss agreement is descriptive, not a stopping criterion.
-
-| Target | Start | Stop | Iterations | Fit loss, start → end | Stationarity / reference |
-|:--|:--|:--|--:|:--|--:|
-| Primary | initial scalar coefficients | relative decrease | 107 | 0.02516 → 0.02070 | 0.0062 |
-| Primary | best checkpoint | relative decrease | 84 | 0.02129 → 0.02070 | 0.0019 |
-| Replication | initial scalar coefficients | line-search floor | 69 | 0.08323 → 0.03682 | 0.0002 |
-| Replication | best checkpoint | relative decrease | 49 | 0.03870 → 0.03682 | 0.0004 |
-
-: Both starts met the declared stopping criteria on both targets. End losses differ by a relative 2.0e-5
-(primary) and 1.1e-6 (replication). {#tbl-polish tbl-colwidths="[14,20,18,12,22,14]"}
-
-The search covers four learning rates for 600 steps plus two further starts under $\lVert E\rVert_F \le \lVert D\rVert_F$.
-Other assignments of the 24 coefficients and larger repair norms remain untested.
-
-## Appendix C — Cost accounting {#sec-app-cost .unnumbered}
-
-For each cost measure, let $C^*$ be a family's cheapest reaching cost on the tested grid. If the observed per-target difference repeats,
-reuse repays the donor cost after more than
-$$
-K^* = \frac{C_{\text{donor}}}{C^*(\text{fresh}) - C^*(\text{donor initialization})}
-$$
-targets (@tbl-break-even). The donor's 3,686,400 presentations give $K^* \approx 10.3$: an 11-target projection
-from two targets. Neither scalar-only fitting nor the fixed donor repair reaches the reference (@fig-reach).
-A random start saves no presentations on the primary target. On replication it gives $K^* = 18$, charged with
-the full donor cost despite using only the donor repair's norm.
-
-Unique tokens count fit tokens plus 57,344 selection positions (32 dates × 7 languages × 256). Presentations count
-fit tokens × optimizer steps across all four learning rates up to the cap, excluding selection forward passes.
-GPU seconds combine training time prorated to the cap and selection-evaluation time allocated by candidate count.
-For the expanded scalar search, presentations and GPU seconds also include both additional runs and evaluation
-of the 48 checkpoints used to choose the second start. All cells exclude base/fine-tuned readouts, the pre-fitting damage check
-and exploration of other cells.
-
-The donor costs 131,072 unique tokens (73,728 fit plus selection), 3,686,400 presentations
-(3 learning rates × 200 steps × 6,144 tokens per minibatch), and an estimated 336 GPU seconds for training,
-selection and readout. Its fine-tune is excluded because the donor model is assumed to exist.
-
-The first fresh seed is the reference (@sec-cost), with self-comparison interval [0, 0]. At 256 tokens and a
-600-step cap, fresh fitting's lower bounds, −1.985 pp (primary) and −1.957 pp (replication), narrowly exceed
-−2 pp and set its lowest unique-token cost. Sensitivity to another reference seed remains unevaluated.
-
-## Appendix D — Reproducibility and availability {#sec-reproduction .unnumbered}
-
-Code, saved measurements, and instructions for replaying analysis and running the model procedures are on
-[GitHub](https://github.com/sergeisoly/interesearch/blob/main/papers/guides/repair-transfer.md).
+![Share of the fine-tune’s excess Dutch loss removed, with a 600-step cap for ordinary runs. The fixed donor has no target fitting. Whiskers and shading give 95% bootstrap intervals over 92 dates per target.](../../results/repair_transfer/figures/recovery.svg){#fig-recovery width="100%" fig-pos="H" fig-alt="Two panels compare Dutch CE recovery on the primary and replication targets. Donor initialization and fresh fitting exceed 95% at 256, 512 and 2,048 fit tokens. The scalar-only fits stay below 90%, including the expanded search at 2,048 fit tokens. A dashed line marks the fixed donor repair and a shaded band gives its interval."}
 
 ::: {.content-visible when-format="html"}
 
 <details>
-<summary>Cite this article</summary>
+<summary>Cite this version (0.2.0)</summary>
 
 ```bibtex
 @misc{solovev2026repair,
   author = {Solovev, Sergei},
   title  = {Transferring Learned Repairs Between Fine-Tunes},
   year   = {2026},
-  month  = oct,
-  note   = {Version 0.1.2},
+  month  = nov,
+  note   = {Version 0.2.0},
   url    = {https://sergeisoly.github.io/interesearch/repair-transfer/}
 }
 ```

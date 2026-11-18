@@ -20,7 +20,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 
-from .analysis.recovery import EQUIV_PAIRS, MAIN_CONTRASTS, PRIMARY, READING_TEXT
+from .analysis.recovery import EQUIV_PAIRS, MAIN_CONTRASTS, PRIMARY
 from .analysis.costs import CURRENCIES
 from .analysis.curve import curve_name
 from ..recipes import load_recipe
@@ -37,8 +37,8 @@ LABEL = {
     "fresh_seed2": "Fresh, second seed",
     "donor_fixed": "Fixed donor repair",
 }
-CHART_LABEL = {**LABEL, "strengths_best": "Scalar coefficients only\n+ expanded search",
-               "donor_init_output": "Donor initialization,\noutput only"}
+CHART_LABEL = {**LABEL, "strengths": "Scalar only", "strengths_best": "Expanded scalar search",
+               "fresh": "Fresh fitting"}
 COLOR = {"donor_init": "#2a78d6", "donor_init_output": "#12865f", "random_init": "#4a3aa7", "fresh": "#c85224",
          "strengths": "#52514e", "strengths_best": "#52514e", "donor_fixed": "#8a8984"}
 MARKER = {"donor_init": "o", "donor_init_output": "D", "random_init": "s", "fresh": "^", "strengths": "v",
@@ -46,18 +46,18 @@ MARKER = {"donor_init": "o", "donor_init_output": "D", "random_init": "s", "fres
 BUDGET_TEXT = {"256": "256", "512": "512", "2K": "2,048"}
 CURRENCY_TEXT = {"unique_tokens": "Unique tokens", "fit_token_presentations": "Fit-token presentations",
                  "gpu_s": "GPU seconds (estimate)"}
-TRAINED = ("strengths", "donor_init", "donor_init_output", "random_init", "fresh")
+RECOVERY_FAMILIES = ("strengths", "donor_init", "fresh")
 # matched-cost contrasts of the warm-start figure: (minuend, subtrahend) -> colour, marker, filled
 WARM_START = {("donor_init", "fresh"): (COLOR["donor_init"], "o", True),
               ("donor_init_output", "fresh"): (COLOR["donor_init_output"], "D", True),
               ("donor_init", "random_init"): (COLOR["random_init"], "s", False)}
-REACH_FAMILIES = ("donor_init", "donor_init_output", "random_init", "fresh")
+REACH_FAMILIES = ("donor_init", "fresh")
 PRESENTATION_TICKS = (5e4, 1e5, 2e5, 5e5, 1e6, 2e6, 5e6)
 WIDTH = 6.3  # inches: the A4 text width of the PDF
 STYLE = {
     "svg.hashsalt": "interesearch-repair-transfer", "svg.fonttype": "path", "font.family": "DejaVu Sans",
-    "font.size": 8, "axes.titlesize": 8.5, "axes.labelsize": 8, "legend.fontsize": 7.5, "xtick.labelsize": 7.5,
-    "ytick.labelsize": 7.5, "axes.spines.top": False, "axes.spines.right": False, "axes.edgecolor": "#52514e",
+    "font.size": 9, "axes.titlesize": 9.5, "axes.labelsize": 9, "legend.fontsize": 8.5, "xtick.labelsize": 8.5,
+    "ytick.labelsize": 8.5, "axes.spines.top": False, "axes.spines.right": False, "axes.edgecolor": "#52514e",
     "axes.linewidth": 0.6, "xtick.color": "#52514e", "ytick.color": "#52514e", "axes.grid": True,
     "axes.grid.axis": "y", "grid.color": "#e4e3df", "grid.linewidth": 0.6, "lines.linewidth": 1.2,
 }
@@ -101,39 +101,43 @@ def _dot(ax, x, y, lo, hi, color, marker, filled=True, ms=4.2):
 
 
 def recovery_figure(res: dict, path: Path, recipe: dict) -> None:
-    """Recovery of every trained family at each fit budget (600 steps), with the fixed donor repair as a band."""
-    fig, axes = plt.subplots(1, 2, figsize=(WIDTH, 2.3), sharey=True)
-    offsets = {f: (i - 2.5) * 0.13 for i, f in enumerate((*TRAINED, "strengths_best"))}
+    """Compare scalar fitting, donor initialization and fresh fitting at the 600-step cap."""
+    fig, axes = plt.subplots(1, 2, figsize=(WIDTH, 2.75), sharey=True)
+    fig.subplots_adjust(left=0.12, right=0.98, bottom=0.15, top=0.75, wspace=0.12)
+    offsets = {"strengths": -0.24, "strengths_best": -0.08, "donor_init": 0.08, "fresh": 0.24}
+    budgets = recipe["curve"]["budgets"]
     for ax, (target, title) in zip(axes, TARGETS.items()):
         cells = res["targets"][target]["cells"]
         fixed = cells["donor_fixed"]
         lo, hi = fixed["ci_r_nl"]
         ax.axhspan(100 * lo, 100 * hi, color=COLOR["donor_fixed"], alpha=0.18, lw=0, zorder=1)
         ax.axhline(100 * fixed["point"]["r_nl"], color=COLOR["donor_fixed"], ls="--", lw=0.9, zorder=2)
-        points = [(i, f, f"{f}@{b}") for i, b in enumerate(recipe["curve"]["budgets"]) for f in TRAINED]
-        for i, f, g in points + [(2, "strengths_best", "strengths_best@2K")]:
+        points = [(i, f, f"{f}@{b}") for i, b in enumerate(budgets) for f in RECOVERY_FAMILIES]
+        for i, f, g in points + [(budgets.index("2K"), "strengths_best", "strengths_best@2K")]:
             c = cells[g]
             _dot(ax, i + offsets[f], 100 * c["point"]["r_nl"], *(100 * v for v in c["ci_r_nl"]), COLOR[f], MARKER[f],
-                 filled=f != "strengths_best")
-        ax.set_xticks(range(len(recipe["curve"]["budgets"])), [BUDGET_TEXT[b] for b in recipe["curve"]["budgets"]])
-        ax.set_xlim(-0.55, 2.55)
-        ax.set_xlabel("Unique fit tokens of the target")
+                 filled=f != "strengths_best", ms=5)
+        ax.set_xticks(range(len(budgets)), [BUDGET_TEXT[b] for b in budgets])
+        ax.set_xlim(-0.55, len(budgets) - 0.45)
         ax.set_title(title, loc="left")
-    axes[0].set_ylim(50, 100)
-    axes[0].set_ylabel("Recovery of Dutch damage (%)")
-    handles = [Line2D([], [], color=COLOR[f], marker=MARKER[f], ls="", ms=4.2, label=CHART_LABEL[f]) for f in TRAINED]
-    handles += [Line2D([], [], color=COLOR["strengths_best"], marker="v", mfc="white", ls="", ms=4.2,
-                       label=CHART_LABEL["strengths_best"] + " (2,048 only)"),
+    axes[0].set_ylim(50, 102)
+    axes[0].set_ylabel("Dutch CE recovery (%)")
+    fig.supxlabel("Unique fit tokens", y=0.015, fontsize=STYLE["axes.labelsize"])
+    handles = [Line2D([], [], color=COLOR[f], marker=MARKER[f], ls="", ms=5, label=CHART_LABEL[f])
+               for f in RECOVERY_FAMILIES]
+    handles += [Line2D([], [], color=COLOR["strengths_best"], marker="v", mfc="white", ls="", ms=5,
+                       label=CHART_LABEL["strengths_best"]),
                 Line2D([], [], color=COLOR["donor_fixed"], ls="--", lw=0.9,
-                       label=LABEL["donor_fixed"] + ", no fitting")]
-    fig.legend(handles=handles, loc="upper center", ncol=3, frameon=False, bbox_to_anchor=(0.5, 1.30),
-               columnspacing=1.2, handletextpad=0.3)
+                       label=LABEL["donor_fixed"])]
+    fig.legend(handles=handles, loc="upper center", ncol=3, frameon=False,
+               columnspacing=1.5, handletextpad=0.5)
     _save(fig, path)
 
 
 def warm_start_figure(res: dict, path: Path, recipe: dict) -> None:
-    """Paired differences at matched cost: the same budget and step cap for both families of a contrast."""
-    fig, axes = plt.subplots(2, 3, figsize=(WIDTH, 2.9), sharex=True, sharey=True)
+    """Paired differences at the same fit-token budget and step cap."""
+    fig, axes = plt.subplots(2, 3, figsize=(WIDTH, 3.55), sharex=True, sharey=True)
+    fig.subplots_adjust(left=0.15, right=0.98, bottom=0.13, top=0.80, wspace=0.15, hspace=0.16)
     steps = [c or recipe["block"]["steps"] for c in (*recipe["curve"]["step_caps"], None)]
     for row, target in enumerate(TARGETS):
         contrasts = res["targets"][target]["contrasts"]
@@ -151,14 +155,15 @@ def warm_start_figure(res: dict, path: Path, recipe: dict) -> None:
             ax.minorticks_off()
             if row == 0:
                 ax.set_title(f"{BUDGET_TEXT[b]} fit tokens", loc="left")
-            if row == 1:
-                ax.set_xlabel("Step cap per run (log scale)")
             if col == 0:
-                ax.set_ylabel(f"{TARGETS[target]}\ndifference (pp)")
+                ax.set_ylabel(f"{TARGETS[target]}\nRecovery gap (pp)")
+    fig.supxlabel("Step cap per learning rate (log scale)", y=0.015, fontsize=STYLE["axes.labelsize"])
+    short = {"donor_init": "Donor", "donor_init_output": "Donor, output only", "random_init": "random",
+             "fresh": "fresh"}
     handles = [Line2D([], [], color=color, marker=marker, mfc=None if filled else "white", ms=3.8,
-                      label=f"{CHART_LABEL[x]} {MINUS}\n{CHART_LABEL[y].lower()}")
+                      label=f"{short[x]} {MINUS} {short[y]}")
                for (x, y), (color, marker, filled) in WARM_START.items()]
-    fig.legend(handles=handles, loc="upper center", ncol=3, frameon=False, bbox_to_anchor=(0.5, 1.14))
+    fig.legend(handles=handles, loc="upper center", ncol=3, frameon=False)
     _save(fig, path)
 
 
@@ -166,7 +171,8 @@ def reach_figure(res: dict, path: Path, recipe: dict) -> None:
     """Quality-cost curve: each grid cell's paired difference from the reference at its true target-side
     fit-token presentations. Family by colour and marker as in the other figures, fit budget by line style. Filled
     markers reach the reference, and a ring marks the two cells that set K*."""
-    fig, axes = plt.subplots(1, 2, figsize=(WIDTH, 2.6), sharey=True)
+    fig, axes = plt.subplots(1, 2, figsize=(WIDTH, 3.1), sharey=True)
+    fig.subplots_adjust(left=0.12, right=0.98, bottom=0.15, top=0.75, wspace=0.14)
     budget_style = {"256": ":", "512": "--", "2K": "-"}
     ticks = [f"{t / 1e6:g}M" if t >= 1e6 else f"{t / 1e3:g}K" for t in PRESENTATION_TICKS]
     for ax, target in zip(axes, TARGETS):
@@ -183,7 +189,7 @@ def reach_figure(res: dict, path: Path, recipe: dict) -> None:
                 for x, y, r in zip(xs, ys, rows):
                     _dot(ax, x, y, *(100 * v for v in r["vs_reference_ci"]), COLOR[f], MARKER[f],
                          filled=r["reaches"], ms=3.8)
-        for f in ("fresh", "donor_init"):
+        for f in REACH_FAMILIES:
             r = grid[curve["reach"][f]["fit_token_presentations"]["cell"]]
             x, y = r["cost"]["fit_token_presentations"], 100 * (r["r_nl"] - ref)
             # Keep the selected family's shape visible when another cell overlaps it.
@@ -192,22 +198,19 @@ def reach_figure(res: dict, path: Path, recipe: dict) -> None:
         ax.set_xscale("log")
         ax.set_xticks(PRESENTATION_TICKS, ticks)
         ax.minorticks_off()
-        ax.set_xlabel("Fit-token presentations per target (log scale)")
         ax.set_title(TARGETS[target], loc="left")
-        ax.text(ax.get_xlim()[1], -100 * curve["tolerance"], "reach threshold ", ha="right", va="bottom",
-                fontsize=7, color="#52514e")
-    axes[0].set_ylabel("Difference from the reference (pp)")
+    axes[0].set_ylabel("Recovery gap to reference (pp)")
+    fig.supxlabel("Fit-token presentations per target (log scale)", y=0.015, fontsize=STYLE["axes.labelsize"])
     grey = "#52514e"
     handles = [Line2D([], [], color=COLOR[f], marker=MARKER[f], ms=3.8, lw=1.0, label=CHART_LABEL[f])
                for f in REACH_FAMILIES]
     handles += [Line2D([], [], color=grey, marker="o", ls="", ms=3.8, label="reaches"),
-                Line2D([], [], color=grey, marker="o", ls="", ms=3.8, mfc="white", label="does not reach")]
+                Line2D([], [], color=grey, marker="o", ls="", ms=3.8, mfc="white", label="falls short")]
     handles += [Line2D([], [], color=grey, ls=ls, lw=0.9, label=f"{BUDGET_TEXT[b]} tokens")
                 for b, ls in budget_style.items()]
     handles.append(Line2D([], [], color="#1a1a1a", marker="o", ls="", ms=9, mfc="none", mew=0.9,
                           label="cheapest reaching cell"))
-    fig.legend(handles=handles, loc="upper center", ncol=4, frameon=False, bbox_to_anchor=(0.5, 1.27),
-               columnspacing=1.2)
+    fig.legend(handles=handles, loc="upper center", ncol=4, frameon=False, columnspacing=1.1)
     _save(fig, path)
 
 
@@ -221,39 +224,37 @@ def contrast_label(key: str) -> str:
 
 
 def primary_table(result: dict, recipe: dict) -> str:
-    """Markdown table of one target's primary contrast for the papers. Rounding happens only here, missing values
-    print as —."""
-    res = result["targets"]["primary_target"]
-    pr = res["primary"]
+    """Recovery and its paired difference for each target at the primary comparison."""
+    targets = result["targets"]
 
     def fmt(v, spec):  # None: no selection. NaN: ci() of non-finite draws
-        return "—" if v is None or not math.isfinite(v) else format(100 * v, spec)
+        return "—" if v is None or not math.isfinite(v) else pct(v, spec)
 
-    def row(label, value, interval, spec):
-        lo, hi = interval or (None, None)
-        ci_text = "—" if interval is None else f"[{fmt(lo, spec)}, {fmt(hi, spec)}]"
-        return f"| {label} | {fmt(value, spec)} | {ci_text} |"
+    def estimate(value, bounds, spec):
+        if bounds is None:
+            return fmt(value, spec)
+        lo, hi = bounds
+        return f"{fmt(value, spec)} [{fmt(lo, spec)}, {fmt(hi, spec)}]"
 
-    cx, cy = (res["cells"][g] for g in PRIMARY)
-    if pr["reading"] in READING_TEXT:
-        reading = READING_TEXT[pr["reading"]].format(pp=f"{100 * recipe["analysis"]["delta"]:g}")
-    else:
-        reading = pr["reading"][0].upper() + pr["reading"][1:] + "."
-    if pr["reading"] == "basis limit supported":
-        reading = (
-            f"Donor-initialized fitting exceeds the tested scalar-coefficient search by more than {100 * recipe["analysis"]["delta"]:g} "
-            "percentage points. The scalar search includes 48 checkpoints from 4 learning-rate runs with a "
-            "600-step cap and two final candidates from additional full-batch runs that met the declared stopping criteria.")
-    lines = [
-        "| Repair | Recovery of Dutch damage (%) | 95% CI |",
-        "|:--|--:|:--|",
-        row("Donor initialization (both factors trained)", cx.get("point", {}).get("r_nl"), cx.get("ci_r_nl"), ".1f"),
-        row("Scalar coefficients only + expanded search", cy.get("point", {}).get("r_nl"), cy.get("ci_r_nl"), ".1f"),
-        row("Difference (percentage points)", pr["diff"], pr["ci"], "+.1f"),
+    lines = ["| Measure | Primary target | Replication target |", "|:--|:--|:--|"]
+    for group, label in zip(PRIMARY, ("Donor initialization (%)", "Expanded scalar search (%)")):
+        cells = (targets[key]["cells"][group] for key in TARGETS)
+        entries = [estimate(c.get("point", {}).get("r_nl"), c.get("ci_r_nl"), ".1f") for c in cells]
+        lines.append(f"| {label} | {' | '.join(entries)} |")
+    entries = [estimate(targets[key]["primary"]["diff"], targets[key]["primary"]["ci"], "+.1f") for key in TARGETS]
+    lines.append(f"| Paired difference (pp) | {' | '.join(entries)} |")
+    readings = [targets[key]["primary"]["reading"] for key in TARGETS]
+    if any(reading.startswith("not assessable") for reading in readings):
+        statuses = [reading.replace("not assessable", "Not assessable", 1).replace("|", r"\|")
+                    if reading.startswith("not assessable")
+                    else "Assessable" for reading in readings]
+        lines.append(f"| Assessability | {' | '.join(statuses)} |")
+    lines += [
         "",
-        f": {res['target'].replace('_', ' ').capitalize()}, 2,048 fit tokens, {res['n_dates']} readout dates. 95% "
-        f"intervals from a joint bootstrap over dates ({recipe["bootstrap"]["n_boot"]:,} draws). {reading} Selection considers "
-        "all 50 candidates and can retain an ordinary checkpoint. {#tbl-primary}",
+        ": Excess Dutch loss recovered at 2,048 fit tokens and a "
+        f"{recipe['block']['steps']}-step cap for ordinary runs. Scalar fitting included two extra candidates. "
+        "The difference is donor minus scalar. Brackets give 95% bootstrap intervals over dates within each target. "
+        '{#tbl-primary tbl-colwidths="[40,30,30]"}',
         "",
     ]
     return "\n".join(lines)
@@ -275,13 +276,13 @@ def secondary_table(res: dict, recipe: dict) -> str:
             band.append("yes" if c.get("equivalent") else "no")
         lines.append(f"| {contrast_label(key)} | {cells[0]} | {cells[1]} | "
                      f"{' / '.join(band) if (x, y) in EQUIV_PAIRS else '—'} |")
-    lines += ["", (": Secondary contrasts at the full fit budget (2,048 unique fit tokens, 600-step cap for ordinary runs): paired difference "
-              f"in recovery (pp) with its 95% interval, {res['targets']['primary_target']['n_dates']} readout dates "
-              "per target. For rows marked '+ expanded search', scalar-repair selection also considers two final "
-              "candidates from additional runs that met the declared stopping criteria. "
+    lines += ["", (": Paired differences in Dutch CE recovery with 95% intervals, at 2,048 fit tokens and a "
+              f"600-step cap for ordinary runs. The bootstrap resamples {res['targets']['primary_target']['n_dates']} "
+              "readout dates within each target. The expanded scalar search includes the ordinary checkpoints "
+              "and two additional candidates. "
               "These intervals are descriptive, without multiplicity correction. The last column applies "
-              "only to the five contrasts named in the protocol for an equivalence reading (primary / replication): "
-              f"'yes' means that the whole interval lies inside the ±{margin} pp band. "
+              "to the five contrasts specified in the protocol (primary / replication). "
+              f"A 'yes' means that the whole interval lies inside the ±{margin} pp band. "
               '{#tbl-secondary tbl-colwidths="[40,24,24,12]"}'), ""]
     return "\n".join(lines)
 
@@ -351,7 +352,7 @@ TABLES = {"primary_table.md": primary_table, "secondary_table.md": secondary_tab
 
 
 def explainer_data(res: dict, source_bytes: bytes, recipe: dict) -> dict:
-    """Copy saved recovery cells and paired intervals for the explainer, retaining source precision."""
+    """Copy saved loss, recovery and paired intervals for the explainer, retaining source precision."""
     targets = []
     for key, label in TARGETS.items():
         target = res["targets"][key]
@@ -360,7 +361,9 @@ def explainer_data(res: dict, source_bytes: bytes, recipe: dict) -> dict:
             saved = target["cells"][name]
             return {"source_cell": name, "recovery": saved["point"]["r_nl"], "ci": saved["ci_r_nl"]}
 
-        full = [{"family": family, "label": text, **cell(name)} for family, text, name in (
+        full = [{"family": family, "label": text, **cell(name),
+                 "dutch_excess_loss": target["cells"][name]["point"]["d_nl"],
+                 "german_effect_kept": target["cells"][name]["point"]["rho_de"]} for family, text, name in (
             ("strengths", LABEL["strengths_best"], "strengths_best@2K"),
             ("donor_init", LABEL["donor_init"], "donor_init@2K"),
             ("fresh", LABEL["fresh"], "fresh@2K"),
@@ -381,7 +384,9 @@ def explainer_data(res: dict, source_bytes: bytes, recipe: dict) -> dict:
         primary = target["primary"]
         targets.append({
             "key": key, "label": label, "n_dates": target["n_dates"],
-            "primary": {"source_contrast": primary["contrast"], "diff": primary["diff"], "ci": primary["ci"]},
+            "unrepaired_dutch_excess_loss": target["damage"]["d_nl"],
+            "primary": {"source_contrast": primary["contrast"], "diff": primary["diff"], "ci": primary["ci"],
+                        "margin": primary["delta"]},
             "full": full, "grid": grid,
         })
     return {
@@ -391,7 +396,8 @@ def explainer_data(res: dict, source_bytes: bytes, recipe: dict) -> dict:
             "study": res["study"],
             "uncertainty": "95% percentile bootstrap over evaluation dates, with paired intervals for differences",
             "n_boot": res["n_boot"],
-            "units": "recovery and difference as fractions, rendered as percent and percentage points",
+            "units": "Dutch excess loss in nat/token, recovery and German effect kept as fractions, "
+                     "differences as fractions rendered in percentage points",
         },
         "equivalence_margin": res["equivalence_margin"],
         "budgets": [{"key": budget, "tokens": {"256": 256, "512": 512, "2K": 2048}[budget]}

@@ -40,6 +40,7 @@ from pathlib import Path
 
 import torch
 
+from ...checksums import sha256_file
 from .costs import donor_cost, fit_and_cost
 from .curve import CURVE_FAMILIES, cost_curve, curve_contrasts
 from ..data import load_block, load_donor
@@ -207,8 +208,8 @@ def primary_reading(cells: dict, contrasts: dict, main_recorded: dict, delta: fl
     return out
 
 
-def analyze_target(target: str, main, nested, donor: dict, recipe: dict) -> dict:
-    """Every cell and contrast of one target, its primary reading, in-sample fit, costs and quality-cost curve."""
+def replay_target(target: str, main, nested, recipe: dict) -> tuple[dict, dict, torch.Tensor]:
+    """Replay selection and compile cells, costs and paired date draws for one target."""
     selection_settings, analysis_settings = recipe["selection"], recipe["analysis"]
     bootstrap_settings = recipe["bootstrap"]
     per = main.readout
@@ -239,13 +240,20 @@ def analyze_target(target: str, main, nested, donor: dict, recipe: dict) -> dict
         res["blocks"][info["block"]] = {
             "selection_replay": summary, "s_adequacy_verified": rec["s_adequacy_verified"],
             "total_s": rec["total_s"], "norm_cap": rec["norm_cap"], "donor_fixed_factor": rec["donor_fixed_factor"]}
+    return res, cell_draws, draws
+
+
+def analyze_target(target: str, main, nested, donor: dict, recipe: dict) -> dict:
+    """Every cell and contrast of one target, its primary reading, in-sample fit, costs and quality-cost curve."""
+    analysis_settings, bootstrap_settings = recipe["analysis"], recipe["bootstrap"]
+    res, cell_draws, _ = replay_target(target, main, nested, recipe)
     for x, y in [PRIMARY, *MAIN_CONTRASTS, *NESTED_CONTRASTS, *curve_contrasts(recipe["curve"])]:
         if f"{x} - {y}" not in res["contrasts"]:
             res["contrasts"][f"{x} - {y}"] = contrast(
                 res["cells"], cell_draws, x, y, analysis_settings, bootstrap_settings)
     for x, y in CROSS_CONTRASTS:
         res["contrasts"][f"{x} - {y}"] = contrast(
-            res["cells"], cell_draws, x, y, analysis_settings, bootstrap_settings, cross_errors)
+            res["cells"], cell_draws, x, y, analysis_settings, bootstrap_settings, res["cross_block"]["errors"])
     rec = main.info["recorded"]
     res["primary"] = primary_reading(res["cells"], res["contrasts"], rec, analysis_settings["delta"])
     res["polish"] = rec["polish"]
@@ -282,13 +290,9 @@ def _replay_settings(recipe: dict) -> dict:
     return {section: recipe[section] for section in REPLAY_SECTIONS}
 
 
-def analyze(data_dir: str | Path, published_recipe: dict | None = None,
-            expected_recipe: dict | None = None) -> dict:
-    """Replay saved settings, with the packaged published recipe only for recognized legacy exports.
-
-    ``expected_recipe`` optionally checks the requested analysis profile. It never replaces recorded values.
-    ``published_recipe`` can be supplied by an entrypoint that has already loaded the packaged profile.
-    """
+def load_replay(data_dir: str | Path, published_recipe: dict | None = None,
+                expected_recipe: dict | None = None) -> tuple[dict, dict, dict]:
+    """Load the blocks, their shared recipe, and the cost of the matched donor."""
     if published_recipe is None:
         published_recipe = load_recipe("interesearch.repair_transfer")
     data_dir = Path(data_dir)
@@ -300,9 +304,29 @@ def analyze(data_dir: str | Path, published_recipe: dict | None = None,
         raise ValueError("blocks have different recorded replay settings")
     if expected_recipe is not None and _replay_settings(expected_recipe) != settings:
         raise ValueError("requested recipe differs from the saved replay settings")
-    donor_record = load_donor(data_dir / "donor")
+    donor_dir = data_dir / "donor"
+    donor_record = load_donor(donor_dir)
+    donor_sha256 = sha256_file(donor_dir / "donor_repair.pt")
+    for target, parts in blocks.items():
+        for block in parts:
+            path = data_dir / target / block.info["block"]
+            if block.donor_repair_sha256 is None:
+                raise ValueError(f"{path}: missing donor identity. Include the original run.json with this block")
+            if block.donor_repair_sha256 != donor_sha256:
+                raise ValueError(f"{path}: measured with a different donor repair than {donor_dir / 'donor_repair.pt'}")
     donor_recipe = replay_recipe(donor_record, published_recipe)
     donor = donor_cost(donor_record, donor_recipe["costs"]["selection_tokens"])
+    return blocks, recipe, donor
+
+
+def analyze(data_dir: str | Path, published_recipe: dict | None = None,
+            expected_recipe: dict | None = None) -> dict:
+    """Replay saved settings, with the packaged published recipe only for recognized legacy exports.
+
+    ``expected_recipe`` optionally checks the requested analysis profile. It never replaces recorded values.
+    ``published_recipe`` can be supplied by an entrypoint that has already loaded the packaged profile.
+    """
+    blocks, recipe, donor = load_replay(data_dir, published_recipe, expected_recipe)
     targets = {t: analyze_target(t, *bs, donor, recipe) for t, bs in blocks.items()}
     result = {"study": "repair_transfer", "n_boot": recipe["bootstrap"]["n_boot"],
               "boot_seed": recipe["bootstrap"]["seed"], "delta": recipe["analysis"]["delta"],

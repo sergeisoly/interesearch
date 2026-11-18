@@ -1,5 +1,15 @@
 # Changelog
 
+## Papers 0.2.0 — 2026-11-18
+
+Both papers and summaries have been revised since their first publication on 14 October 2026. The selective-editing figures show achieved target effects alongside related-language damage. The selective paper adds a session-level check and an archived comparison with Bushnaq’s German component. The primary repair table reports both targets and their paired intervals. Two retrospective repair analyses measure Portuguese spillover and sensitivity to the reference and tolerance used in cost comparisons. The research overview now shows measured results from each study.
+
+## 0.3.0 — 2026-11-18
+
+New CPU commands replay the retrospective analyses and export calibration measurements. The summaries include interactive rank-one geometry, measured calibration and repair effects, and paired budget comparisons.
+
+Repair analysis checks that the donor used for cost accounting matches the donor used by all four measurement blocks. Older runs can supply their original run record, and the published archive replays with its pinned donor.
+
 ## Papers 0.1.2 — 2026-10-15
 
 PDF bookmarks and appendix links now land at their headings. The summaries clarify the fixed VPD edit,

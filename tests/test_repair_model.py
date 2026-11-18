@@ -288,6 +288,7 @@ def test_block_main_and_nested(toy, monkeypatch):
         load_block(out_m)
     blk = load_block(out_m, allow_reduced=True)
     assert blk.info["run"]["reduced"] and blk.info["source"]["run_record_sha256"] == sha256_file(out_m / "run.json")
+    assert blk.info["recorded"]["donor_repair_sha256"] == blk.donor_repair_sha256 == sha256_file(toy.donor_path)
     names = blk.info["readout"]["names"]
     assert names[:6] == ["base", "finetuned", "donor_raw", "donor_fixed", "strengths_converged@2K:start=c0",
                          "strengths_converged@2K:start=best"] and all("::" in n for n in names[6:])

@@ -44,6 +44,8 @@ COLOR = {"vpd_atom": "#2a78d6", "lora_rank1": "#c85224", "finetune_24": "#4a3aa7
 MARKER = {"vpd_atom": "o", "lora_rank1": "s", "finetune_24": "^", "neurons": "D"}
 GREY, LIGHT = "#52514e", "#e4e3df"
 TAUS = ("0.5", "1.0")
+LANGUAGE = {"de": "German", "nl": "Dutch", "es": "Spanish",
+            "pt": "Portuguese", "fr": "French", "it": "Italian"}
 TARGET_FLAG = 0.1  # protocol.json target_deviation_flag: the frozen tolerance of one edit's target rise around tau
 OFFSET = 0.17  # vertical distance of the confirm (above) and dev (below) marker from their row in the forest plot
 WIDTH = 6.3  # inches: the A4 text width of the PDF
@@ -119,10 +121,18 @@ def _hdot(ax, x, y, lo, hi, color, marker, filled=True, ms=4.0):
 
 
 def effects_figure(res: dict, path: Path) -> None:
-    """Achieved target CE rise against protected CE rise of every claim-method edit on the confirm dates, per
-    target and draw, with the frozen tolerance tau +- 0.1 shaded."""
-    edits = _edits(res, "confirm")
-    fig, axes = plt.subplots(1, 3, figsize=(WIDTH, 2.3), sharex=True, sharey=True)
+    """Achieved target and protected CE changes on the confirmation dates, with target tolerance bands.
+
+    A log scale shows small positive changes. Signed changes use a linear scale.
+    """
+    edits = [e for e in _edits(res, "confirm") if e["method"] in METHODS]
+    target_rises = [e["target_rise"] for e in edits]
+    protected_rises = [e["protected_rise"] for e in edits]
+    target_limits = (0.37, 1.13)
+    limits = (min(target_limits[0], min(target_rises, default=0.5) - 0.02),
+              max(target_limits[1], max(target_rises, default=1.0) + 0.02))
+    fig, axes = plt.subplots(1, 3, figsize=(WIDTH, 2.55), sharex=True, sharey=True)
+    fig.subplots_adjust(left=0.14, right=0.99, bottom=0.21, top=0.73, wspace=0.16)
     for ax, (t, p) in zip(axes, _pairs(res).items()):
         for tau in map(float, TAUS):
             ax.axvspan(tau - TARGET_FLAG, tau + TARGET_FLAG, color=LIGHT, alpha=0.7, lw=0, zorder=0)
@@ -130,18 +140,27 @@ def effects_figure(res: dict, path: Path) -> None:
         for m in METHODS:
             es = [e for e in edits if e["target"] == t and e["method"] == m]
             ax.plot([e["target_rise"] for e in es], [e["protected_rise"] for e in es], ls="", marker=MARKER[m],
-                    color=COLOR[m], ms=4.0, mew=0.8, alpha=0.85, zorder=3)
-        ax.set_title(pair_text(t, p), loc="left")
-        ax.set_xlabel("Target CE rise (nat/token)")
+                    color=COLOR[m], ms=4.5, mew=0.8, zorder=3)
+        ax.set_title(f"{LANGUAGE.get(t, t)} → {LANGUAGE.get(p, p)}", loc="left")
+        ax.tick_params(axis="y", which="minor", left=False)
         ax.grid(axis="y")
-    axes[0].set_xlim(0.3, 1.2)
-    axes[0].set_xticks([0.5, 1.0])
-    axes[0].set_ylim(bottom=-0.03)
+    axes[0].set_xlim(*limits)
+    if limits == target_limits:
+        axes[0].set_xticks([0.5, 1.0])
+    else:
+        axes[0].xaxis.set_major_locator(matplotlib.ticker.MaxNLocator(4))
+    if protected_rises and min(protected_rises) > 0:
+        axes[0].set_yscale("log")
+        axes[0].set_ylim(min(protected_rises) / 1.5, max(protected_rises) * 1.5)
+    else:
+        for ax in axes:
+            ax.axhline(0, color=GREY, lw=0.6, ls="--", zorder=1)
     axes[0].set_ylabel("Protected CE rise (nat/token)")
-    handles = [Line2D([], [], color=COLOR[m], marker=MARKER[m], ls="", ms=4.0, label=LABEL[m]) for m in METHODS]
-    handles.append(Patch(color=LIGHT, alpha=0.7, label="τ ± 0.1 (frozen tolerance)"))
-    fig.legend(handles=handles, loc="upper center", ncol=3, frameon=False, bbox_to_anchor=(0.5, 1.22),
-               columnspacing=1.2, handletextpad=0.3)
+    axes[1].set_xlabel("Achieved target CE rise (nat/token)")
+    handles = [Line2D([], [], color=COLOR[m], marker=MARKER[m], ls="", ms=4.5, label=LABEL[m]) for m in METHODS]
+    handles.append(Patch(color=LIGHT, alpha=0.7, label="Target tolerance (τ ± 0.1)"))
+    fig.legend(handles=handles, loc="upper center", ncol=3, frameon=False, bbox_to_anchor=(0.54, 1.0),
+               columnspacing=1.4, handletextpad=0.4)
     _save(fig, path)
 
 
@@ -206,9 +225,9 @@ def contrasts_figure(res: dict, path: Path) -> None:
     handles = [Line2D([], [], color=GREY, marker="o", ls="-", lw=1.0, ms=4.0, label="Confirmation (58 dates)"),
                Line2D([], [], color=GREY, marker="o", ls="-", lw=1.0, ms=4.0, mfc="white", label="Development (64 dates)"),
                Patch(color=LIGHT, alpha=0.7, label="±0.1 band (bottom row)")]
-    fig.text(0.5, 0.985, f"{LABEL[MAIN]} − comparator", ha="center", va="top", fontsize=9)
+    fig.text(0.5, 0.985, "Differences in CE rise (VPD minus comparator)", ha="center", va="top", fontsize=9)
     fig.legend(handles=handles, loc="upper center", ncol=3, frameon=False, bbox_to_anchor=(0.5, 0.943),
-               fontsize=7, handlelength=1.5, handletextpad=0.4, columnspacing=1.2)
+               fontsize=7.5, handlelength=1.5, handletextpad=0.4, columnspacing=1.2)
     _save(fig, path)
 
 
@@ -229,13 +248,11 @@ def effects_table(res: dict) -> str:
             lines.append(f"| {LABEL[m]} | {tau:g} | {span([e['target_rise'] for e in c], '.2f')} | "
                          f"{span(prot, rise_spec(prot))} | {span(en, rise_spec(en))} | {span(kl_c, '.2f')} | "
                          f"{span(kl_d, '.2f')} | {span([e['edit_norm'] for e in d], '.2f')} |")
-    n = len({(e["target"], e["draw"]) for e in conf})
     n_dates = res["posthoc"]["dose_agreement"]["confirm"]["n_dates"]
-    lines += ["", (f": Confirmation effects on {n_dates} dates and development English KL. Each method–τ row covers "
-              f"3 targets × 3 draws; VPD repeats one fixed edit per target. Confirmation ranges span these {n} run entries. "
-              "Development English KL spans all four English sets per run: the validation set and three evaluation sets. "
-              "CE rises and KL are in nat/token. C: confirmation; D: development. "
-              "KL is from the base model; edit norm is the Frobenius norm of the weight change. "
+    lines += ["", (f": Cross-entropy increases on {n_dates} confirmation dates (C), in nat/token. Ranges at each "
+              "calibration target τ span three languages and three draws, with one fixed VPD edit per language. "
+              "English KL is relative to the base model (nat/token). Development ranges (D) include one validation "
+              "and three evaluation sets. Edit norm is the Frobenius norm of the weight change. "
               '{#tbl-effects tbl-colwidths="[13,4,10,14,17,14,14,10]"}'), ""]
     return "\n".join(lines)
 
@@ -247,15 +264,15 @@ def claim_table(res: dict) -> str:
     lines = ["| Pair | τ | Comparator | Protected, confirmation | Protected, development | Target gap, confirmation |",
              "|:--|:--|:--|:--|:--|:--|"]
     for t, tau in _rows(res):
-        for i, m in enumerate(COMPARATORS):
+        for m in COMPARATORS:
             r = claims[(t, tau, m)]
             g = gaps[f"{r['contrast']}|target_gap"]
-            pair = pair_text(t, pairs[t]) if i == 0 and tau == TAUS[0] else ""
-            lines.append(f"| {pair} | {f'{float(tau):g}' if i == 0 else ''} | {LABEL[m]} | {interval(r['confirm'])} | "
+            # Keep the comparison identifiable if the PDF starts a new page mid-pair.
+            lines.append(f"| {pair_text(t, pairs[t])} | {float(tau):g} | {LABEL[m]} | {interval(r['confirm'])} | "
                          f"{interval(r['dev'])} | {interval(g, est='mean')} |")
-    lines += ["", (": VPD subcomponent minus comparator, in nat/token, with simultaneous 95% intervals. "
-              "Protected: prespecified differences in protected-language CE rise. Target gap: differences in achieved "
-              "target CE rise from the separate post hoc analysis. "
+    lines += ["", (": Differences in cross-entropy rise (VPD minus comparator, nat/token) with simultaneous 95% intervals. "
+              "Each pair runs from target to protected language. τ is the calibration target. Protected-language contrasts were prespecified. "
+              "Target gaps are post hoc. "
               '{#tbl-claims tbl-colwidths="[9,4,14,24,24,25]"}'), ""]
     return "\n".join(lines)
 
@@ -278,8 +295,9 @@ def interventions_table(res: dict) -> str:
                      f"{one([e['target_rise'] for e in es['dev']]):.2f} | "
                      f"{one([e['target_rise'] for e in es['confirm']]):.2f} | "
                      f"{one([e['protected_rise'] for e in es['confirm']]):.4f} |")
-    lines += ["", (": Selected subcomponent edits, shared across training draws. Coefficient: 1\u00a0−\u00a0a; "
-              "edit norm: |α| · ‖A‖. CE rises are in nat/token. C: confirmation; D: development. "
+    lines += ["", (": VPD edits by target → protected language and validation target τ. The coefficient is 1 − a "
+              "and edit norm is the Frobenius norm. Cross-entropy rises are in nat/token on development (D) "
+              "and confirmation (C) dates. "
               '{#tbl-interventions tbl-colwidths="[9,13,5,9,12,9,13,14,16]"}'), ""]
     return "\n".join(lines)
 

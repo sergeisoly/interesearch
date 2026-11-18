@@ -1,0 +1,91 @@
+{
+  "description": "German-targeted directions in the post hoc top-20 scan after the main protocol freeze. Dutch CE changes are in nat/token.",
+  "target": "de",
+  "protected_language": "nl",
+  "split": "development",
+  "n_dates": 64,
+  "tau": 0.5,
+  "validation_tolerance": 0.02,
+  "not_recorded_by_scan": [
+    "achieved German test CE change",
+    "English CE and KL changes",
+    "Italian CE change"
+  ],
+  "draws": [
+    {
+      "draw": 0,
+      "source_sha256": {
+        "atlas_de_d0.json": "6b24168cb18ed820bda1fcf0e087acf16daf76d050c63dc4d22cbfbb6c787ce1",
+        "de_d0_vpd.json": "6c6c9cbfb279ee40ab8a65136f9a5198523d9947aab9dc785a107c3176cb81ea"
+      },
+      "rows": [
+        {
+          "subcomponent": "h.0.attn.o_proj:268",
+          "rank_in_draw": 1,
+          "validation_status": "matched",
+          "dose": 0.6812184335382292,
+          "sign": -1,
+          "dutch_ce_change": 0.0035546403378248215
+        },
+        {
+          "subcomponent": "h.3.attn.v_proj:513",
+          "rank_in_draw": 19,
+          "validation_status": "matched",
+          "dose": 1.5606601717798214,
+          "sign": -1,
+          "dutch_ce_change": 0.0012472942471504211
+        }
+      ]
+    },
+    {
+      "draw": 1,
+      "source_sha256": {
+        "atlas_de_d1.json": "8ed1016290c15fd14c185d180c78666de297a4f41215876d3819f0485896115c",
+        "de_d1_vpd.json": "48d899c26a65b88b49d48992962461d332c99091a7f73f6ec183f04628e46d9a"
+      },
+      "rows": [
+        {
+          "subcomponent": "h.0.attn.o_proj:268",
+          "rank_in_draw": 1,
+          "validation_status": "matched",
+          "dose": 0.6812184335382292,
+          "sign": -1,
+          "dutch_ce_change": 0.0035546403378248215
+        },
+        {
+          "subcomponent": "h.3.attn.v_proj:513",
+          "rank_in_draw": 9,
+          "validation_status": "matched",
+          "dose": 1.5606601717798214,
+          "sign": -1,
+          "dutch_ce_change": 0.0012472942471504211
+        }
+      ]
+    },
+    {
+      "draw": 2,
+      "source_sha256": {
+        "atlas_de_d2.json": "6417ce4f033053b1f374013714059e6d996d4a11b68fb698655baf865264cb67",
+        "de_d2_vpd.json": "e3f6afcb9adbacde9c2124249d666a923e12f45cc7ea0f739d4d14c9c61e1e25"
+      },
+      "rows": [
+        {
+          "subcomponent": "h.0.attn.o_proj:268",
+          "rank_in_draw": 1,
+          "validation_status": "matched",
+          "dose": 0.6812184335382292,
+          "sign": -1,
+          "dutch_ce_change": 0.0035546403378248215
+        },
+        {
+          "subcomponent": "h.3.attn.v_proj:513",
+          "rank_in_draw": 9,
+          "validation_status": "matched",
+          "dose": 1.5606601717798214,
+          "sign": -1,
+          "dutch_ce_change": 0.0012472942471504211
+        }
+      ]
+    }
+  ]
+}

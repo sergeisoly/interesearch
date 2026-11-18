@@ -1,0 +1,43 @@
+.repair-method [hidden] { display: none !important; }
+.repair-method figcaption { margin: 0 0 1rem; text-align: left; }
+.repair-method figcaption strong { font-size: 1.15rem; color: var(--research-ink); }
+.repair-method #repair-method-copy { margin: .25rem 0 1rem; }
+.repair-method-sliders {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .75rem 1.4rem;
+  margin: 0 0 1rem;
+}
+.repair-method-sliders label { flex: 1 1 155px; max-width: 355px; font-size: .86rem; font-weight: 600; }
+.repair-method-sliders input { display: block; width: 100%; accent-color: #247467; min-height: 28px; }
+.repair-method-sliders output { float: right; font-variant-numeric: tabular-nums; color: var(--research-muted); }
+.repair-method-scenes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.repair-method-scenes section {
+  min-width: 0;
+  padding: .8rem .8rem .65rem;
+  border: 1px solid var(--research-rule-strong);
+  border-radius: 5px;
+}
+.repair-method-scenes h3 { margin: 0; font-size: 1rem; font-weight: 600; }
+.repair-method .repair-scene { display: block; width: 100%; max-height: 235px; touch-action: pan-y; cursor: grab; }
+.repair-method .repair-scene:active { cursor: grabbing; }
+.repair-method .repair-scene:focus-visible { outline: 2px solid #2b64a0; outline-offset: -2px; }
+.repair-method-scenes p { margin: .25rem 0; }
+.repair-method-key { font-size: .76rem; color: var(--research-muted); }
+.repair-method-key span { white-space: nowrap; }
+.repair-method-key span::before { content: ''; display: inline-block; vertical-align: .19em; width: .9rem; border-top: 2px solid; margin-right: .26rem; }
+.repair-method-key .repair-key-a::before { border-color: #9c4a23; }
+.repair-method-key .repair-key-x::before { border-color: #285a9b; }
+.repair-method-key .repair-key-e::before { border-color: #187163; }
+.repair-method-key .repair-key-b::before { border-color: #9c4a23; border-top-style: dashed; }
+.repair-value { font-size: .89rem; font-variant-numeric: tabular-nums; }
+.repair-view-help { display: flex; align-items: center; flex-wrap: wrap; gap: .4rem 1rem; margin-top: .75rem; color: var(--research-muted); font-size: .78rem; }
+.repair-view-help button { min-height: 36px; }
+@media (max-width: 620px) {
+  .repair-method-scenes { gap: .65rem; grid-template-columns: minmax(0, 1fr); }
+  .repair-method .repair-scene { max-height: 182px; }
+}
+@media print {
+  .repair-method #repair-method-live { display: none !important; }
+  .repair-method #repair-method-fallback { display: block !important; }
+}

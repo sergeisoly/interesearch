@@ -1,285 +1,203 @@
-/* Presentation only: all estimates and paired intervals come from the saved analysis. */
+/* All estimates and intervals come from the saved analysis. */
 (() => {
   "use strict";
-  const NS = "http://www.w3.org/2000/svg";
-  const COLORS = { strengths: "#52514e", donor_init: "#2a78d6", fresh: "#c85224" };
-  const INK = "#182d3b";
-  const MUTED = "#526771";
-  const GRID = "#dedfdc";
+  const METHODS = {
+    strengths: { label: "Expanded scalar search", color: "#52514e" },
+    donor_init: { label: "Donor initialization", color: "#2364a5" },
+    fresh: { label: "First fresh start", color: "#a54520" }
+  };
+  const LOSS_AXIS_MAX = 0.20;
   const pct = value => (value * 100).toFixed(1);
-  const signed = value => `${value >= 0 ? "+" : "−"}${Math.abs(value * 100).toFixed(1)}`;
-  const interval = ci => `${pct(ci[0])}–${pct(ci[1])}`;
+  const signed = value => `${value < 0 ? "−" : "+"}${pct(Math.abs(value))}`;
+  const interval = (bounds, format = pct) => `[${format(bounds[0])}, ${format(bounds[1])}]`;
   const comma = value => value.toLocaleString("en-US");
-  const familyLabel = family => ({ strengths: "Scalar coefficients only", donor_init: "Donor initialization", fresh: "Fresh initialization" })[family];
+  const axisPosition = loss => `${100 * loss / LOSS_AXIS_MAX}%`;
 
-  function svgNode(tag, attrs = {}, content) {
-    const el = document.createElementNS(NS, tag);
-    Object.entries(attrs).forEach(([key, value]) => el.setAttribute(key, String(value)));
-    if (content !== undefined) el.textContent = content;
-    return el;
+  function append(parent, tag, className, text) {
+    const node = document.createElement(tag);
+    if (className) node.className = className;
+    if (text !== undefined) node.textContent = text;
+    parent.append(node);
+    return node;
   }
 
-  function add(parent, tag, attrs, content) {
-    const el = svgNode(tag, attrs, content);
-    parent.append(el);
-    return el;
+  function column(row, label) {
+    const cell = append(row, "th", "", label);
+    cell.scope = "col";
   }
 
-  function text(parent, x, y, content, attrs = {}) {
-    return add(parent, "text", { x, y, fill: INK, "font-size": 14, ...attrs }, content);
+  function rowLabel(row, label) {
+    const cell = append(row, "th", "", label);
+    cell.scope = "row";
   }
 
-  function chart(container, width, height, title, description) {
-    const svg = svgNode("svg", {
-      viewBox: `0 0 ${width} ${height}`, width: "100%", role: "img",
-      "aria-labelledby": `${container.id}-title ${container.id}-description`,
-      "font-family": "system-ui, -apple-system, sans-serif"
-    });
-    add(svg, "title", { id: `${container.id}-title` }, title);
-    add(svg, "desc", { id: `${container.id}-description` }, description);
-    container.replaceChildren(svg);
-    return svg;
+  function initLossChart(data) {
+    const chart = document.getElementById("repair-full-chart");
+    const panels = document.getElementById("repair-loss-panels");
+    const detail = document.getElementById("repair-loss-detail");
+    const choices = [...chart.querySelectorAll("[data-repair-inspect]")];
+    const tracks = [];
+    for (const target of data.targets) {
+      const panel = append(panels, "section", "repair-loss-panel");
+      append(panel, "h3", "", target.label);
+      const unrepaired = append(panel, "p", "repair-loss-before", "Unrepaired fine-tune");
+      append(unrepaired, "strong", "", target.unrepaired_dutch_excess_loss.toFixed(4));
+      for (const cell of target.full) {
+        const method = METHODS[cell.family];
+        const row = append(panel, "div", "repair-loss-row");
+        const labels = append(row, "div", "repair-loss-label");
+        append(labels, "span", "", method.label);
+        append(labels, "span", "repair-loss-number", `${cell.dutch_excess_loss.toFixed(4)} (${pct(cell.recovery)}%)`);
+
+        const track = append(row, "div", "repair-loss-track");
+        track.setAttribute("aria-hidden", "true");
+        track.style.setProperty("--repair-method-color", method.color);
+        const baseline = append(track, "span", "repair-loss-baseline");
+        baseline.style.left = axisPosition(target.unrepaired_dutch_excess_loss);
+        const dot = append(track, "span", "repair-loss-dot");
+        dot.style.left = axisPosition(cell.dutch_excess_loss);
+        tracks.push({ row, family: cell.family });
+      }
+
+      const axis = append(panel, "div", "repair-loss-axis");
+      axis.setAttribute("aria-hidden", "true");
+      for (const value of [0, 0.05, 0.10, 0.15, LOSS_AXIS_MAX]) {
+        const tick = append(axis, "span", "", value === 0 ? "0" : value.toFixed(2));
+        tick.style.left = axisPosition(value);
+      }
+    }
+
+    function inspect(family) {
+      for (const button of choices) {
+        button.setAttribute("aria-pressed", String(button.dataset.repairInspect === family));
+      }
+      for (const track of tracks) track.row.toggleAttribute("data-selected", track.family === family);
+      const kept = data.targets.map(target => {
+        const cell = target.full.find(candidate => candidate.family === family);
+        return `${target.label} ${pct(cell.german_effect_kept)}%`;
+      });
+      detail.textContent = `German effect kept · ${kept.join(" · ")}`;
+    }
+
+    for (const button of choices) {
+      button.addEventListener("click", () => inspect(button.dataset.repairInspect));
+    }
+    const [primary, replication] = data.targets.map(target => target.primary);
+    document.getElementById("repair-full-primary").textContent =
+      `Donor initialization improved recovery over the expanded scalar search by ${pct(primary.diff)} percentage ` +
+      `points on the primary target (95% paired interval ${interval(primary.ci)}) and ${pct(replication.diff)} points ` +
+      `on replication (${interval(replication.ci)}). Both intervals exceeded the study's ${primary.margin * 100}-point margin.`;
+    inspect("donor_init");
+    chart.hidden = false;
+    document.getElementById("repair-full-data").open = false;
   }
 
-  function whisker(svg, x1, x2, y, color) {
-    add(svg, "line", { x1, x2, y1: y, y2: y, stroke: color, "stroke-width": 2 });
-    [x1, x2].forEach(x => add(svg, "line", {
-      x1: x, x2: x, y1: y - 5, y2: y + 5, stroke: color, "stroke-width": 1.5
-    }));
-  }
+  function initBudgetGrid(data) {
+    const interactive = document.getElementById("repair-budget-interactive");
+    const panels = document.getElementById("repair-budget-panels");
+    const selection = document.getElementById("repair-budget-selected");
+    const results = document.getElementById("repair-budget-detail");
+    const buttons = [];
+    const largestGap = Math.max(...data.targets.flatMap(target => target.grid.map(cell => Math.abs(cell.gap.diff))));
+    const arrowMoves = { ArrowUp: [-1, 0], ArrowDown: [1, 0], ArrowLeft: [0, -1], ArrowRight: [0, 1] };
 
-  function marker(svg, family, cx, cy) {
-    if (family === "strengths") return add(svg, "path", {
-      d: `M${cx},${cy + 5}l5,-9h-10Z`, fill: COLORS[family]
-    });
-    if (family === "fresh") return add(svg, "path", {
-      d: `M${cx},${cy - 5}l5,9h-10Z`, fill: COLORS[family]
-    });
-    return add(svg, "circle", { cx, cy, r: 4.5, fill: COLORS[family] });
+    function select(budgetIndex, capIndex) {
+      const budget = data.budgets[budgetIndex];
+      const cap = data.step_caps[capIndex];
+      const cells = data.targets.map(target =>
+        target.grid.find(cell => cell.budget === budget.key && cell.step_cap === cap));
+      for (const panelButtons of buttons) {
+        for (const [row, rowButtons] of panelButtons.entries()) {
+          for (const [col, button] of rowButtons.entries()) {
+            const selected = row === budgetIndex && col === capIndex;
+            button.setAttribute("aria-pressed", String(selected));
+            button.tabIndex = selected ? 0 : -1;
+          }
+        }
+      }
+
+      const leads = cells.map((cell, index) => `${data.targets[index].label} ${signed(cell.gap.diff)} pp`);
+      selection.textContent = `${comma(budget.tokens)} fit tokens · ${cap}-step cap`;
+      append(selection, "span", "visually-hidden", `. ${leads.join(" · ")}`);
+
+      const table = document.createElement("table");
+      append(table, "caption", "", "Recovery with 95% date-bootstrap intervals. Donor advantages use paired intervals.");
+      const head = table.createTHead().insertRow();
+      column(head, "Measure");
+      for (const target of data.targets) column(head, target.label);
+      const body = table.createTBody();
+      for (const [key, name] of [
+        ["strengths", "Scalar-only recovery"],
+        ["donor", "Donor recovery"],
+        ["fresh", "First fresh recovery"],
+        ["gap", "Donor advantage"]
+      ]) {
+        const row = body.insertRow();
+        rowLabel(row, name);
+        for (const cell of cells) {
+          const value = key === "gap"
+            ? `${signed(cell.gap.diff)} pp ${interval(cell.gap.ci, signed)}`
+            : `${pct(cell[key].recovery)}% ${interval(cell[key].ci)}`;
+          row.insertCell().textContent = value;
+        }
+      }
+      results.replaceChildren(table);
+    }
+
+    for (const target of data.targets) {
+      const table = append(panels, "table", "repair-budget-grid");
+      append(table, "caption", "", target.label);
+      const head = table.createTHead().insertRow();
+      column(head, "Fit tokens");
+      for (const cap of data.step_caps) column(head, String(cap));
+      const body = table.createTBody();
+      const panelButtons = [];
+      buttons.push(panelButtons);
+      for (const [budgetIndex, budget] of data.budgets.entries()) {
+        const row = body.insertRow();
+        rowLabel(row, comma(budget.tokens));
+        const rowButtons = [];
+        panelButtons.push(rowButtons);
+        for (const [capIndex, cap] of data.step_caps.entries()) {
+          const cell = target.grid.find(cell => cell.budget === budget.key && cell.step_cap === cap);
+          const value = signed(cell.gap.diff);
+          const button = append(row.insertCell(), "button", "", value);
+          button.type = "button";
+          button.setAttribute("aria-label",
+            `${target.label}, ${comma(budget.tokens)} fit tokens, ${cap}-step cap, ${value} percentage points`);
+          button.style.setProperty("--repair-cell-opacity", 0.06 + 0.23 * Math.abs(cell.gap.diff) / (largestGap || 1));
+          rowButtons.push(button);
+          button.addEventListener("click", () => select(budgetIndex, capIndex));
+          button.addEventListener("keydown", event => {
+            const move = arrowMoves[event.key];
+            if (!move) return;
+            event.preventDefault();
+            const nextRow = budgetIndex + move[0];
+            const nextCol = capIndex + move[1];
+            const next = panelButtons[nextRow]?.[nextCol];
+            if (next) {
+              select(nextRow, nextCol);
+              next.focus();
+            }
+          });
+        }
+      }
+    }
+    select(0, 0);
+    interactive.hidden = false;
+    document.getElementById("repair-budget-fallback").hidden = true;
   }
 
   function init() {
-    const embedded = document.getElementById("repair-explainer-data");
-    if (!embedded) return;
-    let data;
     try {
-      data = JSON.parse(embedded.textContent);
-    } catch (_) {
-      document.getElementById("repair-curve-result").textContent =
-        "The interactive figure could not load. The paper contains the same results as static figures.";
-      return;
-    }
-    const full = document.getElementById("repair-full-chart");
-    const curve = document.getElementById("repair-curve-chart");
-    const targetSelect = document.getElementById("repair-target");
-    const budgetSelect = document.getElementById("repair-budget");
-    const stepInput = document.getElementById("repair-step");
-    const methodCopy = {
-      strengths: {
-        title: "Same directions, new coefficients",
-        text: "Keep the donor repair's input and output directions fixed. Learn one scalar coefficient per matrix, 24 numbers in all.",
-        description: "The new arrow stays on the donor repair's line, but its scale can change.",
-        path: "M58 177 L326 27 M315 28 L326 27 L321 37", label: [332, 25]
-      },
-      donor_init: {
-        title: "Start from the donor, then adapt it",
-        text: "Use the earlier repair as a starting point. Train both its input and output vectors on the new fine-tune, allowing its directions and size to change.",
-        description: "The new arrow can turn away from the donor's direction as the repair is fitted.",
-        path: "M58 177 L348 124 M338 120 L348 124 L341 132", label: [275, 105]
-      },
-      fresh: {
-        title: "Learn a new repair",
-        text: "Start from a zero update and learn both vectors without using the donor repair.",
-        description: "The donor arrow disappears. A new direction is learned from a zero-update start.",
-        path: "M58 177 L333 89 M322 88 L333 89 L326 98", label: [278, 71]
-      }
-    };
-    document.querySelectorAll("[data-repair-method]").forEach(button => button.addEventListener("click", () => {
-      const method = button.dataset.repairMethod;
-      const copy = methodCopy[method];
-      document.querySelectorAll("[data-repair-method]").forEach(b => b.setAttribute("aria-pressed", String(b === button)));
-      document.getElementById("repair-method-title").textContent = copy.title;
-      document.getElementById("repair-method-description").textContent = copy.description;
-      const arrow = document.getElementById("repair-learned-arrow");
-      arrow.setAttribute("d", copy.path);
-      arrow.setAttribute("stroke", COLORS[method]);
-      const label = document.getElementById("repair-arrow-label");
-      label.setAttribute("x", copy.label[0]);
-      label.setAttribute("y", copy.label[1]);
-      label.setAttribute("fill", INK);
-      ["repair-donor-arrow", "repair-donor-endpoint", "repair-donor-label"].forEach(id =>
-        document.getElementById(id).setAttribute("visibility", method === "fresh" ? "hidden" : "visible"));
-      document.getElementById("repair-zero-start").setAttribute("visibility", method === "fresh" ? "visible" : "hidden");
-      const heading = document.createElement("h3");
-      const paragraph = document.createElement("p");
-      heading.textContent = copy.title;
-      paragraph.textContent = copy.text;
-      document.getElementById("repair-method-copy").replaceChildren(heading, paragraph);
-      document.getElementById("repair-transfer-diagram-caption").textContent = method === "fresh"
-        ? "Schematic for one weight matrix. The new repair starts from zero, marked by the orange dot. The solid arrow shows the learned repair."
-        : "Schematic for one weight matrix. The dashed arrow shows the donor repair and the solid arrow shows the new repair.";
-    }));
-
-    function drawFull() {
-      const width = Math.max(310, full.clientWidth || 760);
-      const stacked = width < 650;
-      const panelWidth = stacked ? width : (width - 36) / 2;
-      const panelHeight = 322;
-      const description = data.targets.map(t => `${t.label}: ${t.full.map(c =>
-        `${familyLabel(c.family)}, ${pct(c.recovery)}% recovery, 95% interval ${interval(c.ci)}%`).join(". ")}`).join(". ");
-      const svg = chart(full, width, stacked ? 2 * panelHeight : panelHeight,
-        "Full-budget recovery on the two new fine-tunes", description);
-      data.targets.forEach((target, index) => {
-        const x0 = stacked ? 0 : index * (panelWidth + 36);
-        const y0 = stacked ? index * panelHeight : 0;
-        const left = x0 + 4;
-        const right = x0 + panelWidth - 8;
-        const scale = value => left + value * (right - left);
-        text(svg, left, y0 + 22, target.label, { "font-size": 17, "font-weight": 650 });
-        target.full.forEach((cell, row) => {
-          const y = y0 + 65 + row * 72;
-          text(svg, left, y, familyLabel(cell.family), { "font-size": 14 });
-          if (cell.family === "strengths") text(svg, left, y + 18, "24 learned coefficients", { "font-size": 12, fill: MUTED });
-          const barY = y + (cell.family === "strengths" ? 25 : 12);
-          text(svg, right, y, `${pct(cell.recovery)}%`, { "text-anchor": "end", "font-weight": 650 });
-          add(svg, "rect", { x: left, y: barY, width: right - left, height: 14, fill: "#eaece9", rx: 2 });
-          add(svg, "rect", {
-            x: left, y: barY, width: scale(cell.recovery) - left, height: 14,
-            fill: COLORS[cell.family], rx: 2
-          });
-          whisker(svg, scale(cell.ci[0]), scale(cell.ci[1]), barY + 7, INK);
-        });
-        [0, 0.5, 1].forEach(value => text(svg, scale(value), y0 + 284, `${value * 100}%`, {
-          fill: MUTED, "font-size": 12, "text-anchor": value === 0 ? "start" : value === 1 ? "end" : "middle"
-        }));
-        text(svg, left, y0 + 310, "Share of Dutch damage recovered", { fill: MUTED, "font-size": 12 });
-      });
-      const primaryText = data.targets.map((target, i) =>
-        `${pct(target.primary.diff)} percentage points on the ${i ? "replication" : "primary"} target`).join(" and ");
-      document.getElementById("repair-primary-result").textContent =
-        `Compared with scalar coefficients only, donor initialization increases Dutch recovery by ${primaryText}.`;
-    }
-
-    function drawCurve() {
-      const target = data.targets.find(t => t.key === targetSelect.value);
-      const budget = data.budgets.find(b => b.key === budgetSelect.value);
-      const step = data.step_caps[Number(stepInput.value)];
-      const points = target.grid.filter(cell => cell.budget === budget.key);
-      const current = points.find(cell => cell.step_cap === step);
-      const width = Math.max(310, curve.clientWidth || 760);
-      const stackedLegend = width < 650;
-      const height = stackedLegend ? 410 : 375;
-      const left = 44, right = width - 19, top = stackedLegend ? 92 : 53, bottom = height - 45;
-      const x = cap => left + Math.log(cap / 50) / Math.log(600 / 50) * (right - left);
-      const y = recovery => bottom - (recovery - 0.70) / 0.32 * (bottom - top);
-      const svg = chart(curve, width, height,
-        `${target.label}, ${comma(budget.tokens)} fit tokens: recovery by step cap`,
-        points.map(p => `With a step cap of ${p.step_cap}, scalar coefficients only ${pct(p.strengths.recovery)}%, donor initialization ${pct(p.donor.recovery)}%, fresh ${pct(p.fresh.recovery)}%.`).join(" ") +
-        " Whiskers are 95% date-bootstrap intervals. The vertical scale begins at 70%.");
-      ["strengths", "donor_init", "fresh"].forEach((family, index) => {
-        const xp = stackedLegend ? left : left + index * (right - left) / 3;
-        const yp = stackedLegend ? 17 + index * 23 : 17;
-        add(svg, "line", { x1: xp, x2: xp + 13, y1: yp, y2: yp, stroke: COLORS[family], "stroke-width": 3 });
-        marker(svg, family, xp + 6.5, yp);
-        text(svg, xp + 19, yp + 4, familyLabel(family), { "font-size": 13 });
-      });
-      for (const value of [0.70, 0.80, 0.90, 1]) {
-        add(svg, "line", { x1: left, x2: right, y1: y(value), y2: y(value), stroke: GRID, "stroke-width": 1 });
-        text(svg, left - 9, y(value) + 4, `${Math.round(value * 100)}%`, {
-          "text-anchor": "end", "font-size": 12, fill: MUTED
-        });
-      }
-      add(svg, "line", {
-        x1: x(step), x2: x(step), y1: top, y2: bottom, stroke: MUTED, "stroke-dasharray": "3 5", opacity: 0.65
-      });
-      data.step_caps.forEach(cap => text(svg, x(cap), bottom + 24, String(cap), {
-        "text-anchor": "middle", "font-size": 12, fill: cap === step ? INK : MUTED,
-        "font-weight": cap === step ? 700 : 400
-      }));
-      [["strengths", "strengths"], ["donor", "donor_init"], ["fresh", "fresh"]].forEach(([key, family]) => {
-        add(svg, "path", {
-          d: points.map((p, i) => `${i ? "L" : "M"}${x(p.step_cap)},${y(p[key].recovery)}`).join(" "),
-          fill: "none", stroke: COLORS[family], "stroke-width": 2.5, "stroke-linejoin": "round"
-        });
-        points.forEach(p => {
-          const cx = x(p.step_cap), cy = y(p[key].recovery);
-          add(svg, "line", {
-            x1: cx, x2: cx, y1: y(p[key].ci[0]), y2: y(p[key].ci[1]),
-            stroke: COLORS[family], "stroke-width": 1.5
-          });
-          for (const limit of p[key].ci) add(svg, "line", {
-            x1: cx - 4, x2: cx + 4, y1: y(limit), y2: y(limit), stroke: COLORS[family], "stroke-width": 1.5
-          });
-          if (p.step_cap === step) add(svg, "circle", {
-            cx, cy, r: 8, fill: "#faf9f5", stroke: COLORS[family], "stroke-width": 1.5
-          });
-          const point = marker(svg, family, cx, cy);
-          add(point, "title", {}, `${familyLabel(family)}, step cap ${p.step_cap}: ${pct(p[key].recovery)}%, 95% CI ${interval(p[key].ci)}%.`);
-        });
-      });
-      text(svg, (left + right) / 2, height - 2, "Step cap per run", {
-        "text-anchor": "middle", "font-size": 12, fill: MUTED
-      });
-      document.getElementById("repair-step-value").textContent = `${step} steps`;
-      stepInput.setAttribute("aria-valuetext", `${step} steps per run`);
-      document.getElementById("repair-curve-result").textContent =
-        `With ${comma(budget.tokens)} fit tokens and up to ${step} steps, Dutch recovery is ${pct(current.strengths.recovery)}% with scalar coefficients only, ${pct(current.donor.recovery)}% with donor initialization and ${pct(current.fresh.recovery)}% with fresh initialization. The donor's advantage over fresh initialization is ${signed(current.gap.diff)} percentage points.`;
-      const fullBudget = budget.key === "2K" && step === 600;
-      document.getElementById("repair-curve-interpretation").textContent = fullBudget
-        ? "At this budget, learning a repair from scratch nearly catches up."
-        : "";
-      drawTable(points, target.label, budget.tokens);
-    }
-
-    function drawTable(points, targetLabel, tokens) {
-      const table = document.createElement("table");
-      const caption = document.createElement("caption");
-      caption.textContent = `${targetLabel}, ${comma(tokens)} unique fit tokens. Values in brackets are 95% confidence intervals.`;
-      table.append(caption);
-      const head = table.createTHead().insertRow();
-      ["Step cap", "Scalar coefficients only (%)", "Donor initialization (%)", "Fresh initialization (%)"].forEach(label => {
-        const th = document.createElement("th");
-        th.scope = "col";
-        th.textContent = label;
-        head.append(th);
-      });
-      const body = table.createTBody();
-      points.forEach(p => {
-        const row = body.insertRow();
-        const label = document.createElement("th");
-        label.scope = "row";
-        label.textContent = String(p.step_cap);
-        row.append(label);
-        [`${pct(p.strengths.recovery)} [${interval(p.strengths.ci)}]`,
-          `${pct(p.donor.recovery)} [${interval(p.donor.ci)}]`,
-          `${pct(p.fresh.recovery)} [${interval(p.fresh.ci)}]`].forEach(value => {
-          row.insertCell().textContent = value;
-        });
-      });
-      document.getElementById("repair-curve-table").replaceChildren(table);
-    }
-
-    [targetSelect, budgetSelect].forEach(control => control.addEventListener("change", drawCurve));
-    stepInput.addEventListener("input", drawCurve);
-    drawFull();
-    drawCurve();
-    let frame;
-    const redraw = () => {
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(() => { drawFull(); drawCurve(); });
-    };
-    if (typeof ResizeObserver !== "undefined") {
-      let lastWidth = full.clientWidth;
-      new ResizeObserver(() => {
-        if (full.clientWidth !== lastWidth) {
-          lastWidth = full.clientWidth;
-          redraw();
-        }
-      }).observe(full);
-    } else {
-      window.addEventListener("resize", redraw);
+      const data = JSON.parse(document.getElementById("repair-explainer-data").textContent);
+      initLossChart(data);
+      initBudgetGrid(data);
+    } catch (error) {
+      console.warn("Repair-transfer figures could not initialize.", error);
     }
   }
+
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init, { once: true });
   else init();
 })();

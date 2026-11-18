@@ -23,6 +23,8 @@ uv run python -m interesearch.selective_editing.analysis.posthoc data/selective_
     --out runs/replay/selective_editing
 uv run python -m interesearch.selective_editing.analysis.extended data/selective_editing \
     --out runs/replay/selective_editing
+uv run python -m interesearch.selective_editing.analysis.explainer_calibration data/selective_editing \
+    runs/replay/selective_editing/posthoc.json > runs/replay/selective_editing/explainer_calibration.json
 uv run python -m interesearch.selective_editing.figures runs/replay/selective_editing \
     --out runs/replay/selective_editing
 ```
@@ -37,6 +39,15 @@ In `runs/replay/selective_editing/`, start with:
 | `tables/extended_comparisons_table.md` | Exploratory comparisons |
 
 Compare with the committed [results](../../results/selective_editing/). Interpretation and study limitations are in the [paper](https://sergeisoly.github.io/interesearch/selective-editing/).
+
+The supplementary command prints the per-window summaries of the six fixed edits and the German shortlist measurements as JSON.
+
+```bash
+uv run python -m interesearch.selective_editing.analysis.descriptive data/selective_editing
+```
+
+The window summaries use the 58 stored confirmation measurements and count each fixed edit once.
+The [shortlist extract](../../data/selective_editing/supplementary/german_shortlist.json) contains the two matched directions from each archived draw, with hashes of the original inputs. Its endpoint is mean Dutch CE change on 64 development dates. The scan evaluated German CE for validation calibration and recorded Dutch CE on development text. The scan left achieved German test CE, English CE and KL, and Italian CE unmeasured.
 
 ## Try one edit on the model
 

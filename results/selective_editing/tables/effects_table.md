@@ -9,4 +9,4 @@
 | Neuron edits | 0.5 | 0.48–0.52 | 0.423–0.523 | −0.0008 to 0.0010 | 3.29–5.63 | 0.61–5.45 | 1.12–3.16 |
 | Neuron edits | 1 | 0.98–1.00 | 0.756–0.876 | 0.013–0.038 | 13.38–38.67 | 11.85–39.86 | 5.85–9.80 |
 
-: Confirmation effects on 58 dates and development English KL. Each method–τ row covers 3 targets × 3 draws; VPD repeats one fixed edit per target. Confirmation ranges span these 9 run entries. Development English KL spans all four English sets per run: the validation set and three evaluation sets. CE rises and KL are in nat/token. C: confirmation; D: development. KL is from the base model; edit norm is the Frobenius norm of the weight change. {#tbl-effects tbl-colwidths="[13,4,10,14,17,14,14,10]"}
+: Cross-entropy increases on 58 confirmation dates (C), in nat/token. Ranges at each calibration target τ span three languages and three draws, with one fixed VPD edit per language. English KL is relative to the base model (nat/token). Development ranges (D) include one validation and three evaluation sets. Edit norm is the Frobenius norm of the weight change. {#tbl-effects tbl-colwidths="[13,4,10,14,17,14,14,10]"}

@@ -1,43 +1,38 @@
 # interesearch
 
-Studies of language-model weight edits: selectively weakening one language while sparing a close relative,
-and reusing repairs for collateral damage across fine-tunes trained on data from the same distribution.
+How far does a weight edit spread through a language model? These two studies use Goodfire’s 67M-parameter model to measure changes in next-token prediction. One tests whether a deliberately damaging edit can spare a related language. The other asks how much of the damage an earlier repair can undo on a new fine-tune.
 
-## Studies
+[Research overview](https://sergeisoly.github.io/interesearch/)
 
-**Selective language editing.** I compare weight edits by their effects on a target language and its close relative.
-Following Lucius Bushnaq's [Exploration: Fine-Tuning with Parameter Decomposition](https://www.lesswrong.com/posts/ieoWstubDQWLrMnhH/exploration-fine-tuning-with-parameter-decomposition),
-I test German/Dutch, Spanish/Portuguese and French/Italian. Individual parameter-decomposition subcomponents,
-learned weight updates (including full-matrix fine-tuning), and neuron edits are calibrated to the same target
-effect on validation text. On 58 new session dates in the same model, the six subcomponent edits caused less
-related-language damage than the comparators. The learned updates preserved English predictions better.
+## Selective language editing
 
-[Short summary](https://sergeisoly.github.io/interesearch/selective-editing/explainer.html) · [Selective Language Damage with Parameter-Decomposition Subcomponents](https://sergeisoly.github.io/interesearch/selective-editing/) · [Study guide](papers/guides/selective-editing.md)
+I calibrated edits to weaken German, Spanish or French by a specified amount on validation text, then measured the effect on Dutch, Portuguese or Italian. On 58 further European Parliament session dates, six edits to individual parameter-decomposition subcomponents caused less damage to the related language than rank-one LoRA, full-matrix fine-tuning or neuron edits. The two learned methods preserved English predictions better.
 
-**Repair transfer.** I reuse a learned repair for new fine-tunes trained independently from the same base model
-on different samples from the same data distribution.
-I compare rescaling its fixed directions, training from it as an initialization, and fitting a fresh repair,
-varying the available data and training budget. On two new fine-tunes, fixed directions left more Dutch damage;
-donor initialization helped most when fitting data and steps were limited, while fresh fitting nearly caught up
-at the full budget.
+[Short summary and interactive figures](https://sergeisoly.github.io/interesearch/selective-editing/explainer.html) · [Paper](https://sergeisoly.github.io/interesearch/selective-editing/) · [Study guide](papers/guides/selective-editing.md)
 
-[Short summary](https://sergeisoly.github.io/interesearch/repair-transfer/explainer.html) · [Transferring Learned Repairs Between Fine-Tunes](https://sergeisoly.github.io/interesearch/repair-transfer/) · [Study guide](papers/guides/repair-transfer.md)
+## Repair transfer
 
-Both studies use Goodfire's small language model. Selective editing also uses its released parameter decomposition.
+Fine-tuning to weaken German also hurt Dutch. I took a repair learned for one fine-tune and tried it on two others trained from the same base with the same recipe. Fitting coefficients on the donor’s fixed directions recovered 86.9% and 78.4% of the Dutch damage in the expanded search. Training the directions from that same starting point recovered 98.2% and 98.8%. Freshly fitted repairs nearly caught up at the full budget.
 
-## Install
+[Short summary and interactive figures](https://sergeisoly.github.io/interesearch/repair-transfer/explainer.html) · [Paper](https://sergeisoly.github.io/interesearch/repair-transfer/) · [Study guide](papers/guides/repair-transfer.md)
+
+## Reproduce a result
+
+From the repository root, replay the repair comparison on a CPU using the checked-in measurements:
 
 ```bash
 uv sync --locked
+uv run python -m interesearch.repair_transfer.analysis.recovery data/repair_transfer \
+    --out runs/replay/repair_transfer/analysis.json
+uv run python -m interesearch.repair_transfer.figures runs/replay/repair_transfer/analysis.json \
+    --out runs/replay/repair_transfer
 ```
 
-Replay the saved analysis for [selective editing](papers/guides/selective-editing.md#replay-the-papers-analysis)
-or [repair transfer](papers/guides/repair-transfer.md#replay-the-papers-analysis) on the CPU without downloading the model.
+Open `runs/replay/repair_transfer/tables/primary_table.md` for the recovery estimates and paired intervals. The [selective-editing replay](papers/guides/selective-editing.md#replay-the-papers-analysis) rebuilds the comparisons from per-date measurements. Its confirmatory token windows are unpublished.
 
 ## Try a weight edit
 
-Weaken the model's German predictions and see what happens to Dutch and English. This example applies one
-previously selected edit to four fixed text windows per language. It downloads about 3.2 GB and runs on the CPU.
+Apply the saved German edit on a CPU and compare German, Dutch and English prediction loss on four example windows per language. This demonstration downloads about 3.2 GB.
 
 ```bash
 uv run python -m interesearch.assets fetch assets
@@ -45,45 +40,19 @@ uv run python -m interesearch.selective_editing.method.dictionary extract assets
 uv run python -m interesearch.selective_editing.quickstart assets
 ```
 
-The output compares prediction error (cross-entropy, or CE) before and after the edit.
+The [worked example](papers/guides/selective-editing.md#try-one-edit-on-the-model) gives expected values and shows how to change the edit’s strength.
 
-The [selective-editing guide](papers/guides/selective-editing.md#try-one-edit-on-the-model) explains the output and how to
-change the edit's strength.
+## Code and data
 
-## Work with the research
+| To inspect | Start here |
+|---|---|
+| How the fixed subcomponent is chosen | [Selection rule](src/interesearch/selective_editing/method/selector.py) |
+| How repairs are learned and chosen | [Fitting](src/interesearch/repair_transfer/method/fitting.py) · [Candidate selection](src/interesearch/repair_transfer/method/selection.py) |
+| What goes into the figures | [Saved measurements](data/) · [Analysis outputs and figures](results/) |
+| Environments, tests and paper builds | [Reproduction guide](papers/guides/reproduction.md) |
 
-Start with [subcomponent selection](src/interesearch/selective_editing/method/selector.py) for the selective-editing rule,
-or [repair fitting](src/interesearch/repair_transfer/method/fitting.py) and
-[candidate selection](src/interesearch/repair_transfer/method/selection.py) for repair transfer. The
-[code and data guide](papers/guides/reproduction.md) covers shared data, validated environments, tests and HTML/PDF builds.
+Both studies use Goodfire’s model. The selective study also uses its released parameter decomposition and follows [Lucius Bushnaq’s fine-tuning experiments](https://www.lesswrong.com/posts/ieoWstubDQWLrMnhH/exploration-fine-tuning-with-parameter-decomposition). Manuscript review used [Scientific Agent Skills](https://doi.org/10.48550/arXiv.2609.00065).
 
-Code is MIT licensed. Papers and original research outputs are CC BY 4.0. See
-[licensing and attribution](LICENSING.md) and [NOTICE](NOTICE).
+## Citation and licensing
 
-## Cite
-
-Cite the relevant paper for its findings. For use of the code, see [CITATION.cff](CITATION.cff).
-
-```bibtex
-@misc{solovev2026repair,
-  author = {Solovev, Sergei},
-  title  = {Transferring Learned Repairs Between Fine-Tunes},
-  year   = {2026},
-  month  = oct,
-  note   = {Version 0.1.2},
-  url    = {https://sergeisoly.github.io/interesearch/repair-transfer/}
-}
-
-@misc{solovev2026selective,
-  author = {Solovev, Sergei},
-  title  = {Selective Language Damage with Parameter-Decomposition Subcomponents},
-  year   = {2026},
-  month  = oct,
-  note   = {Version 0.1.2},
-  url    = {https://sergeisoly.github.io/interesearch/selective-editing/}
-}
-```
-
-## Editorial tools
-
-Manuscript review used [Scientific Agent Skills](https://doi.org/10.48550/arXiv.2609.00065).
+Each paper links its published version in a BibTeX entry at the end of the HTML article. For software citations, see [CITATION.cff](CITATION.cff). Code and the released donor repair use the MIT license. The papers and original research outputs use CC BY 4.0. [Licensing](LICENSING.md) and [NOTICE](NOTICE) give the terms for third-party materials.

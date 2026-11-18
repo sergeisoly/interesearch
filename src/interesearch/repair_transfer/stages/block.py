@@ -343,6 +343,7 @@ def cmd_block(a) -> int:
                 "donor_fixed_factor": k_fixed,
                 "direction_cos": {k: v["cos"] for k, v in info["direction"].items()},
                 "finetune_update_sha256": inputs["finetune"]["update_sha256"],
+                "donor_repair_sha256": inputs["donor_repair"]["sha256"],
             },
             "source": {"run_record_sha256": record_sha256},
             "run": {"reduced": a.reduced, "deviations": a.deviations},

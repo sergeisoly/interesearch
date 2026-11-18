@@ -1,0 +1,107 @@
+.selective-calibration {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  align-items: start;
+  gap: 1.5rem;
+  margin-block: 1.4rem 2rem;
+}
+
+.selective-calibration h3 {
+  margin: 0 0 .5rem;
+}
+
+.selective-edit-readout {
+  border: 1px solid var(--research-rule);
+  padding: 1rem 1.2rem;
+}
+
+.selective-chosen-coefficient {
+  margin: 0;
+  color: var(--research-blue);
+  font-size: 1.5rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.selective-calibration-key {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 1rem;
+  margin: .5rem 0 .8rem;
+  color: var(--research-muted);
+  font-size: .85rem;
+}
+
+.selective-calibration-key i {
+  display: inline-block;
+  width: .55rem;
+  height: .55rem;
+  margin-inline-end: .2rem;
+  border-radius: 50%;
+  background: var(--research-muted);
+}
+
+.selective-calibration-key span:nth-child(2) i {
+  border: 2px solid var(--research-blue);
+  background: transparent;
+}
+
+.selective-calibration-key span:nth-child(3) i {
+  width: .8rem;
+  height: .2rem;
+  border-radius: 0;
+  background: var(--research-blue);
+}
+
+.selective-edit-readout table {
+  width: 100%;
+  font-variant-numeric: tabular-nums;
+}
+
+.selective-edit-readout .visual-note {
+  margin-bottom: .8rem;
+}
+
+.selective-edit-readout caption {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.selective-edit-readout th,
+.selective-edit-readout td {
+  padding: .28rem 0;
+}
+
+.selective-edit-readout th[scope="row"] {
+  font-weight: 400;
+}
+
+.selective-edit-readout td {
+  padding-left: .7rem;
+  font-weight: 600;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.selective-edit-readout th[colspan] {
+  padding-top: .65rem;
+  border-top: 1px solid var(--research-rule);
+}
+
+.selective-comparison-heading {
+  margin-top: 2rem;
+}
+
+@media (max-width: 800px) {
+  .selective-calibration {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .selective-edit-readout table {
+    display: table;
+  }
+}

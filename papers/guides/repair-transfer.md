@@ -25,6 +25,21 @@ Compare the outputs with [`results/repair_transfer`](../../results/repair_transf
 | `tables/` | Recovery, readout constraints and break-even comparisons |
 | `figures/` | Recovery, warm starts and quality–cost curves |
 
+### Replay the post hoc checks
+
+```bash
+uv run python -m interesearch.repair_transfer.analysis.posthoc data/repair_transfer \
+    --out runs/replay/repair_transfer/posthoc.json
+```
+
+The reach check uses the same donor-initialized and first-seed fresh candidate grid, readout constraints and
+fit-token cost accounting as the original analysis. It compares the two full-budget fresh references at margins
+of 1, 2 and 3 percentage points. Each row gives the minimum for fit-token presentations and for unique tokens
+including the shared selection positions. The two minima can come from different settings.
+The Portuguese diagnostic reports the change in cross-entropy from the fine-tune for three full-budget repairs,
+with paired date intervals. Positive values indicate higher cross-entropy.
+The repository includes the [replayed diagnostics](../../results/repair_transfer/posthoc.json).
+
 ## Run a new target and its repairs
 
 Use empty output directories. The model stages default to CUDA; see [validated environments](reproduction.md#validated-environments).
@@ -63,8 +78,9 @@ for target in primary_target replication_target; do
 done
 ```
 
-Repair fitting requires the fine-tune to pass validation. Analysis requires both targets, both blocks and completed
-readouts. Add the donor's cost record and checksums, then analyze the new measurements:
+Repair fitting requires the fine-tune to pass validation. Analysis requires both blocks for each target and completed
+readouts. Keep each block's `run.json` when copying older runs. Copy the same donor directory used to run the blocks so
+that analysis can verify its identity and use its fit record to calculate costs.
 
 ```bash
 cp -R data/repair_transfer/donor runs/blocks/donor

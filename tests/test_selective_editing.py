@@ -28,7 +28,8 @@ def sha256(text: str) -> str:
 
 def test_replay_reproduces_committed_results():
     texts = run(DATA)
-    others = ("posthoc.json", "extended_comparisons_analysis.json", "explainer_data.json")  # written by other commands
+    # The post hoc analysis, extended comparisons and summary exporters run separately.
+    others = ("posthoc.json", "extended_comparisons_analysis.json", "explainer_data.json", "explainer_calibration.json")
     assert sorted(texts) == sorted(p.name for p in RESULTS.glob("*.json") if p.name not in others)
     for name, text in texts.items():
         new, committed = json.loads(text), json.loads((RESULTS / name).read_text())

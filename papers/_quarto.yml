@@ -17,11 +17,16 @@ website:
     left:
       - href: https://sergeisoly.github.io/research.html
         text: Research
+      - href: https://sergeisoly.github.io/projects.html
+        text: Projects
       - href: https://sergeisoly.github.io/posts.html
         text: Posts
       - href: https://sergeisoly.github.io/about.html
         text: About
   page-footer:
+    left:
+      - text: Study overview
+        href: index.qmd
     right:
       - text: RSS
         href: https://sergeisoly.github.io/posts.xml
@@ -38,6 +43,30 @@ format:
       text: |
         <script data-goatcounter="https://sergeisoly.goatcounter.com/count"
                 async src="https://gc.zgo.at/count.js" data-external="1"></script>
+    include-after-body:
+      text: |
+        <script>
+          (() => {
+            const panes = document.querySelectorAll(
+              "main .quarto-float-fig > div:has(> img), main .quarto-float-tbl > div:has(> table)"
+            );
+            if (!panes.length) return;
+            const updateTabStops = () => {
+              for (const pane of panes) {
+                const overflows = pane.scrollWidth > pane.clientWidth;
+                pane.toggleAttribute("data-scroll-overflow", overflows);
+                if (overflows) pane.setAttribute("tabindex", "0");
+                else pane.removeAttribute("tabindex");
+              }
+            };
+            const resizeObserver = new ResizeObserver(updateTabStops);
+            for (const pane of panes) {
+              resizeObserver.observe(pane);
+              resizeObserver.observe(pane.firstElementChild);
+            }
+            updateTabStops();
+          })();
+        </script>
     theme: cosmo
     toc: true
     css: styles.css

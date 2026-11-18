@@ -1,0 +1,360 @@
+{
+  "study": "repair_transfer",
+  "analysis": "post hoc",
+  "bootstrap": {
+    "n_boot": 5000,
+    "seed": 10610,
+    "quantiles": [
+      0.025,
+      0.975
+    ]
+  },
+  "reach_cost_units": [
+    "fit_token_presentations",
+    "unique_tokens"
+  ],
+  "portuguese_ce_unit": "nats/token",
+  "portuguese_ce_contrast": "repair minus fine-tuned model",
+  "targets": {
+    "primary_target": {
+      "n_dates": 92,
+      "reach": {
+        "fresh@2K": {
+          "status": "ok",
+          "by_margin_pp": {
+            "1": {
+              "donor_init": {
+                "fit_token_presentations": {
+                  "cost": 51200,
+                  "cell": "donor_init@256:le50"
+                },
+                "unique_tokens": {
+                  "cost": 57600,
+                  "cell": "donor_init@256"
+                }
+              },
+              "fresh": {
+                "fit_token_presentations": {
+                  "cost": 819200,
+                  "cell": "fresh@2K:le100"
+                },
+                "unique_tokens": {
+                  "cost": 59392,
+                  "cell": "fresh@2K"
+                }
+              }
+            },
+            "2": {
+              "donor_init": {
+                "fit_token_presentations": {
+                  "cost": 51200,
+                  "cell": "donor_init@256:le50"
+                },
+                "unique_tokens": {
+                  "cost": 57600,
+                  "cell": "donor_init@256"
+                }
+              },
+              "fresh": {
+                "fit_token_presentations": {
+                  "cost": 409600,
+                  "cell": "fresh@2K:le50"
+                },
+                "unique_tokens": {
+                  "cost": 57600,
+                  "cell": "fresh@256"
+                }
+              }
+            },
+            "3": {
+              "donor_init": {
+                "fit_token_presentations": {
+                  "cost": 51200,
+                  "cell": "donor_init@256:le50"
+                },
+                "unique_tokens": {
+                  "cost": 57600,
+                  "cell": "donor_init@256"
+                }
+              },
+              "fresh": {
+                "fit_token_presentations": {
+                  "cost": 204800,
+                  "cell": "fresh@512:le100"
+                },
+                "unique_tokens": {
+                  "cost": 57600,
+                  "cell": "fresh@256"
+                }
+              }
+            }
+          }
+        },
+        "fresh_seed2@2K": {
+          "status": "ok",
+          "by_margin_pp": {
+            "1": {
+              "donor_init": {
+                "fit_token_presentations": {
+                  "cost": 819200,
+                  "cell": "donor_init@2K:le100"
+                },
+                "unique_tokens": {
+                  "cost": 59392,
+                  "cell": "donor_init@2K"
+                }
+              },
+              "fresh": {
+                "fit_token_presentations": null,
+                "unique_tokens": null
+              }
+            },
+            "2": {
+              "donor_init": {
+                "fit_token_presentations": {
+                  "cost": 51200,
+                  "cell": "donor_init@256:le50"
+                },
+                "unique_tokens": {
+                  "cost": 57600,
+                  "cell": "donor_init@256"
+                }
+              },
+              "fresh": {
+                "fit_token_presentations": {
+                  "cost": 819200,
+                  "cell": "fresh@2K:le100"
+                },
+                "unique_tokens": {
+                  "cost": 59392,
+                  "cell": "fresh@2K"
+                }
+              }
+            },
+            "3": {
+              "donor_init": {
+                "fit_token_presentations": {
+                  "cost": 51200,
+                  "cell": "donor_init@256:le50"
+                },
+                "unique_tokens": {
+                  "cost": 57600,
+                  "cell": "donor_init@256"
+                }
+              },
+              "fresh": {
+                "fit_token_presentations": {
+                  "cost": 409600,
+                  "cell": "fresh@2K:le50"
+                },
+                "unique_tokens": {
+                  "cost": 57856,
+                  "cell": "fresh@512"
+                }
+              }
+            }
+          }
+        }
+      },
+      "portuguese_ce": {
+        "strengths_best@2K": {
+          "status": "ok",
+          "delta_ce": 0.0011542963976915912,
+          "ci": [
+            0.0007318858081432907,
+            0.0016025174601632505
+          ]
+        },
+        "donor_init@2K": {
+          "status": "ok",
+          "delta_ce": -0.0006362689723802948,
+          "ci": [
+            -0.0009834218549381825,
+            -0.0002921572628233778
+          ]
+        },
+        "fresh@2K": {
+          "status": "ok",
+          "delta_ce": -0.0013475219063803995,
+          "ci": [
+            -0.001715544947278734,
+            -0.0009942314923259703
+          ]
+        }
+      }
+    },
+    "replication_target": {
+      "n_dates": 92,
+      "reach": {
+        "fresh@2K": {
+          "status": "ok",
+          "by_margin_pp": {
+            "1": {
+              "donor_init": {
+                "fit_token_presentations": {
+                  "cost": 51200,
+                  "cell": "donor_init@256:le50"
+                },
+                "unique_tokens": {
+                  "cost": 57600,
+                  "cell": "donor_init@256"
+                }
+              },
+              "fresh": {
+                "fit_token_presentations": {
+                  "cost": 819200,
+                  "cell": "fresh@2K:le100"
+                },
+                "unique_tokens": {
+                  "cost": 59392,
+                  "cell": "fresh@2K"
+                }
+              }
+            },
+            "2": {
+              "donor_init": {
+                "fit_token_presentations": {
+                  "cost": 51200,
+                  "cell": "donor_init@256:le50"
+                },
+                "unique_tokens": {
+                  "cost": 57600,
+                  "cell": "donor_init@256"
+                }
+              },
+              "fresh": {
+                "fit_token_presentations": {
+                  "cost": 409600,
+                  "cell": "fresh@2K:le50"
+                },
+                "unique_tokens": {
+                  "cost": 57600,
+                  "cell": "fresh@256"
+                }
+              }
+            },
+            "3": {
+              "donor_init": {
+                "fit_token_presentations": {
+                  "cost": 51200,
+                  "cell": "donor_init@256:le50"
+                },
+                "unique_tokens": {
+                  "cost": 57600,
+                  "cell": "donor_init@256"
+                }
+              },
+              "fresh": {
+                "fit_token_presentations": {
+                  "cost": 204800,
+                  "cell": "fresh@256:le200"
+                },
+                "unique_tokens": {
+                  "cost": 57600,
+                  "cell": "fresh@256"
+                }
+              }
+            }
+          }
+        },
+        "fresh_seed2@2K": {
+          "status": "ok",
+          "by_margin_pp": {
+            "1": {
+              "donor_init": {
+                "fit_token_presentations": {
+                  "cost": 409600,
+                  "cell": "donor_init@2K:le50"
+                },
+                "unique_tokens": {
+                  "cost": 59392,
+                  "cell": "donor_init@2K"
+                }
+              },
+              "fresh": {
+                "fit_token_presentations": {
+                  "cost": 4915200,
+                  "cell": "fresh@2K"
+                },
+                "unique_tokens": {
+                  "cost": 59392,
+                  "cell": "fresh@2K"
+                }
+              }
+            },
+            "2": {
+              "donor_init": {
+                "fit_token_presentations": {
+                  "cost": 51200,
+                  "cell": "donor_init@256:le50"
+                },
+                "unique_tokens": {
+                  "cost": 57600,
+                  "cell": "donor_init@256"
+                }
+              },
+              "fresh": {
+                "fit_token_presentations": {
+                  "cost": 819200,
+                  "cell": "fresh@2K:le100"
+                },
+                "unique_tokens": {
+                  "cost": 59392,
+                  "cell": "fresh@2K"
+                }
+              }
+            },
+            "3": {
+              "donor_init": {
+                "fit_token_presentations": {
+                  "cost": 51200,
+                  "cell": "donor_init@256:le50"
+                },
+                "unique_tokens": {
+                  "cost": 57600,
+                  "cell": "donor_init@256"
+                }
+              },
+              "fresh": {
+                "fit_token_presentations": {
+                  "cost": 409600,
+                  "cell": "fresh@2K:le50"
+                },
+                "unique_tokens": {
+                  "cost": 57600,
+                  "cell": "fresh@256"
+                }
+              }
+            }
+          }
+        }
+      },
+      "portuguese_ce": {
+        "strengths_best@2K": {
+          "status": "ok",
+          "delta_ce": 0.001138556321087329,
+          "ci": [
+            0.0006950867381785973,
+            0.0016005526557384836
+          ]
+        },
+        "donor_init@2K": {
+          "status": "ok",
+          "delta_ce": -0.0006875745462020618,
+          "ci": [
+            -0.001036662939298877,
+            -0.00034396724168496776
+          ]
+        },
+        "fresh@2K": {
+          "status": "ok",
+          "delta_ce": -0.001420407896547916,
+          "ci": [
+            -0.0017818696246267476,
+            -0.0010732613469887243
+          ]
+        }
+      }
+    }
+  }
+}

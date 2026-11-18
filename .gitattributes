@@ -1,0 +1,2 @@
+# Matplotlib writes SVG path coordinates with trailing spaces.
+results/*/figures/*.svg linguist-generated=true whitespace=-blank-at-eol
