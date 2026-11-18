@@ -4840,26 +4840,22 @@ display: table;
 <p><a href="../selective-editing/index.html">Paper</a> · <a href="index.pdf">PDF</a> · <a href="https://github.com/sergeisoly/interesearch/blob/main/papers/guides/selective-editing.md">GitHub</a></p>
 </div>
 <div class="visual-intro">
-<p>A language model uses the same weights across languages. I deliberately worsen its next-token predictions in one language to see how much of that damage spills over to a close relative. In the German–Dutch comparison, I edit the model to make its German predictions worse and measure what happens to Dutch.</p>
-<p>Earlier work by Lucius Bushnaq showed that changing one subcomponent of a weight matrix in <a href="https://www.goodfire.com/research/interpreting-lm-parameters">Goodfire’s four-layer, 67-million-parameter language model</a> weakened German predictions and largely spared French and Spanish, although Italian predictions worsened. I use the same model and decomposition to test three close pairs (German–Dutch, Spanish–Portuguese and French–Italian). <a href="https://www.lesswrong.com/posts/ieoWstubDQWLrMnhH/exploration-fine-tuning-with-parameter-decomposition">Earlier fine-tuning exploration</a></p>
-<p>On the new evaluation dates, the subcomponent edits caused less related-language damage than the three comparison methods. LoRA and full-matrix fine-tuning kept English predictions closer to those of the original model.</p>
+<p>A language model uses the same weights across languages. If an edit makes the model worse at predicting the next token in German, how much of that damage carries over to Dutch?</p>
+<p>Lucius Bushnaq weakened German predictions by editing one subcomponent in <a href="https://www.goodfire.com/research/interpreting-lm-parameters">Goodfire’s four-layer, 67-million-parameter model</a>. I used the same model and decomposition to test German–Dutch, Spanish–Portuguese and French–Italian. <a href="https://www.lesswrong.com/posts/ieoWstubDQWLrMnhH/exploration-fine-tuning-with-parameter-decomposition">Bushnaq’s experiment</a></p>
+<p>On new text, the subcomponent edits did less damage to the related languages than the three comparators. LoRA and full-matrix fine-tuning kept English predictions closer to the original model’s.</p>
 </div>
 <section id="edit-one-rank-one-subcomponent" class="level2">
 <h2 class="anchored" data-anchor-id="edit-one-rank-one-subcomponent">Edit one rank-one subcomponent</h2>
-<p>Goodfire’s adVersarial Parameter Decomposition (VPD) breaks a weight matrix <span class="math inline">\(W\)</span> into a sum of <strong>rank-one subcomponents</strong> and a residual. The decomposition is trained so that a small number of subcomponents can approximate the model’s computation for a given input. Each subcomponent <span class="math inline">\(A\)</span> is the outer product of an output vector <span class="math inline">\(u_{\mathrm{out}}\)</span> and an input vector <span class="math inline">\(v_{\mathrm{in}}\)</span>.</p>
-<p><span class="math display">\[
-A = u_{\mathrm{out}}v_{\mathrm{in}}^\top.
-\]</span></p>
-<p>For an input <span class="math inline">\(x\)</span>, the input vector reads out one number, <span class="math inline">\(v_{\mathrm{in}}^\top x\)</span>. The output vector determines the direction of the resulting contribution to the output.</p>
+<p>Goodfire’s adVersarial Parameter Decomposition (VPD) expresses a weight matrix <span class="math inline">\(W\)</span> as a sum of <strong>rank-one subcomponents</strong> and a residual. The training objective favors using few subcomponents to approximate the computation for each input.</p>
+<p>A subcomponent <span class="math inline">\(A=u_{\mathrm{out}}v_{\mathrm{in}}^\top\)</span> reads one number from the input <span class="math inline">\(x\)</span> with <span class="math inline">\(v_{\mathrm{in}}^\top x\)</span>. That number scales the output vector <span class="math inline">\(u_{\mathrm{out}}\)</span>.</p>
 <p><span class="math display">\[
 Ax = u_{\mathrm{out}}\bigl(v_{\mathrm{in}}^\top x\bigr).
 \]</span></p>
-<p>I rank subcomponents by how much changing their coefficients is expected to raise target-language loss relative to its effect on English predictions. I then test the highest-ranked candidates on target training text to find one that can cause enough damage.</p>
-<p>The edit changes one number, the selected subcomponent’s coefficient <span class="math inline">\(c\)</span>.</p>
+<p>The edit scales <span class="math inline">\(A\)</span> by a single coefficient <span class="math inline">\(c\)</span>, changing many weights at once.</p>
 <p><span class="math display">\[
 W_{\mathrm{edited}} = (W-A) + cA.
 \]</span></p>
-<p>The coefficient scales the same rank-one matrix, changing many weights at once. At <span class="math inline">\(c=1\)</span>, the edit reconstructs the original matrix. At <span class="math inline">\(c=0\)</span>, it removes the selected contribution, and at <span class="math inline">\(c&lt;0\)</span>, it reverses its sign.</p>
+<p>At <span class="math inline">\(c=1\)</span> the matrix is unchanged, at <span class="math inline">\(c=0\)</span> the contribution is removed, and at <span class="math inline">\(c&lt;0\)</span> its sign reverses.</p>
 <figure class="visual-figure visual-concept figure" aria-label="Schematic weight edit" aria-describedby="visual-matrix-caption">
   <fieldset id="matrix-view-switch" class="matrix-view-switch" hidden>
     <legend>View the toy edit</legend>
@@ -4909,19 +4905,15 @@ W_{\mathrm{edited}} = (W-A) + cA.
 </figure>
 </section>
 <section id="comparing-ways-to-change-the-weights" class="level2">
-<h2 class="anchored" data-anchor-id="comparing-ways-to-change-the-weights">Comparing ways to change the weights</h2>
-<p>I compare the VPD edit with three other weight edits aimed at worsening target-language predictions while preserving English.</p>
+<h2 class="anchored" data-anchor-id="comparing-ways-to-change-the-weights">Compare edits at similar target damage</h2>
+<p>The selector ranks subcomponents by how much a small coefficient change is predicted to raise target loss for a given change in English predictions. It tests leading candidates on target training text. The comparison included three other ways to worsen target predictions while preserving English.</p>
 <ul>
-<li><strong>Rank-one LoRA</strong> learns its own input and output vectors. Its update has the same rank as the VPD subcomponent and acts on the same weight matrix.</li>
-<li><strong>Full-matrix fine-tuning</strong> can change every entry of the model’s 24 attention and feed-forward weight matrices.</li>
-<li><strong>Neuron edits</strong> scale the output weights of neurons selected because they activate more frequently on the target language than on English.</li>
+<li><strong>Rank-one LoRA</strong> learns a new pair of input and output vectors for the same matrix as the VPD edit.</li>
+<li><strong>Full-matrix fine-tuning</strong> can change every entry in the 24 attention and feed-forward weight matrices.</li>
+<li><strong>Neuron edits</strong> reduce output weights for neurons that activate more often on target text than on English.</li>
 </ul>
-<p>LoRA and full-matrix fine-tuning explicitly penalize changes to English predictions during training.</p>
-</section>
-<section id="matching-the-intended-damage" class="level2">
-<h2 class="anchored" data-anchor-id="matching-the-intended-damage">Matching the intended damage</h2>
-<p>An edit might spare Dutch simply by barely affecting German. To compare side effects at similar target damage, I adjust each edit’s strength on target-language validation text. The two calibration levels are increases of <strong>0.5 or 1 nat/token</strong> in average next-token prediction loss (cross-entropy) relative to the original model. The loss averages the negative log probability assigned to each observed next token.</p>
-<p>Using Europarl v7, a corpus of European Parliament proceedings, I then measure the effects of the fixed edits on text from <strong>58 further session dates</strong>. Dutch, Portuguese and Italian were excluded from selection and training in this study. Earlier experiments had used development text in these languages and identified the same German subcomponent with Dutch in view. <a href="../selective-editing/index.html#sec-access">Data and prior access</a></p>
+<p><span id="matching-the-intended-damage"></span>An edit could spare Dutch by barely affecting German. Calibration sets the strength of each edit to raise mean next-token prediction loss (cross-entropy) by <strong>0.5 or 1 nat/token</strong> on target-language validation text.</p>
+<p>The final comparison used the fixed edits on text from <strong>58 held-out European Parliament session dates</strong>. The related languages were absent from selection and training for these runs. In earlier work I used development text from those languages and took Dutch performance into account when choosing the German subcomponent. <a href="../selective-editing/index.html#sec-access">Data and prior access</a></p>
 </section>
 <section id="target-and-related-language-damage" class="level2">
 <h2 class="anchored" data-anchor-id="target-and-related-language-damage">Calibration and measured effects</h2>
@@ -5037,20 +5029,18 @@ W_{\mathrm{edited}} = (W-A) + cA.
     <p>See the <a href="index.html#sec-effects">paper&#39;s figure</a> for all three language pairs and both calibration levels.</p>
   </div>
   <figcaption id="visual-results-caption">VPD selected the same edit across all three training subsets.
-  <span class="plot-key">The validation plot shows where the coefficient was tested. Held-out results are available for the chosen coefficient.
-  The two held-out charts share the same scale. The dashed line marks the validation target.
-  Comparator lines span the three training subsets. Equal estimates overlap.
-  The paper reports confidence intervals from resampling evaluation dates.</span></figcaption>
+  <span class="plot-key">The held-out charts share a scale. The dashed line marks the validation target.
+  Comparator lines span the three training subsets.</span></figcaption>
 </figure>
-<p>The six VPD edits raised related-language loss by <strong>0.0003–0.0053 nat/token</strong>. Across individual runs, the other edits raised it by <strong>0.027–0.876 nat/token</strong>. The result covers these six fixed edits in one model. The selection rule’s reliability on new tasks remains open.</p>
+<p>Related-language loss rose by <strong>0.0003–0.0053 nat/token</strong> across the six fixed VPD edits in this model, versus <strong>0.027–0.876 nat/token</strong> across individual comparator runs. The selection rule’s reliability on new tasks remains open. <a href="../selective-editing/index.html#sec-contrasts">Estimates and confidence intervals</a></p>
 </section>
 <section id="what-changed-in-english" class="level2">
 <h2 class="anchored" data-anchor-id="what-changed-in-english">How much did English predictions change?</h2>
-<p>All edits in the main comparison passed the English loss limit. Cross-entropy uses the probability assigned to the token that actually occurred. <strong>KL divergence</strong> also captures changes in the probabilities of the other possible next tokens. Lower KL means the full distribution stayed closer to the original model’s predictions. In this post hoc comparison on the new dates, both LoRA and full-matrix fine-tuning had lower English KL than the VPD edits for every language and calibration level.</p>
+<p>All edits in the main comparison passed the English loss limit. That loss uses the probability of the observed next token. <strong>KL divergence</strong> compares the full next-token distributions of the original and edited models. LoRA and full-matrix fine-tuning penalized English KL during training. In the post hoc analysis, both had lower English KL than VPD for every language and calibration level on the new dates.</p>
 <figure class="visual-figure figure" aria-labelledby="visual-english-caption">
   <div id="visual-english-interactive" hidden>
     <div class="visual-controls">
-      <label for="visual-english-pair">Language being changed
+      <label for="visual-english-pair">Target language
         <select id="visual-english-pair"><option value="de">German</option><option value="es">Spanish</option><option value="fr">French</option></select>
       </label>
       <fieldset class="visual-dose"><legend>Target loss increase on validation text</legend>
@@ -5067,9 +5057,11 @@ W_{\mathrm{edited}} = (W-A) + cA.
   <div id="visual-english-fallback">
     <p>See the <a href="index.html#sec-english">paper&#39;s English comparison</a> for the measurements for all four methods.</p>
   </div>
-  <figcaption id="visual-english-caption">English KL is measured from the base model. <span class="plot-key">Both figures share the language and calibration settings. Lines show the observed minimum and maximum across three training subsets. Each tick is ten times the previous one.</span></figcaption>
+  <figcaption id="visual-english-caption">English KL relative to the original model.
+  <span class="plot-key">The controls also update the charts above. Comparator lines span three training subsets.
+  Each tick is ten times the previous one.</span></figcaption>
 </figure>
-<p>Each VPD edit’s mean English KL was below <strong>0.001 nat/token</strong>. For scale, the KL from a fair coin (<strong>50%/50%</strong>) to a slightly biased one (<strong>52%/48%</strong>) is about <strong>0.00080</strong>, close to the German VPD edit’s mean of <strong>0.00077</strong> at the 1 nat/token calibration level. The two-percentage-point shift belongs to the coin example. In the model, KL averages over many contexts, and individual predictions can change more.</p>
+<p>Mean English KL was below <strong>0.001 nat/token</strong> for every VPD edit. For scale, the KL from a fair coin (<strong>50%/50%</strong>) to a <strong>52%/48%</strong> coin is about <strong>0.00080</strong>. The German VPD edit at the 1 nat/token level had a mean KL of <strong>0.00077</strong>. Individual contexts can have higher KL than the mean.</p>
 <p><a href="../selective-editing/index.html#sec-setup">Methods</a> and <a href="../selective-editing/index.html#sec-limits">study limitations</a> in the paper.</p>
 <script type="application/json" id="visual-selective-data">
 {

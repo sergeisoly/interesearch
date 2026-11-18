@@ -174,7 +174,7 @@ ul.task-list li input[type="checkbox"] {
 <section class="research-story" aria-labelledby="selective-editing">
   <div class="research-story-copy">
     <h2 id="selective-editing" class="anchored">Selective language editing</h2>
-    <p>I edit the model’s weights to deliberately worsen its predictions in one language, then check how much a close relative is affected. Across German–Dutch, Spanish–Portuguese and French–Italian, editing one weight subcomponent caused less damage to the related language than rank-one LoRA, full-matrix fine-tuning or neuron edits calibrated for the same amount of target-language damage on validation text. LoRA and full-matrix fine-tuning preserved English predictions better.</p>
+    <p>Worsening a model’s German predictions also affected its Dutch. How much depended on the edit. Across three language pairs, changing one weight subcomponent did the least damage to the related language when the edits were calibrated to the same target loss increase on validation text. LoRA and full-matrix fine-tuning preserved English predictions better.</p>
     <nav class="research-study-links" aria-label="Selective language editing resources">
       <a class="research-main-link" href="./selective-editing/explainer.html">Short summary <span aria-hidden="true">→</span></a>
       <a href="./selective-editing/index.html">Paper</a>
@@ -194,14 +194,14 @@ ul.task-list li input[type="checkbox"] {
       <div class="research-interval-track research-interval-comparator" aria-hidden="true"><span style="--start: 60.78%; --end: 98.56%"></span></div>
     </div>
     <div class="research-interval-axis" aria-hidden="true"><span>0.0001</span><span>0.001</span><span>0.01</span><span>0.1</span><span>1</span></div>
-    <figcaption>Ranges across the three language pairs in the main confirmation test. Comparison edits are rank-one LoRA, full-matrix fine-tuning and neuron edits. Nats per token, log scale.</figcaption>
+    <figcaption>German–Dutch, Spanish–Portuguese and French–Italian. Ranges span the held-out results in nats per token on a log scale. The comparison includes rank-one LoRA, full-matrix fine-tuning and neuron edits.</figcaption>
   </figure>
 </section>
 
 <section class="research-story" aria-labelledby="repair-transfer">
   <div class="research-story-copy">
     <h2 id="repair-transfer" class="anchored">Repair transfer</h2>
-    <p>Can an earlier correction restore Dutch prediction quality while keeping the intended change to German? I test it on two new fine-tunes from the same base model and data distribution. Training the correction’s directions removed more of the extra Dutch loss than rescaling them alone. Starting from the earlier correction helped most when data and steps were limited. With the largest budget, a new correction trained from scratch nearly caught up.</p>
+    <p>An earlier repair helped restore Dutch predictions on two new fine-tunes from the same model and recipe, while preserving the intended change to German. Training the repair vectors recovered more than rescaling them along their original directions. With little data and few steps, the earlier repair gave training a head start. At the largest budget, training from scratch nearly caught up.</p>
     <nav class="research-study-links" aria-label="Repair transfer resources">
       <a class="research-main-link" href="./repair-transfer/explainer.html">Short summary <span aria-hidden="true">→</span></a>
       <a href="./repair-transfer/index.html">Paper</a>
@@ -210,7 +210,7 @@ ul.task-list li input[type="checkbox"] {
     </nav>
   </div>
   <figure class="research-result figure" aria-labelledby="repair-result-title">
-    <p class="research-result-title" id="repair-result-title">Dutch prediction loss recovered</p>
+    <p class="research-result-title" id="repair-result-title">Extra Dutch prediction loss removed</p>
     <!-- Rounded values for the two targets. Source: repair article, full-budget results. -->
     
 <table class="research-result-table caption-top table" aria-labelledby="repair-result-title">
@@ -247,19 +247,19 @@ fine-tune</th>
 </tbody>
 </table>
 
-    <figcaption>Share of extra Dutch loss removed at 2,048 fit tokens. Regular runs had a 600-step cap. Rescaling uses the expanded scalar search, and training from scratch shows the first fresh start.</figcaption>
+    <figcaption>At 2,048 fit tokens with a 600-step cap for regular runs. Rescaling includes two additional optimization runs. The last row shows the first fresh start.</figcaption>
   </figure>
 </section>
 
 <div class="research-notes">
   <section aria-labelledby="about-these-studies">
     <h2 id="about-these-studies" class="anchored">About these studies</h2>
-    <p>The work presented here is my attempt to understand interpretability and model editing methods more deeply. By building on recent advances and trying to find something new, I also learn what others have done before me. For me, the best way to learn is through practice.</p>
-    <p>Although these studies are written in the form of research papers, I’m not yet confident that I can call them rigorous scientific work. I’m sharing them in the hope that they may be useful to someone besides me.</p>
+    <p>I learn best by trying a method myself. These studies grew out of a wish to understand earlier work on interpretability and model editing, then see what else those methods could reveal.</p>
+    <p>The studies take the form of research papers, though I still hesitate to call them rigorous scientific work. My hope is that someone else who wants to try these methods will find the experiments useful.</p>
   </section>
   <section class="research-ai-note" aria-labelledby="ai-assistance">
     <h2 id="ai-assistance" class="anchored">AI assistance</h2>
-    <p>I made extensive use of Codex with GPT-6 Astra and GPT-6.1 Sol, as well as Claude Code with Opus 5.5, throughout this work. I personally supervised the experiments and guided their direction based on the results and the questions I wanted to explore.</p>
+    <p>Codex (GPT-6 Astra and GPT-6.1 Sol) and Claude Code (Opus 5.5) helped extensively throughout the project. I supervised the experiments and decided what to try next as the results came in.</p>
     <p>Most of the text was also written with AI assistance and went through several rounds of careful editing. I hope attentive readers will forgive me for that.</p>
   </section>
 </div>

@@ -4749,19 +4749,17 @@ color: var(--research-muted);
 <p><a href="../repair-transfer/index.html">Paper</a> · <a href="index.pdf">PDF</a> · <a href="https://github.com/sergeisoly/interesearch/blob/main/papers/guides/repair-transfer.md">GitHub</a></p>
 </div>
 <div class="visual-explainer explainer-repair">
-<p>When a fine-tuning recipe causes the same side effect more than once, a correction learned for one model might help correct the next. I test two ways to reuse an earlier repair on two new fine-tunes.</p>
-<p>As in <a href="../selective-editing/explainer.html">Selective editing</a>, I deliberately worsen predictions in one language and measure the side effects on another. I fine-tune <a href="https://www.goodfire.com/research/interpreting-lm-parameters">Goodfire’s four-layer, 67-million-parameter language model</a> to raise German prediction loss while penalizing changes to English, French, Spanish and Italian predictions. Dutch is left out of that objective, and its prediction loss also rises. A <strong>repair</strong> is an additional weight update that aims to undo the Dutch damage while keeping the intended German change.</p>
-<p>Rescaling the earlier repair’s fixed directions left some Dutch damage on both fine-tunes. Training those directions removed almost all of it. Starting from the earlier repair helped most with short runs on small amounts of fitting text. At the largest tested budget, a fresh repair nearly caught up.</p>
+<p>Can a repair learned on one fine-tune help the next? I fine-tuned Goodfire’s four-layer, 67-million-parameter language model to raise German next-token loss while penalizing changes to English, French, Spanish and Italian predictions. The objective omitted Dutch, whose loss rose too. A <strong>repair</strong> is a weight update fit to restore the original Dutch predictions and keep the fine-tuned predictions in the other five languages. <a href="https://www.goodfire.com/research/interpreting-lm-parameters">Goodfire’s model</a> · <a href="../selective-editing/explainer.html">Selective editing</a></p>
+<p>Starting from an earlier repair helped most with little fitting text and few steps. At the largest budget, a repair trained from scratch nearly caught up.</p>
 <section id="the-same-starting-repair-two-ways-to-reuse-it" class="level2">
-<h2 class="anchored" data-anchor-id="the-same-starting-repair-two-ways-to-reuse-it">Training the repair</h2>
-<p>The earlier fine-tune is the <strong>donor</strong>. The <strong>primary target</strong> and <strong>replication target</strong> are two more fine-tunes trained independently from the same base model with the same recipe, different seeds and text sampled from the same distribution (Europarl, a corpus of European Parliament proceedings). I learn one donor repair and reuse it for both targets.</p>
-<p>Each repair freezes the fine-tuned weights and adds a <strong>rank-one update</strong> <span class="math inline">\(E=ba^\top\)</span> to each of 24 weight matrices. On an input <span class="math inline">\(x\)</span>, the input vector <span class="math inline">\(a\)</span> reads out a scalar <span class="math inline">\(a^\top x\)</span> and the output vector <span class="math inline">\(b\)</span> sets the direction of the added output <span class="math inline">\(Ex=b(a^\top x)\)</span>. Training rewards matching the base model’s Dutch predictions and keeping the fine-tuned model’s predictions in the other five languages.</p>
-<p>I compare three ways to fit the repair.</p>
-<ol type="1">
-<li><strong>Scalar-only fitting</strong> learns one multiplier per matrix. It can amplify, weaken or reverse the donor’s correction along the same direction.</li>
-<li><strong>Donor initialization</strong> trains both vectors from their donor values. It can change what the correction reads from the input and where it sends the result.</li>
-<li><strong>Fresh initialization</strong> starts with a zero update and trains both vectors using the target. This provides a baseline for how much the donor helps when both vectors can change.</li>
-</ol>
+<h2 class="anchored" data-anchor-id="the-same-starting-repair-two-ways-to-reuse-it">Three ways to fit a repair</h2>
+<p>The two <strong>targets</strong> reuse a repair learned on one earlier fine-tune, the <strong>donor</strong>. All three fine-tunes used the same base model and recipe, with different seeds and samples of Europarl text.</p>
+<p>The repair adds a <strong>rank-one update</strong> <span class="math inline">\(E=ba^\top\)</span> to each of 24 weight matrices. The input vector <span class="math inline">\(a\)</span> reads one scalar <span class="math inline">\(a^\top x\)</span> from <span class="math inline">\(x\)</span>. The output vector <span class="math inline">\(b\)</span> writes the correction <span class="math inline">\(Ex=b(a^\top x)\)</span>.</p>
+<ul>
+<li><strong>Scalar-only fitting</strong> learns one multiplier per matrix to rescale or reverse the donor’s correction along the same line.</li>
+<li><strong>Donor initialization</strong> refits both vectors from their donor values. Their lengths and directions can change.</li>
+<li><strong>Fresh initialization</strong> also fits both vectors. It starts with a random input vector and a zero output vector in each matrix.</li>
+</ul>
 <style type="text/css">.repair-method [hidden] { display: none !important; }
 .repair-method figcaption { margin: 0 0 1rem; text-align: left; }
 .repair-method figcaption strong { font-size: 1.15rem; color: var(--research-ink); }
@@ -4807,7 +4805,7 @@ border-radius: 5px;
 }
 </style>
 <figure class="explainer-diagram repair-method figure" aria-labelledby="repair-transfer-diagram-caption">
-  <figcaption id="repair-transfer-diagram-caption"><strong>How one matrix reads and writes a correction</strong><br>Schematic vectors in three dimensions. The input <i>x</i> stays fixed and the read vector <i>a</i> has unit length.</figcaption>
+  <figcaption id="repair-transfer-diagram-caption">One matrix’s repair in three dimensions. This schematic fixes the input <i>x</i> and keeps <i>a</i> at unit length.</figcaption>
   <div id="repair-method-live" hidden>
     <div class="explainer-method-controls" role="group" aria-label="Repair fitting method" id="repair-method-controls">
       <button type="button" data-repair-method="strengths" aria-pressed="true">Scalar coefficients only</button>
@@ -4842,7 +4840,7 @@ border-radius: 5px;
     <div class="repair-view-help"><span>Drag either view to rotate both. Use arrow keys when focused.</span><button type="button" id="repair-view-reset">Reset view</button></div>
   </div>
   <div id="repair-method-fallback">
-    <p>Take <i>x</i> = (0.8, −0.5, 0.8), <i>a</i> = (1, 0, 0) and <i>b</i> = (0.8, 0, 0.6). The readout is 0.8. At coefficient 1 the added output is 0.8<i>b</i> = (0.64, 0, 0.48). At −1 it points the other way along the same line. Training <i>a</i> and <i>b</i> can change both the readout and the line. A fresh repair starts with <i>b</i> = 0 and adds nothing.</p>
+    <p>For <i>x</i> = (0.8, −0.5, 0.8) and <i>a</i> = (1, 0, 0), the readout is 0.8. If <i>b</i> = (0.8, 0, 0.6), a coefficient of 1 gives a correction of (0.64, 0, 0.48). A coefficient of −1 reverses it along the same line.</p>
   </div>
 </figure>
 <script>// Orthographic views for small diagrams of vectors, with z up in model space.
@@ -5070,12 +5068,12 @@ window.ResearchOrbit = (() => {
 </script>
 </section>
 <section id="keeping-the-directions-leaves-damage-behind" class="level2">
-<h2 class="anchored" data-anchor-id="keeping-the-directions-leaves-damage-behind">Changing the directions repairs more damage</h2>
-<p><strong>Recovery</strong> is the share of the fine-tune’s extra Dutch prediction loss removed by the repair. At 100%, Dutch loss matches the base model’s. I select each repair on text separate from fitting and evaluate it on text from <strong>92 other Europarl session dates</strong>.</p>
-<p>At the largest tested fitting budget, donor initialization recovered <strong>98.2%</strong> on the primary target and <strong>98.8%</strong> on replication. The scalar-only fits reached <strong>86.9%</strong> and <strong>78.4%</strong> after a search that included two additional optimization runs per target. The selected repairs preserved the German effect and met the evaluation constraints on Dutch and the other languages. <a href="../repair-transfer/index.html#sec-app-checks">Expanded scalar search</a></p>
+<h2 class="anchored" data-anchor-id="keeping-the-directions-leaves-damage-behind">Refitting the vectors recovers more</h2>
+<p><strong>Recovery</strong> is the share of extra Dutch prediction loss the repair removes. At 100%, loss is back at the base model’s level. I evaluated the selected repairs on <strong>92 Europarl session dates</strong> separate from fitting and checkpoint selection.</p>
+<p>At each budget, the methods use the same fitting text. <strong>Fit tokens</strong> count distinct prediction positions. A step cap sets the latest checkpoint eligible for selection.</p>
 <figure class="explainer-figure repair-results figure" aria-labelledby="repair-full-caption">
-  <figcaption id="repair-full-caption">Dutch prediction loss above the base model (nat/token) and the share of damage recovered (%).
-  The fits use 2,048 fit tokens and a 600-step cap for regular runs. The scalar search includes two extra runs per target.</figcaption>
+  <figcaption id="repair-full-caption">Extra Dutch loss (nat/token) and recovery (%) at 2,048 fit tokens.
+  Regular runs have a 600-step cap. The expanded scalar search adds two runs per target.</figcaption>
   <div id="repair-full-chart" hidden>
     <p class="repair-loss-key">Zero marks the base model. A dashed line marks each unrepaired fine-tune.</p>
     <div class="repair-loss-controls" role="group" aria-label="Inspect a repair on both targets">
@@ -5143,28 +5141,24 @@ window.ResearchOrbit = (() => {
 <p id="repair-full-primary" class="explainer-finding">Donor initialization improved recovery over the expanded scalar
 search by 11.3 percentage points on the primary target (95% paired interval [10.0, 12.7]) and 20.4 points
 on replication ([19.0, 21.7]). Both intervals exceeded the study&#39;s 3-point margin.</p>
-<p>These comparisons cover two targets trained from the same base with the same recipe. The extra scalar runs left a gap on both targets. Other choices of the 24 coefficients could still recover more Dutch performance under the same limit on repair size.</p>
+<p>The donor-initialized and scalar-only repairs preserved the German effect and passed the other readout checks. Other coefficients could recover more under the same repair size limit. <a href="../repair-transfer/index.html#sec-app-checks">Expanded scalar search</a></p>
 </section>
 <section id="the-donor-helps-most-when-fitting-is-constrained" class="level2">
-<h2 class="anchored" data-anchor-id="the-donor-helps-most-when-fitting-is-constrained">The donor helps most when fitting is constrained</h2>
-<p>A fitting budget counts <strong>unique fit tokens</strong>, the distinct prediction positions used to train the repair. Each method uses the same text at a given budget. A step cap sets the latest checkpoint eligible for selection, so the chosen repair may come from an earlier step.</p>
-<p>With <strong>256 fit tokens and a cap of 50 steps</strong>, donor initialization recovered <strong>4.4 percentage points</strong> more than the first fresh start on the primary target and <strong>4.1 points</strong> more on replication. With <strong>2,048 tokens and a cap of 600 steps</strong>, those leads fell to <strong>1.1</strong> and <strong>1.4 points</strong>. Only one fresh start was tested at the small budget.</p>
-<p>In the regular search, scalar-only recovery changed little across budgets and step caps. It ranged from <strong>86.9–87.4%</strong> on the primary target and <strong>76.3–77.4%</strong> on replication.</p>
+<h2 class="anchored" data-anchor-id="the-donor-helps-most-when-fitting-is-constrained">The donor start helps most in short, low-data runs</h2>
+<p>With <strong>256 fit tokens and a 50-step cap</strong>, donor initialization led the first fresh start by <strong>4.4</strong> and <strong>4.1 percentage points</strong> on the primary and replication targets. At <strong>2,048 tokens and a 600-step cap</strong>, the leads fell to <strong>1.1</strong> and <strong>1.4 points</strong>. The smaller budget included one fresh seed.</p>
+<p>Across the regular search, scalar-only recovery stayed within <strong>86.9–87.4%</strong> on the primary target and <strong>76.3–77.4%</strong> on replication.</p>
 <section class="explainer-interactive repair-budget" id="repair-budget-interactive" aria-label="Donor recovery compared with the first fresh start" hidden>
   <figure class="explainer-figure figure" aria-labelledby="repair-budget-caption">
-    <figcaption id="repair-budget-caption">Donor recovery minus the first fresh start, in percentage points.
-    Columns give step caps per run. Select a cell to inspect both targets at that budget.
-    Every cell uses the regular fitting search.</figcaption>
+    <figcaption id="repair-budget-caption">Donor advantage over the first fresh start (percentage points) in the regular search.
+    Select a cell to compare both targets at that token budget and step cap.</figcaption>
     <div id="repair-budget-panels" class="repair-panel-pair"></div>
   </figure>
   <p id="repair-budget-selected" class="repair-inspection" aria-live="polite" aria-atomic="true"></p>
   <div id="repair-budget-detail" class="explainer-data-table"></div>
 </section>
 <div id="repair-budget-fallback">
-  <p>At 256 fit tokens and a cap of 50 steps, donor initialization recovered 97.0% on the primary target
-  and 96.7% on replication, versus 92.6% for fresh initialization on each target. Scalar-only fits
-  recovered 87.2% on the primary target and 76.3% on replication.
-  The <a href="index.html#sec-warm">paper&#39;s static figures</a> compare the first fresh start across every tested budget.</p>
+  <p>At 256 fit tokens and a 50-step cap, the donor start recovered 97.0% and 96.7%, with the fresh
+  start at 92.6% on both targets. <a href="index.html#sec-warm">Results across fitting budgets</a></p>
 </div>
 <p><a href="../repair-transfer/index.html#sec-setup">Methods</a> and <a href="../repair-transfer/index.html#sec-limits">study limitations</a> in the paper.</p>
 <script id="repair-explainer-data" type="application/json">
